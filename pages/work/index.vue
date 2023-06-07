@@ -1,20 +1,18 @@
 <template>
   <div>
-    <ClientOnly>
-      <ShaderPass
-        v-if="supportsCurtains"
-        :params="firstPassProps"
-        @render="onFirstPassRender"
-        @ready="onFirstPassReady"
-        ref="firstPass"
-      />
-    </ClientOnly>
     <div class="container">
       <div class="container__header-minimize" data-header-scroll-minimize></div>
       <h1 class="page__title scroll-opacity" data-scroll-index="0">Tous<br />nos projets&nbsp;<sub class="big-underscore">&nbsp;—</sub></h1>
       <section class="projects-work">
         <template v-for="(item, index) in projects">
-          <ProjectItem class="projects-work__item" :index="index" :src="item.sections[0].blocks[3].value" :to="`/work/${item.slug}`" :title="item.sections[0].blocks[0].value" :subtitle="['Brand Content', 'Réseaux Sociaux']" :onRender="onRender"/>
+          <ProjectItem 
+            class="projects-work__item" 
+            :index="index" 
+            :src="item.sections[0].blocks[3].value"
+            :to="`/work/${item.slug}`"
+            :title="item.sections[0].blocks[0].value"
+            :subtitle="['Brand Content', 'Réseaux Sociaux']" 
+          />
         </template>
       </section>
       <div class="space"></div>
@@ -24,8 +22,6 @@
 </template>
   
 <script>
-  import { ShaderPass } from 'vue-curtains';
-  import curtainsShader from "~/mixins/curtains-shader";
   import scrollOpacity from '~~/mixins/scroll-opacity';
   import utilsDevice from '~~/mixins/utils-device.js';
   import { useDatasStore } from '~/stores/datas';
@@ -33,10 +29,6 @@
   import gsap from 'gsap';
 
   export default {
-    components: {
-      ShaderPass,
-    },
-
     setup() {
       const storeDatas = useDatasStore()
       const oSeo = storeDatas.seo.sections[0]
@@ -65,7 +57,6 @@
     },
   
     mixins: [
-      curtainsShader,
       scrollOpacity,
       utilsDevice,
       scrollHeaderMinimize

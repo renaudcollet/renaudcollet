@@ -5,7 +5,6 @@
         <ClientOnly>
           <ImagePlane 
             :src="src" 
-            :onRender="onRender" 
             alt=""
           />
         </ClientOnly>

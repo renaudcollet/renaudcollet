@@ -22,7 +22,7 @@ export const useDatasStore = defineStore( 'datas', {
       // console.log('FECH DATAS')
       if (!this.datas) {
         const {data} = await useFetch(`${apiUrl}/contenus`)
-        // console.log('datas from store', data.value);
+        console.log('datas from store', data.value);
         if (data.value) {
           this.datas = data
           this.seo = data.value.contenus.find((item) => item.structure_name === 'SEO')

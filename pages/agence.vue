@@ -36,7 +36,6 @@
 </template>
 
 <script>
-import curtainsShader from '~/mixins/curtains-shader';
 import scrollOpacity from '~~/mixins/scroll-opacity';
 import utilsDevice from '~~/mixins/utils-device.js';
 import { useDatasStore } from '~/stores/datas';
@@ -81,7 +80,6 @@ export default {
   },
 
   mixins: [
-    curtainsShader,
     scrollOpacity,
     utilsDevice,
     scrollHeaderMinimize

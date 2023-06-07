@@ -1,20 +1,17 @@
 <template>
   <div>
-    <ClientOnly>
-      <ShaderPass 
-        v-if="supportsCurtains"
-        :params="firstPassProps"
-        @render="onFirstPassRender"
-        @ready="onFirstPassReady"
-        ref="firstPass"
-      />
-    </ClientOnly>
     <div class="header">
       <img id="index-logo" class="logo" data-header-scroll-minimize src="~assets/svg/logo_groupie.svg" alt="">
     </div>
     <section class="projects-home">
       <template v-for="(item, index) in projects">
-        <ProjectItem class="projects-home__item" :index="index" :src="item.sections[0].blocks[3].value" :to="`/work/${item.slug}`" :title="item.sections[0].blocks[0].value" :subtitle="[item.sections[0].blocks[1].value, item.sections[0].blocks[2].value]" :onRender="onRender"/>
+        <ProjectItem 
+          class="projects-home__item" 
+          :index="index" 
+          :src="item.sections[0].blocks[3].value" 
+          :to="`/work/${item.slug}`" 
+          :title="item.sections[0].blocks[0].value"
+          :subtitle="[item.sections[0].blocks[1].value, item.sections[0].blocks[2].value]" />
       </template>
     </section>
     <Footer :projects="projectsFooter" :footer="footer"></Footer>
@@ -22,8 +19,6 @@
 </template>
 
 <script>              
-import { ShaderPass } from 'vue-curtains';
-import curtainsShader from '~~/mixins/curtains-shader';
 import scrollOpacity from '~~/mixins/scroll-opacity';
 import utilsDevice from '~~/mixins/utils-device.js';
 import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
@@ -31,9 +26,7 @@ import { useDatasStore } from '~/stores/datas';
 import gsap from 'gsap';
 
 export default {
-  components: {
-    ShaderPass,
-  },
+  components: {},
 
   setup() {
     const storeDatas = useDatasStore()
@@ -79,7 +72,6 @@ export default {
   },
 
   mixins: [
-    curtainsShader,
     scrollOpacity,
     utilsDevice,
     scrollHeaderMinimize

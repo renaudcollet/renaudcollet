@@ -4,7 +4,6 @@
       <ClientOnly>
         <ImagePlane 
           :src="src" 
-          :onRender="onRender" 
           :class="{'scroll-opacity': !supportsCurtains, 'zoomable': !isVideo()}" 
           object-fit="cover" 
           :data-zoomable-url="src"

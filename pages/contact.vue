@@ -1,12 +1,5 @@
 <template>
   <div class="page">
-    <!-- <ShaderPass
-      v-if="supportsCurtains"
-      :params="firstPassProps"
-      @render="onFirstPassRender"
-      @ready="onFirstPassReady"
-      ref="firstPass"
-    /> -->
     <section>
       <div class="header-minimize" data-header-scroll-minimize></div>
       <h1 class="scroll-opacity" data-scroll-index="0">Contact<sub class="big-underscore"> —</sub></h1>
@@ -29,19 +22,14 @@
 </template>
 
 <script>
-import { ShaderPass } from 'vue-curtains';
-import curtainsShader from '~/mixins/curtains-shader';
 import scrollOpacity from '~~/mixins/scroll-opacity';
 import utilsDevice from '~~/mixins/utils-device.js';
-// import { storeToRefs } from 'pinia';
 import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
 import { useDatasStore } from '~/stores/datas';
 import gsap from 'gsap';
 
 export default {
-  components: {
-    ShaderPass,
-  },
+  components: {},
 
   setup() {
     const storeDatas = useDatasStore()
@@ -74,7 +62,6 @@ export default {
   },
 
   mixins: [
-    curtainsShader,
     scrollOpacity,
     utilsDevice,
     scrollHeaderMinimize

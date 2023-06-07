@@ -1,7 +1,7 @@
 <template>
     <NuxtLink class="project-item project-item-this">
         <ClientOnly>
-            <ImagePlane class="project-item__image scroll-opacity scroll-opacity--no-translate" data-scroll-index="8" :src="src" :onRender="onRender" object-fit="cover"/>
+            <ImagePlane class="project-item__image scroll-opacity scroll-opacity--no-translate" data-scroll-index="8" :src="src" object-fit="cover"/>
         </ClientOnly>
         <div class="project-item__text z-index-text" >
             <h1 class="project-item__title">
@@ -61,10 +61,6 @@ export default {
     },
     subtitle: {
         type: Array,
-        required: true,
-    },
-    onRender: {
-        type: Function,
         required: true,
     },
   },

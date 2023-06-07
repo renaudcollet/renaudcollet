@@ -6,7 +6,6 @@
           v-if="!playVideo"
           :src="src"
           :video-src="videoSrc" 
-          :onRender="onRender"
           object-fit="cover" 
           alt=""
           ref="imagePlane"

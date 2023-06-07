@@ -1,14 +1,5 @@
 <template>
   <div class="page">
-    <ClientOnly>
-      <ShaderPass
-        v-if="supportsCurtains"
-        :params="firstPassProps"
-        @render="onFirstPassRender"
-        @ready="onFirstPassReady"
-        ref="firstPass"
-      />
-    </ClientOnly>
     <section class="cover-top">
       <div class="cover-top__image">
         <picture>
@@ -52,14 +43,18 @@
       </div>
     </section>
     <section class="projects">
-      <WorkItem1 v-if="sections[0].blocks[7].value !== ''" :src="sections[0].blocks[8].value" :context="sections[0].blocks[7].value" :answer="sections[0].blocks[9].value" :onRender="onRender" />
+      <WorkItem1 
+        v-if="sections[0].blocks[7].value !== ''"
+        :src="sections[0].blocks[8].value"
+        :context="sections[0].blocks[7].value"
+        :answer="sections[0].blocks[9].value" 
+      />
       <WorkItem2 
         v-if="sections[0].blocks[13].value !== ''"
         :video-src="sections[0].blocks[14].value"
         :src="sections[0].blocks[13].value"
         :title="sections[0].blocks[11].value"
         :content="sections[0].blocks[12].value"
-        :onRender="onRender" 
       />
       <div class="workitem3-container">
         <template v-for="(item, index) in items">
@@ -69,7 +64,6 @@
             :video-src="item.blocks[3].value"
             :content="{title: item.blocks[0].value, content: item.blocks[1].value}" 
             :class="{'right': index%4 === 0, 'left': index%4 === 2}"
-            :onRender="onRender" 
           />
         </template>
       </div>
@@ -80,8 +74,6 @@
 </template>
   
 <script>
-  import { ShaderPass } from 'vue-curtains';
-  import curtainsShader from "~/mixins/curtains-shader";
   import scrollOpacity from "~/mixins/scroll-opacity";
   import utilsDevice from '~~/mixins/utils-device.js';
   import { useDatasStore } from '~/stores/datas';
@@ -91,7 +83,6 @@
   
   export default {
     components: {
-      ShaderPass,
       ImagePlane
     },
 
@@ -167,7 +158,6 @@
     },
 
     mixins: [
-      curtainsShader,
       scrollOpacity,
       utilsDevice,
       scrollHeaderMinimize

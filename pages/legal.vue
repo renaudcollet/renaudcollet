@@ -14,7 +14,6 @@
 </template>
 
 <script>
-import curtainsShader from '~/mixins/curtains-shader';
 import gsap from 'gsap';
 import utilsDevice from '~~/mixins/utils-device.js';
 import { useDatasStore } from '~/stores/datas';
@@ -56,7 +55,6 @@ export default {
   },
 
   mixins: [
-    curtainsShader,
     utilsDevice,
     scrollHeaderMinimize
   ],

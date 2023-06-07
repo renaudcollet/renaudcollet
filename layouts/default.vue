@@ -1,68 +1,37 @@
 <template>
   <div :class="[currentPage]">
     <Header></Header>
-    <Cover3D v-if="showCover" :position="coverPosition" :showScrollArrow="showScrollArrow"/>
+    <!-- <Cover3D v-if="showCover" :position="coverPosition" :showScrollArrow="showScrollArrow"/> -->
     
-    <Curtains id="CurtainsCanvas" @success="onReady" ref="curtains">
-      <NuxtPage :scrollVelocity="scrollVelocity" />
-    </Curtains>
-    
+    <NuxtPage :scrollVelocity="scrollVelocity" />
+  
     <span v-if="config" id="config"></span>
   </div>
 </template>
 
 <script>
-import { Curtains } from "vue-curtains";
 import Lenis from '@studio-freight/lenis';
-import Cover3D from '~/components/webgl/Cover3D.vue'
+// import Cover3D from '~/components/webgl/Cover3D.vue'
 import utilsDevice from '~~/mixins/utils-device.js';
-// import { storeToRefs } from 'pinia';
 import { useDatasStore } from '~/stores/datas';
 
 export default {
   components: {
-    Curtains,
-    Cover3D
+    // Cover3D
   },
 
   mixins: [utilsDevice],
 
   async setup () {
-
-      // I don't know why, I can't use useHead() after receiving the data from the store
-      useHead({
-        // titleTemplate: '%s - Accueil',
-        titleTemplate: '%s',
-      })
-
-    const curtainsParams = {
-      // antialias: true,
-      // premultipliedAlpha: true
-    }
-
-    let brew = `
-                                                            
-     .::.                                                   
-     Y@@5                                                   
-     5@@P  ..           .      ..                           
-     5@@B5B&&B5~  JBBYJB&G .?PB###P7 YBBY   5BBB~  ^GBG:    
-     5@@@P??5&@@? P@@@GJ?7~#@&?~~5@@5^&@@7 !@@@@B. G@@?     
-     ~G@Y    7@@# 5@@G    P@@#GBBB&@@:~@@&^B@P?@@J7@@5      
-       !J!^:~G@@P P@@5    ?@@#7~~7Y7^. J@@&@@^ P@@&@B.      
-         ~5&@@#Y. 5@@5     !G&&B#&&P:   P@@@Y  :&@@&^       
-           ^~^.   :^^:       !7J!^.      ^^^    :^^:        
-                   .^!!~^..^?@@&~^^   .^!!~:    ^^^ :~!:    
-                 .P&@#B&&7!&&@@@&&B ^5&&BG&@B7 :&@@G&@@?    
-                 .?B@Y!7~  .!@@&^..^&@@J!!?&@@!.&@@G^::.    
-     ^!!!!!!!!!!~   !B@@&G^ ~@@&.  7@@@GGGGGGG7.&@@~        
-                      :5@@7 ^@@@577.P@@P7!7G5~ :@@@~        
-                        ~!   7GB##G  ~YG###GY^ .GBG^        
-                                                            
-    `
-    // console.log('%c' + brew, ' color: black; font-weight: bold; text-shadow: 5px 0 1px #f22e50, 10px 0 2px #db2b62, 15px 0 4px #ff3156;')
+    // I don't know why, I can't use useHead() after receiving the data from the store
+    // -> Can't useHead in async function
+    // useHead({
+    //   // titleTemplate: '%s - Accueil',
+    //   titleTemplate: '%s',
+    //   })
     
     const config = useRuntimeConfig()
-    // console.log('API URL', config.public.apiUrl)
+    console.log('API URL', config.public.apiUrl)
 
     const storeDatas = useDatasStore()
     const { fetchDatas } = storeDatas
@@ -127,17 +96,6 @@ export default {
   },
 
   mounted() {
-    // console.log(`CURTAINS`, this.$refs.curtains);
-    // this.$refs.curtains.params.autoRender = false
-    // // this.$refs.curtains.disableDrawing();
-    // console.log(`CURTAINS`, this.$refs.curtains);
-    // console.log(`CURTAINS`, this.$refs.curtains.curtainsInstance);
-
-    console.log('SUPPORT CURTAINS ?', this.supportsCurtains)
-
-    if (this.supportsCurtains)
-      document.body.classList.add('supports-curtains')
-
     this.showScrollArrow = this.$route.name === 'index'
 
     const c1 = 1.70158;
@@ -182,52 +140,11 @@ export default {
     lerp(a, b, n) {
       return (1 - n) * a + n * b;
     },
-
-    onReady(c) {
-
-      // console.log(`CURTAINS READY`, c);
-      // c.disableDrawing();
-
-
-      c.autoResize = false
-      let timeout = false
-      window.addEventListener('resize', () => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-          
-          // Reload window if orientation changes
-          // const isPortrait = window.innerHeight > window.innerWidth
-          // if (this.isPortrait !== isPortrait) {
-          //   window.location.reload()
-          // }
-          
-          // Resize curtains
-          c.resize()
-        }, 110);
-      })
-    },
-
-    easeOutBack(x) {
-      const c1 = 1.70158;
-      const c3 = c1 + 1;
-
-      return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
-    },
   }
 };
 </script>
 
 <style lang="scss">
-#CurtainsCanvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: $z-curtains;
-}
-
 #config{
   position: fixed;
   top: 0;
