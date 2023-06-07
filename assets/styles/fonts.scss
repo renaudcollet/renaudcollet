@@ -1,0 +1,172 @@
+/**
+100	Thin (Hairline)
+200	Extra Light (Ultra Light)
+300	Light
+400	Normal (Regular)
+500	Medium
+600	Semi Bold (Demi Bold)
+700	Bold
+800	Extra Bold (Ultra Bold)
+900	Black (Heavy)
+**/
+
+.font-main {
+  font-family: $font-main;
+  @supports (font-variation-settings: normal) {
+    font-family: 'FigtreeVF';
+  }
+}
+
+.font-groupie {
+  font-family: 'Groupie';
+}
+
+/**
+  Groupie
+**/
+@font-face {
+  font-family: 'Groupie';
+  src: url('#{$path-fonts}/Groupie.ttf') format('truetype');
+  font-weight: normal;
+  font-display: swap;
+}
+
+/**
+  Figtree
+**/
+@font-face {
+  font-family: $font-main;
+  src: url('#{$path-fonts}/Figtree-BoldItalic.woff2') format('woff2'),
+  url('#{$path-fonts}/Figtree-BoldItalic.woff') format('woff');
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: $font-main;
+  src: url('#{$path-fonts}/Figtree-MediumItalic.woff2') format('woff2'),
+  url('#{$path-fonts}/Figtree-MediumItalic.woff') format('woff');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: $font-main;
+  src: url('#{$path-fonts}/Figtree-SemiBoldItalic.woff2') format('woff2'),
+  url('#{$path-fonts}/Figtree-SemiBoldItalic.woff') format('woff');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: $font-main;
+  src: url('#{$path-fonts}/Figtree-Bold.woff2') format('woff2'),
+  url('#{$path-fonts}/Figtree-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: $font-main;
+  src: url('#{$path-fonts}/Figtree-Black.woff2') format('woff2'),
+  url('#{$path-fonts}/Figtree-Black.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: $font-main;
+  src: url('#{$path-fonts}/Figtree-Regular.woff2') format('woff2'),
+  url('#{$path-fonts}/Figtree-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: $font-main;
+  src: url('#{$path-fonts}/Figtree-LightItalic.woff2') format('woff2'),
+  url('#{$path-fonts}/Figtree-LightItalic.woff') format('woff');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: $font-main;
+  src: url('#{$path-fonts}/Figtree-SemiBold.woff2') format('woff2'),
+  url('#{$path-fonts}/Figtree-SemiBold.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: $font-main;
+  src: url('#{$path-fonts}/Figtree-Italic.woff2') format('woff2'),
+  url('#{$path-fonts}/Figtree-Italic.woff') format('woff');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: $font-main;
+  src: url('#{$path-fonts}/Figtree-ExtraBoldItalic.woff2') format('woff2'),
+  url('#{$path-fonts}/Figtree-ExtraBoldItalic.woff') format('woff');
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: $font-main;
+  src: url('#{$path-fonts}/Figtree-Light.woff2') format('woff2'),
+  url('#{$path-fonts}/Figtree-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: $font-main;
+  src: url('#{$path-fonts}/Figtree-Medium.woff2') format('woff2'),
+  url('#{$path-fonts}/Figtree-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: $font-main;
+  src: url('#{$path-fonts}/Figtree-BlackItalic.woff2') format('woff2'),
+  url('#{$path-fonts}/Figtree-BlackItalic.woff') format('woff');
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: $font-main;
+  src: url('#{$path-fonts}/Figtree-ExtraBold.woff2') format('woff2'),
+  url('#{$path-fonts}/Figtree-ExtraBold.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/*
+  VARIABLE FONT
+*/
+@font-face {
+  font-family: 'FigtreeVF';
+  src: url('#{$path-fonts}/Figtree-VariableFont_wght.ttf') format('truetype');
+  font-weight: 300 900;
+  // font-stretch: 75% 200%;
+  font-variation-settings: 'wdth' 100, 'wght' 400; // Setting default font
+}

@@ -1,0 +1,57 @@
+:root {
+  --scrollbar-track-color: #444444;
+}
+
+$scrollbar-track-color: #444444;
+
+$z-3d-scene-container: -1000;
+$z-3d-scene-controls: 100;
+$z-menu: 1600;
+$z-menu-button: 1610;
+$z-menu-zone: 1500;
+$z-header: 1300;
+$z-logo: 1350;
+$z-curtains: 10;
+$z-text: 50;
+$z-projects: 150;
+$z-video: 1200;
+$z-video-controls: 1200;
+$z-video-button-play: 1210;
+$z-zoomable: 9000;
+
+/**
+  * Opacity Scroll
+  */
+$opacity-scroll-duration: 0.3s;
+$translate-scroll-duration: 0.5s;
+
+
+/**
+  * Fonts
+  */
+$path-fonts: '~/assets/fonts';
+$font-main: 'Figtree';
+
+$font-size-text-sm: 12px;
+$font-size-text-md: 18px;
+$font-size-text-lg: 24px;
+$font-size-text-xl: 24px; // 26px // 28px
+
+$font-line-height-sm: 1.5;
+$font-line-height-md: 1.5;
+$font-line-height-lg: 1.2;
+$font-line-height-xl: 1.2;
+
+$font-size: (
+  sm: $font-size-text-sm,
+  md: $font-size-text-md,
+  lg: $font-size-text-lg,
+  xl: $font-size-text-xl
+);
+
+$font-line-height: (
+  sm: $font-line-height-sm,
+  md: $font-line-height-md,
+  lg: $font-line-height-lg,
+  xl: $font-line-height-xl
+);

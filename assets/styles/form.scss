@@ -1,0 +1,179 @@
+/**
+  Custom vue-formulate styles
+  https://vueformulate.com/guide/theming/customizing-classes/#class-keys
+**/
+
+.formulate-form {
+
+  .formulate-input {
+
+    &-wrapper {}
+
+    &-label,
+    &[data-classification=group]>.formulate-input-wrapper>.formulate-input-label {
+      font-family: $font-paragraph;
+      font-weight: 400;
+      @include main-color;
+      text-align: center;
+      margin-bottom: 5px;
+      line-height: 1;
+    }
+
+    &[data-classification=box] .formulate-input-element,
+    &[data-classification=box] .formulate-input-wrapper {
+      justify-content: flex-start;
+
+      .formulate-input-label {
+        text-align: left;
+        display: flex;
+      }
+    }
+
+    &-element {
+      margin: 0 auto;
+
+      &--button {
+        text-align: right;
+      }
+
+      button[data-ghost],
+      button[data-minor] {
+        background-color: #000;
+        @include main-color;
+      }
+
+      input,
+      select {
+        border-radius: 20px !important;
+        background-color: #fff;
+        text-align: center;
+        font-size: 16px;
+        font-family: $font-paragraph;
+        font-weight: 400;
+
+        // &::placeholder,
+        // &::-webkit-input-placeholder,
+        // &:-moz-placeholder,
+        // &::-moz-placeholder,
+        // &:-ms-input-placeholder {
+        // }
+      }
+
+      select>option {
+        text-align: left;
+      }
+    }
+
+    &[data-classification=group] [data-is-repeatable] {
+      border: 0;
+      padding: 0;
+      position: relative;
+    }
+
+    &[data-classification=group] [data-is-repeatable] .formulate-input-group-repeatable {
+      margin: 0;
+    }
+
+    &[data-classification=group] [data-is-repeatable] .formulate-input-group-repeatable {
+      border: 0;
+      padding: 0;
+      margin-bottom: 5px;
+
+      &:first-child .formulate-input-group-repeatable-remove {
+        display: none;
+      }
+    }
+
+    &[data-classification=group] [data-is-repeatable] .formulate-input-group-repeatable-remove {
+      top: calc(50% - 22px);
+      right: -50px;
+    }
+
+    &[data-classification=group] [data-is-repeatable] .formulate-input-grouping {
+      margin: 0;
+    }
+
+    .formulate-input-errors {
+      display: flex;
+      justify-content: center;
+    }
+
+    .formulate-input-error {
+      font-size: 14px;
+      font-family: $font-paragraph;
+      font-weight: 600;
+      text-align: center;
+      line-height: 1;
+      color: #ff0000;
+      background-color: rgba(0, 0, 0, 0.5);
+      margin-top: 5px;
+    }
+
+    @include media-breakpoint-up(lg) {
+
+      &-label {
+        margin-bottom: 10px;
+        font-size: 24px;
+      }
+
+      &-element {
+        width: 400px;
+        max-width: 400px;
+
+        input,
+        select {
+          border-radius: 40px !important;
+          text-align: center;
+          font-size: 22px;
+
+          // &::placeholder,
+          // &::-webkit-input-placeholder,
+          // &:-moz-placeholder,
+          // &::-moz-placeholder,
+          // &:-ms-input-placeholder {
+          // }
+        }
+
+        &--checkbox {
+          width: auto;
+          margin: 0;
+        }
+      }
+
+      &[data-classification=group] [data-is-repeatable] {
+        border: 0;
+        padding: 0;
+        position: relative;
+      }
+
+      &[data-classification=group] [data-is-repeatable] .formulate-input-group-repeatable {
+        margin: 0;
+        margin-bottom: 10px;
+      }
+
+      &[data-classification=group] [data-is-repeatable] .formulate-input-group-repeatable {
+        border: 0;
+        padding: 0;
+      }
+
+      &[data-classification=group] [data-is-repeatable] .formulate-input-group-repeatable-remove {
+        top: calc(50% - 11px);
+        right: -40px;
+      }
+
+      &[data-classification=group] [data-is-repeatable] .formulate-input-grouping {
+        margin: 0;
+      }
+
+      .formulate-input-error {
+        font-size: 22px;
+        font-family: $font-paragraph;
+        font-weight: 600;
+        text-align: center;
+      }
+    }
+  }
+
+  .formulate-input select option {}
+
+}

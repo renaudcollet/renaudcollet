@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+    x="0px" y="0px" viewBox="0 0 31 31">
+    <style>
+      @keyframes loop {
+        from {
+          transform: scale(0.8);
+        }
+
+        to {
+          transform: scale(1);
+        }
+      }
+      circle {
+        transform-origin: center center;
+        transform: scale(0.8);
+
+        animation-duration: 1s;
+        animation-name: loop;
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+      }
+    </style>
+    <circle fill="rgb(0, 0, 0)" cx="15.5" cy="15.5" r="15.5" shape-rendering="geometricPrecision"/>
+    <rect class="horiz" fill="rgb(255, 255, 255)" x="10" y="15.5" width="12" height="1" />
+    <rect class="vert" fill="rgb(255, 255, 255)" x="15.5" y="10" width="1" height="12" />
+</svg>

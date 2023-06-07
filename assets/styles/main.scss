@@ -1,0 +1,59 @@
+@import 'vendors/normalize';
+// @import 'vendors/bootstrap/bootstrap-grid';
+// @import 'vendors/popbox';
+// @import 'vendors/simplebar';
+// @import 'vendors/embla';
+// @import 'vendors/overlayscrollbars';
+
+// @import 'vendors/vue-formulate/boilerplate/boilerplate';
+// @import 'vendors/vue-formulate/snow/snow';
+
+@import 'bootstrap';
+// @import 'breakpoints-viewer';
+@import 'variables';
+@import 'mixins';
+@import 'functions';
+@import 'fonts';
+// @import 'collapse';
+@import 'scrollbar-body';
+@import 'page';
+@import 'video';
+// @import 'project-item';
+
+@import 'scroll-opacity';
+@import 'scroll-header-minimize';
+@import 'zoomable-image';
+// @import 'form';
+// @import 'stripe';
+
+
+html {
+  // overflow-x: hidden;
+  min-height: 100vh;
+  // background-color: #000000;
+}
+
+body {
+  line-height: 1;
+  background: linear-gradient(180deg, rgb(28, 28, 28) 0%, rgb(32, 32, 32) 100%);
+  color: #ffffff;
+  font-family: $font-main;
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.big-underscore {
+  font-weight: 300;
+}
+
+/**
+  This is important to put text over the canvas
+**/
+.z-index-text
+{  
+  position: relative;
+  z-index: $z-text;
+}

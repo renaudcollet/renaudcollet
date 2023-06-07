@@ -1,0 +1,36 @@
+.zoomable {
+  cursor: auto;
+  &:hover {
+    cursor: url('~/assets/svg/zoom-open.svg') 16 16, zoom-in;
+  }
+}
+
+.zoomable-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  background-repeat: no-repeat;
+  z-index: $z-zoomable;
+  // overflow: auto;
+  cursor: url('~/assets/svg/zoom-close.svg') 16 16, zoom-out;
+}
+
+.zoomable-image {
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+  width: 100%;
+  height: 100%;
+}
+
+.zoomable-exit-button{
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  width: 30px;
+  height: 30px;
+  background-image: url('~/assets/svg/zoom-close.svg');
+}

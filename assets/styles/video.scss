@@ -1,0 +1,17 @@
+
+.video-player {
+  &.video-js {
+    width: 100%;
+    height: 100%;
+    z-index: $z-video;
+  
+    .vjs-poster {
+      img {
+        object-fit: cover;
+      }
+    }
+    .vjs-tech {
+      object-fit: cover;
+    }
+  }
+}

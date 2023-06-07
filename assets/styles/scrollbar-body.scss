@@ -1,0 +1,48 @@
+@include media-breakpoint-up(lg) {
+  body::-webkit-scrollbar {
+    width: 12px;
+    /* width of the entire scrollbar */
+  }
+
+  body::-webkit-scrollbar-track {
+    background: #000;
+    /* color of the tracking area */
+  }
+
+  body::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-track-color, $scrollbar-track-color);
+    /* color of the scroll thumb */
+    border-radius: 0;
+    /* roundness of the scroll thumb */
+    border: 1px solid #000;
+    /* creates padding around scroll thumb */
+  }
+
+  body {
+    scrollbar-width: thin;
+    /* "auto" or "thin" */
+    scrollbar-color: var(--scrollbar-track-color, $scrollbar-track-color) #000;
+    /* scroll thumb and track */
+  }
+
+  /* Works on Firefox */
+  :root{
+    scrollbar-color: var(--scrollbar-track-color, $scrollbar-track-color) #000;
+    scrollbar-width: thin;
+  }
+  
+  /* Works on Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #000;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-track-color, $scrollbar-track-color);
+    border-radius: 0;
+    border: 1px solid #000;
+  }
+}

@@ -1,0 +1,38 @@
+/*********************
+BREAKPOINTS WITNESS
+**/
+body {
+  &:after {
+    content: 'sm';
+    position: fixed;
+    bottom: 50px;
+    right: 0;
+    width: 50px;
+    height: 30px;
+    font-size: 20px;
+    text-align: center;
+    background-color: #5a5a5a;
+    color: #ffffff;
+    z-index: 999999;
+
+    @include media-breakpoint-up(md) {
+      content: 'md';
+    }
+
+    @include media-breakpoint-up(lg) {
+      content: 'lg';
+    }
+
+    @include media-breakpoint-up(xl) {
+      content: 'xl';
+    }
+
+    @include media-breakpoint-up(xxl) {
+      content: 'xxl';
+    }
+    /* 
+    @include media-breakpoint-up(hd) {
+      content: 'hd' + hd;
+    } */
+  }
+}
