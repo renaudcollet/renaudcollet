@@ -95,29 +95,13 @@
       const storeDatas = useDatasStore()
       const project = storeDatas.projects.find(project => project.slug === route.params.id)
       const projectsFooter = storeDatas.projects.filter(project => project.slug !== route.params.id)
-
-      const oSeo = storeDatas.seo.sections[0]
-
-      // I don't know why, I can't use useHead() after receiving the data from the store in the default layout
-      useHead({
-        // titleTemplate: '%s - Accueil',
-        titleTemplate: '%s',
-        meta: [
-          { name: "description", content: oSeo.blocks[0].value },
-          { property: 'og:description', content: oSeo.blocks[0].value },
-          { property: 'og:image', content: oSeo.blocks[1].value },
-        ],
-        // bodyAttrs: {
-        //   class: 'test'
-      })
       
       return {
         project,
         projectsFooter,
         sections: project.sections,
         footer: storeDatas.footer,
-        items: project.sections.slice(1),
-        seo: oSeo
+        items: project.sections.slice(1)
       }
     },
 

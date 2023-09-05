@@ -46,16 +46,15 @@ export default {
 
   setup() {
     const storeDatas = useDatasStore()
-    const oSeo = storeDatas.seo.sections[0]
 
     // I don't know why, I can't use useHead() after receiving the data from the store in the default layout
     useHead({
       // titleTemplate: '%s - Accueil',
       titleTemplate: '%s',
       meta: [
-        { name: "description", content: oSeo.blocks[0].value },
-        { property: 'og:description', content: oSeo.blocks[0].value },
-        { property: 'og:image', content: oSeo.blocks[1].value },
+        { name: "description", content: datasSEO.blocks[0].value },
+        { property: 'og:description', content: datasSEO.blocks[0].value },
+        { property: 'og:image', content: datasSEO.blocks[1].value },
       ],
     })
 
@@ -63,8 +62,7 @@ export default {
       agence: storeDatas.agence.sections[0].blocks,
       metiers: storeDatas.agence.sections[1].blocks,
       projects: storeDatas.projects,
-      footer: storeDatas.footer,
-      seo: oSeo
+      footer: storeDatas.footer
     }
   },
 

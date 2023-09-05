@@ -1,7 +1,7 @@
 <template>
     <NuxtLink class="project-item project-item-this">
         <ClientOnly>
-            <ImagePlane class="project-item__image scroll-opacity scroll-opacity--no-translate" data-scroll-index="8" :src="src" object-fit="cover"/>
+            <ImagePlane class="project-item__image scroll-opacity scroll-opacity--no-translate" data-scroll-index="8" :src="config.public.backendUrl + src.large.url" object-fit="cover"/>
         </ClientOnly>
         <div class="project-item__text z-index-text" >
             <h1 class="project-item__title">
@@ -14,10 +14,10 @@
               </div>
             </h1>
             <div class="project-item__alt">
-                <div v-for="(item, index) in subtitle">
+                <div v-for="(item, index) in keywords">
                     <h3 class="project-item__subtitle scroll-opacity" :data-scroll-index="paraphToLines.length + index + 3">{{ item }}</h3>
                 </div>
-                <div class="project-item__button scroll-opacity" :data-scroll-index="paraphToLines.length + subtitle.length + 4">
+                <div class="project-item__button scroll-opacity" :data-scroll-index="paraphToLines.length + keywords.length + 4">
                     <svg x="0px" y="0px" viewBox="0 0 124 124">
                         <circle fill="rgb(255, 255, 255)" cx="62" cy="62" r="52"/>
                         <rect class="horiz" fill="rgb(0, 0, 0)" x="42" y="62" width="41" height="1"/>
@@ -31,6 +31,12 @@
         </div>
     </NuxtLink>
 </template>
+
+<script setup>
+
+const config = useRuntimeConfig()
+
+</script>
 
 <script>
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
@@ -52,14 +58,14 @@ export default {
         required: true,
     },
     src: {
-        type: String,
+        type: Object,
         required: true,
     },
     title: {
         type: String,
         required: true,
     },
-    subtitle: {
+    keywords: {
         type: Array,
         required: true,
     },

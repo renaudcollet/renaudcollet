@@ -4,126 +4,98 @@
       <img id="index-logo" class="logo" data-header-scroll-minimize src="~assets/svg/logo_groupie.svg" alt="">
     </div>
     <section class="projects-home">
-      <template v-for="(item, index) in projects">
+      <template v-for="(item, index) in datasProjets">
         <ProjectItem 
           class="projects-home__item" 
           :index="index" 
-          :src="item.sections[0].blocks[3].value" 
-          :to="`/work/${item.slug}`" 
-          :title="item.sections[0].blocks[0].value"
-          :subtitle="[item.sections[0].blocks[1].value, item.sections[0].blocks[2].value]" />
+          :src="item.attributes.cover.data.attributes.formats" 
+          :to="`/work/${item.attributes.slug}`" 
+          :title="item.attributes.titre"
+          :keywords="item.attributes.keywords.data" />
       </template>
     </section>
-    <Footer :projects="projectsFooter" :footer="footer"></Footer>
+    <!-- <Footer :projects="projectsFooter" :footer="footer"></Footer> -->
   </div>  
 </template>
 
-<script>              
-import scrollOpacity from '~~/mixins/scroll-opacity';
-import utilsDevice from '~~/mixins/utils-device.js';
-import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
-import { useDatasStore } from '~/stores/datas';
+<script setup>
+import { onMounted, onUnmounted } from "vue";
+import { useDatasStore, S_DATA_ACCUEIL, S_DATA_PROJECTS } from '~/stores/datas';
 import gsap from 'gsap';
 
-export default {
-  components: {},
+// import scrollOpacity from '~~/mixins/scroll-opacity';
+// import utilsDevice from '~~/mixins/utils-device.js';
+// import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
 
-  setup() {
-    const storeDatas = useDatasStore()
-    const oSeo = storeDatas.seo.sections[0]
+const storeDatas = useDatasStore();
+const { fetchDatas } = storeDatas;
+await fetchDatas(S_DATA_ACCUEIL);
+await fetchDatas(S_DATA_PROJECTS);
 
-    // if used in async setup() , I can't use useHead() after receiving the data from the store in the default layout
-    useHead({
-      // titleTemplate: '%s - Accueil',
-      titleTemplate: '%s',
-      meta: [
-        { name: "description", content: oSeo.blocks[0].value },
-        { property: 'og:description', content: oSeo.blocks[0].value },
-        { property: 'og:image', content: oSeo.blocks[1].value },
-      ],
-      // bodyAttrs: {
-      //   class: 'test'
-    })
+const datasAccueil = storeDatas.accueil.data.attributes;
+const datasProjets = storeDatas.projects.data;
 
-    return {
-      projects: storeDatas.projectsHome,
-      projectsFooter: storeDatas.projectsFooterHome,
-      footer: storeDatas.footer,
-      seo: oSeo,
+console.log('datasProjets', datasProjets);
+
+let ioLogo = null;
+
+onMounted(() => {
+  gsap.set('#header-logo', { translateX: -20, opacity: 0 })
+  gsap.set('#index-logo', { translateX: -20, opacity: 0 })
+  gsap.to('#index-logo', { delay: 1, translateX: 0, opacity: 1 })
+
+  // this.initLogoObserver()
+})
+
+onUnmounted(() => {
+  // this.clearLogoObserver()
+})
+
+
+const initLogoObserver = () => {
+  // header-logo is in Header.vue
+  gsap.set('#header-logo', { autoAlpha: 0 })
+  // Intersection Observer to trigger apparition of the logo on scroll
+  ioLogo = new IntersectionObserver((entries) => {
+    if (entries[0].intersectionRatio === 0) {
+      this.hideCoverLogo()
+      this.showHeaderLogo()
+    } else {
+      this.hideHeaderLogo()
+      this.showCoverLogo()
     }
-  },
-
-  data() {
-    return {
-      ioLogo: null,
-    }
-  },
-
-  mounted() {
-    gsap.set('#header-logo', { translateX: -20, opacity: 0 })
-    gsap.set('#index-logo', { translateX: -20, opacity: 0 })
-    gsap.to('#index-logo', { delay: 1, translateX: 0, opacity: 1 })
-
-    this.initLogoObserver()
-  },
-
-  unmounted() {
-    this.clearLogoObserver()
-  },
-
-  mixins: [
-    scrollOpacity,
-    utilsDevice,
-    scrollHeaderMinimize
-  ],
-
-  methods: {
-    initLogoObserver() {
-      // header-logo is in Header.vue
-      gsap.set('#header-logo', { autoAlpha: 0 })
-      // Intersection Observer to trigger apparition of the logo on scroll
-      this.ioLogo = new IntersectionObserver((entries) => {
-        if (entries[0].intersectionRatio === 0) {
-          this.hideCoverLogo()
-          this.showHeaderLogo()
-        } else {
-          this.hideHeaderLogo()
-          this.showCoverLogo()
-        }
-      });
-      this.ioLogo.observe(document.querySelector('#index-logo'));
-    },
-    clearLogoObserver() {
-      this.ioLogo.disconnect();
-    },
-    hideHeaderLogo() {
-      gsap.killTweensOf('#header-logo')
-      gsap.to('#header-logo', {
-        duration: 1,
-        translateX: -20,
-        autoAlpha: 0,
-        ease: 'power4.out',
-      })
-    },
-    showHeaderLogo() {
-      gsap.killTweensOf('#header-logo')
-      gsap.to('#header-logo', {
-        duration: 1,
-        translateX: 0,
-        autoAlpha: 1,
-        ease: 'power4.out',
-      })
-    },
-    hideCoverLogo() {
-      gsap.killTweensOf('#index-logo')
-      gsap.to('#index-logo', { translateX: -20, opacity: 0 })
-    },
-    showCoverLogo() {
-      gsap.killTweensOf('#index-logo')
-      gsap.to('#index-logo', { delay: 0.3, translateX: 0, opacity: 1 })
-    }
-  },
-};
+  });
+  ioLogo.observe(document.querySelector('#index-logo'));
+}
+const clearLogoObserver = () => {
+  ioLogo.disconnect();
+}
+const hideHeaderLogo = () => {
+  gsap.killTweensOf('#header-logo')
+  gsap.to('#header-logo', {
+    duration: 1,
+    translateX: -20,
+    autoAlpha: 0,
+    ease: 'power4.out',
+  })
+}
+const showHeaderLogo = () => {
+  gsap.killTweensOf('#header-logo')
+  gsap.to('#header-logo', {
+    duration: 1,
+    translateX: 0,
+    autoAlpha: 1,
+    ease: 'power4.out',
+  })
+}
+const hideCoverLogo = () => {
+  gsap.killTweensOf('#index-logo')
+  gsap.to('#index-logo', { translateX: -20, opacity: 0 })
+}
+const showCoverLogo = () => {
+  gsap.killTweensOf('#index-logo')
+  gsap.to('#index-logo', { delay: 0.3, translateX: 0, opacity: 1 })
+}
 </script>
 
 <style lang="scss" scoped>

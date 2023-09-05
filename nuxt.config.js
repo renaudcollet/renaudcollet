@@ -25,15 +25,15 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       appUrl: process.env.NUXT_APP_URL,
-      // backendUrl: process.env.NUXT_APP_BACKEND_URL,
-      apiUrl: process.env.NUXT_PREPROD_APP ? process.env.NUXT_PREPROD_API_URL : process.env.NUXT_PROD_API_URL,
+      backendUrl: process.env.NUXT_APP_BACKEND_URL,
+      apiUrl: process.env.NUXT_API_URL,
     }
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   app: {
     head: {
-      title: 'Groupie Paris',
+      title: 'Renaud COLLET - Frontend development',
       htmlAttrs: {
         lang: 'fr',
       },
@@ -46,9 +46,9 @@ export default defineNuxtConfig({
         // { name: 'msapplication-TileColor', content: '#da532c' },
         // { name: 'msapplication-TileImage', content: 'images/tileimage.jpg' },
         { name: 'apple-mobile-web-app-capable', content: 'yes' },
-        { property: 'og:url', content: 'https://groupieparis.com' },
+        { property: 'og:url', content: 'https://renaudcollet.com' },
         { property: 'og:type', content: 'website' },
-        { property: 'og:title', content: 'Groupie Paris' },
+        { property: 'og:title', content: 'Renaud COLLET - Développeur Frontend' },
         // { property: 'og:description', content: "Groupie Paris est un studio de création et de production de contenus." }, // Set with code
         // { property: 'og:image', content: "https://groupieparis.com/opengraph.jpg" }, // Set with code
       ],
@@ -63,9 +63,9 @@ export default defineNuxtConfig({
     },
   },
 
-  gtag: {
-    id: 'G-8P490KJ1F9' // can alos be set in .env https://github.com/johannschopplich/nuxt-gtag#runtime-config
-  },
+  // gtag: {
+  //   id: 'G-8P490KJ1F9' // can alos be set in .env https://github.com/johannschopplich/nuxt-gtag#runtime-config
+  // },
 
   // css
   css: [/* '~/assets/styles/vendor.scss',  */'~/assets/styles/main.scss'],

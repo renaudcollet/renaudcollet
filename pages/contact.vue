@@ -17,56 +17,46 @@
         <a :href="`mailto:${contact[8].value}`" class="scroll-opacity" data-scroll-index="7">{{contact[8].value}}</a>
       </p>
     </section>
-    <Footer :projects="projects" :footer="footer"></Footer>
+    <!-- <Footer :projects="projects" :footer="footer"></Footer> -->
   </div>  
 </template>
 
-<script>
-import scrollOpacity from '~~/mixins/scroll-opacity';
-import utilsDevice from '~~/mixins/utils-device.js';
-import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
+<script setup>
+// import scrollOpacity from '~~/mixins/scroll-opacity';
+// import utilsDevice from '~~/mixins/utils-device.js';
+// import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
+import { onMounted, onUnmounted, useHead } from "vue";
 import { useDatasStore } from '~/stores/datas';
 import gsap from 'gsap';
 
-export default {
-  components: {},
+const storeDatas = useDatasStore();
+const { fetchDatas } = storeDatas;
+await fetchDatas(S_DATA_ACCUEIL);
 
-  setup() {
-    const storeDatas = useDatasStore()
-    const oSeo = storeDatas.seo.sections[0]
+const datasAccueil = storeDatas.accueil.data.attributes;
 
-    // I don't know why, I can't use useHead() after receiving the data from the store in the default layout
-    useHead({
-      // titleTemplate: '%s - Accueil',
-      titleTemplate: '%s',
-      meta: [
-        { name: "description", content: oSeo.blocks[0].value },
-        { property: 'og:description', content: oSeo.blocks[0].value },
-        { property: 'og:image', content: oSeo.blocks[1].value },
-      ],
-      // bodyAttrs: {
-      //   class: 'test'
-    })
-
-    return {
-      contact: storeDatas.contact.sections[0].blocks,
-      projects: storeDatas.projects,
-      footer: storeDatas.footer,
-      seo: oSeo
-    }
-  },
-
-  mounted() {
-    gsap.killTweensOf('#header-logo')
-    gsap.to('#header-logo', { autoAlpha: 1 })
-  },
-
-  mixins: [
-    scrollOpacity,
-    utilsDevice,
-    scrollHeaderMinimize
+// I don't know why, I can't use useHead() after receiving the data from the store in the default layout
+useHead({
+  // titleTemplate: '%s - Accueil',
+  titleTemplate: '%s',
+  meta: [
+    { name: "description", content: datasSEO.blocks[0].value },
+    { property: 'og:description', content: datasSEO.blocks[0].value },
+    { property: 'og:image', content: datasSEO.blocks[1].value },
   ],
-};
+  // bodyAttrs: {
+  //   class: 'test'
+})
+
+onMounted(() => {
+  gsap.killTweensOf('#header-logo')
+  gsap.to('#header-logo', { autoAlpha: 1 })
+})
+
+onUnmounted(() => {
+  gsap.killTweensOf('#header-logo')
+  gsap.to('#header-logo', { autoAlpha: 0 })
+})
 </script>
 
 <style lang="scss" scoped>

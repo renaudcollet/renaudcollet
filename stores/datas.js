@@ -1,53 +1,108 @@
 import { defineStore } from 'pinia'
+// import {mande} from 'mande'
 
-import voca from 'voca';
-// toAlphaNumeric(str) {
-//   return str.replace(/[^0-9a-zA-Z_]/gi, '');
-// },
+export const S_DATA_ACCUEIL = 'accueil'
+export const S_DATA_CONTACT = 'contact'
+export const S_DATA_SEO = 'seo'
+export const S_DATA_AGENCE = 'agence'
+export const S_DATA_PROJECTS = 'projets'
 
 export const useDatasStore = defineStore( 'datas', {
+  
   state: () => ({
     datas: null,
+    accueil: null,
+    contact: null,
     seo: null,
     agence: null,
-    contact: null,
     projects: null,
-    projectsHome: null,
-    projectsFooterHome: null,
-    legals: null,
     footer: null
   }),
+
   actions: {
-    async fetchDatas(apiUrl) {
-      // console.log('FECH DATAS')
-      if (!this.datas) {
-        const {data} = await useFetch(`${apiUrl}/contenus`)
-        console.log('datas from store', data.value);
-        if (data.value) {
-          this.datas = data
-          this.seo = data.value.contenus.find((item) => item.structure_name === 'SEO')
-          this.contact = data.value.contenus.find((item) => item.structure_name === 'CONTACT')
-          this.agence = data.value.contenus.find((item) => item.structure_name === "AGENCE")
-          this.legals = data.value.contenus.find((item) => item.structure_name === "LEGAL")
-          this.footer = data.value.contenus.find((item) => item.structure_name === "FOOTER")
+    async fetchDatas(apiId) {
 
-          this.projects = []
+      switch (apiId) {
+        case S_DATA_ACCUEIL:
+          if (this.accueil) return
+          break;
+        case S_DATA_CONTACT:
+          if (this.contact) return
+          break;
+        case S_DATA_SEO:
+          if (this.seo) return
+          break;
+        case S_DATA_AGENCE:
+          if (this.agence) return
+          break;
+        case S_DATA_PROJECTS:
+          if (this.projects) return
+          break;
+        default:
+      }
+      
+      const config = useRuntimeConfig()
 
-          const aContenus = data.value.contenus
-          const nbContenus = aContenus.length
-          for (let i = 0; i < nbContenus; i++) {
-            const contenu = aContenus[i];
-            if (contenu.structure_name === 'PROJET') {
-              contenu.slug = voca.slugify(contenu.name)
-              this.projects.push(contenu)
-            } 
-          }
+      // console.log(config.public)
 
-          // console.log('this.projects', this.projects);
+      let query = { populate: '*' }
 
-          this.projectsHome = this.projects.slice(0, 5)
-          this.projectsFooterHome = this.projects.slice(5, 11)
+      if (apiId === S_DATA_PROJECTS) {
+        // Query sort by date:desc, and find content where Type = B et C 
+        // https://docs.strapi.io/dev-docs/api/rest/filters-locale-publication#example-find-multiple-restaurants-with-ids-3-68
+        // (
+        // NB : [$eq] peut lever une erreur de securité
+        // Answer : https://support.plesk.com/hc/en-us/articles/12377453278871
+        // Ajouter l'ID de la règle dans Web App Firewall -> Switch off security rules : 211760
+        // )
+        // query = { ...query, sort: 'Date:desc', 'filters[Type][$eq][0]': 'B et C', 'filters[Type][$eq][1]': this.currentFolder }
+        query = { populate: 'deep', sort: 'Date:desc' }
+      }
+      else if (apiId === S_DATA_CONTACT) {
+        query = { populate: 'deep' }
+      }
+      else if (apiId === S_DATA_ACCUEIL) {
+        query = { populate: 'deep' }
+      }
+      else if (apiId === S_DATA_SEO) {
+        query = { populate: 'deep' }
+      }
+      else if (apiId === S_DATA_AGENCE) {
+        query = { populate: 'deep' }
+      }
+      
+      console.log(`Fetch url ${config.public.apiUrl}/${apiId}`);
+
+      try {        
+        const { data, pending, error, refresh } = await useFetch(`${config.public.apiUrl}/${apiId}`, {
+          method: 'GET',
+          query
+        })
+        console.log(`Data from ${apiId}`, data);
+
+        switch (apiId) {
+          case S_DATA_CONTACT:
+            this.contact = data.value
+            break;
+          case S_DATA_ACCUEIL:
+            this.accueil = data.value
+            break;
+          case S_DATA_CONTACT:
+            this.contact = data.value
+            break;
+          case S_DATA_SEO:
+            this.seo = data.value
+            break;
+          case S_DATA_AGENCE:
+            this.agence = data.value
+            break;
+          case S_DATA_PROJECTS:
+            this.projects = data.value
+            break;
+          default:
         }
+      } catch(e) {
+        console.log(`Error fetching - ${e}`);
       }
     }
   }

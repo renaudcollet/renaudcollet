@@ -22,21 +22,19 @@ import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
 export default {
   setup() {
     const storeDatas = useDatasStore()
-    const oSeo = storeDatas.seo.sections[0]
 
     // I don't know why, I can't use useHead() after receiving the data from the store in the default layout
     useHead({
       // titleTemplate: '%s - Accueil',
       titleTemplate: '%s',
       meta: [
-        { name: "description", content: oSeo.blocks[0].value },
-        { property: 'og:description', content: oSeo.blocks[0].value },
-        { property: 'og:image', content: oSeo.blocks[1].value },
+        { name: "description", content: datasSEO.blocks[0].value },
+        { property: 'og:description', content: datasSEO.blocks[0].value },
+        { property: 'og:image', content: datasSEO.blocks[1].value },
       ],
     })
 
     return {
-      seo: oSeo,
       projects: storeDatas.projects,
       footer: storeDatas.footer,
       legals: storeDatas.legals.sections[0].blocks[0],
