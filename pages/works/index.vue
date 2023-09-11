@@ -1,54 +1,57 @@
 <template>
-  <div>
+  <div ref="root">
     <div class="container">
       <div class="container__header-minimize" data-header-scroll-minimize></div>
-      <h1 class="page__title scroll-opacity" data-scroll-index="0">Tous<br />nos projets&nbsp;<sub class="big-underscore">&nbsp;—</sub></h1>
+      <h1 class="page__title scroll-opacity" data-scroll-index="0">All<br />my works&nbsp;<sub class="big-underscore">&nbsp;—</sub></h1>
       <section class="projects-work">
-        <template v-for="(item, index) in projects">
+        <template v-for="(item, index) in datasProjets">
           <ProjectItem 
-            class="projects-work__item" 
-            :index="index" 
-            :src="item.sections[0].blocks[3].value"
-            :to="`/work/${item.slug}`"
-            :title="item.sections[0].blocks[0].value"
-            :subtitle="['Brand Content', 'Réseaux Sociaux']" 
-          />
+            class="projects-home__item" 
+            :id="index" 
+            :src="item.attributes.cover" 
+            :to="`/works/${item.attributes.slug}`" 
+            :title="item.attributes.titre"
+            :keywords="item.attributes.keywords.data" />
         </template>
       </section>
       <div class="space"></div>
     </div>
-    <Footer :footer="footer"></Footer>
+    <!-- <Footer :footer="footer"></Footer> -->
   </div>
 </template>
   
-<script>
-  import scrollOpacity from '~~/mixins/scroll-opacity';
-  import utilsDevice from '~~/mixins/utils-device.js';
-  import { useDatasStore } from '~/stores/datas';
-  import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
-  import gsap from 'gsap';
+<script setup>
+import { onMounted, onUnmounted, ref, nextTick } from "vue";
+import { useDatasStore, S_DATA_ACCUEIL, S_DATA_PROJECTS } from '~/stores/datas';
+import useScrollOpacity from '~/compositions/use-scroll-opacity';
+import useLogoObserver from '~/compositions/use-logo-observer';
+// import utilsDevice from '~~/mixins/utils-device.js';
+// import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
+import gsap from 'gsap';
 
-  export default {
-    setup() {
-      const storeDatas = useDatasStore()
+const storeDatas = useDatasStore();
+const { fetchDatas } = storeDatas;
+await fetchDatas(S_DATA_ACCUEIL);
+await fetchDatas(S_DATA_PROJECTS);
 
-      return {
-        projects: storeDatas.projects,
-        // footer: storeDatas.footer,
-      }
-    },
+const datasProjets = storeDatas.projects.data;
 
-    mounted() {
-      gsap.killTweensOf('#header-logo')
-      gsap.to('#header-logo', { autoAlpha: 1 })
-    },
-  
-    mixins: [
-      scrollOpacity,
-      utilsDevice,
-      scrollHeaderMinimize
-    ],
-  };
+const root = ref(null);
+const { initScrollOpacity, clearScrollOpacity } = useScrollOpacity();
+
+onMounted(() => {
+  gsap.killTweensOf('#header-logo')
+  gsap.to('#header-logo', { autoAlpha: 1 })
+
+  nextTick(() => {
+    initScrollOpacity(root.value)
+  })
+})
+
+onUnmounted(() => {
+  clearScrollOpacity()
+})
+
 </script>
   
 <style lang="scss" scoped>
