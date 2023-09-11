@@ -22,6 +22,7 @@
 import { onMounted, onUnmounted, ref } from "vue";
 import { useDatasStore, S_DATA_ACCUEIL, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollOpacity from '~/compositions/use-scroll-opacity';
+import useLogoObserver from '~/compositions/use-logo-observer';
 import gsap from 'gsap';
 
 // import utilsDevice from '~~/mixins/utils-device.js';
@@ -38,7 +39,8 @@ const datasProjets = storeDatas.projects.data;
 console.log('datasProjets', datasProjets);
 
 const root = ref(null);
-const {initScrollOpacity, clearScrollOpacity} = useScrollOpacity();
+const { initScrollOpacity, clearScrollOpacity } = useScrollOpacity();
+const { initLogoObserver, clearLogoObserver } = useLogoObserver();
 
 let ioLogo = null;
 
@@ -49,59 +51,14 @@ onMounted(() => {
 
   console.log('root', root);
   initScrollOpacity(root.value)
-  // this.initLogoObserver()
+  initLogoObserver()
 })
 
 onUnmounted(() => {
-  // this.clearLogoObserver()
   clearScrollOpacity()
+  clearLogoObserver()
 })
 
-
-const initLogoObserver = () => {
-  // header-logo is in Header.vue
-  gsap.set('#header-logo', { autoAlpha: 0 })
-  // Intersection Observer to trigger apparition of the logo on scroll
-  ioLogo = new IntersectionObserver((entries) => {
-    if (entries[0].intersectionRatio === 0) {
-      this.hideCoverLogo()
-      this.showHeaderLogo()
-    } else {
-      this.hideHeaderLogo()
-      this.showCoverLogo()
-    }
-  });
-  ioLogo.observe(document.querySelector('#index-logo'));
-}
-const clearLogoObserver = () => {
-  ioLogo.disconnect();
-}
-const hideHeaderLogo = () => {
-  gsap.killTweensOf('#header-logo')
-  gsap.to('#header-logo', {
-    duration: 1,
-    translateX: -20,
-    autoAlpha: 0,
-    ease: 'power4.out',
-  })
-}
-const showHeaderLogo = () => {
-  gsap.killTweensOf('#header-logo')
-  gsap.to('#header-logo', {
-    duration: 1,
-    translateX: 0,
-    autoAlpha: 1,
-    ease: 'power4.out',
-  })
-}
-const hideCoverLogo = () => {
-  gsap.killTweensOf('#index-logo')
-  gsap.to('#index-logo', { translateX: -20, opacity: 0 })
-}
-const showCoverLogo = () => {
-  gsap.killTweensOf('#index-logo')
-  gsap.to('#index-logo', { delay: 0.3, translateX: 0, opacity: 1 })
-}
 </script>
 
 <style lang="scss" scoped>
