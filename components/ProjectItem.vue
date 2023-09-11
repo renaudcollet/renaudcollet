@@ -16,7 +16,7 @@
             <div class="project-item__alt">
                 <div v-for="(item, index) in keywords">
                     <h3 class="project-item__subtitle scroll-opacity" :data-scroll-index="paraphToLines.length + index + 3">{{ item }}</h3>
-                </div>
+                </div> 
                 <div class="project-item__button scroll-opacity" :data-scroll-index="paraphToLines.length + keywords.length + 4">
                     <svg x="0px" y="0px" viewBox="0 0 124 124">
                         <circle fill="rgb(255, 255, 255)" cx="62" cy="62" r="52"/>

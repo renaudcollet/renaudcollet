@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="root">
     <div class="header">
       <img id="index-logo" class="logo" data-header-scroll-minimize src="~assets/svg/logo_groupie.svg" alt="">
     </div>
@@ -9,7 +9,7 @@
           class="projects-home__item" 
           :index="index" 
           :src="item.attributes.cover.data.attributes.formats" 
-          :to="`/work/${item.attributes.slug}`" 
+          :to="`/works/${item.attributes.slug}`" 
           :title="item.attributes.titre"
           :keywords="item.attributes.keywords.data" />
       </template>
@@ -19,11 +19,11 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { useDatasStore, S_DATA_ACCUEIL, S_DATA_PROJECTS } from '~/stores/datas';
+import useScrollOpacity from '~/compositions/use-scroll-opacity';
 import gsap from 'gsap';
 
-// import scrollOpacity from '~~/mixins/scroll-opacity';
 // import utilsDevice from '~~/mixins/utils-device.js';
 // import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
 
@@ -37,6 +37,9 @@ const datasProjets = storeDatas.projects.data;
 
 console.log('datasProjets', datasProjets);
 
+const root = ref(null);
+const {initScrollOpacity, clearScrollOpacity} = useScrollOpacity();
+
 let ioLogo = null;
 
 onMounted(() => {
@@ -44,11 +47,14 @@ onMounted(() => {
   gsap.set('#index-logo', { translateX: -20, opacity: 0 })
   gsap.to('#index-logo', { delay: 1, translateX: 0, opacity: 1 })
 
+  console.log('root', root);
+  initScrollOpacity(root.value)
   // this.initLogoObserver()
 })
 
 onUnmounted(() => {
   // this.clearLogoObserver()
+  clearScrollOpacity()
 })
 
 

@@ -16,8 +16,8 @@
         <div class="header__menu__button__label">Menu</div>
       </div>
       <div class="header__menu__content">
-        <NuxtLink class="menu-item" to="/work" v-on:click="onClickItem">Nos campagnes</NuxtLink>
-        <NuxtLink class="menu-item" to="/agence" v-on:click="onClickItem">L'agence</NuxtLink>
+        <NuxtLink class="menu-item" to="/works" v-on:click="onClickItem">Works</NuxtLink>
+        <NuxtLink class="menu-item" to="/about" v-on:click="onClickItem">About</NuxtLink>
         <NuxtLink class="menu-item" to="/contact" v-on:click="onClickItem">Contact</NuxtLink>
         <div class="header__menu__content__logo menu-item">
           <NuxtLink class="logo" to="/" v-on:click="onClickItem"></NuxtLink>
