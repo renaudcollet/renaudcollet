@@ -1,7 +1,7 @@
 <template>
     <NuxtLink class="project-item project-item-this">
         <ClientOnly>
-            <ImagePlane class="project-item__image scroll-opacity scroll-opacity--no-translate" data-scroll-index="8" :src="config.public.backendUrl + src.large.url" object-fit="cover"/>
+            <ImagePlane class="project-item__image scroll-opacity scroll-opacity--no-translate" data-scroll-index="0" :src="config.public.backendUrl + src.data.attributes.formats.large.url" object-fit="cover"/>
         </ClientOnly>
         <div class="project-item__text z-index-text" >
             <h1 class="project-item__title">
@@ -53,7 +53,7 @@ export default {
     };
   },
   props: {
-    index: {
+    id: {
         type: Number,
         required: true,
     },

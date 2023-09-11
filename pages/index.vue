@@ -7,8 +7,8 @@
       <template v-for="(item, index) in datasProjets">
         <ProjectItem 
           class="projects-home__item" 
-          :index="index" 
-          :src="item.attributes.cover.data.attributes.formats" 
+          :id="index" 
+          :src="item.attributes.cover" 
           :to="`/works/${item.attributes.slug}`" 
           :title="item.attributes.titre"
           :keywords="item.attributes.keywords.data" />
@@ -19,24 +19,20 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref, nextTick } from "vue";
 import { useDatasStore, S_DATA_ACCUEIL, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollOpacity from '~/compositions/use-scroll-opacity';
 import useLogoObserver from '~/compositions/use-logo-observer';
 import gsap from 'gsap';
-
-// import utilsDevice from '~~/mixins/utils-device.js';
-// import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
 
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
 await fetchDatas(S_DATA_ACCUEIL);
 await fetchDatas(S_DATA_PROJECTS);
 
-const datasAccueil = storeDatas.accueil.data.attributes;
+// const datasAccueil = storeDatas.accueil.data.attributes;
 const datasProjets = storeDatas.projects.data;
-
-console.log('datasProjets', datasProjets);
+// console.log('datasProjets', datasProjets);
 
 const root = ref(null);
 const { initScrollOpacity, clearScrollOpacity } = useScrollOpacity();
@@ -48,10 +44,12 @@ onMounted(() => {
   gsap.set('#header-logo', { translateX: -20, opacity: 0 })
   gsap.set('#index-logo', { translateX: -20, opacity: 0 })
   gsap.to('#index-logo', { delay: 1, translateX: 0, opacity: 1 })
-
-  console.log('root', root);
-  initScrollOpacity(root.value)
+  
   initLogoObserver()
+
+  nextTick(() => {
+    initScrollOpacity(root.value)
+  })
 })
 
 onUnmounted(() => {
