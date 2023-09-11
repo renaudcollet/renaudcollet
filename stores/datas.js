@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 export const S_DATA_ACCUEIL = 'accueil'
 export const S_DATA_CONTACT = 'contact'
 export const S_DATA_SEO = 'seo'
-export const S_DATA_AGENCE = 'agence'
+export const S_DATA_ABOUT = 'agence'
 export const S_DATA_PROJECTS = 'projets'
 
 export const useDatasStore = defineStore( 'datas', {
@@ -14,7 +14,7 @@ export const useDatasStore = defineStore( 'datas', {
     accueil: null,
     contact: null,
     seo: null,
-    agence: null,
+    about: null,
     projects: null,
     footer: null
   }),
@@ -32,8 +32,8 @@ export const useDatasStore = defineStore( 'datas', {
         case S_DATA_SEO:
           if (this.seo) return
           break;
-        case S_DATA_AGENCE:
-          if (this.agence) return
+        case S_DATA_ABOUT:
+          if (this.about) return
           break;
         case S_DATA_PROJECTS:
           if (this.projects) return
@@ -67,7 +67,7 @@ export const useDatasStore = defineStore( 'datas', {
       else if (apiId === S_DATA_SEO) {
         query = { populate: 'deep' }
       }
-      else if (apiId === S_DATA_AGENCE) {
+      else if (apiId === S_DATA_ABOUT) {
         query = { populate: 'deep' }
       }
       
@@ -93,8 +93,8 @@ export const useDatasStore = defineStore( 'datas', {
           case S_DATA_SEO:
             this.seo = data.value
             break;
-          case S_DATA_AGENCE:
-            this.agence = data.value
+          case S_DATA_ABOUT:
+            this.about = data.value
             break;
           case S_DATA_PROJECTS:
             this.projects = data.value
