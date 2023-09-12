@@ -12,7 +12,7 @@
 <script setup>
 import { onMounted, onUnmounted, watch, ref, computed } from "vue";
 import { useDatasStore, S_DATA_SEO } from '~/stores/datas';
-import gsap from 'gsap';
+// import gsap from 'gsap';
 
 // import Lenis from '@studio-freight/lenis';
 // import Cover3D from '~/components/webgl/Cover3D.vue'
@@ -53,8 +53,8 @@ watch(route, (to, from) => {
     'set', 'page_title', to
   )
     
-  showScrollArrow = route.name === 'index'
-  lenis.scrollTo(0, 0)
+  // showScrollArrow = route.name === 'index'
+  // lenis.scrollTo(0, 0)
 })
 
 onMounted(() => {

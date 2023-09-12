@@ -74,7 +74,7 @@
 </template>
   
 <script>
-  import scrollOpacity from "~/mixins/scroll-opacity";
+  // import scrollOpacity from "~/mixins/scroll-opacity";
   import utilsDevice from '~~/mixins/utils-device.js';
   import { useDatasStore } from '~/stores/datas';
   import ImagePlane from '~/components/webgl/ImagePlane.vue';
@@ -142,7 +142,7 @@
     },
 
     mixins: [
-      scrollOpacity,
+      // scrollOpacity,
       utilsDevice,
       scrollHeaderMinimize
     ],

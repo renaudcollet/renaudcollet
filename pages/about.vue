@@ -26,29 +26,11 @@
         <p class=" scroll-opacity" data-scroll-index="10" v-html="metiers[11].value"></p>
       </div> -->
     </section>
-    <!-- <section id="contact">
-      <div class="header-minimize" data-header-scroll-minimize></div>
-      <h1 class="scroll-opacity" data-scroll-index="0">Contact<sub class="big-underscore"> —</sub></h1>
-      <p>
-        <span class="scroll-opacity" data-scroll-index="1">{{contact[0].value}}</span><br />
-        <a :href="`tel:${contact[1].value}`" class="scroll-opacity" data-scroll-index="2">{{contact[1].value}}</a>
-      </p>
-      <p>
-        <span class="scroll-opacity" data-scroll-index="3">{{contact[3].value}}</span><br />
-        <a :href="`tel:${contact[4].value}`" class="scroll-opacity" data-scroll-index="4">{{contact[4].value}}</a><br />
-        <a :href="`mailto:${contact[5].value}`" class="scroll-opacity" data-scroll-index="5">{{contact[5].value}}</a>
-      </p>
-      <p>
-        <span class="scroll-opacity" data-scroll-index="6">{{contact[7].value}}</span><br />
-        <a :href="`mailto:${contact[8].value}`" class="scroll-opacity" data-scroll-index="7">{{contact[8].value}}</a>
-      </p>
-    </section> -->
     <!-- <Footer :projects="projects" :footer="footer"></Footer> -->
   </div>  
 </template>
 
 <script setup>
-// import scrollOpacity from '~~/mixins/scroll-opacity';
 // import utilsDevice from '~~/mixins/utils-device.js';
 // import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
 import { onMounted, onUnmounted, ref, nextTick } from "vue";
