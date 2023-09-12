@@ -1,51 +1,30 @@
 <template>
   <div class="work-item-1">
-    <div class="work-item-1__context">
-      <div class="work-item-1__context__image scroll-opacity scroll-opacity--no-translate" data-scroll-index="0">
-        <ClientOnly>
-          <ImagePlane 
-            :src="src" 
-            alt=""
-          />
-        </ClientOnly>
-      </div>
-      <div class="work-item-1__context__col z-index-text">
-        <h3 class="work-item-1__context__title scroll-opacity" data-scroll-index="1">Contexte</h3>
-        <p class="work-item-1__context__text scroll-opacity" data-scroll-index="2" v-html="context"></p>
-      </div>
-    </div>
-    <div v-if="answer !== ''" class="work-item-1__answer z-index-text">
-      <h3 class="work-item-1__answer__title scroll-opacity" data-scroll-index="0">Notre réponse</h3>
-      <p class="work-item-1__answer__text scroll-opacity"  data-scroll-index="1" v-html="answer"></p>
+    <div class="work-item-1__answer z-index-text">
+      <h3 class="work-item-1__answer__title scroll-opacity" data-scroll-index="0">{{ title }}</h3>
+      <div v-if="content" class="work-item-1__answer__text scroll-opacity"  data-scroll-index="1" v-html="content"></div>
     </div>
   </div>
 </template>
 
 <script>
-import ImagePlane from '~/components/webgl/ImagePlane.vue';
-import utilsDevice from '~~/mixins/utils-device.js';
+/* 
+  Component : title and/or Resume 
+*/
 
 export default {
-  components: {
-    ImagePlane,
-  },
-  mixins: [utilsDevice],
   props: {
-    src: {
+    title: {
       type: String,
       required: true,
     },
-    context: {
+    content: {
       type: String,
-      required: true,
-    },
-    answer: {
-      type: String,
-      required: true,
+      required: false,
     },
     onRender: {
       type: Function,
-      required: true,
+      required: false,
     },
   }
 }

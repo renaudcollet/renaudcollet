@@ -33,12 +33,15 @@
         </svg>
       </div>
       <h3 class="work-item-2__content__title scroll-opacity" data-scroll-index="1" v-html="titleUnderscore"></h3>
-      <p class="work-item-2__content__text scroll-opacity" data-scroll-index="2" v-html="content"></p>
+      <div class="work-item-2__content__text scroll-opacity" data-scroll-index="2" v-html="content"></div>
     </div>
   </div>
 </template>
 
 <script>
+/* 
+  Component : Titre / Resume / Image / Video 
+*/
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
 import VideoComponent from '~/components/video/VideoComponent.vue';
 import utilsDevice from '~~/mixins/utils-device.js';
@@ -57,7 +60,7 @@ export default {
     },
     content: {
       type: String,
-      required: true,
+      required: false,
     },
     src: {
       type: String,
@@ -71,7 +74,7 @@ export default {
     },
     onRender: {
       type: Function,
-      required: true,
+      required: false,
     },
   }, 
   data() {

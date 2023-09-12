@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div ref="root" class="page">
     <section class="cover-top">
       <div class="cover-top__image">
         <picture>
@@ -43,30 +43,28 @@
       </div> 
     </section>
     <section class="projects">
-      <!-- <WorkItem1 
-        v-if="sections[0].blocks[7].value !== ''"
-        :src="sections[0].blocks[8].value"
-        :context="sections[0].blocks[7].value"
-        :answer="sections[0].blocks[9].value" 
-      /> -->
-      <!-- <WorkItem2 
-        v-if="sections[0].blocks[13].value !== ''"
-        :video-src="sections[0].blocks[14].value"
-        :src="sections[0].blocks[13].value"
-        :title="sections[0].blocks[11].value"
-        :content="sections[0].blocks[12].value"
-      /> -->
-      <!-- <div class="workitem3-container">
-        <template v-for="(item, index) in items">
-          <WorkItem3 
-            :index="index" 
-            :src="item.blocks[2].value" 
-            :video-src="item.blocks[3].value"
-            :content="{title: item.blocks[0].value, content: item.blocks[1].value}" 
-            :class="{'right': index%4 === 0, 'left': index%4 === 2}"
-          />
-        </template>
-      </div> -->
+      <template v-for="(item, index) in currentProjectBlocs">
+        <WorkItem1
+          v-if="item.Image.data === null && item.Video.data === null"
+          :title="item.Titre"
+          :content="item.Resume"
+        />
+        <WorkItem2 
+          v-else-if="item.type === 'Big'"
+          :src="item.Image.data ? config.public.backendUrl + item.Image.data.attributes.formats.large.url : null" 
+          :video-src="item.Video.data ? config.public.backendUrl + item.Video.data.attributes.url : null"
+          :title="item.Titre"
+          :content="item.Resume"
+        />
+        <WorkItem3 
+          v-else-if="item.type === 'Small'"
+          :index="index" 
+          :src="item.Image.data ? config.public.backendUrl + item.Image.data.attributes.formats.large.url : null" 
+          :video-src="item.Video.data ? config.public.backendUrl + item.Video.data.attributes.url : null"
+          :content="{title: item.Titre, content: item.Resume}" 
+          :class="{'right': index%4 === 0, 'left': index%4 === 2}"
+        />
+      </template>
     </section>
     <!-- <Footer :projects="projectsFooter" :footer="footer"></Footer> -->
     <!-- <img :class="showScrollArrow ? 'active' : ''" class="scroll-arrow" src="~~/assets/svg/scroll.svg" width="50px" height="50px" alt=""> -->
@@ -75,7 +73,8 @@
   
 <script setup>
 import { useDatasStore, S_DATA_PROJECTS } from '~/stores/datas';
-import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
+import useScrollOpacity from '~/compositions/use-scroll-opacity';
+// import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
 import gsap from 'gsap';
 
 const storeDatas = useDatasStore();
@@ -95,7 +94,11 @@ const currentProject = datasProjets.find(project => {
 
 const currentProjectId = currentProject.id
 const currentProjectCover = currentProject.attributes.cover.data.attributes
-// console.log('currentProject', currentProject);
+const currentProjectBlocs = currentProject.attributes.bloc
+
+const root = ref(null);
+const { initScrollOpacity, clearScrollOpacity } = useScrollOpacity();
+
 
 onMounted(() => {
   gsap.killTweensOf('#header-logo')
@@ -106,6 +109,14 @@ onMounted(() => {
   // https://github.com/johannschopplich/nuxt-gtag
   // const route = useRoute()
   // useTrackEvent('work-id-page', route.params.id)
+
+  nextTick(() => {
+    initScrollOpacity(root.value)
+  })
+})
+
+onUnmounted(() => {
+  clearScrollOpacity()
 })
 
   //   computed: {
