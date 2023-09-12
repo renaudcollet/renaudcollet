@@ -104,8 +104,8 @@ onMounted(() => {
   // gtag
   // https://developers.google.com/tag-platform/gtagjs/reference/events?hl=fr#page_view -> should I use page_view ?
   // https://github.com/johannschopplich/nuxt-gtag
-  const route = useRoute()
-  useTrackEvent('work-id-page', route.params.id)
+  // const route = useRoute()
+  // useTrackEvent('work-id-page', route.params.id)
 })
 
   //   computed: {
