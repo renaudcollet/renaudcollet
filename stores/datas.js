@@ -43,8 +43,6 @@ export const useDatasStore = defineStore( 'datas', {
       
       const config = useRuntimeConfig()
 
-      // console.log(config.public)
-
       let query = { populate: '*' }
 
       if (apiId === S_DATA_PROJECTS) {
@@ -56,6 +54,7 @@ export const useDatasStore = defineStore( 'datas', {
         // Ajouter l'ID de la règle dans Web App Firewall -> Switch off security rules : 211760
         // )
         // query = { ...query, sort: 'Date:desc', 'filters[Type][$eq][0]': 'B et C', 'filters[Type][$eq][1]': this.currentFolder }
+        // ?filters[slug][$eq]=mon-projet-1
         query = { populate: 'deep', sort: 'Date:desc' }
       }
       else if (apiId === S_DATA_CONTACT) {
@@ -78,7 +77,7 @@ export const useDatasStore = defineStore( 'datas', {
           method: 'GET',
           query
         })
-        console.log(`Data from ${apiId}`, data);
+        // console.log(`Data from ${apiId}`, data);
 
         switch (apiId) {
           case S_DATA_CONTACT:

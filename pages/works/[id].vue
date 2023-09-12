@@ -4,59 +4,59 @@
       <div class="cover-top__image">
         <picture>
           <source
-            :srcset="sections[0].blocks[3].value"
+            :srcset="config.public.backendUrl + currentProjectCover.formats.large.url"
             media="(min-width: 2050px) and (orientation: landscape)"
           />
           <source
-            :srcset="sections[0].blocks[3].value"
+            :srcset="config.public.backendUrl + currentProjectCover.formats.large.url"
             media="(orientation: landscape)"
           />
           <source
-            :srcset="sections[0].blocks[4].value"
+            :srcset="config.public.backendUrl + currentProjectCover.formats.large.url"
             media="(min-width: 600px) and (orientation: portrait)"
           />
           <img
-            :srcset="sections[0].blocks[4].value"
-            alt="Titre de l'image"
+            :srcset="config.public.backendUrl + currentProjectCover.formats.medium.url"
+            alt=""
           />
         </picture>
       </div>
       <div class="cover-top__title z-index-text">
         <div class="cover-top__title__header-minimize" data-header-scroll-minimize></div>
         <h1 class="cover-top__title__brand">
-          <div
+          <!-- <div
             v-for="(line, index) in paraphToLines"
             :key="index"
             class="line"
           >
             <div class="scroll-opacity" :data-scroll-index="index">{{ line.trim() }}</div>
-          </div> 
+          </div>  -->
         </h1>
-        <div
+        <!-- <div
           class="cover-top__title__project scroll-opacity"
           :data-scroll-index="paraphToLinesLength + 1"
         >{{ sections[0].blocks[1].value }}</div>
         <div
           class="cover-top__title__project scroll-opacity"
           :data-scroll-index="paraphToLinesLength + 2"
-        >{{ sections[0].blocks[2].value }}</div>
-      </div>
+        >{{ sections[0].blocks[2].value }}</div>-->
+      </div> 
     </section>
     <section class="projects">
-      <WorkItem1 
+      <!-- <WorkItem1 
         v-if="sections[0].blocks[7].value !== ''"
         :src="sections[0].blocks[8].value"
         :context="sections[0].blocks[7].value"
         :answer="sections[0].blocks[9].value" 
-      />
-      <WorkItem2 
+      /> -->
+      <!-- <WorkItem2 
         v-if="sections[0].blocks[13].value !== ''"
         :video-src="sections[0].blocks[14].value"
         :src="sections[0].blocks[13].value"
         :title="sections[0].blocks[11].value"
         :content="sections[0].blocks[12].value"
-      />
-      <div class="workitem3-container">
+      /> -->
+      <!-- <div class="workitem3-container">
         <template v-for="(item, index) in items">
           <WorkItem3 
             :index="index" 
@@ -66,87 +66,56 @@
             :class="{'right': index%4 === 0, 'left': index%4 === 2}"
           />
         </template>
-      </div>
+      </div> -->
     </section>
-    <Footer :projects="projectsFooter" :footer="footer"></Footer>
-    <img :class="showScrollArrow ? 'active' : ''" class="scroll-arrow" src="~~/assets/svg/scroll.svg" width="50px" height="50px" alt="">
+    <!-- <Footer :projects="projectsFooter" :footer="footer"></Footer> -->
+    <!-- <img :class="showScrollArrow ? 'active' : ''" class="scroll-arrow" src="~~/assets/svg/scroll.svg" width="50px" height="50px" alt=""> -->
   </div>
 </template>
   
-<script>
-  // import scrollOpacity from "~/mixins/scroll-opacity";
-  import utilsDevice from '~~/mixins/utils-device.js';
-  import { useDatasStore } from '~/stores/datas';
-  import ImagePlane from '~/components/webgl/ImagePlane.vue';
-  import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
-  import gsap from 'gsap';
-  
-  export default {
-    components: {
-      ImagePlane
-    },
+<script setup>
+import { useDatasStore, S_DATA_PROJECTS } from '~/stores/datas';
+import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
+import gsap from 'gsap';
 
-    data: {
-      showScrollArrow: true,
-    },
+const storeDatas = useDatasStore();
+const { fetchDatas } = storeDatas;
+await fetchDatas(S_DATA_PROJECTS);
 
-    setup() {
-      const route = useRoute()
-      const storeDatas = useDatasStore()
-      const project = storeDatas.projects.find(project => project.slug === route.params.id)
-      const projectsFooter = storeDatas.projects.filter(project => project.slug !== route.params.id)
-      
-      return {
-        project,
-        projectsFooter,
-        sections: project.sections,
-        footer: storeDatas.footer,
-        items: project.sections.slice(1)
-      }
-    },
+const config = useRuntimeConfig()
+const route = useRoute()
+console.log('route.params.id', route.params.id);
 
-    mounted() {
-      gsap.killTweensOf('#header-logo')
-      gsap.to('#header-logo', { autoAlpha: 1 })
+const datasProjets = storeDatas.projects.data;
 
-      // gtag
-      // https://developers.google.com/tag-platform/gtagjs/reference/events?hl=fr#page_view -> should I use page_view ?
-      // https://github.com/johannschopplich/nuxt-gtag
-      const route = useRoute()
-      useTrackEvent('work-id-page', route.params.id)
+const currentProject = datasProjets.find(project => {
+  // console.log('project.slug', project.attributes.slug);
+  return project.attributes.slug === route.params.id
+})
 
-      window.addEventListener('scroll', this.onScroll)
-    },
+const currentProjectId = currentProject.id
+const currentProjectCover = currentProject.attributes.cover.data.attributes
+// console.log('currentProject', currentProject);
 
-    unmounted(){
-      window.removeEventListener('scroll', this.onScroll)
-    },  
+onMounted(() => {
+  gsap.killTweensOf('#header-logo')
+  gsap.to('#header-logo', { autoAlpha: 1 })
 
-    computed: {
-      paraphToLines() {
-        return this.sections[0].blocks[0].value.split('<br />');
-      },
-      paraphToLinesLength() {
-        return this.paraphToLines.length;
-      },
-    },
+  // gtag
+  // https://developers.google.com/tag-platform/gtagjs/reference/events?hl=fr#page_view -> should I use page_view ?
+  // https://github.com/johannschopplich/nuxt-gtag
+  const route = useRoute()
+  useTrackEvent('work-id-page', route.params.id)
+})
 
-    methods: {
-      onScroll() {
-        let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-        let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        height -= window.innerHeight
-        let scroll = winScroll / height;
-        this.showScrollArrow = scroll < 1
-      },
-    },
-
-    mixins: [
-      // scrollOpacity,
-      utilsDevice,
-      scrollHeaderMinimize
-    ],
-  };
+  //   computed: {
+  //     paraphToLines() {
+  //       return this.sections[0].blocks[0].value.split('<br />');
+  //     },
+  //     paraphToLinesLength() {
+  //       return this.paraphToLines.length;
+  //     },
+  //   },
 </script>
   
 <style lang="scss" scoped>
