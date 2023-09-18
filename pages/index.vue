@@ -4,7 +4,7 @@
       <img id="index-logo" class="logo" data-header-scroll-minimize src="~assets/svg/logo_groupie.svg" alt="">
     </div>
     <section class="projects-home">
-      <template v-for="(item, index) in datasProjets">
+      <template v-for="(item, index) in storeDatas.projectsFiltered">
         <ProjectItem 
           class="projects-home__item" 
           :id="index" 
@@ -19,7 +19,6 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, ref, nextTick } from "vue";
 import { useDatasStore, S_DATA_ACCUEIL, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollOpacity from '~/compositions/use-scroll-opacity';
 import useLogoObserver from '~/compositions/use-logo-observer';
@@ -30,15 +29,16 @@ const { fetchDatas } = storeDatas;
 await fetchDatas(S_DATA_ACCUEIL);
 await fetchDatas(S_DATA_PROJECTS);
 
-// const datasAccueil = storeDatas.accueil.data.attributes;
-const datasProjets = storeDatas.projects.data;
-// console.log('datasProjets', datasProjets);
-
 const root = ref(null);
 const { initScrollOpacity, clearScrollOpacity } = useScrollOpacity();
 const { initLogoObserver, clearLogoObserver } = useLogoObserver();
 
-let ioLogo = null;
+watch(() => storeDatas.projectsFiltered, (newVal, oldVal) => {
+  // console.log('watch projectsFiltered', newVal, oldVal);
+  nextTick(() => {
+    initScrollOpacity(root.value)
+  })
+})
 
 onMounted(() => {
   gsap.set('#header-logo', { translateX: -20, opacity: 0 })

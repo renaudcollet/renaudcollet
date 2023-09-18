@@ -6,6 +6,7 @@ export const S_DATA_CONTACT = 'contact'
 export const S_DATA_SEO = 'seo'
 export const S_DATA_ABOUT = 'agence'
 export const S_DATA_PROJECTS = 'projets'
+export const S_DATA_KEYWORDS = 'keywords'
 
 export const useDatasStore = defineStore( 'datas', {
   
@@ -16,10 +17,21 @@ export const useDatasStore = defineStore( 'datas', {
     seo: null,
     about: null,
     projects: null,
-    footer: null
+    projectsById: null,
+    projectsFiltered: null,
+    footer: null,
+    keywords: null,
   }),
 
   actions: {
+    filterProjects(aProjects) {
+      this.projectsFiltered = []
+      aProjects.forEach(project => {
+        this.projectsFiltered.push(this.projectsById[project.id])
+      })
+      console.log('Filtered projectsFiltered', this.projectsFiltered);
+    },
+
     async fetchDatas(apiId) {
 
       switch (apiId) {
@@ -37,6 +49,9 @@ export const useDatasStore = defineStore( 'datas', {
           break;
         case S_DATA_PROJECTS:
           if (this.projects) return
+          break;
+        case S_DATA_KEYWORDS:
+          if (this.keywords) return
           break;
         default:
       }
@@ -56,6 +71,10 @@ export const useDatasStore = defineStore( 'datas', {
         // query = { ...query, sort: 'Date:desc', 'filters[Type][$eq][0]': 'B et C', 'filters[Type][$eq][1]': this.currentFolder }
         // ?filters[slug][$eq]=mon-projet-1
         query = { populate: 'deep', sort: 'Date:desc' }
+      }
+      else if (apiId === S_DATA_KEYWORDS) {
+        // TODO: Should only return id of related projects
+        query = { populate: 'deep' }
       }
       else if (apiId === S_DATA_CONTACT) {
         query = { populate: 'deep' }
@@ -96,7 +115,15 @@ export const useDatasStore = defineStore( 'datas', {
             this.about = data.value
             break;
           case S_DATA_PROJECTS:
-            this.projects = data.value
+            this.projects = data.value.data
+            this.projectsById = {}
+            this.projects.forEach(project => {
+              this.projectsById[project.id] = project
+            })
+            this.projectsFiltered = data.value.data // includes all projects by default
+            break;
+          case S_DATA_KEYWORDS:
+            this.keywords = data.value
             break;
           default:
         }
