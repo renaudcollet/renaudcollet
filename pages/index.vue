@@ -1,7 +1,12 @@
 <template>
   <div ref="root">
     <div class="header">
-      <img id="index-logo" class="logo" data-header-scroll-minimize src="~assets/svg/logo_groupie.svg" alt="">
+      <div id="index-logo" class="logo" data-header-scroll-minimize alt="">
+        <svg height="50" width="50">
+          <polygon points="0,50 25,0 50,50" fill="none" stroke="#fff" stroke-width="1" />
+        </svg>
+        <span>Renaud COLLET</span>
+      </div>
     </div>
     <section class="projects-home">
       <template v-for="(item, index) in storeDatas.projectsFiltered">

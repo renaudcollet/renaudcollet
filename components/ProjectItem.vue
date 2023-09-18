@@ -25,7 +25,8 @@
         </div>
         <div class="project-item__button scroll-opacity" :data-scroll-index="paraphToLines.length + keywords.length + 4">
           <svg x="0px" y="0px" viewBox="0 0 124 124">
-            <circle fill="rgb(255, 255, 255)" cx="62" cy="62" r="52" />
+            <!-- <circle fill="rgb(255, 255, 255)" cx="62" cy="62" r="52" /> -->
+            <polygon points="0,50 25,0 50,50" fill="#fff" stroke="#fff" stroke-width="1" />
             <rect class="horiz" fill="rgb(0, 0, 0)" x="42" y="62" width="41" height="1" />
             <g class="vert">
               <rect class="vert1" fill="rgb(0, 0, 0)" x="62" y="42" width="1" height="20" />
@@ -256,7 +257,7 @@ const paraphToLines = computed(() => {
         order: 2;
         right: auto;
         top: auto;
-        width: 478.461538px;
+        width: 100%;
         height: 269.230769px;
       }
 
@@ -265,7 +266,7 @@ const paraphToLines = computed(() => {
         order: 2;
         right: auto;
         top: auto;
-        width: 622px;
+        // width: 622px;
         height: 350px;
       }
     }
