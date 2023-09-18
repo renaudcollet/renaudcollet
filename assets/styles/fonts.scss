@@ -10,25 +10,13 @@
 900	Black (Heavy)
 **/
 
+@import url('//fonts.googleapis.com/css2?family=Poppins:wght@100;200;400;500;600;700&display=swap');
+
 .font-main {
   font-family: $font-main;
   @supports (font-variation-settings: normal) {
     font-family: 'FigtreeVF';
   }
-}
-
-.font-groupie {
-  font-family: 'Groupie';
-}
-
-/**
-  Groupie
-**/
-@font-face {
-  font-family: 'Groupie';
-  src: url('#{$path-fonts}/Groupie.ttf') format('truetype');
-  font-weight: normal;
-  font-display: swap;
 }
 
 /**
