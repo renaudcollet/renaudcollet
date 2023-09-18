@@ -350,7 +350,7 @@ const paraphToLines = computed(() => {
 
   h1 {
     font-size: 28px;
-    font-weight: 900;
+    font-weight: 600;
     margin-bottom: 7px;
 
     @include media-breakpoint-up(md) {
