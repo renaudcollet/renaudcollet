@@ -55,7 +55,7 @@ const onClickItem = ($event, idKey, aProjects) => {
   }
   selectedItemElement = $event.target;
   selectedItemElement.classList.add('selected');
-  
+
   closeMenu()
 }
 
@@ -162,46 +162,6 @@ onMounted(() => {
 
     @include media-breakpoint-up(lg) {
       display: none;
-    }
-  }
-  
-  &__logo {
-    position: absolute;
-    top: 0;
-    z-index: $z-logo;
-    margin-top: 7px;
-    margin-left: 60px;
-    width: 60px;
-    height: 17px;
-    background-image: url('/assets/svg/logo_groupie.svg');
-    background-repeat: no-repeat;
-    background-size: contain;
-    opacity: 0;
-
-    @include media-breakpoint-up(xl) {
-      margin-top: 30px;
-      margin-left: 130px;
-      // width: 125px;
-      // height: 32px;
-      width: 60px;
-      height: 20px;
-    }
-    
-    &::before {
-      content: '';
-      position: absolute;
-      display: flex;
-      width: 24px;
-      height: 1px;
-      background-color: #fff;
-      left: -30px;
-      top: 50%;
-
-      @include media-breakpoint-up(xl) {
-        width: 40px;
-        left: -50px;
-        top: 58%;
-      }
     }
   }
 
@@ -373,27 +333,6 @@ onMounted(() => {
           &:nth-child(3) {
             order: 1;
           }
-        }
-      }
-
-      &__logo {
-        width: 166px;
-        height: 65px;
-        // background-image: url('/assets/svg/logo_groupie.svg');
-        // background-repeat: no-repeat;
-        // background-size: contain;
-        margin-top: 20px;
-
-        .logo {
-          width: 166px;
-          height: 65px;
-          background-image: url('/assets/svg/logo_groupie.svg');
-          background-repeat: no-repeat;
-          background-size: contain;
-        }
-
-        @include media-breakpoint-up(xl) {
-          display: none;
         }
       }
     }

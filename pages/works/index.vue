@@ -2,9 +2,9 @@
   <div ref="root">
     <div class="container">
       <div class="container__header-minimize" data-header-scroll-minimize></div>
-      <h1 class="page__title scroll-opacity" data-scroll-index="0">All<br />my works&nbsp;<sub class="big-underscore">&nbsp;—</sub></h1>
+      <h1 class="page__title scroll-opacity" data-scroll-index="0">All my works</h1>
       <section class="projects-work">
-        <template v-for="(item, index) in datasProjets">
+        <template v-for="(item, index) in storeDatas.projectsFiltered">
           <ProjectItem 
             class="projects-home__item" 
             :id="index" 
@@ -21,11 +21,9 @@
 </template>
   
 <script setup>
-import { onMounted, onUnmounted, ref, nextTick } from "vue";
 import { useDatasStore, S_DATA_ACCUEIL, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollOpacity from '~/compositions/use-scroll-opacity';
-import useLogoObserver from '~/compositions/use-logo-observer';
-// import utilsDevice from '~~/mixins/utils-device.js';
+// import useLogoObserver from '~/compositions/use-logo-observer';
 // import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
 import gsap from 'gsap';
 
@@ -34,10 +32,15 @@ const { fetchDatas } = storeDatas;
 await fetchDatas(S_DATA_ACCUEIL);
 await fetchDatas(S_DATA_PROJECTS);
 
-const datasProjets = storeDatas.projects.data;
-
 const root = ref(null);
 const { initScrollOpacity, clearScrollOpacity } = useScrollOpacity();
+
+watch(() => storeDatas.projectsFiltered, (newVal, oldVal) => {
+  // console.log('watch projectsFiltered', newVal, oldVal);
+  nextTick(() => {
+    initScrollOpacity(root.value)
+  })
+})
 
 onMounted(() => {
   gsap.killTweensOf('#header-logo')
