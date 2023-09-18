@@ -15,11 +15,11 @@
         <div class="keywords__menu__button__label">Filtres</div>
       </div>
       <div class="keywords__menu__content">
-        <template v-for="(item, index) in datasKeywords">
+        <template v-for="(item, index) in datasKeywords" :key="index">
           <button 
             v-if="item.attributes.projets.data.length > 0" 
             class="menu-item" 
-            v-on:click="onClickItem(item.id, item.attributes.projets.data)"
+            v-on:click="onClickItem($event, item.id, item.attributes.projets.data)"
           >
             {{ item.attributes.key }}
           </button>
@@ -33,7 +33,6 @@
 <script setup>
 import gsap from 'gsap'
 import { useDatasStore, S_DATA_PROJECTS, S_DATA_KEYWORDS } from '~/stores/datas'
-import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 const storeDatas = useDatasStore()
 const { fetchDatas } = storeDatas
@@ -45,9 +44,18 @@ const datasKeywords = storeDatas.keywords.data;
 let isMenuOpened = false
 let isDesktop = computed(() => window.innerWidth >= 1200)
 
-const onClickItem = (idKey, aProjects) => {
-  console.log('onClickItem', idKey, aProjects);
+let selectedItemElement = null
+
+const onClickItem = ($event, idKey, aProjects) => {
+  console.log('onClickItem', $event, idKey, aProjects);
   storeDatas.filterProjects(aProjects);
+
+  if (selectedItemElement) {
+    selectedItemElement.classList.remove('selected');
+  }
+  selectedItemElement = $event.target;
+  selectedItemElement.classList.add('selected');
+  
   closeMenu()
 }
 
@@ -295,6 +303,10 @@ onMounted(() => {
 
       .menu-item {
         pointer-events: all;
+        cursor: pointer;
+        &.selected {
+          text-decoration: underline;
+        }
       }
       
       a {
