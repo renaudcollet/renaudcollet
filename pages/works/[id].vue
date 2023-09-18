@@ -83,16 +83,15 @@ await fetchDatas(S_DATA_PROJECTS);
 
 const config = useRuntimeConfig()
 const route = useRoute()
-console.log('route.params.id', route.params.id);
+// console.log('route.params.id', route.params.id);
 
-const datasProjets = storeDatas.projects.data;
+const datasProjets = storeDatas.projects;
 
 const currentProject = datasProjets.find(project => {
-  // console.log('project.slug', project.attributes.slug);
+  // console.log('project.slug', `${project.attributes.slug} === ${route.params.id}`);
   return project.attributes.slug === route.params.id
 })
 
-const currentProjectId = currentProject.id
 const currentProjectCover = currentProject.attributes.cover.data.attributes
 const currentProjectBlocs = currentProject.attributes.bloc
 
