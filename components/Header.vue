@@ -1,6 +1,11 @@
 <template>
   <div class="header">
-    <NuxtLink id="header-logo" class="header__logo" to="/"></NuxtLink>
+    <NuxtLink id="header-logo" class="header__logo" to="/">
+      <svg height="50" width="50">
+        <polygon points="0,50 25,0 50,50" fill="none" stroke="#fff" stroke-width="1" />
+      </svg>
+      <span>Renaud COLLET</span>
+    </NuxtLink>
     <div class="header__menu">
       <div class="header__menu__button" v-on:click="onClickMenuButton">
         <div class="header__menu__button__arrow">
@@ -20,7 +25,7 @@
         <NuxtLink class="menu-item" to="/about" v-on:click="onClickItem">About</NuxtLink>
         <NuxtLink class="menu-item" to="/contact" v-on:click="onClickItem">Contact</NuxtLink>
         <div class="header__menu__content__logo menu-item">
-          <NuxtLink class="logo" to="/" v-on:click="onClickItem"></NuxtLink>
+          <NuxtLink class="logo" to="/" v-on:click="onClickItem">Renaud COLLET</NuxtLink>
         </div>
       </div>
       <div class="header__menu__zone" v-on:click="closeMenu"></div>
@@ -180,10 +185,10 @@ export default {
     margin-left: 60px;
     width: 60px;
     height: 17px;
-    background-image: url('/assets/svg/logo_groupie.svg');
-    background-repeat: no-repeat;
-    background-size: contain;
     opacity: 0;
+    font-family: $font-main;
+    text-decoration: none;
+    color: #fff;
 
     @include media-breakpoint-up(xl) {
       margin-top: 30px;
@@ -192,23 +197,6 @@ export default {
       // height: 32px;
       width: 60px;
       height: 20px;
-    }
-    
-    &::before {
-      content: '';
-      position: absolute;
-      display: flex;
-      width: 24px;
-      height: 1px;
-      background-color: #fff;
-      left: -30px;
-      top: 50%;
-
-      @include media-breakpoint-up(xl) {
-        width: 40px;
-        left: -50px;
-        top: 58%;
-      }
     }
   }
 
@@ -380,17 +368,16 @@ export default {
       &__logo {
         width: 166px;
         height: 65px;
-        // background-image: url('/assets/svg/logo_groupie.svg');
-        // background-repeat: no-repeat;
-        // background-size: contain;
         margin-top: 20px;
+        font-family: $font-main;
+        text-decoration: none;
 
         .logo {
           width: 166px;
           height: 65px;
-          background-image: url('/assets/svg/logo_groupie.svg');
-          background-repeat: no-repeat;
-          background-size: contain;
+          // background-image: url('/assets/svg/logo_groupie.svg');
+          // background-repeat: no-repeat;
+          // background-size: contain;
         }
 
         @include media-breakpoint-up(xl) {
