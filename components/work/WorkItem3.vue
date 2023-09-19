@@ -38,7 +38,7 @@
           <polygon class="triangle" fill="#ffffff" points="84.2,66.4 55.8,79.9 55.8,52.9" />
         </svg>
       </div>
-      <h3 class="work-item-3__content__title scroll-opacity" data-scroll-index="2" v-html="titleUnderscore"></h3>
+      <h3 class="work-item-3__content__title scroll-opacity" data-scroll-index="2" v-html="content.title"></h3>
       <div class="work-item-3__content__text scroll-opacity" data-scroll-index="3" v-html="content.content"></div>
     </div>
   </div>
