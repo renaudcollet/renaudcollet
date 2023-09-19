@@ -71,13 +71,11 @@ onUnmounted(() => {
   user-select: none;
   pointer-events: none;
   position: relative;
+  
   .logo{
-    // margin-top: 200px;
     margin-bottom: 0;
     width: 170px;
     opacity: 0;
-    position: absolute;
-    bottom: 22%;
   }
 }
 

@@ -10,19 +10,19 @@
     </ClientOnly>
     <div class="project-item__text z-index-text">
       <h1 class="project-item__title">
-        <div v-for="(line, index) in paraphToLines" :key="index" class="line">
+        <div v-for="(line, index) in paraphToLines" class="line">
           <div class="scroll-opacity" :data-scroll-index="index + 2">{{ line.trim() }}</div>
         </div>
       </h1>
       <div class="project-item__alt">
-        <div v-for="(item, index) in props.keywords" :key="index">
+        <template v-for="(item, index) in props.keywords">
           <h3 
             class="project-item__subtitle scroll-opacity" 
             :data-scroll-index="paraphToLines.length + index + 3"
           >
             {{ item.attributes.key }}
           </h3>
-        </div>
+        </template>
         <div class="project-item__button scroll-opacity" :data-scroll-index="paraphToLines.length + keywords.length + 4">
           <svg x="0px" y="0px" viewBox="0 0 124 124">
             <!-- <circle fill="rgb(255, 255, 255)" cx="62" cy="62" r="52" /> -->
@@ -142,100 +142,11 @@ const paraphToLines = computed(() => {
       }
     }
   }
-
-  @include media-breakpoint-up(md) {
-    width: 83.333333vw;
-    height: 46.851852vw;
-    margin: 0 8.333333vw 34.166667vw;
-  }
-
-  @include media-breakpoint-up(lg) {
-    width: 665.384615px;
-    height: 269.230769px;
-    margin: 0 auto 185px;
-    justify-content: flex-end;
-
-    .project-item__alt {
-      display: flex;
-      flex-direction: column;
-      height: 115.384615px;
-      position: relative;
-    }
-  }
-
-  @include media-breakpoint-up(xl) {
-    width: 865px;
-    height: 350px;
-    margin: 0 auto 185px;
-    justify-content: flex-end;
-
-    .project-item__alt {
-      display: flex;
-      flex-direction: column;
-      height: 150px;
-      position: relative;
-    }
-  }
-
-  &:nth-child(even) {
-
-    @include media-breakpoint-up(lg) {
-      justify-content: flex-start;
-      width: 665.384615px;
-
-      .project-item__alt {
-        width: 138.461538px;
-      }
-
-      .project-item__button {
-        margin-left: 0;
-        margin-right: auto;
-      }
-    }
-
-    @include media-breakpoint-up(xl) {
-      justify-content: flex-start;
-      width: 865px;
-
-      .project-item__alt {
-        width: 180px;
-      }
-
-      .project-item__button {
-        margin-left: 0;
-        margin-right: auto;
-      }
-    }
-
-    .project-item__text {
-      margin-left: auto;
-      margin-right: 30px;
-      right: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-
-      @include media-breakpoint-up(md) {
-        margin-right: 8.333333vw;
-      }
-
-      @include media-breakpoint-up(lg) {
-        right: 0;
-        margin-right: 0;
-        left: auto;
-      }
-
-      @include media-breakpoint-up(xl) {
-        right: 0;
-        margin-right: 0;
-        left: auto;
-      }
-    }
-
-    h1,
-    h3 {
-      text-align: right;
-    }
+  
+  &__alt {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.5);
   }
 
   &__image {
@@ -251,6 +162,8 @@ const paraphToLines = computed(() => {
       right: 0;
       top: 0;
       user-select: none;
+      // clip-path: polygon(0 0, 0 75%, 25% 100%, 100% 100%, 100% 25%, 75% 0);
+      clip-path: polygon(25% 0, 100% 0, 100% 75%, 75% 100%, 0 100%, 0 25%);
 
       @include media-breakpoint-up(lg) {
         position: relative;
@@ -393,4 +306,5 @@ const paraphToLines = computed(() => {
       line-height: 1;
     }
   }
-}</style>
+}
+</style>
