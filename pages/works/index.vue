@@ -8,10 +8,9 @@
           <ProjectItem 
             class="projects-home__item" 
             :id="index" 
-            :src="item.attributes.cover" 
-            :to="`/works/${item.attributes.slug}`" 
-            :title="item.attributes.titre"
-            :keywords="item.attributes.keywords.data" />
+            :to="`/works/${item.attributes.slug}`"
+            :datas="item"
+          />
         </template>
       </section>
       <div class="space"></div>

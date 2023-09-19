@@ -1,21 +1,21 @@
 <template>
   <NuxtLink class="project-item project-item-this">
-    <ClientOnly>
+    <!-- <ClientOnly> -->
       <ImagePlane 
         data-scroll-index="0"
-        :src="config.public.backendUrl + src.data.attributes.formats.large.url" 
+        :src="coverSrc" 
         object-fit="cover" 
         class="project-item__image scroll-opacity scroll-opacity--no-translate" 
       />
-    </ClientOnly>
+    <!-- </ClientOnly> -->
+    <h1 class="project-item__title">
+      <div v-for="(line, index) in paraphToLines" class="line">
+        <div class="scroll-opacity" :data-scroll-index="index + 2">{{ line.trim() }}</div>
+      </div>
+    </h1>
     <div class="project-item__text z-index-text">
-      <h1 class="project-item__title">
-        <div v-for="(line, index) in paraphToLines" class="line">
-          <div class="scroll-opacity" :data-scroll-index="index + 2">{{ line.trim() }}</div>
-        </div>
-      </h1>
       <div class="project-item__alt">
-        <template v-for="(item, index) in props.keywords">
+        <template v-for="(item, index) in keywords">
           <h3 
             class="project-item__subtitle scroll-opacity" 
             :data-scroll-index="paraphToLines.length + index + 3"
@@ -23,18 +23,18 @@
             {{ item.attributes.key }}
           </h3>
         </template>
-        <div class="project-item__button scroll-opacity" :data-scroll-index="paraphToLines.length + keywords.length + 4">
-          <svg x="0px" y="0px" viewBox="0 0 124 124">
-            <!-- <circle fill="rgb(255, 255, 255)" cx="62" cy="62" r="52" /> -->
-            <polygon points="0,50 25,0 50,50" fill="#fff" stroke="#fff" stroke-width="1" />
-            <rect class="horiz" fill="rgb(0, 0, 0)" x="42" y="62" width="41" height="1" />
-            <g class="vert">
-              <rect class="vert1" fill="rgb(0, 0, 0)" x="62" y="42" width="1" height="20" />
-              <rect class="vert2" fill="rgb(0, 0, 0)" x="62" y="62" width="1" height="20" />
-            </g>
-          </svg>
-        </div>
       </div>
+    </div>
+    <div class="project-item__button scroll-opacity" :data-scroll-index="paraphToLines.length + keywords.length + 4">
+      <svg x="0px" y="0px" viewBox="0 0 124 124">
+        <!-- <circle fill="rgb(255, 255, 255)" cx="62" cy="62" r="52" /> -->
+        <polygon points="0,50 25,0 50,50" fill="#fff" stroke="#fff" stroke-width="1" />
+        <rect class="horiz" fill="rgb(255, 255, 255)" x="42" y="62" width="41" height="1" />
+        <g class="vert">
+          <rect class="vert1" fill="rgb(255, 255, 255)" x="62" y="42" width="1" height="20" />
+          <rect class="vert2" fill="rgb(255, 255, 255)" x="62" y="62" width="1" height="20" />
+        </g>
+      </svg>
     </div>
   </NuxtLink>
 </template>
@@ -48,27 +48,22 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-  src: {
+  datas: {
     type: Object,
     required: true,
-  },
-  title: {
-    type: String,
-    required: true,
-  },
-  keywords: {
-    type: Array,
-    required: true,
-  },
+  }
 })
-
 // onMounted(() => {
 //   console.log('mounted', props.id, props.title);
 //   console.log('keywords', props.keywords);
 // })
 
+const keywords = props.datas.attributes.keywords.data;
+
+const coverSrc = config.public.backendUrl + props.datas.attributes.cover.data.attributes.formats.large.url;
+
 const paraphToLines = computed(() => {
-  return props.title.split('<br />');
+  return props.datas.attributes.titre.split('<br />');
 })
 </script>
 
@@ -78,7 +73,7 @@ const paraphToLines = computed(() => {
   display: flex;
   width: calc(100vw - 60px);
   height: 56.25vw;
-  margin: 0 30px 123px;
+  margin: 0 30px 90px;
   color: #fff;
   text-decoration: none;
 
@@ -146,7 +141,8 @@ const paraphToLines = computed(() => {
   &__alt {
     display: flex;
     flex-direction: column;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(5, 5, 5, 0.678);
+    padding: 8px 8px 20px;
   }
 
   &__image {
@@ -187,8 +183,9 @@ const paraphToLines = computed(() => {
 
   &__text {
     position: absolute;
-    bottom: 40%;
-    margin-left: 30px;
+    left: 15px;
+    bottom: 0;
+    margin-left: 0;
     transform: translate3d(0, 0, 0);
 
     @include media-breakpoint-up(md) {
@@ -287,7 +284,7 @@ const paraphToLines = computed(() => {
     font-size: 11px;
     font-weight: 300;
     margin-bottom: 5px;
-    text-decoration: underline;
+    // text-decoration: underline;
 
     @include media-breakpoint-up(md) {
       font-size: 3.055556vw;

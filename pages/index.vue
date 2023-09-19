@@ -9,11 +9,10 @@
       <template v-for="(item, index) in storeDatas.projectsFiltered">
         <ProjectItem 
           class="projects-home__item" 
-          :id="index" 
-          :src="item.attributes.cover" 
-          :to="`/works/${item.attributes.slug}`" 
-          :title="item.attributes.titre"
-          :keywords="item.attributes.keywords.data" />
+          :id="index"
+          :datas="item"
+          :to="`/works/${item.attributes.slug}`"
+        />
       </template>
     </section>
     <!-- <Footer :projects="projectsFooter" :footer="footer"></Footer> -->
@@ -99,7 +98,6 @@ onUnmounted(() => {
   flex-direction: column;
   position: relative;
   user-select: none;
-  margin-top: 100px;
   z-index: $z-projects;
 }
 </style>
