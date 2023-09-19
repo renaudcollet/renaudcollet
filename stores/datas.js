@@ -24,12 +24,28 @@ export const useDatasStore = defineStore( 'datas', {
   }),
 
   actions: {
-    filterProjects(aProjects) {
-      this.projectsFiltered = []
-      aProjects.forEach(project => {
-        this.projectsFiltered.push(this.projectsById[project.id])
+    filterProjects(datasKeywordsSelected) {
+      let tmp = []
+      datasKeywordsSelected.forEach(item => {
+        item.attributes.projets.data.forEach(project => {
+          tmp.push(this.projectsById[project.id])
+        })
       })
-      console.log('Filtered projectsFiltered', this.projectsFiltered);
+      // console.log('--- Filtered projectsFiltered', tmp);
+
+      // Remove duplicates
+      const seen = new Set();
+      this.projectsFiltered = tmp.filter(item => {
+        const duplicate = seen.has(item.id);
+        seen.add(item.id);
+        return !duplicate;
+      });
+
+      if (this.projectsFiltered.length === 0) {
+        this.projectsFiltered = this.projects
+      }
+
+      // console.log('--- Filtered projectsFiltered singles', this.projectsFiltered);
     },
 
     async fetchDatas(apiId) {
@@ -96,6 +112,8 @@ export const useDatasStore = defineStore( 'datas', {
           method: 'GET',
           query
         })
+
+        // console.log('Data ERROR', error);
         // console.log(`Data from ${apiId}`, data);
 
         switch (apiId) {

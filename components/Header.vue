@@ -18,7 +18,7 @@
              d="M0,0.9L0.9,0L14,12.9l-0.6,0.6l0.6,0.6L0.9,27L0,26.1l12.7-12.6L0,0.9z"/>
           </svg>
         </div>
-        <div class="header__menu__button__label">Menu</div>
+        <div class="header__menu__button__label">Ξ</div>
       </div>
       <div class="header__menu__content">
         <NuxtLink class="menu-item" to="/works" v-on:click="onClickItem">Works</NuxtLink>
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import utilsDevice from '~~/mixins/utils-device.js'
+// import utilsDevice from '~~/mixins/utils-device.js'
 import gsap from 'gsap'
 
 export default {
@@ -52,7 +52,6 @@ export default {
       return window.innerWidth >= 1200
     },
   },
-  mixins: [utilsDevice],
   watch: {
     // $route() {
     //   // if (this.isMenuOpened) {
@@ -215,7 +214,7 @@ export default {
       // top: -5px;
       padding: 10px;
       transform-origin: right bottom;
-      transform: rotate(-90deg);
+      // transform: rotate(-90deg);
       cursor: pointer;
 
       @include media-breakpoint-up(md) {
@@ -234,9 +233,10 @@ export default {
 
       &__label {
         display: flex;
-        font-size: 8px;
+        font-size: 20px;
         font-weight: 300;
         color: #fff;
+        font-family: sans-serif;
 
         @include media-breakpoint-up(md) {
           font-size: 11px;
@@ -253,6 +253,7 @@ export default {
         display: flex;
         margin-right: 10px;
         position: relative;
+        display: none;
 
         @include media-breakpoint-up(xl) {
           order: 2;
@@ -283,7 +284,7 @@ export default {
       align-items: center;
       width: 100%;
       height: 600px;
-      background-color: #a51b48;
+      background-color: #1b89a5;
       overflow: hidden;
 
       @include media-breakpoint-up(xl) {
@@ -326,21 +327,6 @@ export default {
               width: calc(100% - 20px);
               transition: width 0.2s 0s;
             }
-          }
-
-          &::before {
-            content: '';
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: #fff;
-            border-radius: 10px;
-            left: -7px;
-            top: 12px;
-            
-            transform-origin: center;
-            transition: transform 0.3s;
-            transform: scale(1);
           }
 
           &::after {

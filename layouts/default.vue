@@ -1,5 +1,5 @@
 <template>
-  <div :class="[currentPage]">
+  <div :class="[currentPage.value]">
     <Header></Header>
     <!-- <Cover3D v-if="showCover" :position="coverPosition" :showScrollArrow="showScrollArrow"/> -->
     
