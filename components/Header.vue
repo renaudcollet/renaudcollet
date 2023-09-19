@@ -1,10 +1,11 @@
 <template>
   <div class="header">
     <NuxtLink id="header-logo" class="header__logo" to="/">
-      <svg height="50" width="50">
+      <!-- <svg height="50" width="50">
         <polygon points="0,50 25,0 50,50" fill="none" stroke="#fff" stroke-width="1" />
       </svg>
-      <span>Renaud COLLET</span>
+      <span>Renaud COLLET</span> -->
+      <Logo />
     </NuxtLink>
     <div class="header__menu">
       <div class="header__menu__button" v-on:click="onClickMenuButton">
@@ -25,7 +26,9 @@
         <NuxtLink class="menu-item" to="/about" v-on:click="onClickItem">About</NuxtLink>
         <NuxtLink class="menu-item" to="/contact" v-on:click="onClickItem">Contact</NuxtLink>
         <div class="header__menu__content__logo menu-item">
-          <NuxtLink class="logo" to="/" v-on:click="onClickItem">Renaud COLLET</NuxtLink>
+          <NuxtLink class="logo" to="/" v-on:click="onClickItem">
+            <Logo />
+          </NuxtLink>
         </div>
       </div>
       <div class="header__menu__zone" v-on:click="closeMenu"></div>
@@ -181,7 +184,7 @@ export default {
     top: 0;
     z-index: $z-logo;
     margin-top: 7px;
-    margin-left: 60px;
+    margin-left: 10px;
     width: 60px;
     height: 17px;
     opacity: 0;
@@ -208,7 +211,7 @@ export default {
       z-index: $z-menu-button;
       display: flex;    
       align-items: center;
-      right: 2px;
+      right: 5px;
       top: 3px;
       // right: 20px;
       // top: -5px;
@@ -237,6 +240,7 @@ export default {
         font-weight: 300;
         color: #fff;
         font-family: sans-serif;
+        transform: scaleX(1.5);
 
         @include media-breakpoint-up(md) {
           font-size: 11px;
@@ -306,6 +310,7 @@ export default {
         display: flex;
         text-decoration: none;
         margin-bottom: 15px;
+        justify-content: center;
 
         @include media-breakpoint-up(xl) {
           font-size: 14px;
@@ -360,7 +365,7 @@ export default {
 
         .logo {
           width: 166px;
-          height: 65px;
+          height: 145px;
           // background-image: url('/assets/svg/logo_groupie.svg');
           // background-repeat: no-repeat;
           // background-size: contain;
