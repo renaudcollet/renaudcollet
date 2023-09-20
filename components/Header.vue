@@ -70,8 +70,17 @@ export default {
 
     if (this.isDesktop)
       this.openMenu()
+
+    // window.addEventListener('resize', this.onResize)
   },
   methods: {
+    onResize() {
+      if (this.isDesktop) {
+        this.openMenu()
+      } else {
+        this.closeMenu()
+      }
+    },
     onClickItem() {
       this.closeMenu()
     },
@@ -288,6 +297,7 @@ export default {
       height: 600px;
       background-color: #1b89a5;
       overflow: hidden;
+      padding: 40px;
 
       @include media-breakpoint-up(xl) {
         background-color: transparent;
@@ -299,6 +309,7 @@ export default {
         height: fit-content;
         transform: translateY(25px);
         pointer-events: none;
+        padding: 0;
       }
 
       a {
@@ -356,7 +367,7 @@ export default {
 
       &__logo {
         width: 166px;
-        height: 65px;
+        height: 150px;
         margin-top: 20px;
         font-family: $font-main;
         text-decoration: none;
