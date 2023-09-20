@@ -30,19 +30,17 @@ export default function useScrollReveal() {
                   duration: entry.target.dataset.scrollRevealDuration,
                   opacity: 1,
                   y: 0,
-                  delay: entry.target.dataset.scrollRevealDelay
+                  delay: entry.target.dataset.scrollRevealDelay,
+                  ease: 'power2.outIn'
               })
             } else if (entry.target.dataset.scrollRevealHeight !== undefined) {
-              gsap.fromTo(entry.target, {
-                  height: 0,
-              }, {
-                  duration: 0.5,
-                  height: 'auto',
-                  delay: entry.target.dataset.scrollRevealDelay
+              gsap.to(entry.target, {
+                  duration: entry.target.dataset.scrollRevealDelay,
+                  delay: entry.target.dataset.scrollRevealDelay,
+                  height: 'auto'
               })
             } else if (entry.target.dataset.scrollRevealClipPath !== undefined) {
               gsap.to(entry.target, {
-                  duration: 0.5,
                   clipPath: entry.target.dataset.scrollRevealClipPath,
                   delay: entry.target.dataset.scrollRevealDelay,
                   duration: entry.target.dataset.scrollRevealDuration,
