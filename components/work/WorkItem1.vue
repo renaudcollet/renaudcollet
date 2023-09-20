@@ -22,10 +22,6 @@ export default {
       type: String,
       required: false,
     },
-    onRender: {
-      type: Function,
-      required: false,
-    },
   }
 }
 </script>

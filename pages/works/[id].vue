@@ -23,23 +23,30 @@
       </div>
       <div class="cover-top__title z-index-text">
         <div class="cover-top__title__header-minimize" data-header-scroll-minimize></div>
-        <h1 class="cover-top__title__brand">
-          <!-- <div
-            v-for="(line, index) in paraphToLines"
-            :key="index"
-            class="line"
-          >
-            <div class="scroll-opacity" :data-scroll-index="index">{{ line.trim() }}</div>
-          </div>  -->
+        <h1 class="cover-top__title__project">
+          {{ currentProject.attributes.titre }}
         </h1>
-        <!-- <div
-          class="cover-top__title__project scroll-opacity"
-          :data-scroll-index="paraphToLinesLength + 1"
-        >{{ sections[0].blocks[1].value }}</div>
         <div
-          class="cover-top__title__project scroll-opacity"
-          :data-scroll-index="paraphToLinesLength + 2"
-        >{{ sections[0].blocks[2].value }}</div>-->
+          class="cover-top__title__brand scroll-opacity"
+          :data-scroll-index="1"
+        >
+          Client : {{ currentProject.attributes.brand }}
+        </div>
+        <div
+          class="cover-top__title__brand scroll-opacity"
+          :data-scroll-index="1"
+        >
+          Agency : {{ currentProject.attributes.agency }}
+        </div>
+        <div
+          class="cover-top__title__brand scroll-opacity"
+          :data-scroll-index="1"
+        >
+          Filters : 
+          <span v-for="(item, index) in keywords">
+            {{ index < keywords.length - 1 ? `${item.attributes.key}, ` : item.attributes.key }}
+          </span>
+        </div>
       </div> 
     </section>
     <section class="projects">
@@ -94,6 +101,7 @@ const currentProject = datasProjets.find(project => {
 
 const currentProjectCover = currentProject.attributes.cover.data.attributes
 const currentProjectBlocs = currentProject.attributes.bloc
+const keywords = currentProject.attributes.keywords.data
 
 const root = ref(null);
 const { initScrollOpacity, clearScrollOpacity } = useScrollOpacity();
@@ -118,14 +126,16 @@ onUnmounted(() => {
   clearScrollOpacity()
 })
 
-  //   computed: {
-  //     paraphToLines() {
-  //       return this.sections[0].blocks[0].value.split('<br />');
-  //     },
-  //     paraphToLinesLength() {
-  //       return this.paraphToLines.length;
-  //     },
-  //   },
+// computed( paraphToLines => datasProjets.attributes.)
+
+//   computed: {
+//     paraphToLines() {
+//       return this.sections[0].blocks[0].value.split('<br />');
+//     },
+//     paraphToLinesLength() {
+//       return this.paraphToLines.length;
+//     },
+//   },
 </script>
   
 <style lang="scss" scoped>
@@ -226,32 +236,31 @@ SECTION .cover-top
       top: -30px;
     }
 
-    &__brand {
-      font-weight: 800;
+    &__project {
+      font-weight: 700;
       font-size: 40px;
       text-align: left;
       line-height: 1;
-      margin-bottom: 20px;
+      margin-bottom: 0;
 
       @include media-breakpoint-up(md) {
-        font-size: 80px;
+        font-size: 40px;
         line-height: 1;
       }
 
       @include media-breakpoint-up(lg) {
-        font-size: 100px;
+        font-size: 60px;
       }
 
       @include media-breakpoint-up(xl) {
-        font-size: 120px;
+        font-size: 80px;
       }
     }
 
-    &__project {
-      font-size: 10px;
+    &__brand {
+      font-size: 12px;
       line-height: 1;
-      font-weight: 300;
-      text-decoration: underline;
+      font-weight: 500;
       margin-bottom: 5px;
 
       @include media-breakpoint-up(md) {
@@ -259,6 +268,10 @@ SECTION .cover-top
         line-height: 1;
         letter-spacing: normal;
         margin-bottom: 15px;
+      }
+
+      @include media-breakpoint-up(xl) {
+        font-size: 34px;
       }
     }
   }

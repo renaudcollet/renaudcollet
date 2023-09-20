@@ -5,6 +5,9 @@ Filters:
 Design:
     ☐ Design all pages
 
+Intégration:
+    ☐ Bug header when resize from xl to lg
+
 Animation:
     ☐ Titles and Vignettes should appear with a skew mask animation
 
