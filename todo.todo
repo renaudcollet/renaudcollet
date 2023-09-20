@@ -5,5 +5,12 @@ Filters:
 Design:
     ☐ Design all pages
 
+Animation:
+    ☐ Titles and Vignettes should appear with a skew mask animation
+
+Webgl:
+    ☐ Add a webgl background
+    ☐ Add effect on vignettes when hovering
+
 Data:
     ☐ Improve initial data loading

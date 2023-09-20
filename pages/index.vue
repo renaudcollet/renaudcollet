@@ -22,6 +22,7 @@
 <script setup>
 import { useDatasStore, S_DATA_ACCUEIL, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollOpacity from '~/compositions/use-scroll-opacity';
+import useScrollReveal from '~/compositions/use-scroll-reveal';
 import useLogoObserver from '~/compositions/use-logo-observer';
 import gsap from 'gsap';
 
@@ -33,11 +34,13 @@ await fetchDatas(S_DATA_PROJECTS);
 const root = ref(null);
 const { initScrollOpacity, clearScrollOpacity } = useScrollOpacity();
 const { initLogoObserver, clearLogoObserver } = useLogoObserver();
+const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 
 watch(() => storeDatas.projectsFiltered, (newVal, oldVal) => {
   // console.log('watch projectsFiltered', newVal, oldVal);
   nextTick(() => {
     initScrollOpacity(root.value)
+    initScrollReveal(root.value)
   })
 })
 
@@ -50,12 +53,14 @@ onMounted(() => {
 
   nextTick(() => {
     initScrollOpacity(root.value)
+    initScrollReveal(root.value)
   })
 })
 
 onUnmounted(() => {
   clearScrollOpacity()
   clearLogoObserver()
+  clearScrollReveal()
 })
 
 </script>

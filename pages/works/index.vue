@@ -85,11 +85,11 @@ onUnmounted(() => {
 }
 
 .page__title {
-  margin-top: 45vh;
-  margin-bottom: 130px;
+  margin-top: 21vh;
+  margin-bottom: 100px;
   text-align: center;
   font-size: 28px;
-  font-weight: 900;
+  font-weight: 800;
 
   @include media-breakpoint-up(md) {
     margin-top: 43vh;

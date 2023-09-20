@@ -9,7 +9,7 @@
 // @import 'vendors/vue-formulate/snow/snow';
 
 @import 'bootstrap';
-// @import 'breakpoints-viewer';
+@import 'breakpoints-viewer';
 @import 'variables';
 @import 'mixins';
 @import 'functions';
@@ -21,6 +21,7 @@
 // @import 'project-item';
 
 @import 'scroll-opacity';
+@import 'scroll-reveal';
 @import 'scroll-header-minimize';
 @import 'zoomable-image';
 // @import 'form';

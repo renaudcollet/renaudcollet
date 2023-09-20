@@ -195,9 +195,7 @@ export default {
     @include media-breakpoint-up(xl) {
       margin-top: 30px;
       margin-left: 130px;
-      // width: 125px;
-      // height: 32px;
-      width: 60px;
+      width: 90px;
       height: 20px;
     }
   }
