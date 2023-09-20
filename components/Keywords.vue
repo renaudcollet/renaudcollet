@@ -168,6 +168,16 @@ onMounted(() => {
   font-size: 12px;
   border: 0;
   padding: 3px 2px;
+  color: rgb(0, 0, 0);
+  background-color: rgb(255, 255, 255);
+  transition: background-color 0.8s ease-in-out, color 0.8s ease-in-out;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: rgb(255, 255, 255);
+    transition: background-color 0.0s ease-in-out, color 0.0s ease-in-out;
+  }
+
   &.selected {
     // text-decoration: underline;
     position: relative;
