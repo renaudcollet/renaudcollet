@@ -220,11 +220,8 @@ export default {
       align-items: center;
       right: 5px;
       top: 3px;
-      // right: 20px;
-      // top: -5px;
       padding: 10px;
       transform-origin: right bottom;
-      // transform: rotate(-90deg);
       cursor: pointer;
 
       @include media-breakpoint-up(md) {
@@ -297,7 +294,7 @@ export default {
       height: 600px;
       background-color: #1b89a5;
       overflow: hidden;
-      padding: 40px;
+      padding: 0;
 
       @include media-breakpoint-up(xl) {
         background-color: transparent;
