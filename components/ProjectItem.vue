@@ -5,7 +5,7 @@
         class="image-container scroll-reveal"
         data-scroll-reveal-clip-path="polygon(0% 0, 175% 0, 100% 100%, -75% 100%)"
         data-scroll-reveal-delay="0.3"
-        data-scroll-reveal-duration="2"
+        data-scroll-reveal-duration="1.6"
       >
         <ImagePlane 
           :src="coverSrc" 
@@ -29,7 +29,8 @@
     <div 
       class="project-item__text scroll-reveal z-index-text"
       data-scroll-reveal-height
-      data-scroll-reveal-delay="1.2"
+      data-scroll-reveal-delay="1"
+      data-scroll-reveal-duration="0.4"
       :data-scroll-index="2"
     >
       <div class="project-item__alt">
@@ -37,7 +38,7 @@
           <h3 
             class="project-item__subtitle scroll-reveal" 
             data-scroll-reveal-opacity-y
-            :data-scroll-reveal-delay="0.5 + index * 0.2"
+            :data-scroll-reveal-delay="0.2 + index * 0.2"
             data-scroll-reveal-duration="0.5"
           >
             {{ item.attributes.key }}
@@ -49,7 +50,7 @@
       class="project-item__button scroll-reveal"
       :data-scroll-index="paraphToLines.length + keywords.length + 4"
       data-scroll-reveal-opacity-y
-      data-scroll-reveal-delay="1"
+      data-scroll-reveal-delay="2"
       data-scroll-reveal-duration="1"
     >
       <svg x="0px" y="0px" viewBox="0 0 124 124">
@@ -197,8 +198,10 @@ const paraphToLines = computed(() => {
   &__alt {
     display: flex;
     flex-direction: column;
-    background-color: rgba(5, 5, 5, 0.678);
+    background-color: rgba(5, 5, 5, 0.5);
     padding: 8px 8px 20px;
+    border: 1px solid;
+    border-bottom: 0;
 
     @include media-breakpoint-up(xl) {
       padding: 15px 15px 70px;
@@ -342,7 +345,7 @@ const paraphToLines = computed(() => {
 
   h3 {
     font-size: 11px;
-    font-weight: 200;
+    font-weight: 500;
     margin-bottom: 5px;
 
     @include media-breakpoint-up(md) {
