@@ -4,8 +4,8 @@
       <div 
         class="image-container scroll-reveal"
         data-scroll-reveal-clip-path="polygon(0% 0, 175% 0, 100% 100%, -75% 100%)"
-        data-scroll-reveal-clip-path-delay="0.3"
-        data-scroll-reveal-clip-path-duration="2"
+        data-scroll-reveal-delay="0.3"
+        data-scroll-reveal-duration="2"
       >
         <ImagePlane 
           :src="coverSrc" 
@@ -16,22 +16,42 @@
     <!-- </ClientOnly> -->
     <h1 class="project-item__title">
       <div v-for="(line, index) in paraphToLines" class="line">
-        <div class="scroll-opacity" :data-scroll-index="index + 2">{{ line.trim() }}</div>
+        <div 
+          class="scroll-reveal"
+          data-scroll-reveal-opacity-y
+          :data-scroll-reveal-delay="1"
+          data-scroll-reveal-duration="0.5"
+        >
+          {{ line.trim() }}
+        </div>
       </div>
     </h1>
-    <div class="project-item__text scroll-reveal z-index-text" data-scroll-reveal-height data-scroll-reveal-height-delay="0.6" :data-scroll-index="2">
+    <div 
+      class="project-item__text scroll-reveal z-index-text"
+      data-scroll-reveal-height
+      data-scroll-reveal-delay="1.2"
+      :data-scroll-index="2"
+    >
       <div class="project-item__alt">
         <template v-for="(item, index) in keywords">
           <h3 
-            class="project-item__subtitle scroll-opacity" 
-            :data-scroll-index="paraphToLines.length + index + 3"
+            class="project-item__subtitle scroll-reveal" 
+            data-scroll-reveal-opacity-y
+            :data-scroll-reveal-delay="0.5 + index * 0.2"
+            data-scroll-reveal-duration="0.5"
           >
             {{ item.attributes.key }}
           </h3>
         </template>
       </div>
     </div>
-    <div class="project-item__button scroll-opacity" :data-scroll-index="paraphToLines.length + keywords.length + 4">
+    <div 
+      class="project-item__button scroll-reveal"
+      :data-scroll-index="paraphToLines.length + keywords.length + 4"
+      data-scroll-reveal-opacity-y
+      data-scroll-reveal-delay="1"
+      data-scroll-reveal-duration="1"
+    >
       <svg x="0px" y="0px" viewBox="0 0 124 124">
         <polygon points="0,120 60,10 120,120" fill="transparent" stroke="#fff" stroke-width="1" />
         <g class="cross">

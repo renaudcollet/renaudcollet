@@ -12,11 +12,11 @@
     //     clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
     // }
 
-    &--opacity {
+    &[data-scroll-reveal-opacity-y] {
         opacity: 0;
         transform: translateY(40px);
       
-        &[data-scroll-index="0"] {
+        /* &[data-scroll-index="0"] {
           transition: opacity $opacity-scroll-duration 0.1s, transform $translate-scroll-duration 0.1s;
         }
       
@@ -58,9 +58,9 @@
       
         &[data-scroll-index="10"] {
           transition: opacity $opacity-scroll-duration 1.1s, transform $translate-scroll-duration 1.1s;
-        }
+        } */
 
-        &--show {
+        /* &--show {
             opacity: 1;
             transform: translateY(0);
         
@@ -107,6 +107,6 @@
             &[data-scroll-index="10"] {
               transition: opacity $opacity-scroll-duration 1.1s, transform $translate-scroll-duration 1.1s;
             }
-        }
+        } */
     }
 }
