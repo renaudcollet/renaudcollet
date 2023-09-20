@@ -18,16 +18,13 @@ export default function useScrollReveal() {
 
       console.log('initScrollReveal', targets)
 
-      // gsap.set(targets, { opacity: 0, y: '+=40' })
-
       // Intersection Observer to trigger apparition of the logo on scroll
       intersectionObserver = new IntersectionObserver((entries) => {
         for(let i = 0; i < entries.length; i++) {
           const entry = entries[i]
           if (entry.isIntersecting || entry.intersectionRatio > 0) {
 
-            console.log('entry', entry.target.dataset.scrollRevealHeightDelay);
-            if (entry.target.dataset.scrollRevealHeight !== null) {
+            if (entry.target.dataset.scrollRevealHeight !== undefined) {
                 gsap.fromTo(entry.target, {
                     height: 0,
                 }, {
@@ -35,7 +32,16 @@ export default function useScrollReveal() {
                     height: 'auto',
                     delay: entry.target.dataset.scrollRevealHeightDelay
                 })
+            } else if (entry.target.dataset.scrollRevealClipPath !== undefined) {
+                gsap.to(entry.target, {
+                    duration: 0.5,
+                    clipPath: entry.target.dataset.scrollRevealClipPath,
+                    delay: entry.target.dataset.scrollRevealClipPathDelay,
+                    duration: entry.target.dataset.scrollRevealClipPathDuration,
+                    ease: 'power2.inOut'
+                })
             }
+
             // let index = entry.target.dataset.scrollIndex
             // if (!index) index = 0
             // GSAP animation
@@ -58,7 +64,7 @@ export default function useScrollReveal() {
       targets.forEach(target => {
         intersectionObserver.observe(target, {
           // threshold: 1,
-          rootMargin: '-100px 0px -100px 0px',
+          rootMargin: '-200px 0px -100px 0px',
           // root: document.body
         })
       })

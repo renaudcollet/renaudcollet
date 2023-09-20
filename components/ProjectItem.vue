@@ -1,12 +1,18 @@
 <template>
   <NuxtLink class="project-item project-item-this">
     <!-- <ClientOnly> -->
-      <ImagePlane 
-        data-scroll-index="0"
-        :src="coverSrc" 
-        object-fit="cover" 
-        class="project-item__image scroll-opacity scroll-opacity--no-translate" 
-      />
+      <div 
+        class="image-container scroll-reveal"
+        data-scroll-reveal-clip-path="polygon(0% 0, 175% 0, 100% 100%, -75% 100%)"
+        data-scroll-reveal-clip-path-delay="0.3"
+        data-scroll-reveal-clip-path-duration="2"
+      >
+        <ImagePlane 
+          :src="coverSrc" 
+          object-fit="cover" 
+          class="project-item__image" 
+        />
+      </div>
     <!-- </ClientOnly> -->
     <h1 class="project-item__title">
       <div v-for="(line, index) in paraphToLines" class="line">
@@ -42,6 +48,7 @@
 
 <script setup>
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
+import gsap from 'gsap'
 
 const config = useRuntimeConfig()
 const props = defineProps({
@@ -54,10 +61,6 @@ const props = defineProps({
     required: true,
   }
 })
-// onMounted(() => {
-//   console.log('mounted', props.id, props.title);
-//   console.log('keywords', props.keywords);
-// })
 
 const keywords = props.datas.attributes.keywords.data;
 
@@ -75,13 +78,19 @@ const paraphToLines = computed(() => {
   margin: 0 auto 90px;
   color: #fff;
   text-decoration: none;
+  width: calc(100vw - 60px);
+  height: 56.25vw;
 
   @include media-breakpoint-up(lg) {
     margin-bottom: 140px;
+    height: 500px;
+    width: 870px;
   }
 
   @include media-breakpoint-up(xl) {
     margin-bottom: 200px;
+    width: 1040px;
+    height: 580px;
   }
 
   svg {
@@ -160,6 +169,10 @@ const paraphToLines = computed(() => {
       }
     }
   }
+
+  .image-container {
+    clip-path: polygon(75% 0, 75% 0, 25% 100%, 25% 100%);
+  }
   
   &__alt {
     display: flex;
@@ -185,7 +198,7 @@ const paraphToLines = computed(() => {
       right: 0;
       top: 0;
       user-select: none;
-      // clip-path: polygon(0 0, 0 75%, 25% 100%, 100% 100%, 100% 25%, 75% 0);
+      // // clip-path: polygon(0 0, 0 75%, 25% 100%, 100% 100%, 100% 25%, 75% 0);
       clip-path: polygon(25% 0, 100% 0, 100% 75%, 75% 100%, 0 100%, 0 25%);
 
       @include media-breakpoint-up(lg) {
@@ -206,15 +219,12 @@ const paraphToLines = computed(() => {
     bottom: 0;
     margin-left: 0;
     transform: translate3d(0, 0, 0);
-    // clip-path: polygon(0 0, 0 75%, 25% 100%, 100% 100%, 100% 25%, 75% 0);
-    // clip-path: polygon(25% 0, 100% 0, 100% 75%, 75% 100%, 0 100%, 0 25%);
 
     @include media-breakpoint-up(md) {
       margin-left: 8.333333vw;
     }
 
     @include media-breakpoint-up(lg) {
-      // position: relative;
       order: 1;
       bottom: 0;
       margin-left: 65.384615px;
@@ -222,9 +232,6 @@ const paraphToLines = computed(() => {
     }
 
     @include media-breakpoint-up(xl) {
-      // position: relative;
-      order: 1;
-      bottom: 0;
       margin-left: 85px;
       left: 0;
     }
@@ -305,27 +312,25 @@ const paraphToLines = computed(() => {
     }
 
     @include media-breakpoint-up(xl) {
-      // font-size: 72px;
-      font-size: 62px;
+      font-size: 70px;
       margin-bottom: 15px;
       margin-top: 28px;
-      margin-left: 30px;
+      margin-left: 45px;
+      padding-right: 60px;
     }
   }
 
   h3 {
     font-size: 11px;
-    font-weight: 300;
+    font-weight: 200;
     margin-bottom: 5px;
-    // text-decoration: underline;
 
     @include media-breakpoint-up(md) {
-      font-size: 3.055556vw;
-      margin-bottom: 1.388889vw;
+      font-size: 13px;
+      margin-bottom: 9px;
     }
 
     @include media-breakpoint-up(lg) {
-      font-size: 12px;
       margin-bottom: 9px;
       line-height: 0.6;
     }

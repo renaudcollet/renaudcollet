@@ -192,6 +192,10 @@ onMounted(() => {
   width: 100%;
   z-index: $z-header;
 
+  @include media-breakpoint-up(xl) {
+    top: 66px;
+  }
+
   &::before {
     content: '';
     position: absolute;
@@ -223,11 +227,19 @@ onMounted(() => {
       cursor: pointer;
       right: 0;
 
+      @include media-breakpoint-up(xl) {
+        right: 97px;
+      }
+
       &__label {
         display: flex;
         font-size: 8px;
         font-weight: 300;
         color: #fff;
+
+        @include media-breakpoint-up(xl) {
+          font-size: 10px;
+        }
       }
 
       &__arrow {
@@ -261,6 +273,10 @@ onMounted(() => {
       overflow: hidden;
       position: absolute;
       right: 0;
+
+      @include media-breakpoint-up(xl) {
+        right: 69px;
+      }
     }
 
     &__selected {
@@ -275,6 +291,10 @@ onMounted(() => {
       position: absolute;
       right: 0;
       top: 40px;
+
+      @include media-breakpoint-up(xl) {
+        right: 69px;
+      }
     }
 
     &__zone {
@@ -284,7 +304,7 @@ onMounted(() => {
       height: 100vh;
       z-index: $z-menu-zone;
 
-      @include media-breakpoint-up(xl) {
+      @include media-breakpoint-up(lg) {
         display: none;
       }
     }

@@ -7,6 +7,11 @@
         overflow: hidden;
     }
 
+    // &[data-scroll-reveal-clip-path] {
+    //     overflow: hidden;
+    //     clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    // }
+
     &--opacity {
         opacity: 0;
         transform: translateY(40px);
