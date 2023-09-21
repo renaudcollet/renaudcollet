@@ -191,7 +191,7 @@ SECTION .cover-top
 
   @include media-breakpoint-up(md) {
     display: flex;
-    align-items: center;
+    align-items: end;
   }
 
   &__image {
@@ -230,6 +230,7 @@ SECTION .cover-top
 
     @include media-breakpoint-up(xl) {
       margin-left: 300px;
+      bottom: 12vh;
     }
 
     &__header-minimize {
@@ -274,7 +275,7 @@ SECTION .cover-top
       }
 
       @include media-breakpoint-up(xl) {
-        font-size: 34px;
+        font-size: 26px;
       }
     }
   }
