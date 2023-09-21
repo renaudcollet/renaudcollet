@@ -288,25 +288,18 @@ export default {
 
     &__title {
       font-size: 24px;
-      font-weight: 800;
+      font-weight: 700;
       margin-top: 11px;
       margin-bottom: 13px;
       padding: 0 30px;
       text-align: center;
 
       @include media-breakpoint-up(lg) {
-        font-size: 72px;
-        margin-top: 32px;
-        margin-bottom: 47px;
-        padding: 0;
-        text-align: left;
-      }
-
-      @include media-breakpoint-up(xl) {
-        font-size: 72px;
+        font-size: 60px;
         margin-top: 32px;
         margin-bottom: 24px;
         padding: 0;
+        text-align: left;
       }
     }
   

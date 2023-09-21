@@ -51,19 +51,20 @@
     </section>
     <section class="projects">
       <template v-for="(item, index) in currentProjectBlocs">
-        <WorkItem1
+        <WorkItemTitleResume
           v-if="item.Image.data === null && item.Video.data === null"
           :title="item.Titre"
           :content="item.Resume"
+          :type="item.type"
         />
-        <WorkItem2 
+        <WorkItemBig
           v-else-if="item.type === 'Big'"
           :src="item.Image.data ? config.public.backendUrl + item.Image.data.attributes.formats.large.url : null" 
           :video-src="item.Video.data ? config.public.backendUrl + item.Video.data.attributes.url : null"
           :title="item.Titre"
           :content="item.Resume"
         />
-        <WorkItem3 
+        <WorkItemSmall
           v-else-if="item.type === 'Small'"
           :index="index" 
           :src="item.Image.data ? config.public.backendUrl + item.Image.data.attributes.formats.large.url : null" 
@@ -238,10 +239,11 @@ SECTION .cover-top
 
     &__project {
       font-weight: 700;
-      font-size: 40px;
+      font-size: 30px;
       text-align: left;
       line-height: 1;
       margin-bottom: 0;
+      filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
 
       @include media-breakpoint-up(md) {
         font-size: 40px;
@@ -262,6 +264,7 @@ SECTION .cover-top
       line-height: 1;
       font-weight: 500;
       margin-bottom: 5px;
+      filter: drop-shadow(0px 0px 8px rgba(0, 0, 0, 0.5));
 
       @include media-breakpoint-up(md) {
         font-size: 18px;

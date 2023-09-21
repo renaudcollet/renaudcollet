@@ -1,5 +1,5 @@
 <template>
-  <div class="work-item-1">
+  <div class="work-item-1" :class="{'small' : type === 'Small'}">
     <div class="work-item-1__answer z-index-text">
       <h3 class="work-item-1__answer__title scroll-opacity" data-scroll-index="0">{{ title }}</h3>
       <div v-if="content" class="work-item-1__answer__text scroll-opacity"  data-scroll-index="1" v-html="content"></div>
@@ -22,6 +22,10 @@ export default {
       type: String,
       required: false,
     },
+    type: {
+      type: String,
+      required: false,
+    },
   }
 }
 </script>
@@ -32,22 +36,33 @@ export default {
       display: flex;
       flex-direction: column;
       align-items: center;
-      background-color: #2b2a2b;
+      // background-color: #2b2a2b;
 
       &__title {
           text-align: center;
           font-weight: 300;
-          font-size: 20px;
+          font-size: 24px;
           // text-decoration: underline;
           color: #fff;
           margin-bottom: 20px;
           margin-top: 30px;
           font-weight: 700;
 
+          .small & {
+            font-size: 16px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+          }
+
           @include media-breakpoint-up(lg) {
               margin-top: 60px;
               margin-bottom: 40px;
-              font-size: 18px;
+              font-size: 60px;
+
+              .small & {
+                font-size: 30px;
+                margin-bottom: 20px;
+              }
           }
       }
       &__text {
@@ -56,16 +71,19 @@ export default {
           margin: 0 60px 30px;
           text-align: center;
           font-weight: normal;
+
           @include media-breakpoint-up(md) {
               font-size: $font-size-text-md;
               line-height: 1.2;
               margin-bottom: 50px;
           }
+
           @include media-breakpoint-up(lg) {
               font-size: $font-size-text-lg;
               width: 56vw;
               margin-bottom: 104px;
           }
+
           @include media-breakpoint-up(xl) {
               width: 756px;
           }
