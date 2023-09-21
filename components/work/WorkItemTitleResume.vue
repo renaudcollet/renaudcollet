@@ -1,8 +1,8 @@
 <template>
-  <div class="work-item-1" :class="{'small' : type === 'Small'}">
-    <div class="work-item-1__answer z-index-text">
-      <h3 class="work-item-1__answer__title scroll-opacity" data-scroll-index="0">{{ title }}</h3>
-      <div v-if="content" class="work-item-1__answer__text scroll-opacity"  data-scroll-index="1" v-html="content"></div>
+  <div class="work-item-title" :class="{'small' : type === 'Small'}">
+    <div class="work-item-title__answer z-index-text">
+      <h3 class="work-item-title__answer__title scroll-opacity" data-scroll-index="0">{{ title }}</h3>
+      <div v-if="content" class="work-item-title__answer__text scroll-opacity"  data-scroll-index="1" v-html="content"></div>
     </div>
   </div>
 </template>
@@ -31,7 +31,7 @@ export default {
 </script>
 
 <style lang="scss">
-.work-item-1 { 
+.work-item-title { 
   &__answer {
       display: flex;
       flex-direction: column;

@@ -1,6 +1,6 @@
 <template>
-  <div class="work-item-2">
-    <div class="work-item-2__image" :class="{'scroll-opacity': !supportsCurtains}" data-scroll-index="0">
+  <div class="work-item-big">
+    <div class="work-item-big__image" :class="{'scroll-opacity': !supportsCurtains}" data-scroll-index="0">
       <ClientOnly>
         <ImagePlane 
           v-if="!playVideo"
@@ -13,7 +13,7 @@
       </ClientOnly>
       <VideoComponent
           v-if="playVideo"
-          class="work-item-2__image__video"
+          class="work-item-big__image__video"
           :src="src" 
           :video-src="videoSrc" 
           :id="titleAlphaNumeric" 
@@ -25,15 +25,25 @@
           alt=""
       ></VideoComponent>
     </div>
-    <div class="work-item-2__content z-index-text" :class="{'hide': playVideo}">
-      <div v-if="isVideo()" class="work-item-2__content__button scroll-opacity" data-scroll-index="0" ref="btn-play" @click="onClickPlayVideo">
-        <svg x="0px" y="0px" viewBox="0 0 130 130">
-          <path class="circle" fill="#ffffff" d="M65,19.5c25.1,0,45.5,20.4,45.5,45.5S90.1,110.5,65,110.5S19.5,90.1,19.5,65 S39.9,19.5,65,19.5z"/>
-          <polygon class="triangle" fill="#ffffff" points="84.2,66.4 55.8,79.9 55.8,52.9" />
-        </svg>
+    <div class="work-item-big__content z-index-text" :class="{'hide': playVideo}">
+      <div class="work-item-big__content__abs">
+        <div 
+          v-if="isVideo()" 
+          class="work-item-big__content__button scroll-opacity" 
+          data-scroll-index="0" 
+          ref="btn-play"
+          @click="onClickPlayVideo"
+        >
+          <svg x="0px" y="0px" viewBox="-27 -15 162 150">
+            <polygon class="triangle-button" points="0,120 60,10 120,120" fill="transparent" stroke="#fff" stroke-width="1" />
+            <g>
+              <polygon class="triangle" fill="#ffffff" points="84.2,66.4 55.8,79.9 55.8,52.9" />
+            </g>
+          </svg>
+        </div>
+        <h3 class="work-item-big__content__title scroll-opacity" data-scroll-index="1" v-html="title"></h3>
       </div>
-      <h3 class="work-item-2__content__title scroll-opacity" data-scroll-index="1" v-html="title"></h3>
-      <div class="work-item-2__content__text scroll-opacity" data-scroll-index="2" v-html="content"></div>
+      <div class="work-item-big__content__text scroll-opacity" data-scroll-index="2" v-html="content"></div>
     </div>
   </div>
 </template>
@@ -119,7 +129,7 @@ export default {
         v: 1,
         onComplete: () => {
           this.activateVideo = true;
-          gsap.to('.work-item-2__content', {
+          gsap.to('.work-item-big__content', {
             duration: 0.3,
             autoAlpha: 0,
             transform: 'translateY(50px)',
@@ -140,7 +150,7 @@ export default {
     onVideoOutOfView() {
       this.playVideo = false;
       this.activateVideo = false;
-      gsap.to('.work-item-2__content', {
+      gsap.to('.work-item-big__content', {
         duration: 0.3,
         autoAlpha: 1,
         transform: 'translateY(0px)',
@@ -152,19 +162,16 @@ export default {
 </script>
 
 <style lang="scss">
-.work-item-2 {
+.work-item-big {
   display: flex;
   flex-direction: column;
   align-items: center;
-  // margin-bottom: 72px;
+  margin-bottom: 50px;
 
-  // @include media-breakpoint-up(lg) {
-  //   margin-bottom: 210px;
-  // }
-
-  // @include media-breakpoint-up(xl) {
-  //   margin-bottom: 210px; // 210px
-  // }
+  @include media-breakpoint-up(lg) {
+    align-items: start;
+    margin-bottom: 150px;
+  }
 
   &__image {
     height: 54vw;
@@ -172,7 +179,6 @@ export default {
     position: relative;
 
     @include media-breakpoint-up(lg) {
-      // height: 559px;
       height: 100vh;
     }
 
@@ -188,7 +194,6 @@ export default {
       z-index: $z-video;
 
       @include media-breakpoint-up(lg) {
-        // height: 559px;
         height: 100vh;
       }
 
@@ -202,25 +207,22 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: -45px;
     position: relative;
     z-index: $z-video-button-play;
 
     @include media-breakpoint-up(lg) {
       width: 500px;
-      margin-top: -276px;
       align-items: flex-start;
+      margin-left: 250px;
     }
 
     @include media-breakpoint-up(xl) {
-      width: 650px;
-      margin-top: -260px;
-      align-items: flex-start;
+      width: 750px;
     }
 
     &__button {
-      width: 40px;
-      height: 40px;
+      width: 50px;
+      height: 50px;
       margin-left: -6px;
 
       svg {
@@ -229,17 +231,21 @@ export default {
         transition: transform 0.3s ease;
       }
 
-      .circle {
+      g {
+        transform: translate(-6px, 15px);
+      }
+      
+      .triangle-button {
+        fill: rgba(0, 0, 0, 0.3);
         transform: scale(1);
         transform-origin: center;
-        transition: transform 0.3s 0.10s ease;
+        transition: transform 0.3s 0.10s ease, stroke-width 0.6s 0.1s ease;
       }
+
       .triangle {
         transform: scale(1);
         transform-origin: center;
         transition: transform 0.3s ease, fill 0.1s 0.3s ease;
-        // filter: invert(1);
-        fill: #000000;
         opacity: 0.9;
       }
 
@@ -251,31 +257,39 @@ export default {
           transition: transform 0.3s ease;
         }
 
-        .circle {
+        .triangle-button {
           transform-origin: center;
           transform: scale(0) !important;
-          transition: transform 0.3s ease;
+          transition: transform 0.3s ease, stroke-width 0.6s 0.1s ease;
+          stroke-width: 1;
         }
+
         .triangle {
+          transform-origin: center;
           transform: scale(1.4);
           transition: transform 0.3s ease, fill 0.1s 0.3s ease;
           fill: #ffffff;
-          // filter: invert(0);
           opacity: 1;
         }
       }
 
       @include media-breakpoint-up(lg) {
-        width: 94px;
-        height: 94px;  
+        width: 120px;
+        height: 120px;  
         margin-left: -10px;
         cursor: pointer;
+        align-self: flex-start;
+
+        .triangle-button {
+          fill: rgba(0, 0, 0, 0.2);
+        }
 
         &:hover {
-          .circle {
+          .triangle-button {
             transform: scale(1.3);
             transform-origin: center;
-            transition: transform 0.3s 0.10s ease;
+            transition: transform 0.3s 0.10s ease, stroke-width 0.6s 0.1s ease;
+            stroke-width: 4;
           }
           .triangle {
             transform: scale(1.4);
@@ -283,6 +297,19 @@ export default {
             transition: transform 0.4s ease, fill 0.1s 0.3s ease;
           }
         } 
+      }
+    }
+
+    &__abs {
+      position: absolute;
+      bottom: 65px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.8));
+      
+      @include media-breakpoint-up(lg) {
+        bottom: 110px;
       }
     }
 

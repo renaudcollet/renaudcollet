@@ -1,6 +1,6 @@
 <template>
-  <div class="work-item-3">
-    <div class="work-item-3__image">
+  <div class="work-item-small">
+    <div class="work-item-small__image">
       <ClientOnly>
         <ImagePlane 
           :src="src" 
@@ -13,7 +13,7 @@
       </ClientOnly>
       <VideoComponent
           v-if="playVideo"
-          class="work-item-3__image__video"
+          class="work-item-small__image__video"
           :src="src" 
           :video-src="videoSrc" 
           :id="titleAlphaNumeric" 
@@ -25,21 +25,25 @@
           alt=""
       ></VideoComponent>
     </div>
-    <div class="work-item-3__content z-index-text">
-      <div 
-        v-if="isVideo()" 
-        @click="onClickPlayVideo"
-        ref="btn-play" 
-        class="work-item-3__content__button scroll-opacity" 
-        data-scroll-index="1" 
-      >
-        <svg x="0px" y="0px" viewBox="0 0 130 130">
-          <path class="circle" fill="#ffffff" d="M65,19.5c25.1,0,45.5,20.4,45.5,45.5S90.1,110.5,65,110.5S19.5,90.1,19.5,65 S39.9,19.5,65,19.5z"/>
-          <polygon class="triangle" fill="#ffffff" points="84.2,66.4 55.8,79.9 55.8,52.9" />
-        </svg>
+    <div class="work-item-small__content z-index-text">
+      <div class="work-item-small__content__abs">
+        <div 
+          v-if="isVideo()" 
+          @click="onClickPlayVideo"
+          ref="btn-play" 
+          class="work-item-small__content__button scroll-opacity" 
+          data-scroll-index="1" 
+        >
+          <svg x="0px" y="0px" viewBox="-27 -15 162 150">
+            <polygon class="triangle-button" points="0,120 60,10 120,120" fill="transparent" stroke="#fff" stroke-width="1" />
+            <g>
+              <polygon class="triangle" fill="#ffffff" points="84.2,66.4 55.8,79.9 55.8,52.9" />
+            </g>
+          </svg>
+        </div>
+        <h3 class="work-item-small__content__title scroll-opacity" data-scroll-index="2" v-html="content.title"></h3>
       </div>
-      <h3 class="work-item-3__content__title scroll-opacity" data-scroll-index="2" v-html="content.title"></h3>
-      <div class="work-item-3__content__text scroll-opacity" data-scroll-index="3" v-html="content.content"></div>
+      <div class="work-item-small__content__text scroll-opacity" data-scroll-index="3" v-html="content.content"></div>
     </div>
   </div>
 </template>
@@ -115,7 +119,7 @@ export default {
         v: 1,
         onComplete: () => {
           this.activateVideo = true;
-          const el = this.$el.querySelector('.work-item-3__content');
+          const el = this.$el.querySelector('.work-item-small__content');
           gsap.to(el, {
             duration: 0.3,
             autoAlpha: 0,
@@ -137,7 +141,7 @@ export default {
     onVideoOutOfView() {
       this.playVideo = false;
       this.activateVideo = false;
-      gsap.to('.work-item-3__content', {
+      gsap.to('.work-item-small__content', {
         duration: 0.3,
         autoAlpha: 1,
         transform: 'translateY(0px)',
@@ -149,15 +153,17 @@ export default {
 </script>
 
 <style lang="scss">
-.work-item-3 {
+.work-item-small {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   margin-bottom: 38px;
+  padding-top: 40px;
 
   @include media-breakpoint-up(lg) {
     margin-bottom: 210px;
+    padding-top: 80px;
   }
 
   @include media-breakpoint-up(xl) {
@@ -241,8 +247,8 @@ export default {
     }
 
     &__button {
-      width: 40px;
-      height: 40px;
+      width: 50px;
+      height: 50px;
       margin-left: -6px;
       pointer-events: all;
 
@@ -252,17 +258,23 @@ export default {
         transition: transform 0.3s ease;
       }
 
-      .circle {
+      g {
+        transform: translate(-6px, 15px);
+      }
+      
+      .triangle-button {
+        fill: rgba(0, 0, 0, 0.3);
         transform: scale(1);
         transform-origin: center;
-        transition: transform 0.3s 0.10s ease;
+        transition: transform 0.3s 0.10s ease, stroke-width 0.6s 0.1s ease;
       }
+
       .triangle {
         transform: scale(1);
         transform-origin: center;
         transition: transform 0.3s ease, fill 0.1s 0.3s ease;
         // filter: invert(1);
-        fill: #000000;
+        fill: #fff;
         opacity: 0.9;
       }
 
@@ -274,12 +286,15 @@ export default {
           transition: transform 0.3s ease;
         }
 
-        .circle {
+        .triangle-button {
           transform-origin: center;
           transform: scale(0) !important;
-          transition: transform 0.3s ease;
+          transition: transform 0.3s ease, stroke-width 0.6s 0.1s ease;
+          stroke-width: 1;
         }
+
         .triangle {
+          transform-origin: center;
           transform: scale(1.4);
           transition: transform 0.3s ease, fill 0.1s 0.3s ease;
           fill: #ffffff;
@@ -289,16 +304,21 @@ export default {
       }
 
       @include media-breakpoint-up(lg) {
-        width: 94px;
-        height: 94px;  
+        width: 120px;
+        height: 120px;  
         margin-left: -10px;
         cursor: pointer;
 
+        .triangle-button {
+          fill: rgba(0, 0, 0, 0.2);
+        }
+
         &:hover {
-          .circle {
+          .triangle-button {
             transform: scale(1.3);
             transform-origin: center;
-            transition: transform 0.3s 0.10s ease;
+            transition: transform 0.3s 0.10s ease, stroke-width 0.6s 0.1s ease;
+            stroke-width: 4;
           }
           .triangle {
             transform: scale(1.4);
@@ -308,23 +328,30 @@ export default {
         } 
       }
     }
+
+    &__abs {
+      position: absolute;
+      bottom: 65px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.8));
+      
+      @include media-breakpoint-up(lg) {
+        bottom: 106px;
+      }
+    }
     
     &__title {
       font-size: 24px;
-      font-weight: 800;
-      margin-top: 28px;
+      font-weight: 700;
+      margin-top: 12px;
       margin-bottom: 15px;
 
       @include media-breakpoint-up(lg) {
-        font-size: 72px;
-        margin-top: 32px;
-        margin-bottom: 47px;
-      }
-
-      @include media-breakpoint-up(xl) {
-        font-size: 72px;
-        margin-top: 32px;
-        margin-bottom: 24px;
+        font-size: 60px;
+        margin-top: 30px;
+        margin-bottom: 30px;
       }
     }
   
