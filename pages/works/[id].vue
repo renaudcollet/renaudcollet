@@ -4,11 +4,11 @@
       <div class="cover-top__image">
         <picture>
           <source
-            :srcset="config.public.backendUrl + currentProjectCover.formats.large.url"
-            media="(min-width: 2050px) and (orientation: landscape)"
+            :srcset="config.public.backendUrl + xxlarge"
+            media="(min-width: 1600px) and (orientation: landscape)"
           />
           <source
-            :srcset="config.public.backendUrl + currentProjectCover.formats.large.url"
+            :srcset="config.public.backendUrl + xlarge"
             media="(orientation: landscape)"
           />
           <source
@@ -107,6 +107,8 @@ const keywords = currentProject.attributes.keywords.data
 const root = ref(null);
 const { initScrollOpacity, clearScrollOpacity } = useScrollOpacity();
 
+const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProjectCover.formats.xxlarge.url : currentProjectCover.url;
+const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
 
 onMounted(() => {
   gsap.killTweensOf('#header-logo')
@@ -191,7 +193,7 @@ SECTION .cover-top
 
   @include media-breakpoint-up(md) {
     display: flex;
-    align-items: end;
+    align-items: flex-end;
   }
 
   &__image {
@@ -200,12 +202,15 @@ SECTION .cover-top
     font-size: 0;
     position: absolute;
     background: black;
+    clip-path: polygon(25% 0, 100% 0, 100% 75%, 75% 100%, 0 100%, 0 25%);
+
     img {
       width: 100%;
       height: 100%;
       pointer-events: none;
       object-fit: cover;
     }
+
     @include media-breakpoint-up(md) {
       height: 100vh;
     }
@@ -243,8 +248,8 @@ SECTION .cover-top
       font-size: 30px;
       text-align: left;
       line-height: 1;
-      margin-bottom: 0;
-      filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
+      margin-bottom: 15px;
+      filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.7));
 
       @include media-breakpoint-up(md) {
         font-size: 40px;
@@ -253,6 +258,7 @@ SECTION .cover-top
 
       @include media-breakpoint-up(lg) {
         font-size: 60px;
+        margin-bottom: 30px;
       }
 
       @include media-breakpoint-up(xl) {
@@ -271,11 +277,13 @@ SECTION .cover-top
         font-size: 18px;
         line-height: 1;
         letter-spacing: normal;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
+        margin-left: 10px;
       }
 
       @include media-breakpoint-up(xl) {
         font-size: 26px;
+        margin-left: 10px;
       }
     }
   }

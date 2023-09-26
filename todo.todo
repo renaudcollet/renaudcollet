@@ -7,9 +7,11 @@ Design:
 
 Intégration:
     ☐ Bug header when resize from xl to lg
+    ☐ When click filters, go to page works
+    ☐ Page projet, add a link to next project
 
 Animation:
-    ☐ Titles and Vignettes should appear with a skew mask animation
+    ✔ Titles and Vignettes should appear with a skew mask animation @done(23-09-21 16:56)
 
 Webgl:
     ☐ Add a webgl background
@@ -17,3 +19,4 @@ Webgl:
 
 Data:
     ☐ Improve initial data loading
+    ☐ slug : prepend brand to slug 

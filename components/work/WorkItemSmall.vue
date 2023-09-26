@@ -41,9 +41,9 @@
             </g>
           </svg>
         </div>
-        <h3 class="work-item-small__content__title scroll-opacity" data-scroll-index="2" v-html="content.title"></h3>
+        <h3 class="work-item-small__content__title scroll-opacity" data-scroll-index="2" v-html="content.title === null ? '' : content.title"></h3>
       </div>
-      <div class="work-item-small__content__text scroll-opacity" data-scroll-index="3" v-html="content.content"></div>
+      <div class="work-item-small__content__text scroll-opacity" data-scroll-index="3" v-html="content.content === null ? '' : content.content"></div>
     </div>
   </div>
 </template>
@@ -80,10 +80,6 @@ export default {
       required: false,
       default: null
     },
-    onRender: {
-      type: Function,
-      required: false,
-    },
   },
   data() {
     return {
@@ -94,10 +90,7 @@ export default {
   computed: {
     titleAlphaNumeric() {
       return this.toAlphaNumeric(this.content.title);
-    },
-    titleUnderscore() {
-      return this.content.title + '&nbsp;<sub class="big-underscore">&nbsp;—</sub>';
-    },
+    }
   },
   methods: {
     isVideo() {

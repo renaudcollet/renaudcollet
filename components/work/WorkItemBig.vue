@@ -81,11 +81,7 @@ export default {
       type: String,
       required: false,
       default: null
-    },
-    onRender: {
-      type: Function,
-      required: false,
-    },
+    }
   }, 
   data() {
     return {
@@ -96,10 +92,7 @@ export default {
   computed: {
     titleAlphaNumeric() {
       return this.toAlphaNumeric(this.$props.title);
-    },
-    titleUnderscore() {
-      return this.$props.title + '&nbsp;<sub class="big-underscore">&nbsp;—</sub>';
-    },
+    }
   },
   mounted() {
     setTimeout(() => {

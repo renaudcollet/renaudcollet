@@ -8,7 +8,7 @@
         data-scroll-reveal-duration="1.6"
       >
         <ImagePlane 
-          :src="coverSrc" 
+          :src="config.public.backendUrl + coverSrc" 
           object-fit="cover" 
           class="project-item__image" 
         />
@@ -85,7 +85,8 @@ const props = defineProps({
 
 const keywords = props.datas.attributes.keywords.data;
 
-const coverSrc = config.public.backendUrl + props.datas.attributes.cover.data.attributes.formats.large.url;
+// const coverSrc = config.public.backendUrl + props.datas.attributes.cover.data.attributes.formats.large.url;
+const coverSrc = props.datas.attributes.cover.data.attributes.formats.large !== undefined ? props.datas.attributes.cover.data.attributes.formats.large.url : props.datas.attributes.cover.data.attributes.url;
 
 const paraphToLines = computed(() => {
   return props.datas.attributes.titre.split('<br />');
@@ -198,13 +199,15 @@ const paraphToLines = computed(() => {
   &__alt {
     display: flex;
     flex-direction: column;
+    padding: 13px 12px 20px;
+    // border: 0;
+    // border-bottom: 0;
+    min-width: 10vw;
     background-color: rgba(5, 5, 5, 0.5);
-    padding: 8px 8px 20px;
-    border: 1px solid;
-    border-bottom: 0;
+    background: linear-gradient(90deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.4) 54%, rgba(0,0,0,0.2) 83%, rgba(36,36,36,0) 100%);
 
     @include media-breakpoint-up(xl) {
-      padding: 15px 15px 70px;
+      padding: 25px 15px 70px 20px;
     }
   }
 
@@ -238,26 +241,26 @@ const paraphToLines = computed(() => {
 
   &__text {
     position: absolute;
-    left: 15px;
+    left: 0;
     bottom: 0;
     margin-left: 0;
     transform: translate3d(0, 0, 0);
 
-    @include media-breakpoint-up(md) {
-      margin-left: 8.333333vw;
-    }
+    // @include media-breakpoint-up(md) {
+    //   margin-left: 8.333333vw;
+    // }
 
     @include media-breakpoint-up(lg) {
-      order: 1;
-      bottom: 0;
-      margin-left: 65.384615px;
+      // order: 1;
+      // bottom: 0;
+      // margin-left: 65.384615px;
       left: 0;
     }
 
-    @include media-breakpoint-up(xl) {
-      margin-left: 85px;
-      left: 0;
-    }
+    // @include media-breakpoint-up(xl) {
+    //   margin-left: 85px;
+    //   left: 0;
+    // }
   }
 
   &__button {
