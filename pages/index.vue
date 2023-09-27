@@ -6,7 +6,7 @@
       </div>
     </div>
     <section class="projects-home">
-      <template v-for="(item, index) in storeDatas.projectsFiltered">
+      <template v-for="(item, index) in storeDatas.projectsFiltered" :key="index">
         <ProjectItem 
           class="projects-home__item" 
           :id="index"

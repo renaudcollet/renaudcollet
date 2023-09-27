@@ -69,7 +69,7 @@
 
 <script setup>
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
-import gsap from 'gsap'
+// import gsap from 'gsap'
 
 const config = useRuntimeConfig()
 const props = defineProps({
@@ -83,13 +83,24 @@ const props = defineProps({
   }
 })
 
-const keywords = props.datas.attributes.keywords.data;
+const keywords = computed(() => {
+  return props.datas.attributes.keywords.data;
+})
 
-// const coverSrc = config.public.backendUrl + props.datas.attributes.cover.data.attributes.formats.large.url;
-const coverSrc = props.datas.attributes.cover.data.attributes.formats.large !== undefined ? props.datas.attributes.cover.data.attributes.formats.large.url : props.datas.attributes.cover.data.attributes.url;
+const coverSrc = computed(() => {
+  return props.datas.attributes.cover.data.attributes.formats.large !== undefined ? props.datas.attributes.cover.data.attributes.formats.large.url : props.datas.attributes.cover.data.attributes.url;
+})
 
 const paraphToLines = computed(() => {
   return props.datas.attributes.titre.split('<br />');
+})
+
+onMounted(() => {
+  console.log('mounted ProjectItem', props.id, props.datas);
+})
+
+onUnmounted(() => {
+  console.log('Unmounted ProjectItem', props.id, props.datas);
 })
 </script>
 
