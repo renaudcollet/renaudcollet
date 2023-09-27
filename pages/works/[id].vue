@@ -12,7 +12,7 @@
             media="(orientation: landscape)"
           />
           <source
-            :srcset="config.public.backendUrl + currentProjectCover.formats.large.url"
+            :srcset="config.public.backendUrl + large"
             media="(min-width: 600px) and (orientation: portrait)"
           />
           <img
@@ -109,6 +109,7 @@ const { initScrollOpacity, clearScrollOpacity } = useScrollOpacity();
 
 const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProjectCover.formats.xxlarge.url : currentProjectCover.url;
 const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
+const large = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
 
 onMounted(() => {
   gsap.killTweensOf('#header-logo')
@@ -249,6 +250,7 @@ SECTION .cover-top
       text-align: left;
       line-height: 1;
       margin-bottom: 15px;
+      padding-right: 30px;
       filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.7));
 
       @include media-breakpoint-up(md) {
@@ -309,8 +311,12 @@ SECTION .cover-top
   flex-direction: column;
   position: relative;
   user-select: none;
-  // background: rgb(0,0,0);
-  // background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 75%, rgba(36,36,36,1) 100%);
+  padding-top: 50px;
+
+  @include media-breakpoint-up(lg) {
+    padding-top: 100px;  
+    max-width: 1920px;
+  }
 }
 
 .workitem3-container {

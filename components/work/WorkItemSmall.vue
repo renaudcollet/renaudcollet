@@ -41,7 +41,7 @@
             </g>
           </svg>
         </div>
-        <h3 class="work-item-small__content__title scroll-opacity" data-scroll-index="2" v-html="content.title === null ? '' : content.title"></h3>
+        <h3 v-if="content.title !== null" class="work-item-small__content__title scroll-opacity" data-scroll-index="2" v-html="content.title"></h3>
       </div>
       <div class="work-item-small__content__text scroll-opacity" data-scroll-index="3" v-html="content.content === null ? '' : content.content"></div>
     </div>
@@ -213,6 +213,7 @@ export default {
     flex-direction: column;
     align-items: center;
     pointer-events: none;
+    width: 74vw;
 
     @include media-breakpoint-up(lg) {
       width: 460px;
@@ -220,22 +221,26 @@ export default {
     }
 
     @include media-breakpoint-up(xl) {
-      width: 560px;
+      width: 876px;
       align-items: flex-start;
 
       .right & {
         order: 1;
         position: relative;
-        margin-right: -170px;
-        margin-top: 187px;
+        margin-right: 40px;
+        margin-top: auto;
+        margin-bottom: auto;
         width: 460px;
+        padding-left: 40px;
       }
 
       .left & {
         position: relative;
-        margin-left: -190px;
-        margin-top: 198px;
+        margin-left: 40px;
+        margin-top: auto;
+        margin-bottom: auto;
         width: 460px;
+        padding-right: 40px;
       }
     }
 
@@ -323,35 +328,28 @@ export default {
     }
 
     &__abs {
-      position: absolute;
-      bottom: 65px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.8));
-      
-      @include media-breakpoint-up(lg) {
-        bottom: 106px;
-      }
     }
     
     &__title {
       font-size: 24px;
       font-weight: 700;
       margin-top: 12px;
-      margin-bottom: 15px;
+      margin-bottom: 0;
 
       @include media-breakpoint-up(lg) {
         font-size: 60px;
         margin-top: 30px;
-        margin-bottom: 30px;
+        margin-bottom: 0;
       }
     }
   
     &__text {
       @include font-main();
       font-weight: normal;
-      padding: 0 45px;
+      padding: 0;
       text-align: center;
       margin-top: 0;
 
@@ -359,6 +357,10 @@ export default {
         text-align: left;
         margin-left: 0;
         padding: 0;
+      }
+
+      p {
+        margin-bottom: 0;
       }
     }
   }

@@ -9,9 +9,11 @@ Intégration:
     ☐ Bug header when resize from xl to lg
     ☐ When click filters, go to page works
     ☐ Page projet, add a link to next project
+    ☐ Kewywords missing, last item doesn't show up on homepage
 
 Animation:
     ✔ Titles and Vignettes should appear with a skew mask animation @done(23-09-21 16:56)
+    ☐ Transition on the cover when click homepage project to project page
 
 Webgl:
     ☐ Add a webgl background
