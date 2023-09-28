@@ -1,7 +1,7 @@
 .zoomable {
   cursor: auto;
   &:hover {
-    cursor: url('~/assets/svg/zoom-open.svg') 16 16, zoom-in;
+    cursor: url('~/assets/svg/zoom-open-triangle.svg') 15 15, zoom-in;
   }
 }
 
@@ -15,7 +15,7 @@
   background-repeat: no-repeat;
   z-index: $z-zoomable;
   // overflow: auto;
-  cursor: url('~/assets/svg/zoom-close.svg') 16 16, zoom-out;
+  cursor: url('~/assets/svg/zoom-close-triangle.svg') 15 15, zoom-out;
 }
 
 .zoomable-image {
@@ -26,11 +26,17 @@
   height: 100%;
 }
 
-.zoomable-exit-button{
+.zoomable-exit-button {
   position: absolute;
   top: 30px;
   right: 30px;
-  width: 30px;
-  height: 30px;
-  background-image: url('~/assets/svg/zoom-close.svg');
+  width: 62px;
+  height: 62px;
+  background-image: url('~/assets/svg/zoom-close-triangle.svg');
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transition: transform 0.2s ease-in-out;
+    transform: scale(1.1);
+  }
 }
