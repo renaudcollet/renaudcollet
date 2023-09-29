@@ -13,7 +13,8 @@ export default {
         },
 
         supportsCurtains() {
-            return false//!this.isTablet && !this.isTouchScreendevice && !this.iOS
+            // return !this.isTablet && !this.isTouchScreendevice && !this.iOS
+            return true
         },
 
         iOS() {

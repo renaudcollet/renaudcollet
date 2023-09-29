@@ -26,7 +26,8 @@
     "pinia": "^2.1.6",
     "screenfull": "^6.0.2",
     "three": "^0.148.0",
-    "voca": "^1.4.1"
+    "voca": "^1.4.1",
+    "vue-curtains": "^1.0.2"
   },
   "overrides": {
     "vue": "latest"

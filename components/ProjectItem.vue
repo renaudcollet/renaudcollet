@@ -8,7 +8,8 @@
         data-scroll-reveal-duration="1.6"
       >
         <ImagePlane 
-          :src="config.public.backendUrl + coverSrc" 
+          :src="config.public.backendUrl + coverSrc"
+          :onRender="onRender"
           object-fit="cover" 
           class="project-item__image" 
         />
@@ -80,6 +81,10 @@ const props = defineProps({
   datas: {
     type: Object,
     required: true,
+  },
+  onRender: {
+    type: Function,
+    required: true,
   }
 })
 
@@ -95,13 +100,13 @@ const paraphToLines = computed(() => {
   return props.datas.attributes.titre.split('<br />');
 })
 
-onMounted(() => {
-  console.log('mounted ProjectItem', props.id, props.datas);
-})
+// onMounted(() => {
+//   console.log('mounted ProjectItem', props.id, props.datas);
+// })
 
-onUnmounted(() => {
-  console.log('Unmounted ProjectItem', props.id, props.datas);
-})
+// onUnmounted(() => {
+//   console.log('Unmounted ProjectItem', props.id, props.datas);
+// })
 </script>
 
 <style lang="scss">

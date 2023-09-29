@@ -16,9 +16,22 @@ Animation:
     ☐ Transition on the cover when click homepage project to project page
 
 Webgl:
-    ☐ Add a webgl background
+    ☐ Add a webgl effect for images reveal using curtains.js
     ☐ Add effect on vignettes when hovering
+    ☐ Would be great to only have threejs to do curtains effect (like on lusion.co)
+
+Curtains: 
+    ☐ Optimize, Pass along a unique Date.getTime() to curtains Plane in ImagePlane
+    ☐ Migrate mixins curtains-shader to composition api use-curtains-shader
 
 Data:
     ☐ Improve initial data loading
-    ☐ slug : prepend brand to slug 
+    ✘ slug : prepend brand to slug @cancelled(23-09-28 12:30) 
+
+SEO:
+    ☐ Add meta tags
+    ☐ Add sitemap
+    ☐ Add robots.txt
+
+Build: 
+    ☐ Create a clear console, then add console.log (like lusion.co)

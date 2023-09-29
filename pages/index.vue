@@ -1,5 +1,12 @@
 <template>
   <div ref="root">
+    <ClientOnly>
+      <ShaderPass 
+        :params="firstPassProps"
+        @render="onFirstPassRender"
+        @ready="onFirstPassReady"
+      />
+    </ClientOnly>
     <div class="header">
       <div id="index-logo" class="logo" data-header-scroll-minimize alt="">
         <Logo />
@@ -12,6 +19,7 @@
           :id="index"
           :datas="item"
           :to="`/works/${item.attributes.slug}`"
+          :onRender="onRender"
         />
       </template>
     </section>
@@ -20,10 +28,12 @@
 </template>
 
 <script setup>
+import { ShaderPass } from 'vue-curtains';
 import { useDatasStore, S_DATA_ACCUEIL, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollOpacity from '~/compositions/use-scroll-opacity';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 import useLogoObserver from '~/compositions/use-logo-observer';
+import useCurtainsShader from '~/compositions/use-curtains-shader';
 import gsap from 'gsap';
 
 const storeDatas = useDatasStore();
@@ -31,12 +41,32 @@ const { fetchDatas } = storeDatas;
 await fetchDatas(S_DATA_ACCUEIL);
 await fetchDatas(S_DATA_PROJECTS);
 
+const props = defineProps({
+  scrollVelocity: {
+    type: Number
+  },
+})
+
 const root = ref(null);
 const { initScrollOpacity, clearScrollOpacity } = useScrollOpacity();
 const { initLogoObserver, clearLogoObserver } = useLogoObserver();
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
+const { 
+  firstPassProps, 
+  onFirstPassReady, 
+  onFirstPassRender, 
+  onRender, 
+  updateScrollVelocity
+} = useCurtainsShader();
 
-watch(() => storeDatas.projectsFiltered, (newVal, oldVal) => {
+const scrollVelocity = toRef(props, 'scrollVelocity');
+
+watch(scrollVelocity, (newVal, oldVal) => {
+  // console.log('watch scrollVelocity', newVal, oldVal);
+  updateScrollVelocity(newVal)
+})
+
+watch(storeDatas.projectsFiltered, (newVal, oldVal) => {
   // console.log('watch projectsFiltered', newVal, oldVal);
   nextTick(() => {
     initScrollOpacity(root.value)
@@ -66,6 +96,14 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.props {
+  position: fixed;
+  background-color: #000;
+  color: #fff;
+  top: 0;
+  width: 100px;
+  height: 50px;
+}
 .header {
   height: 100vh;
   width: 100%;
