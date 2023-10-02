@@ -6,6 +6,8 @@
  * https://github.com/evanw/esbuild/issues/1711
  */
 
+import glsl from 'vite-plugin-glsl';
+
 export default defineNuxtConfig({
   telemetry: false, // For nuxt team (anonyous statistics)
 
@@ -20,6 +22,12 @@ export default defineNuxtConfig({
         },
       },
     },
+    plugins: [
+      glsl({
+        warnDuplicatedImports: false,
+        compress: true,
+      }),
+    ],
   },
 
   runtimeConfig: {

@@ -44,8 +44,10 @@ export const vertexShader = `
   }
 `;
 
+
+
 export const fragmentShader = `
-precision highp float;
+  precision highp float;
 
   varying vec3 vVertexPosition;
   varying vec2 vTextureCoord;
@@ -59,6 +61,8 @@ precision highp float;
   uniform float hovered;
   uniform float isText;
   uniform float uScale;
+
+  #include "lygia/draw/circle.glsl"
 
   void main() {
     vec2 uv = vTextureCoord;
@@ -78,7 +82,7 @@ precision highp float;
       uv /= 1. + max(0., uRatio - uNaturalRatio);
     }
     uv += 0.5;
-    float rect2 = step(distance(uv.x, 0.5), 0.25) * step(distance(uv.y, 0.5), 0.25);
+    // float rect2 = step(distance(uv.x, 0.5), 0.25) * step(distance(uv.y, 0.5), 0.25);
 
     vec4 color = texture2D(uTexture, uv);
     
@@ -87,7 +91,9 @@ precision highp float;
     // color.ra += rect1 * 0.8;
     // color.ga += rect2* 1.;
 
-    if(uv.x < 0. || uv.x > 1. || uv.y < 0. || uv.y > 1.) discard;
+    // color.a += step(0.0, 0.0);
+
+    // if(uv.x < 0. || uv.x > 1. || uv.y < 0. || uv.y > 1.) discard;
     gl_FragColor = color;
   }
 `;

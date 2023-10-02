@@ -24,17 +24,17 @@ export default function useCurtainsShader() {
       stretch: {
         name: "stretch",
         type: "1f",
-        value: 0.06,
+        value: 0.0, // 0.06
       },
       squish: {
         name: "squish",
         type: "1f",
-        value: 0.06,
+        value: 0.0, // 0.06
       },
       noiseFreq: {
         name: "noiseFreq",
         type: "1f",
-        value: 2,
+        value: 0.0, // 2
       },
     },
   }

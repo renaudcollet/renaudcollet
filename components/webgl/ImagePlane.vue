@@ -14,7 +14,9 @@
 
 <script>
   import { Plane } from "vue-curtains";
-  import { fragmentShader, vertexShader } from "~/shaders/planes";
+//   import { fragmentShader, vertexShader } from "~/shaders/planes";
+  import fragmentShader from "~/shaders/planes.frag";
+  import vertexShader from "~/shaders/planes.vert";
   // import VideoPlayer from '~/components/video/VideoPlayer.vue';
   import supportsCurtains from '~~/mixins/utils-device.js';
   import gsap from 'gsap';
@@ -123,71 +125,70 @@
           }
           
           const planeProps = {
-              vertexShader,
-              fragmentShader,
-              widthSegments: 10,
-              heightSegments: 10,
-              drawCheckMargins: {
-                  top: 100,
-                  right: 0,
-                  bottom: 100,
-                  left: 0,
+            vertexShader,
+            fragmentShader,
+            widthSegments: 10,
+            heightSegments: 10,
+            drawCheckMargins: {
+                top: 100,
+                right: 0,
+                bottom: 100,
+                left: 0,
+            },
+            uniforms: {
+              planeDeformation: {
+                  name: "uPlaneDeformation",
+                  type: "1f",
+                  value: 0,
               },
-              uniforms: {
-                  planeDeformation: {
-                      name: "uPlaneDeformation",
-                      type: "1f",
-                      value: 0,
-                  },
-                  needsRatio: {
-                      name: "uNeedsRatio",
-                      type: "1f",
-                      value: 0,
-                  },
-                  resolution: {
-                      name: "uResolution",
-                      type: "2f",
-                      value: [0, 0],
-                  },
-                  ratio: {
-                      name: "uRatio",
-                      type: "1f",
-                      value: 0,
-                  },
-                  // scale: {
-                  //     name: "uScale",
-                  //     type: "1f",
-                  //     value: 1,
-                  // },
-                  
-                  naturalRatio: {
-                      name: "uNaturalRatio",
-                      type: "1f",
-                      value: 0,
-                  },
-                  scale: {
-                      name: "uScale",
-                      type: "1f",
-                      value: 0,
-                  },
-                  zPos: {
-                      name: "uZPos",
-                      type: "1f",
-                      // value: isVideo() ? 0. : 0.2,
-                      value: 0.,
-                  },
-                  hovered: {
-                      name: "uHovered",
-                      type: "1f",
-                      value: 0,
-                  },
-                  isText: {
-                      name: "isText",
-                      type: "1f",
-                      value: 0,
-                  }
+              needsRatio: {
+                  name: "uNeedsRatio",
+                  type: "1f",
+                  value: 0,
               },
-          };
+              resolution: {
+                  name: "uResolution",
+                  type: "2f",
+                  value: [0, 0],
+              },
+              ratio: {
+                  name: "uRatio",
+                  type: "1f",
+                  value: 0,
+              },
+              naturalRatio: {
+                  name: "uNaturalRatio",
+                  type: "1f",
+                  value: 0,
+              },
+              scale: {
+                  name: "uScale",
+                  type: "1f",
+                  value: 0,
+              },
+              zPos: {
+                  name: "uZPos",
+                  type: "1f",
+                  // value: isVideo() ? 0. : 0.2,
+                  value: 0.,
+              },
+              hovered: {
+                  name: "uHovered",
+                  type: "1f",
+                  value: 0,
+              },
+              isText: {
+                  name: "isText",
+                  type: "1f",
+                  value: 0,
+              },
+              uOpenProgress: {
+                    name: "uOpenProgress",
+                    type: "1f",
+                    value: 0,
+                },
+              }
+          }
           
           return {
               planeProps,
@@ -249,13 +250,26 @@
 
                   window.addEventListener('resize', this.onResize)
 
-                  const t = {v: 0}
+                  const t = {u: 0, v: 0}
                   gsap.to(t, {
-                      v: 1,
+                      u: 1,
                       duration: 0.1,
                       onComplete: () => {
                           this.onResize()
                       },
+                  })
+                  
+                  gsap.to(t, {
+                        v: 0.7,
+                        duration: 1,
+                        delay: 0.1,
+                        // repeat: -1,
+                        onUpdate: () => {
+                            this.plane.uniforms.uOpenProgress.value = t.v
+                        },
+                        onComplete: () => {
+                            this.plane.uniforms.uOpenProgress.value = t.v
+                        },
                   })
               })
               

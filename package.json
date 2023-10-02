@@ -15,7 +15,8 @@
     "postcss-cli": "^10.1.0",
     "postcss-nested": "^6.0.1",
     "sass": "^1.66.1",
-    "sass-loader": "^13.3.2"
+    "sass-loader": "^13.3.2",
+    "vite-plugin-glsl": "^1.1.2"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.4.11",

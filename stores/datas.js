@@ -89,7 +89,7 @@ export const useDatasStore = defineStore( 'datas', {
         query = { populate: 'deep', sort: 'Date:desc' }
       }
       else if (apiId === S_DATA_KEYWORDS) {
-        // TODO: Should only return id of related projects
+        // TODO: Should only return id of related projects (not createdAt, updatedAt, etc.)
         query = { populate: 'deep' }
       }
       else if (apiId === S_DATA_CONTACT) {
