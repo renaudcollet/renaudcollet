@@ -16,9 +16,12 @@ Animation:
     ☐ Transition on the cover when click homepage project to project page
 
 Webgl:
-    ☐ Add a webgl effect for images reveal using curtains.js
-    ☐ Add effect on vignettes when hovering
-    ☐ Would be great to only have threejs to do curtains effect (like on lusion.co)
+    ✔ Add a webgl effect for images reveal using curtains.js @done(23-10-03 11:32)
+    ✔ Déclencher l'ouverture quand l'image apparait dans le viewport @done(23-10-03 15:42)
+    ☐ Probleme d'image resolution, sur luna rossa et digital mirror, les coins n'ont pas la même taille
+    ☐ Add effect on vignettes when hovering 
+    Particles : https://codepen.io/jshuadvd/pen/ogKeBB
+    (☐ Would be great to only have threejs to do curtains effect (like on lusion.co))
 
 Curtains: 
     ☐ Optimize, Pass along a unique Date.getTime() to curtains Plane in ImagePlane
