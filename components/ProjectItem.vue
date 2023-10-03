@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink class="project-item project-item-this">
+  <NuxtLink class="project-item project-item-this" ref="el">
     <!-- <ClientOnly> -->
       <div 
         class="image-container scroll-reveal"
@@ -10,6 +10,7 @@
         <ImagePlane 
           :src="config.public.backendUrl + coverSrc"
           :onRender="onRender"
+          :isVisible="isVisible"
           object-fit="cover" 
           class="project-item__image" 
         />
@@ -70,6 +71,7 @@
 
 <script setup>
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
+import useElementVisibility from '~/compositions/use-element-visibility';
 // import gsap from 'gsap'
 
 const config = useRuntimeConfig()
@@ -98,6 +100,17 @@ const coverSrc = computed(() => {
 
 const paraphToLines = computed(() => {
   return props.datas.attributes.titre.split('<br />');
+})
+
+const el = ref(null);
+
+const visibilityObserver = useElementVisibility(el);
+const isVisible = visibilityObserver.isVisible;
+watch(isVisible, (newVal, oldVal) => {
+  // console.log(`projectitem ${ props.id} isVisible`, newVal);
+  if (newVal) {
+    visibilityObserver.observer.stop();
+  }
 })
 
 // onMounted(() => {

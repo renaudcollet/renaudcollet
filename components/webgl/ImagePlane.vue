@@ -56,7 +56,11 @@ const props = defineProps({
     type: String,
     required: false,
     default: ""
-  }
+  },
+  isVisible: {
+    type: Boolean,
+    default: false
+  },
 });
 
 const planeProps = {
@@ -125,9 +129,29 @@ const planeProps = {
     }
 }
 
-// const isVisible = ref(props.reveal);
+const isVisible = toRef(props, 'isVisible');
+
+watch(isVisible, (newVal, oldVal) => {
+  console.log(`${ props.id} isVisible`, newVal);
+  if (newVal) {
+      const t = {u: 0, v: 0}
+      gsap.to(t, {
+        v: 0.7,
+        duration: 1,
+        delay: 0.1,
+        // repeat: -1,
+        onUpdate: () => {
+            this_plane.uniforms.uOpenProgress.value = t.v
+        },
+        onComplete: () => {
+            this_plane.uniforms.uOpenProgress.value = t.v
+        },
+      })
+  }
+})
 
 const onReady = (plane) => {
+  console.log(`onReady ${props.id}`, plane);
   this_plane = plane;
   nextTick(() => {
       plane.images[0].style.opacity = 0
@@ -140,19 +164,6 @@ const onReady = (plane) => {
         duration: 0.1,
         onComplete: () => {
             onResize()
-        },
-      })
-      
-      gsap.to(t, {
-        v: 0.7,
-        duration: 1,
-        delay: 0.1,
-        // repeat: -1,
-        onUpdate: () => {
-            plane.uniforms.uOpenProgress.value = t.v
-        },
-        onComplete: () => {
-            plane.uniforms.uOpenProgress.value = t.v
         },
       })
   })

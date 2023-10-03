@@ -11,6 +11,9 @@
       <div id="index-logo" class="logo" data-header-scroll-minimize alt="">
         <Logo />
       </div>
+      <div>
+        Freelance Web Developer
+      </div>
     </div>
     <section class="projects-home">
       <template v-for="(item, index) in storeDatas.projectsFiltered" :key="index">
@@ -30,7 +33,6 @@
 <script setup>
 import { ShaderPass } from 'vue-curtains';
 import { useDatasStore, S_DATA_ACCUEIL, S_DATA_PROJECTS } from '~/stores/datas';
-import useScrollOpacity from '~/compositions/use-scroll-opacity';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 import useLogoObserver from '~/compositions/use-logo-observer';
 import useCurtainsShader from '~/compositions/use-curtains-shader';
@@ -48,7 +50,6 @@ const props = defineProps({
 })
 
 const root = ref(null);
-const { initScrollOpacity, clearScrollOpacity } = useScrollOpacity();
 const { initLogoObserver, clearLogoObserver } = useLogoObserver();
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 const { 
@@ -60,7 +61,6 @@ const {
 } = useCurtainsShader();
 
 const scrollVelocity = toRef(props, 'scrollVelocity');
-
 watch(scrollVelocity, (newVal, oldVal) => {
   // console.log('watch scrollVelocity', newVal, oldVal);
   updateScrollVelocity(newVal)
@@ -69,7 +69,6 @@ watch(scrollVelocity, (newVal, oldVal) => {
 watch(storeDatas.projectsFiltered, (newVal, oldVal) => {
   // console.log('watch projectsFiltered', newVal, oldVal);
   nextTick(() => {
-    initScrollOpacity(root.value)
     initScrollReveal(root.value)
   })
 })
@@ -82,13 +81,11 @@ onMounted(() => {
   initLogoObserver()
 
   nextTick(() => {
-    initScrollOpacity(root.value)
     initScrollReveal(root.value)
   })
 })
 
 onUnmounted(() => {
-  clearScrollOpacity()
   clearLogoObserver()
   clearScrollReveal()
 })
@@ -142,5 +139,6 @@ onUnmounted(() => {
   position: relative;
   user-select: none;
   z-index: $z-projects;
+  margin-top: 50px;
 }
 </style>
