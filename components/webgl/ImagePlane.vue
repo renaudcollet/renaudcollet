@@ -1,338 +1,224 @@
 <template>
-  <Plane v-if="supportsCurtains" class="plane" :params="planeProps" @render="onRender" @ready="onReady" ref="plane">
-      <img :src="src  + '?' + new Date().getTime()" :style="{'object-fit': objectFit}" data-sampler="uTexture" crossorigin="anonymous" :alt="alt">
+  <Plane 
+    class="plane"
+    :params="planeProps"
+    @render="onRender"
+    @ready="onReady"
+  >
+    <img 
+      :src="src  + '?' + new Date().getTime()" 
+      :style="{'object-fit': objectFit}"
+      :alt="alt"
+      data-sampler="uTexture"
+      crossorigin="anonymous"
+    >
   </Plane>   
-  <div v-else class="not-plane">
+  <!-- <div v-else class="not-plane">
       <img 
           :src="src" 
           :style="{'object-fit': objectFit}" 
           :alt="alt" 
           crossorigin="anonymous"
       /> 
-  </div>
+  </div> -->
 </template>
 
-<script>
-  import { Plane } from "vue-curtains";
-//   import { fragmentShader, vertexShader } from "~/shaders/planes";
-  import fragmentShader from "~/shaders/planes.frag";
-  import vertexShader from "~/shaders/planes.vert";
-  // import VideoPlayer from '~/components/video/VideoPlayer.vue';
-  import supportsCurtains from '~~/mixins/utils-device.js';
-  import gsap from 'gsap';
+<script setup>
+import { Plane } from "vue-curtains";
+import fragmentShader from "~/shaders/planes.frag";
+import vertexShader from "~/shaders/planes.vert";
+// import supportsCurtains from '~~/mixins/utils-device.js';
+import gsap from 'gsap';
 
-  export default{
-      components: {
-          Plane,
-          // VideoPlayer,
-      },
+let this_plane = null;
 
-      data() {
-          return {
-              plane: null,
-              video: null,
-              coverImg: null,
-          }
-      },
-
-      mixins: [supportsCurtains],
-
-      props: {
-          objectFit: {
-              type: String,
-              required: false,
-              default: "contain"
-          },
-          src: {
-              type: String,
-              required: false,
-              default: null
-          },
-          videoSrc: {
-              type: String,
-              required: false,
-              default: null
-          },
-          onRender: {
-              type: Function,
-              required: true,
-          },
-          id: {
-              type: String,
-              required: false,
-              default: ""
-          },
-          // play: {
-          //     type: Boolean,
-          //     required: false,
-          //     default: false
-          // },
-          alt: {
-              type: String,
-              required: false,
-              default: ""
-          }
-      },
-      watch: {
-          // play(val) {
-          //     if(val === true) {
-          //         this.video.play().then(() => {
-          //             this.video.volume = 1
-          //             this.video.loop = false
-          //             if (this.coverImg) {
-          //                 // this.coverImg.style.opacity = 0;
-          //                 gsap.to(this.coverImg, {autoAlpha: 0, duration: 0.2})
-          //             }
-                      
-          //             // Pause/Play the video when click on it
-          //             if (this.video.getAttribute('click-listener') !== 'true') {
-          //                 this.video.setAttribute('click-listener', 'true')
-          //                 this.video.addEventListener('click', this.onClickVideo)
-          //             }
-          //         });
-          //     } else {
-          //         this.video.pause()
-          //     }
-          // }
-      },
-      
-      setup(props){
-          
-          const isVideo = () => {
-              if (!props.videoSrc)
-                  return false;
-              else 
-                  return true;
-
-              // let parts = {...props}.videoSrc.split('.');
-              // let ext = parts[parts.length - 1];
-
-              // switch (ext) {
-              //     // case 'm4v':
-              //     // case 'avi':
-              //     // case 'mpg':
-              //     case 'mp4':
-              //     // case 'ogg':
-              //     // case 'ogv':
-              //     case 'webm':
-              //     case 'mov':
-              //     // case 'wmv':
-              //     // case 'flv':
-              //         return true;
-              //     default:
-              //         return false;
-              // }
-          }
-          
-          const planeProps = {
-            vertexShader,
-            fragmentShader,
-            widthSegments: 10,
-            heightSegments: 10,
-            drawCheckMargins: {
-                top: 100,
-                right: 0,
-                bottom: 100,
-                left: 0,
-            },
-            uniforms: {
-              planeDeformation: {
-                  name: "uPlaneDeformation",
-                  type: "1f",
-                  value: 0,
-              },
-              needsRatio: {
-                  name: "uNeedsRatio",
-                  type: "1f",
-                  value: 0,
-              },
-              resolution: {
-                  name: "uResolution",
-                  type: "2f",
-                  value: [0, 0],
-              },
-              ratio: {
-                  name: "uRatio",
-                  type: "1f",
-                  value: 0,
-              },
-              naturalRatio: {
-                  name: "uNaturalRatio",
-                  type: "1f",
-                  value: 0,
-              },
-              scale: {
-                  name: "uScale",
-                  type: "1f",
-                  value: 0,
-              },
-              zPos: {
-                  name: "uZPos",
-                  type: "1f",
-                  // value: isVideo() ? 0. : 0.2,
-                  value: 0.,
-              },
-              hovered: {
-                  name: "uHovered",
-                  type: "1f",
-                  value: 0,
-              },
-              isText: {
-                  name: "isText",
-                  type: "1f",
-                  value: 0,
-              },
-              uOpenProgress: {
-                    name: "uOpenProgress",
-                    type: "1f",
-                    value: 0,
-                },
-              }
-          }
-          
-          return {
-              planeProps,
-              isVideo
-          }
-      },
-
-      mounted() {
-          // Need to use nextTick to be sure the DOM is loaded, specially for client-only components
-          this.$nextTick(() => {
-              // if (this.isVideo() === true) {
-              //     this.video = this.$refs.video;
-              //     this.addVideoObserver()
-              // }
-              this.coverImg = this.$refs.coverImg;
-          })
-          
-          const t = {v: 0}
-          gsap.to(t, {
-                  v: 1,
-                  duration: 0.5,
-                  onComplete: () => {
-                      this.onResize()
-                  },
-              })
-          
-          // this.plane.uniforms.zPos.value = this.isVideo ? 0. : 0.25;
-      },
-
-      unmounted() {
-          // if (this.isVideo() === true && this.video.getAttribute('click-listener') === 'true') {
-          //     this.video.removeEventListener('click', this.onClickVideo)
-          // }
-          window.removeEventListener('resize', this.onResize)
-          //unmount curtains
-      },
-      
-      methods: {
-
-          // addVideoObserver() {
-          //     const observer = new IntersectionObserver((entries) => {
-          //         entries.forEach((entry) => {
-          //             if (!entry.isIntersecting) {
-          //                 this.video.pause();
-          //                 this.onVideoEnded()
-          //             }
-          //         });
-
-          //     });
-          //     observer.observe(this.video);
-          // },
-
-          onReady(plane) {
-              this.$nextTick(() => {
-                  this.plane = plane
-                  this.plane.images[0].style.opacity = 0
-
-                  this.updateRatioUniforms()
-
-                  window.addEventListener('resize', this.onResize)
-
-                  const t = {u: 0, v: 0}
-                  gsap.to(t, {
-                      u: 1,
-                      duration: 0.1,
-                      onComplete: () => {
-                          this.onResize()
-                      },
-                  })
-                  
-                  gsap.to(t, {
-                        v: 0.7,
-                        duration: 1,
-                        delay: 0.1,
-                        // repeat: -1,
-                        onUpdate: () => {
-                            this.plane.uniforms.uOpenProgress.value = t.v
-                        },
-                        onComplete: () => {
-                            this.plane.uniforms.uOpenProgress.value = t.v
-                        },
-                  })
-              })
-              
-          },
-
-          updateRatioUniforms(){
-              let width = this.plane.images[0].width
-              let height = this.plane.images[0].height
-              let nWidth = this.plane.images[0].naturalWidth
-              let nHeight = this.plane.images[0].naturalHeight
-
-              let ratio = Math.round(width/height*100)/100
-              let naturalRatio = Math.round(nWidth/nHeight*100)/100
-              
-              this.plane.uniforms.naturalRatio.value = naturalRatio
-              this.plane.uniforms.ratio.value = ratio
-              this.plane.uniforms.needsRatio.value = (ratio != naturalRatio) ? 1 : 0
-              // this.plane.uniforms.
-              // console.log(this.plane.images[0])
-              // console.log('w/h', width, height)
-              // console.log('n w/h', nWidth, nHeight)
-              // console.log('ratio', ratio, naturalRatio)
-              // console.log(width, nWidth, this.plane.images[0].offsetWidth, this.plane.images[0].parentElement.offsetWidth)
-              // console.log(height, nHeight, this.plane.images[0].offsetHeight, this.plane.images[0].parentElement.offsetHeight)
-              let xRatio =  width / nWidth
-              let yRatio = height / nHeight
-
-              if(this.objectFit == 'contain')
-                  this.plane.uniforms.scale.value = Math.min(xRatio, yRatio)
-
-              // console.log('scale', this.plane.uniforms.scale.value)
-
-          },
-
-          onResize() {
-              if(!this.plane) return
-              this.plane.resize()
-              if(this.plane.textures.length > 0) {
-                  this.plane.textures[0].resize();
-                  this.plane.textures[0].needUpdate();
-
-                  this.updateRatioUniforms()
-              }
-          },
-
-          // onClickVideo() {
-          //     if (this.video.paused) {
-          //         this.video.play();
-          //     } else {
-          //         this.video.pause();
-          //     }
-          // },
-
-          // onVideoEnded() {
-          //     // if (this.coverImg) {
-          //     //     gsap.to(this.coverImg, {autoAlpha: 1, duration: 0.2})
-          //     // }
-          //     this.video.currentTime = 0;
-          //     this.$emit('video-ended');
-          // },
-      }
-
+const props = defineProps({
+  objectFit: {
+    type: String,
+    required: false,
+    default: "contain"
+  },
+  src: {
+    type: String,
+    required: false,
+    default: null
+  },
+  onRender: {
+    type: Function,
+    required: true,
+  },
+  id: {
+    type: String,
+    required: false,
+    default: ""
+  },
+  alt: {
+    type: String,
+    required: false,
+    default: ""
   }
+});
+
+const planeProps = {
+  vertexShader,
+  fragmentShader,
+  widthSegments: 10,
+  heightSegments: 10,
+  drawCheckMargins: {
+    top: 100,
+    right: 0,
+    bottom: 100,
+    left: 0,
+  },
+  uniforms: {
+    planeDeformation: {
+        name: "uPlaneDeformation",
+        type: "1f",
+        value: 0,
+    },
+    needsRatio: {
+        name: "uNeedsRatio",
+        type: "1f",
+        value: 0,
+    },
+    resolution: {
+        name: "uResolution",
+        type: "2f",
+        value: [0, 0],
+    },
+    ratio: {
+        name: "uRatio",
+        type: "1f",
+        value: 0,
+    },
+    naturalRatio: {
+        name: "uNaturalRatio",
+        type: "1f",
+        value: 0,
+    },
+    scale: {
+        name: "uScale",
+        type: "1f",
+        value: 0,
+    },
+    zPos: {
+        name: "uZPos",
+        type: "1f",
+        // value: isVideo() ? 0. : 0.2,
+        value: 0.,
+    },
+    hovered: {
+        name: "uHovered",
+        type: "1f",
+        value: 0,
+    },
+    isText: {
+        name: "isText",
+        type: "1f",
+        value: 0,
+    },
+    uOpenProgress: {
+        name: "uOpenProgress",
+        type: "1f",
+        value: 0,
+      },
+    }
+}
+
+// const isVisible = ref(props.reveal);
+
+const onReady = (plane) => {
+  this_plane = plane;
+  nextTick(() => {
+      plane.images[0].style.opacity = 0
+
+      updateRatioUniforms(plane)
+
+      const t = {u: 0, v: 0}
+      gsap.to(t, {
+        u: 1,
+        duration: 0.1,
+        onComplete: () => {
+            onResize()
+        },
+      })
+      
+      gsap.to(t, {
+        v: 0.7,
+        duration: 1,
+        delay: 0.1,
+        // repeat: -1,
+        onUpdate: () => {
+            plane.uniforms.uOpenProgress.value = t.v
+        },
+        onComplete: () => {
+            plane.uniforms.uOpenProgress.value = t.v
+        },
+      })
+  })
+    
+}
+
+const updateRatioUniforms = (plane) => {
+    let width = plane.images[0].width
+    let height = plane.images[0].height
+    let nWidth = plane.images[0].naturalWidth
+    let nHeight = plane.images[0].naturalHeight
+
+    let ratio = Math.round(width/height*100)/100
+    let naturalRatio = Math.round(nWidth/nHeight*100)/100
+    
+    plane.uniforms.naturalRatio.value = naturalRatio
+    plane.uniforms.ratio.value = ratio
+    plane.uniforms.needsRatio.value = (ratio != naturalRatio) ? 1 : 0
+    // plane.uniforms.
+    // console.log(plane.images[0])
+    // console.log('w/h', width, height)
+    // console.log('n w/h', nWidth, nHeight)
+    // console.log('ratio', ratio, naturalRatio)
+    // console.log(width, nWidth, plane.images[0].offsetWidth, plane.images[0].parentElement.offsetWidth)
+    // console.log(height, nHeight, plane.images[0].offsetHeight, plane.images[0].parentElement.offsetHeight)
+    let xRatio =  width / nWidth
+    let yRatio = height / nHeight
+
+    if(props.objectFit == 'contain')
+        plane.uniforms.scale.value = Math.min(xRatio, yRatio)
+
+    // console.log('scale', plane.uniforms.scale.value)
+
+}
+
+const onResize = () => {
+  if(!this_plane) return
+  // console.log('onResize', this_plane);
+  this_plane.resize()
+  if(this_plane.textures.length > 0) {
+      this_plane.textures[0].resize();
+      this_plane.textures[0].needUpdate();
+
+      updateRatioUniforms(this_plane)
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('resize', onResize)
+
+  // const t = {v: 0}
+  // gsap.to(t, {
+  //     v: 1,
+  //     duration: 0.5,
+  //     onComplete: () => {
+  //         onResize()
+  //     },
+  // })
+  
+  // plane.uniforms.zPos.value = isVideo ? 0. : 0.25;
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', onResize)
+  //unmount curtains
+})
 </script>
 
 <style scoped lang="scss">
