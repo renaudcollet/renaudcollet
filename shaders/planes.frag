@@ -2,7 +2,6 @@
 precision mediump float;
 #endif
 
-
 varying vec3 vVertexPosition;
 varying vec2 vTextureCoord;
 varying float yPos;
@@ -26,23 +25,25 @@ uniform float uOpenProgress;
 void main() {
   vec2 uv = vTextureCoord;
 
+  vec2 cover_uv = uv;
+
   // Cover / Contain
-  uv -= 0.5;
-  uv /= 1. - uScale;
+  cover_uv -= 0.5;
+  cover_uv /= 1. - uScale;
   if(uNeedsRatio == 1.){
     if(uNaturalRatio > 1.){
-      uv.x *= uRatio;
-      uv.x /= uNaturalRatio;
+      cover_uv.x *= uRatio;
+      cover_uv.x /= uNaturalRatio;
     } else { 
-      uv.y /= uRatio;
-      uv.y *= uNaturalRatio;
+      cover_uv.y /= uRatio;
+      cover_uv.y *= uNaturalRatio;
     }
-    uv /= 1. + max(0., uRatio - uNaturalRatio);
+    cover_uv /= 1. + max(0., uRatio - uNaturalRatio);
   }
-  uv += 0.5;
+  cover_uv += 0.5;
 
   // Draw texture
-  vec4 color = texture2D(uTexture, uv);
+  vec4 color = texture2D(uTexture, cover_uv);
 
   // Rotate
   vec2 center_uv = uv - 0.5; // translate
