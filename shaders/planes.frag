@@ -21,6 +21,7 @@ uniform float uOpenProgress;
 #include "/lygia/math/const.glsl";
 #include "/lygia/draw/rect.glsl";
 #include "/lygia/math/rotate2d.glsl";
+// #include "/lygia/generative/psrdnoise.glsl";
 
 void main() {
   vec2 uv = vTextureCoord;
@@ -49,9 +50,20 @@ void main() {
   rotate_uv += 0.5; // translate back
 
   // Rect
-  float rectAlpha = rect(rotate_uv, vec2(1.5, 1.5 * uOpenProgress));
-  color.rgba *= rectAlpha;
+  float rect_mask = rect(rotate_uv, vec2(1.5, 1.5 * uOpenProgress));
+  color.rgba *= rect_mask;
 
-  // if(uv.x < 0. || uv.x > 1. || uv.y < 0. || uv.y > 1.) discard;
+  // Noise
+  // const float scale = 50.0;
+  // vec2 v = scale * uv;
+  // const vec2 p = vec2(0.0, 0.0);
+  // float alpha = uOpenProgress * 10.;
+  // vec2 g;
+  // float n = 0.5 + 0.5 * psrdnoise(v, p, alpha, g);
+  // vec4 colorNoise = vec4(n);
+  
+  // Gradient
+
+  // gl_FragColor = colorNoise * color;
   gl_FragColor = color;
 }

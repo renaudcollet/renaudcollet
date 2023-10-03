@@ -62,8 +62,6 @@ export const fragmentShader = `
   uniform float isText;
   uniform float uScale;
 
-  #include "lygia/draw/circle.glsl"
-
   void main() {
     vec2 uv = vTextureCoord;
 
