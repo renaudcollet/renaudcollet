@@ -1,5 +1,12 @@
 <template>
   <div ref="root" class="page">
+    <ClientOnly>
+      <ShaderPass 
+        :params="firstPassProps"
+        @render="onFirstPassRender"
+        @ready="onFirstPassReady"
+      />
+    </ClientOnly>
     <section class="cover-top">
       <div class="cover-top__image">
         <picture>
@@ -93,6 +100,7 @@
 </template>
   
 <script setup>
+import { ShaderPass } from 'vue-curtains';
 import { useDatasStore, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 // import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';

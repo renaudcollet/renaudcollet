@@ -3,6 +3,7 @@
     <div class="work-item-small__image">
       <ClientOnly>
         <ImagePlane 
+          v-if="!playVideo"
           :src="src" 
           :data-zoomable-url="src"
           :onRender="onRender"
@@ -28,9 +29,7 @@
           object-fit="contain" 
           alt=""
       ></VideoComponent>
-    </div>
-    <div class="work-item-small__content z-index-text" ref="txtContent">
-      <div class="work-item-small__content__abs">
+      <div class="work-item-small__content__button__center">
         <div 
           v-if="isVideo" 
           @click="onClickPlayVideo"
@@ -46,7 +45,11 @@
               <polygon class="triangle" fill="#ffffff" points="84.2,66.4 55.8,79.9 55.8,52.9" />
             </g>
           </svg>
-        </div>
+      </div>
+      </div>
+    </div>
+    <div class="work-item-small__content z-index-text" ref="txtContent">
+      <div class="work-item-small__content__abs">
         <h3 
           v-if="content.title !== null"
           class="work-item-small__content__title scroll-reveal"
@@ -123,7 +126,7 @@ const el = ref(null);
 const visibilityObserver = useElementVisibility(el);
 const isVisible = visibilityObserver.isVisible;
 watch(isVisible, (newVal, oldVal) => {
-  // console.log(`projectitem ${ props.id} isVisible`, newVal);
+  console.log(`projectitem ${ props.src} isVisible`, newVal);
   if (newVal) {
     visibilityObserver.observer.stop();
   }
@@ -277,6 +280,13 @@ const onVideoOutOfView = () => {
       }
     }
 
+    &__button__center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
     &__button {
       width: 50px;
       height: 50px;
@@ -383,11 +393,10 @@ const onVideoOutOfView = () => {
       @include font-main();
       font-weight: normal;
       padding: 0;
-      text-align: center;
+      text-align: left;
       margin-top: 0;
 
       @include media-breakpoint-up(lg) {
-        text-align: left;
         margin-left: 0;
         padding: 0;
       }

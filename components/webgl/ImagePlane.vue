@@ -129,6 +129,7 @@ const planeProps = {
     }
 }
 
+const isReady = ref(false);
 const isVisible = toRef(props, 'isVisible');
 watch(isVisible, (newVal, oldVal) => {
   // console.log(`${ props.id} isVisible`, newVal);
@@ -140,6 +141,7 @@ watch(isVisible, (newVal, oldVal) => {
 const reveal = () => {
   // console.log('reveal', this_plane);
   if(!this_plane) return
+
   const t = {u: 0, v: 0}
   gsap.to(t, {
     v: 0.7,
@@ -156,7 +158,6 @@ const reveal = () => {
 }
 
 const onReady = (plane) => {
-  console.log(`onReady ${props.id}`, plane);
   this_plane = plane;
   nextTick(() => {
       plane.images[0].style.opacity = 0
@@ -172,8 +173,11 @@ const onReady = (plane) => {
         },
       })
 
-      if (isVisible)
+      isReady.value = true;
+      // console.log(`onReady ${props.src}`, `isVisible ${props.isVisible}`, `isReady ${isReady.value}` );
+      if (props.isVisible) {
         reveal();
+      }
   })
     
 }
@@ -220,7 +224,7 @@ const onResize = () => {
 }
 
 onMounted(() => {
-  console.log(`mounted ${props.src}`, `isVisible ${props.isVisible}`);
+  // console.log(`mounted ${props.src}`, `isVisible ${props.isVisible}`);
   window.addEventListener('resize', onResize)
 
   // const t = {v: 0}
@@ -233,6 +237,11 @@ onMounted(() => {
   // })
   
   // plane.uniforms.zPos.value = isVideo ? 0. : 0.25;
+
+  // console.log(`mounted ${props.src}`, `isVisible ${props.isVisible}`, `isReady ${isReady.value}` );
+  if (props.isVisible && isReady.value) {
+    reveal();
+  }
 })
 
 onUnmounted(() => {
@@ -249,11 +258,11 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
 }
+.plane img {
+  opacity: 0;
+}
 
 @include media-breakpoint-up(xl) {
-  .plane img {
-    opacity: 0;
-  }
   .plane img.cover {
     opacity: 1;
   }
