@@ -130,25 +130,30 @@ const planeProps = {
 }
 
 const isVisible = toRef(props, 'isVisible');
-
 watch(isVisible, (newVal, oldVal) => {
-  console.log(`${ props.id} isVisible`, newVal);
+  // console.log(`${ props.id} isVisible`, newVal);
   if (newVal) {
-      const t = {u: 0, v: 0}
-      gsap.to(t, {
-        v: 0.7,
-        duration: 1,
-        delay: 0.1,
-        // repeat: -1,
-        onUpdate: () => {
-            this_plane.uniforms.uOpenProgress.value = t.v
-        },
-        onComplete: () => {
-            this_plane.uniforms.uOpenProgress.value = t.v
-        },
-      })
+    reveal();
   }
 })
+
+const reveal = () => {
+  // console.log('reveal', this_plane);
+  if(!this_plane) return
+  const t = {u: 0, v: 0}
+  gsap.to(t, {
+    v: 0.7,
+    duration: 1,
+    delay: 0.2,
+    // repeat: -1,
+    onUpdate: () => {
+        this_plane.uniforms.uOpenProgress.value = t.v
+    },
+    onComplete: () => {
+        this_plane.uniforms.uOpenProgress.value = t.v
+    },
+  })
+}
 
 const onReady = (plane) => {
   console.log(`onReady ${props.id}`, plane);
@@ -166,6 +171,9 @@ const onReady = (plane) => {
             onResize()
         },
       })
+
+      if (isVisible)
+        reveal();
   })
     
 }
@@ -212,6 +220,7 @@ const onResize = () => {
 }
 
 onMounted(() => {
+  console.log(`mounted ${props.src}`, `isVisible ${props.isVisible}`);
   window.addEventListener('resize', onResize)
 
   // const t = {v: 0}
@@ -227,6 +236,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  console.log(`unmounted ${props.src}`);
   window.removeEventListener('resize', onResize)
   //unmount curtains
 })

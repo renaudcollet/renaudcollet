@@ -1,14 +1,21 @@
 <template>
-  <div class="work-item-big">
-    <div class="work-item-big__image" :class="{'scroll-opacity': !supportsCurtains}" data-scroll-index="0">
+  <div class="work-item-big" ref="el">
+    <div 
+      class="work-item-big__image"
+      :class="{'scroll-reveal': !supportsCurtains}"
+      data-scroll-reveal-opacity-y
+      data-scroll-reveal-delay="0.2"
+      data-scroll-reveal-duration="0.5"
+    >
       <ClientOnly>
         <ImagePlane 
           v-if="!playVideo"
           :src="src"
           :video-src="videoSrc" 
+          :onRender="onRender"
+          :isVisible="isVisible"
           object-fit="cover" 
           alt=""
-          ref="imagePlane"
         />
       </ClientOnly>
       <VideoComponent
@@ -18,6 +25,7 @@
           :video-src="videoSrc" 
           :id="titleAlphaNumeric" 
           :play="activateVideo"
+          :onRender="onRender"
           @videoEnded="onVideoEnded"
           @videoOutOfView="onVideoOutOfView"
           @videoPaused="onVideoPaused"
@@ -25,13 +33,15 @@
           alt=""
       ></VideoComponent>
     </div>
-    <div class="work-item-big__content z-index-text" :class="{'hide': playVideo}">
+    <div class="work-item-big__content z-index-text" :class="{'hide': playVideo}" ref="txtContent">
       <div class="work-item-big__content__abs">
         <div 
-          v-if="isVideo()" 
-          class="work-item-big__content__button scroll-opacity" 
-          data-scroll-index="0" 
-          ref="btn-play"
+          v-if="isVideo" 
+          class="work-item-big__content__button scroll-reveal" 
+          data-scroll-reveal-opacity-y
+          data-scroll-reveal-delay="0.2"
+          data-scroll-reveal-duration="0.5"
+          ref="btnPlay"
           @click="onClickPlayVideo"
         >
           <svg x="0px" y="0px" viewBox="-27 -15 162 150">
@@ -41,117 +51,140 @@
             </g>
           </svg>
         </div>
-        <h3 class="work-item-big__content__title scroll-opacity" data-scroll-index="1" v-html="title"></h3>
+        <h3 
+          class="work-item-big__content__title scroll-reveal"
+          data-scroll-reveal-opacity-y
+          data-scroll-reveal-delay="0.2"
+          data-scroll-reveal-duration="0.5"
+          v-html="title"
+        ></h3>
       </div>
-      <div class="work-item-big__content__text scroll-opacity" data-scroll-index="2" v-html="content"></div>
+      <div 
+        class="work-item-big__content__text scroll-reveal"
+        data-scroll-reveal-opacity-y
+        data-scroll-reveal-delay="0.2"
+        data-scroll-reveal-duration="0.5"
+        v-html="content"
+      ></div>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
 /* 
   Component : Titre / Resume / Image / Video 
 */
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
+import useElementVisibility from '~/compositions/use-element-visibility';
 import VideoComponent from '~/components/video/VideoComponent.vue';
-import utilsDevice from '~~/mixins/utils-device.js';
 import gsap from 'gsap';
 
-export default {
-  components: {
-    ImagePlane,
-    VideoComponent
+const props = defineProps({
+  title: {
+    type: String,
+    required: true,
   },
-  mixins: [utilsDevice],
-  props: {
-    title: {
-      type: String,
-      required: true,
-    },
-    content: {
-      type: String,
-      required: false,
-    },
-    src: {
-      type: String,
-      required: false,
-      default: null
-    },
-    videoSrc: {
-      type: String,
-      required: false,
-      default: null
-    }
-  }, 
-  data() {
-    return {
-      playVideo: false,
-      activateVideo: false,
-    }
+  content: {
+    type: String,
+    required: false,
   },
-  computed: {
-    titleAlphaNumeric() {
-      return this.toAlphaNumeric(this.$props.title);
-    }
+  src: {
+    type: String,
+    required: false,
+    default: null
   },
-  mounted() {
-    setTimeout(() => {
-      this.imagePlane = this.$refs.imagePlane;
-      // console.log('IMAGE PLANE', this.imagePlane)
-      // console.log(this)
-    }, 2000);
-  },  
-  methods: {
-    isVideo() {
-      if (!this.$props.videoSrc)
-        return false;
-      else 
-        return true;
-    },
-    toAlphaNumeric(str) {
-      return str.replace(/[^0-9a-zA-Z_]/gi, '');
-    },
-    onClickPlayVideo() {
+  videoSrc: {
+    type: String,
+    required: false,
+    default: null
+  },
+  supportsCurtains: {
+    type: Boolean,
+    required: false,
+    default: true,
+  },
+  onRender: {
+    type: Function,
+    required: true,
+  }
+})
 
-      this.playVideo = true;
+const btnPlay = ref(null);
+const txtContent = ref(null);
+const playVideo = ref(false);
+const activateVideo = ref(false);
+const titleAlphaNumeric = computed(() => {
+  return toAlphaNumeric(props.title);
+})
 
-      const t = {v: 0}
-      // Hide the block, after the css animation is complete
-      gsap.to(t, {
-        delay: 0.0,
-        v: 1,
-        onComplete: () => {
-          this.activateVideo = true;
-          gsap.to('.work-item-big__content', {
-            duration: 0.3,
-            autoAlpha: 0,
-            transform: 'translateY(50px)',
-            ease: 'power2.inOut',
-          })
+const isVideo = computed(() => {
+  if (!props.videoSrc)
+    return false;
+  else 
+    return true;
+})
 
-          if (!this.isPortrait)
-            window.lenis.scrollTo(`#${this.titleAlphaNumeric}`);
-        }
-      })
-    },
-    onVideoEnded() {
-      this.onVideoOutOfView()
-    },
-    onVideoPaused() {
-      this.onVideoOutOfView()
-    },
-    onVideoOutOfView() {
-      this.playVideo = false;
-      this.activateVideo = false;
-      gsap.to('.work-item-big__content', {
+const el = ref(null);
+
+const visibilityObserver = useElementVisibility(el);
+const isVisible = visibilityObserver.isVisible;
+watch(isVisible, (newVal, oldVal) => {
+  if (newVal) {
+    visibilityObserver.observer.stop();
+  }
+})
+
+const toAlphaNumeric = (str) => {
+  return str.replace(/[^0-9a-zA-Z_]/gi, '');
+}
+
+const onClickPlayVideo = () => {
+  playVideo.value = true;
+
+  const t = {v: 0}
+  // Hide the block, after the css animation is complete
+  gsap.to(t, {
+    delay: 0.0,
+    v: 1,
+    onComplete: () => {
+      activateVideo.value = true;
+      
+      // const el = this.$el.querySelector('.work-item-big__content');
+      gsap.to(txtContent.value, {
         duration: 0.3,
-        autoAlpha: 1,
-        transform: 'translateY(0px)',
+        autoAlpha: 0,
+        transform: 'translateY(50px)',
         ease: 'power2.inOut',
       })
+
+      if (window.innerWidth > window.innerHeight) // if not portrait
+        window.lenis.scrollTo(`#${titleAlphaNumeric.value}`);
     }
-  }
+  })
 }
+
+const onVideoEnded = () => {
+  onVideoOutOfView()
+}
+
+const onVideoPaused = () => {
+  onVideoOutOfView()
+}
+
+const onVideoOutOfView = () => {
+  playVideo.value = false;
+  activateVideo.value = false;
+  gsap.to(txtContent.value, {
+    duration: 0.3,
+    autoAlpha: 1,
+    transform: 'translateY(0px)',
+    ease: 'power2.inOut',
+  })
+}
+
+onMounted(() => {
+  // console.log('mounted ProjectItem', props.id, props.datas);
+})
 </script>
 
 <style lang="scss">

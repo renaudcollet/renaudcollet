@@ -89,7 +89,6 @@ onMounted(() => {
 onUnmounted(() => {
   clearScrollReveal()
 })
-
 </script>
   
 <style lang="scss" scoped>

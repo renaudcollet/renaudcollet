@@ -10,6 +10,10 @@ Intégration:
     ☐ When click filters, go to page works
     ☐ Page projet, add a link to next project
     ☐ Kewywords missing, last item doesn't show up on homepage
+    ☐ + of the triangle is not centered in x (on homepage)
+
+Bug:
+    ☐ Little black flash when pause the video
 
 Animation:
     ✔ Titles and Vignettes should appear with a skew mask animation @done(23-09-21 16:56)
@@ -18,9 +22,11 @@ Animation:
 Webgl:
     ✔ Add a webgl effect for images reveal using curtains.js @done(23-10-03 11:32)
     ✔ Déclencher l'ouverture quand l'image apparait dans le viewport @done(23-10-03 15:42)
-    ☐ Probleme d'image resolution, sur luna rossa et digital mirror, les coins n'ont pas la même taille
-    ☐ Add effect on vignettes when hovering 
-    Particles : https://codepen.io/jshuadvd/pen/ogKeBB
+    ✔ Probleme d'image resolution, sur luna rossa et digital mirror, les coins n'ont pas la même taille @done(23-10-03 17:07)
+    ☐ Add effect on vignettes when hovering : https://pixallus.com/creating-webgl-effects-with-curtainsjs/
+    Particles : 
+        Joshua Davis - https://codepen.io/jshuadvd/pen/ogKeBB
+        https://nullprogram.com/webgl-particles/
     (☐ Would be great to only have threejs to do curtains effect (like on lusion.co))
 
 Curtains: 

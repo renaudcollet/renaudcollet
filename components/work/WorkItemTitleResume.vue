@@ -1,8 +1,22 @@
 <template>
   <div class="work-item-title" :class="{'small' : type === 'Small'}">
     <div class="work-item-title__answer z-index-text">
-      <h3 class="work-item-title__answer__title scroll-opacity" data-scroll-index="0">{{ title }}</h3>
-      <div v-if="content" class="work-item-title__answer__text scroll-opacity"  data-scroll-index="1" v-html="content"></div>
+      <h3 
+        class="work-item-title__answer__title scroll-reveal"
+        data-scroll-reveal-opacity-y
+        data-scroll-reveal-delay="0.2"
+        data-scroll-reveal-duration="0.5"
+      >
+        {{ title }}
+      </h3>
+      <div 
+        v-if="content"
+        class="work-item-title__answer__text scroll-reveal"
+        data-scroll-reveal-opacity-y
+        data-scroll-reveal-delay="0.2"
+        data-scroll-reveal-duration="0.5"
+        v-html="content"
+      ></div>
     </div>
   </div>
 </template>
@@ -11,7 +25,6 @@
 /* 
   Component : title and/or Resume 
 */
-
 export default {
   props: {
     title: {

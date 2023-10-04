@@ -11,6 +11,9 @@ export interface UseElementVisibilityOptions extends ConfigurableWindow {
 
 /**
  * Tracks the visibility of an element within the viewport.
+ * 
+ * Update by Renaud COLLET:
+ *  - Add observer to return it, so it can be disconnected when needed
  *
  * @see https://vueuse.org/useElementVisibility
  */

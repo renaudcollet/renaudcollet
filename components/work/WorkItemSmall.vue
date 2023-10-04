@@ -1,13 +1,17 @@
 <template>
-  <div class="work-item-small">
+  <div class="work-item-small" ref="el">
     <div class="work-item-small__image">
       <ClientOnly>
         <ImagePlane 
           :src="src" 
-          :class="{'scroll-opacity': !supportsCurtains, 'zoomable': !isVideo()}" 
-          object-fit="cover" 
           :data-zoomable-url="src"
-          data-scroll-index="0" 
+          :onRender="onRender"
+          :isVisible="isVisible"
+          :class="{'scroll-reveal': !supportsCurtains, 'zoomable': !isVideo}" 
+          data-scroll-reveal-opacity-y
+          data-scroll-reveal-delay="0.2"
+          data-scroll-reveal-duration="0.5"
+          object-fit="cover" 
           alt=""
         />
       </ClientOnly>
@@ -25,14 +29,16 @@
           alt=""
       ></VideoComponent>
     </div>
-    <div class="work-item-small__content z-index-text">
+    <div class="work-item-small__content z-index-text" ref="txtContent">
       <div class="work-item-small__content__abs">
         <div 
-          v-if="isVideo()" 
+          v-if="isVideo" 
           @click="onClickPlayVideo"
-          ref="btn-play" 
-          class="work-item-small__content__button scroll-opacity" 
-          data-scroll-index="1" 
+          ref="btnPlay" 
+          class="work-item-small__content__button scroll-reveal" 
+          data-scroll-reveal-opacity-y
+          data-scroll-reveal-delay="0.2"
+          data-scroll-reveal-duration="0.5"
         >
           <svg x="0px" y="0px" viewBox="-27 -15 162 150">
             <polygon class="triangle-button" points="0,120 60,10 120,120" fill="transparent" stroke="#fff" stroke-width="1" />
@@ -41,107 +47,134 @@
             </g>
           </svg>
         </div>
-        <h3 v-if="content.title !== null" class="work-item-small__content__title scroll-opacity" data-scroll-index="2" v-html="content.title"></h3>
+        <h3 
+          v-if="content.title !== null"
+          class="work-item-small__content__title scroll-reveal"
+          data-scroll-reveal-opacity-y
+          data-scroll-reveal-delay="0.2"
+          data-scroll-reveal-duration="0.5"
+          v-html="content.title"
+        ></h3>
       </div>
-      <div class="work-item-small__content__text scroll-opacity" data-scroll-index="3" v-html="content.content === null ? '' : content.content"></div>
+      <div 
+        class="work-item-small__content__text scroll-reveal"
+        data-scroll-reveal-opacity-y
+        data-scroll-reveal-delay="0.2"
+        data-scroll-reveal-duration="0.5"
+        v-html="content.content === null ? '' : content.content"
+      ></div>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
 /* 
   Component : Titre / Resume / Image / Video 
 */
 
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
-import utilsDevice from '~~/mixins/utils-device.js';
-import zoomable from '~~/mixins/zoomable-image.js';
+import useElementVisibility from '~/compositions/use-element-visibility';
+// import utilsDevice from '~~/mixins/utils-device.js';
+// import zoomable from '~~/mixins/zoomable-image.js';
 import gsap from 'gsap';
 
-export default {
-  components: {
-    ImagePlane,
+const props = defineProps({
+  src: {
+    type: String,
+    required: true,
   },
-  mixins: [
-    utilsDevice,
-    zoomable,
-  ],
-  props: {
-    content: {
-      type: Object,
-      required: true,
-    },
-    src: {
-      type: String,
-      required: true,
-    },
-    videoSrc: {
-      type: String,
-      required: false,
-      default: null
-    },
+  videoSrc: {
+    type: String,
+    required: false,
+    default: null
   },
-  data() {
-    return {
-      playVideo: false,
-      activateVideo: false,
-    }
+  content: {
+    type: Object,
+    required: true,
   },
-  computed: {
-    titleAlphaNumeric() {
-      return this.toAlphaNumeric(this.content.title);
-    }
+  onRender: {
+    type: Function,
+    required: true,
   },
-  methods: {
-    isVideo() {
-      if (!this.$props.videoSrc)
-        return false;
-      else 
-        return true;
-    },
-    toAlphaNumeric(str) {
-      return str.replace(/[^0-9a-zA-Z_]/gi, '');
-    },
-    onClickPlayVideo() {
-      this.playVideo = true;
+  supportsCurtains: {
+    type: Boolean,
+    required: false,
+    default: true,
+  }
+})
 
-      const t = {v: 0}
-      // Hide the block, after the css animation is complete
-      gsap.to(t, {
-        delay: 0.0,
-        v: 1,
-        onComplete: () => {
-          this.activateVideo = true;
-          const el = this.$el.querySelector('.work-item-small__content');
-          gsap.to(el, {
-            duration: 0.3,
-            autoAlpha: 0,
-            transform: 'translateY(50px)',
-            ease: 'power2.inOut',
-          })
+const btnPlay = ref(null);
+const txtContent = ref(null);
+const playVideo = ref(false);
+const activateVideo = ref(false);
+const titleAlphaNumeric = computed(() => {
+  return toAlphaNumeric(props.content.title);
+})
 
-          // if (!this.isPortrait)
-          //   window.lenis.scrollTo(`#${this.titleAlphaNumeric}`);
-        }
-      })
-    },
-    onVideoEnded() {
-      this.onVideoOutOfView()
-    },
-    onVideoPaused() {
-      this.onVideoOutOfView()
-    },
-    onVideoOutOfView() {
-      this.playVideo = false;
-      this.activateVideo = false;
-      gsap.to('.work-item-small__content', {
+const isVideo = computed(() => {
+  if (!props.videoSrc)
+    return false;
+  else 
+    return true;
+})
+
+const el = ref(null);
+
+const visibilityObserver = useElementVisibility(el);
+const isVisible = visibilityObserver.isVisible;
+watch(isVisible, (newVal, oldVal) => {
+  // console.log(`projectitem ${ props.id} isVisible`, newVal);
+  if (newVal) {
+    visibilityObserver.observer.stop();
+  }
+})
+
+const toAlphaNumeric = (str) => {
+  return str.replace(/[^0-9a-zA-Z_]/gi, '');
+}
+
+const onClickPlayVideo = () => {
+  playVideo.value = true;
+
+  const t = {v: 0}
+  // Hide the block, after the css animation is complete
+  gsap.to(t, {
+    delay: 0.0,
+    v: 1,
+    onComplete: () => {
+      activateVideo.value = true;
+      
+      // const el = this.$el.querySelector('.work-item-small__content');
+      gsap.to(btnPlay.value, {
         duration: 0.3,
-        autoAlpha: 1,
-        transform: 'translateY(0px)',
+        autoAlpha: 0,
+        transform: 'translateY(50px)',
         ease: 'power2.inOut',
       })
+
+      // if (!this.isPortrait)
+      //   window.lenis.scrollTo(`#${this.titleAlphaNumeric}`);
     }
-  }
+  })
+}
+
+const onVideoEnded = () => {
+  onVideoOutOfView()
+}
+
+const onVideoPaused = () => {
+  onVideoOutOfView()
+}
+
+const onVideoOutOfView = () => {
+  playVideo.value = false;
+  activateVideo.value = false;
+  gsap.to(btnPlay.value, {
+    duration: 0.3,
+    autoAlpha: 1,
+    transform: 'translateY(0px)',
+    ease: 'power2.inOut',
+  })
 }
 </script>
 

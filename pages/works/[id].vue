@@ -23,24 +23,35 @@
       </div>
       <div class="cover-top__title z-index-text">
         <div class="cover-top__title__header-minimize" data-header-scroll-minimize></div>
-        <h1 class="cover-top__title__project">
+        <h1 
+          class="cover-top__title__project scroll-reveal"
+          data-scroll-reveal-opacity-y
+          data-scroll-reveal-delay="0"
+          data-scroll-reveal-duration="0.7"
+        >
           {{ currentProject.attributes.titre }}
         </h1>
         <div
-          class="cover-top__title__brand scroll-opacity"
-          :data-scroll-index="1"
+          class="cover-top__title__brand scroll-reveal"
+          data-scroll-reveal-opacity-y
+          data-scroll-reveal-delay="0.6"
+          data-scroll-reveal-duration="0.3"
         >
           Client : {{ currentProject.attributes.brand }}
         </div>
         <div
-          class="cover-top__title__brand scroll-opacity"
-          :data-scroll-index="1"
+          class="cover-top__title__brand scroll-reveal"
+          data-scroll-reveal-opacity-y
+          data-scroll-reveal-delay="0.8"
+          data-scroll-reveal-duration="0.3"
         >
           Agency : {{ currentProject.attributes.agency }}
         </div>
         <div
-          class="cover-top__title__brand scroll-opacity"
-          :data-scroll-index="1"
+          class="cover-top__title__brand scroll-reveal"
+          data-scroll-reveal-opacity-y
+          data-scroll-reveal-delay="1.0"
+          data-scroll-reveal-duration="0.3"
         >
           Filters : 
           <span v-for="(item, index) in keywords">
@@ -63,6 +74,7 @@
           :video-src="item.Video.data ? config.public.backendUrl + item.Video.data.attributes.url : null"
           :title="item.Titre"
           :content="item.Resume"
+          :onRender="onRender"
         />
         <WorkItemSmall
           v-else-if="item.type === 'Small'"
@@ -71,6 +83,7 @@
           :video-src="item.Video.data ? config.public.backendUrl + item.Video.data.attributes.url : null"
           :content="{title: item.Titre, content: item.Resume}" 
           :class="{'right': index%4 === 0, 'left': index%4 === 2}"
+          :onRender="onRender"
         />
       </template>
     </section>
@@ -81,13 +94,21 @@
   
 <script setup>
 import { useDatasStore, S_DATA_PROJECTS } from '~/stores/datas';
-import useScrollOpacity from '~/compositions/use-scroll-opacity';
+import useScrollReveal from '~/compositions/use-scroll-reveal';
 // import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
+import useZoomableImage from '~/compositions/use-zoomable-image';
+import useCurtainsShader from '~/compositions/use-curtains-shader';
 import gsap from 'gsap';
 
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
 await fetchDatas(S_DATA_PROJECTS);
+
+const props = defineProps({
+  scrollVelocity: {
+    type: Number
+  },
+})
 
 const config = useRuntimeConfig()
 const route = useRoute()
@@ -105,7 +126,21 @@ const currentProjectBlocs = currentProject.attributes.bloc
 const keywords = currentProject.attributes.keywords.data
 
 const root = ref(null);
-const { initScrollOpacity, clearScrollOpacity } = useScrollOpacity();
+const { initScrollReveal, clearScrollReveal } = useScrollReveal();
+const { initZoomableImage, clearZoomableImage } = useZoomableImage();
+const { 
+  firstPassProps, 
+  onFirstPassReady, 
+  onFirstPassRender, 
+  onRender, 
+  updateScrollVelocity
+} = useCurtainsShader();
+
+const scrollVelocity = toRef(props, 'scrollVelocity');
+watch(scrollVelocity, (newVal, oldVal) => {
+  // console.log('watch scrollVelocity', newVal, oldVal);
+  updateScrollVelocity(newVal)
+})
 
 const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProjectCover.formats.xxlarge.url : currentProjectCover.url;
 const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
@@ -122,12 +157,14 @@ onMounted(() => {
   // useTrackEvent('work-id-page', route.params.id)
 
   nextTick(() => {
-    initScrollOpacity(root.value)
+    initScrollReveal(root.value)
+    initZoomableImage(root.value)
   })
 })
 
 onUnmounted(() => {
-  clearScrollOpacity()
+  clearScrollReveal()
+  clearZoomableImage()
 })
 
 // computed( paraphToLines => datasProjets.attributes.)
