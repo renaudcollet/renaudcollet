@@ -1,8 +1,22 @@
 <template>
   <div ref="root">
+    <ClientOnly>
+      <ShaderPass 
+        :params="firstPassProps"
+        @render="onFirstPassRender"
+        @ready="onFirstPassReady"
+      />
+    </ClientOnly>
     <div class="container">
       <div class="container__header-minimize" data-header-scroll-minimize></div>
-      <h1 class="page__title scroll-opacity" data-scroll-index="0">All my works</h1>
+      <h1 
+        class="page__title scroll-reveal"
+        data-scroll-reveal-opacity-y
+        data-scroll-reveal-delay="0.2"
+        data-scroll-reveal-duration="0.5"
+      >
+        All my works
+      </h1>
       <section class="projects-work">
         <template v-for="(item, index) in storeDatas.projectsFiltered">
           <ProjectItem 
@@ -10,6 +24,7 @@
             :id="index" 
             :to="`/works/${item.attributes.slug}`"
             :datas="item"
+            :onRender="onRender"
           />
         </template>
       </section>
@@ -20,11 +35,12 @@
 </template>
   
 <script setup>
+import { ShaderPass } from 'vue-curtains';
 import { useDatasStore, S_DATA_ACCUEIL, S_DATA_PROJECTS } from '~/stores/datas';
-import useScrollOpacity from '~/compositions/use-scroll-opacity';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 // import useLogoObserver from '~/compositions/use-logo-observer';
 // import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
+import useCurtainsShader from '~/compositions/use-curtains-shader';
 import gsap from 'gsap';
 
 const storeDatas = useDatasStore();
@@ -32,14 +48,31 @@ const { fetchDatas } = storeDatas;
 await fetchDatas(S_DATA_ACCUEIL);
 await fetchDatas(S_DATA_PROJECTS);
 
+const props = defineProps({
+  scrollVelocity: {
+    type: Number
+  },
+})
+
 const root = ref(null);
-const { initScrollOpacity, clearScrollOpacity } = useScrollOpacity();
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
+const { 
+  firstPassProps, 
+  onFirstPassReady, 
+  onFirstPassRender, 
+  onRender, 
+  updateScrollVelocity
+} = useCurtainsShader();
+
+const scrollVelocity = toRef(props, 'scrollVelocity');
+watch(scrollVelocity, (newVal, oldVal) => {
+  // console.log('watch scrollVelocity', newVal, oldVal);
+  updateScrollVelocity(newVal)
+})
 
 watch(() => storeDatas.projectsFiltered, (newVal, oldVal) => {
   // console.log('watch projectsFiltered', newVal, oldVal);
   nextTick(() => {
-    initScrollOpacity(root.value)
     initScrollReveal(root.value)
   })
 })
@@ -49,13 +82,11 @@ onMounted(() => {
   gsap.to('#header-logo', { autoAlpha: 1 })
 
   nextTick(() => {
-    initScrollOpacity(root.value)
     initScrollReveal(root.value)
   })
 })
 
 onUnmounted(() => {
-  clearScrollOpacity()
   clearScrollReveal()
 })
 
