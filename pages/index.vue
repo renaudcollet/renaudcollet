@@ -26,13 +26,13 @@
         />
       </template>
     </section>
-    <!-- <Footer :projects="projectsFooter" :footer="footer"></Footer> -->
+    <FooterSimple />
   </div>  
 </template>
 
 <script setup>
 import { ShaderPass } from 'vue-curtains';
-import { useDatasStore, S_DATA_ACCUEIL, S_DATA_PROJECTS } from '~/stores/datas';
+import { useDatasStore, S_DATA_ACCUEIL } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 import useLogoObserver from '~/compositions/use-logo-observer';
 import useCurtainsShader from '~/compositions/use-curtains-shader';
@@ -40,7 +40,6 @@ import gsap from 'gsap';
 
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
-// await fetchDatas(S_DATA_PROJECTS);
 await fetchDatas(S_DATA_ACCUEIL);
 
 const props = defineProps({

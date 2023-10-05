@@ -276,7 +276,7 @@ SECTION .cover-top
       width: 100%;
       margin-left: 18vw;
       position: relative;
-      bottom: auto;
+      bottom: 10vh;
     }
 
     @include media-breakpoint-up(xl) {

@@ -8,11 +8,11 @@
       />
     </ClientOnly>
     <div class="container">
-      <div class="container__header-minimize" data-header-scroll-minimize></div>
+      <!-- <div class="container__header-minimize" data-header-scroll-minimize></div> -->
       <h1 
         class="page__title scroll-reveal"
         data-scroll-reveal-opacity-y
-        data-scroll-reveal-delay="0.2"
+        data-scroll-reveal-delay="0.0"
         data-scroll-reveal-duration="0.5"
       >
         All my works
@@ -30,7 +30,7 @@
       </section>
       <div class="space"></div>
     </div>
-    <!-- <Footer :footer="footer"></Footer> -->
+    <FooterSimple />
   </div>
 </template>
   
@@ -120,15 +120,15 @@ onUnmounted(() => {
 }
 
 .page__title {
-  margin-top: 21vh;
+  margin-top: 100px;
   margin-bottom: 100px;
   text-align: center;
   font-size: 28px;
   font-weight: 800;
 
   @include media-breakpoint-up(md) {
-    margin-top: 43vh;
-    margin-bottom: 36vw;
+    // margin-top: 43vh;
+    // margin-bottom: 36vw;
     font-size: 7.777778vw;
   }
 

@@ -2,15 +2,46 @@
   <div ref="root" class="page">
     <section id="contact">
       <div class="header-minimize" data-header-scroll-minimize></div>
-      <h1 class="scroll-opacity" data-scroll-index="0">{{ datasContact.attributes.titre }}<sub class="big-underscore"> —</sub></h1>
-      
+      <h1 
+        class="scroll-reveal"
+        data-scroll-reveal-opacity-y
+        data-scroll-reveal-delay="0.2"
+        data-scroll-reveal-duration="0.5"
+      >
+        {{ datasContact.attributes.titre }}
+      </h1>
       <p>
-        <span class="scroll-opacity" data-scroll-index="1">{{ datasContact.attributes.description }}</span><br />
-        <a :href="`tel:${datasContact.attributes.tel}`" class="scroll-opacity" data-scroll-index="2">{{ datasContact.attributes.tel }}</a><br />
-        <a :href="`mailto:${datasContact.attributes.email}`" class="scroll-opacity" data-scroll-index="3">{{ datasContact.attributes.email }}</a>
+        <span 
+          class="scroll-reveal"
+          data-scroll-reveal-opacity-y
+          data-scroll-reveal-delay="0.2"
+          data-scroll-reveal-duration="0.5"
+        >
+          {{ datasContact.attributes.description }}
+        </span>
+        <br />
+        <a 
+          :href="`tel:${datasContact.attributes.tel}`"
+          class="scroll-reveal"
+          data-scroll-reveal-opacity-y
+          data-scroll-reveal-delay="0.2"
+          data-scroll-reveal-duration="0.5"
+        >
+          {{ datasContact.attributes.tel }}
+        </a>
+        <br />
+        <a
+          :href="`mailto:${datasContact.attributes.email}`"
+          class="scroll-reveal"
+          data-scroll-reveal-opacity-y
+          data-scroll-reveal-delay="0.2"
+          data-scroll-reveal-duration="0.5"
+        >
+          {{ datasContact.attributes.email }}
+        </a>
       </p>
     </section>
-    <!-- <Footer :projects="projects" :footer="footer"></Footer> -->
+    <FooterSimple />
   </div>  
 </template>
 
@@ -19,44 +50,30 @@
 // import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
 import { onMounted, onUnmounted, ref, nextTick } from "vue";
 import { useDatasStore, S_DATA_CONTACT } from '~/stores/datas';
-import useScrollOpacity from '~/compositions/use-scroll-opacity';
+import useScrollReveal from '~/compositions/use-scroll-reveal';
 import gsap from 'gsap';
 
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
-// await fetchDatas(S_DATA_ACCUEIL);
 await fetchDatas(S_DATA_CONTACT);
 
 const datasContact = storeDatas.contact.data;
 
-
-// I don't know why, I can't use useHead() after receiving the data from the store in the default layout
-// useHead({
-//   // titleTemplate: '%s - Accueil',
-//   titleTemplate: '%s',
-//   meta: [
-//     { name: "description", content: datasSEO.blocks[0].value },
-//     { property: 'og:description', content: datasSEO.blocks[0].value },
-//     { property: 'og:image', content: datasSEO.blocks[1].value },
-//   ],
-// })
-
 const root = ref(null);
-const { initScrollOpacity, clearScrollOpacity } = useScrollOpacity();
+const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 
 onMounted(() => {
-  gsap.set('#header-logo', { translateX: -20, opacity: 0 })
-  gsap.set('#index-logo', { translateX: -20, opacity: 0 })
-  gsap.to('#index-logo', { delay: 1, translateX: 0, opacity: 1 })
+  gsap.killTweensOf('#header-logo')
+  gsap.to('#header-logo', { autoAlpha: 1 })
 
   nextTick(() => {
-    initScrollOpacity(root.value)
+    initScrollReveal(root.value)
     // initScrollHeaderMinimize(root.value)
   })
 })
 
 onUnmounted(() => {
-  clearScrollOpacity()
+  clearScrollReveal()
   // clearLogoObserver()
 })
 </script>

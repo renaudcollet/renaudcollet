@@ -51,6 +51,8 @@ export const useDatasStore = defineStore( 'datas', {
 
     async fetchDatas(apiId) {
 
+      console.log('--- Fetching datas for ', apiId);
+
       switch (apiId) {
         case S_DATA_ACCUEIL:
           if (this.accueil) return
@@ -114,8 +116,8 @@ export const useDatasStore = defineStore( 'datas', {
           query
         })
 
-        // console.log('Data ERROR', error);
-        // console.log(`Data from ${apiId}`, data);
+        console.log('Data ERROR', error);
+        console.log(`Data from ${apiId}`, data.value);
 
         switch (apiId) {
           case S_DATA_CONTACT:
