@@ -16,7 +16,7 @@
       </div>
     </div>
     <section class="projects-home">
-      <template v-for="(item, index) in storeDatas.projectsFiltered" :key="index">
+      <template v-for="(item, index) in storeDatas.projectsHomepage" :key="index">
         <ProjectItem 
           class="projects-home__item" 
           :id="index"
@@ -40,8 +40,8 @@ import gsap from 'gsap';
 
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
+// await fetchDatas(S_DATA_PROJECTS);
 await fetchDatas(S_DATA_ACCUEIL);
-await fetchDatas(S_DATA_PROJECTS);
 
 const props = defineProps({
   scrollVelocity: {
@@ -64,13 +64,6 @@ const scrollVelocity = toRef(props, 'scrollVelocity');
 watch(scrollVelocity, (newVal, oldVal) => {
   // console.log('watch scrollVelocity', newVal, oldVal);
   updateScrollVelocity(newVal)
-})
-
-watch(storeDatas.projectsFiltered, (newVal, oldVal) => {
-  // console.log('watch projectsFiltered', newVal, oldVal);
-  nextTick(() => {
-    initScrollReveal(root.value)
-  })
 })
 
 onMounted(() => {

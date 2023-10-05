@@ -4,16 +4,22 @@ Filters:
 
 Design:
     ☐ Design all pages
+    ☐ Page Music, soundcloud widget (https://developers.soundcloud.com/docs/api/html5-widget#resources)
 
 Intégration:
+    ✔ When click filters, go to page works @done(23-10-05 11:01)
+    ✔ Kewywords missing, last item doesn't show up on homepage @done(23-10-05 10:28)
+    ✔ Manage projects visible on homepage from admin @done(23-10-05 11:01)
     ☐ Bug header when resize from xl to lg
-    ☐ When click filters, go to page works
     ☐ Page projet, add a link to next project
-    ☐ Kewywords missing, last item doesn't show up on homepage
     ☐ + of the triangle is not centered in x (on homepage)
 
 Bug:
     ☐ Little black flash when pause the video
+    ☐ Error when go from another page to homepage
+
+Menu: 
+    ☐ Rollover triangle
 
 Animation:
     ✔ Titles and Vignettes should appear with a skew mask animation @done(23-09-21 16:56)
@@ -34,7 +40,7 @@ Curtains:
     ☐ Migrate mixins curtains-shader to composition api use-curtains-shader
 
 Data:
-    ☐ Improve initial data loading
+    ✘ Improve initial data loading @cancelled(23-10-05 14:49)
     ✘ slug : prepend brand to slug @cancelled(23-09-28 12:30) 
 
 SEO:

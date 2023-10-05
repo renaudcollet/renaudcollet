@@ -19,6 +19,7 @@ export const useDatasStore = defineStore( 'datas', {
     projects: null,
     projectsById: null,
     projectsFiltered: null,
+    projectsHomepage: null,
     footer: null,
     keywords: null,
   }),
@@ -122,6 +123,7 @@ export const useDatasStore = defineStore( 'datas', {
             break;
           case S_DATA_ACCUEIL:
             this.accueil = data.value
+            this.projectsHomepage = data.value.data.attributes.projets.data
             break;
           case S_DATA_CONTACT:
             this.contact = data.value

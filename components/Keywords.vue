@@ -46,6 +46,8 @@
 import gsap from 'gsap'
 import { useDatasStore, S_DATA_PROJECTS, S_DATA_KEYWORDS } from '~/stores/datas'
 
+const router = useRouter();
+
 const storeDatas = useDatasStore()
 const { fetchDatas } = storeDatas
 await fetchDatas(S_DATA_PROJECTS);
@@ -63,6 +65,10 @@ const isSelected = (oItem) => {
 
 const onClickItem = (oItem) => {
   console.log('> onClickItem', oItem.id, oItem.attributes.projets.data);
+
+  if (router.currentRoute.value.name !== 'works') {
+    router.push({ name: 'works' })
+  }
 
   datasKeywordsSelected.value.push(oItem);
 
