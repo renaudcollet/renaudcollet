@@ -8,13 +8,14 @@
     <div class="footer__bottom">
       <div class="footer__bottom__social">
         <a v-if="linkedin" :href="linkedin" target="_blank" class="footer__bottom__social__link">
-          <img src="~/assets/svg/social-linkedin-white.svg" alt="Linkedin" class="footer__bottom__social__link__icon">
+          Connect on linkedin &nbsp;<img src="~/assets/svg/social-linkedin-white.svg" alt="Linkedin" class="footer__bottom__social__link__icon">
         </a>
       </div>
       <!-- <NuxtLink to="/legal" class="footer__bottom__legal">Mentions légales</NuxtLink> -->
-      <div class="footer__bottom__since">
-        Renaud Collet - Web developer since 2004 - ©{{ currentYear }}
-      </div>
+    </div>
+
+    <div class="footer__since">
+      Renaud Collet - Web developer since 2004 - ©{{ currentYear }}
     </div>
 
   </footer>
@@ -40,12 +41,12 @@ const currentYear = computed(() => {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-top: 13px;
+  padding-top: 30px;
   padding-bottom: 51px;
 
   @include media-breakpoint-up(md) {
-    padding-top: 3.611111vw;
-    padding-bottom: 14.166667vw;
+    padding-top: 60px;
+    padding-bottom: 70px;
   }
 
   @include media-breakpoint-up(xl) {
@@ -90,17 +91,20 @@ const currentYear = computed(() => {
     }
 
     &__more {
-      color: #fff;
+      color: $font-color;
       font-weight: 600;
       font-size: 12px;
       text-decoration: none;
 
       @include media-breakpoint-up(md) {
-        font-size: 24px;
+        font-size: 14px;
+      }
+
+      @include media-breakpoint-up(lg) {
+        font-size: 20px;
       }
 
       @include media-breakpoint-up(xl) {
-        font-size: 24px;
         margin-top: 5px;
       }
     }
@@ -150,6 +154,7 @@ const currentYear = computed(() => {
     width: 296px;
     display: flex;
     flex-direction: row;
+    align-items: flex-end;
     margin-top: 0;
 
     @include media-breakpoint-up(md) {
@@ -162,11 +167,15 @@ const currentYear = computed(() => {
 
     &__social {
       display: flex;
+      align-items: flex-end;
 
       &__link {
         margin-right: 20px;
         display: flex;
-        align-items: flex-end;
+        align-items: baseline;
+        text-decoration: none;
+        color: $font-color;
+
 
         @include media-breakpoint-up(md) {
           margin-right: 5.555556vw;
@@ -186,8 +195,8 @@ const currentYear = computed(() => {
           }
 
           @include media-breakpoint-up(xl) {
-            width: 20px;
-            height: 20px;
+            width: 14px;
+            height: 14px;
           }
         }
       }
@@ -207,20 +216,22 @@ const currentYear = computed(() => {
         font-size: 11px;
       }
     }
+  }
 
-    &__since {
-      color:#fff;
-      text-decoration: none;
-      font-size: 9px;
+  &__since {
+    color: $font-color;
+    text-decoration: none;
+    font-size: 9px;
+    display: flex;
+    letter-spacing: 0.3px;
 
-      @include media-breakpoint-up(md) {
-        font-size: 11px;
-      }
+    @include media-breakpoint-up(md) {
+      font-size: 11px;
+    }
 
-      @include media-breakpoint-up(xl) {
-        margin-top: 20px;
-        font-size: 11px;
-      }
+    @include media-breakpoint-up(xl) {
+      margin-top: 20px;
+      font-size: 11px;
     }
   }
 }

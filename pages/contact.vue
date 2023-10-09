@@ -88,22 +88,6 @@ const datasContact = storeDatas.contact.data;
 const root = ref(null);
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 
-const email = datasContact.attributes.email;
-const tel = datasContact.attributes.tel;
-const linkedin = datasContact.attributes.linkedin;
-
-const clickElementToShow = (e) => {
-  console.log('clickElementToShow', e.target.dataset.email);
-  e.preventDefault()
-  e.stopImmediatePropagation()
-
-  if (e.target.dataset['mail'] === 'A') {
-    return
-  }
-  // showEmail.value = true
-  // showTel.value = true
-}
-
 const clickShowEmail = () => {
   console.log('clickShowEmail');
   showEmail.value = true
@@ -155,6 +139,7 @@ onUnmounted(() => {
 
 .link-item {
   margin-bottom: 13px;
+  color: $font-color;
 
   @include media-breakpoint-up(lg) {
     margin-left: 10px;
@@ -232,8 +217,8 @@ onUnmounted(() => {
 
   a {
     display: inline-flex;
-    color: #ffffff;
     text-decoration: none;
+    color: $font-color;
   }
 }
 
