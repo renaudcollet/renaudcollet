@@ -1,7 +1,11 @@
 <template>
   <div class="keywords">
     <div class="keywords__menu">
-      <div class="keywords__menu__button" v-on:click="onClickMenuButton">
+      <div 
+        class="keywords__menu__button"
+        v-on:click="onClickMenuButton"
+        data-cursor="hover"
+      >
         <div class="keywords__menu__button__label">Filtres</div>
         <div class="keywords__menu__button__arrow">
           <svg width="14px" height="27px" viewBox="0 0 14 27">
@@ -252,6 +256,7 @@ onMounted(() => {
         font-size: 8px;
         font-weight: 300;
         color: #fff;
+        pointer-events: none;
 
         @include media-breakpoint-up(xl) {
           font-size: 10px;

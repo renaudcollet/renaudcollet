@@ -3,7 +3,7 @@ Filters:
     ✔ Add possibility to select multiple filters @done(23-09-19 16:38)
 
 Design:
-    ☐ Design all pages
+    ✔ Design all pages @done(23-10-09 14:01)
     ☐ Page Music, soundcloud widget (https://developers.soundcloud.com/docs/api/html5-widget#resources)
 
 Intégration:

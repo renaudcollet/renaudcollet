@@ -8,7 +8,11 @@
       <Logo />
     </NuxtLink>
     <div class="header__menu">
-      <div class="header__menu__button" v-on:click="onClickMenuButton">
+      <div 
+        class="header__menu__button"
+        v-on:click="onClickMenuButton"
+        data-cursor="hover"
+      >
         <div class="header__menu__button__arrow">
           <svg width="14px" height="27px" viewBox="0 0 14 27">
             <path fill-rule="evenodd" fill="rgb(255, 255, 255)"
@@ -245,6 +249,7 @@ export default {
         color: #fff;
         font-family: sans-serif;
         transform: scaleX(1.5);
+        pointer-events: none;
 
         @include media-breakpoint-up(md) {
           font-size: 11px;

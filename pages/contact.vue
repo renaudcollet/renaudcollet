@@ -41,7 +41,9 @@
             data-scroll-reveal-delay="0.4"
             data-scroll-reveal-duration="0.5"
           >
-            <span>Email &nbsp;</span>
+            <span
+              data-cursor="hover"
+            >Email &nbsp;</span>
             <a
               v-if="showEmail"
               :href="`mailto:${datasContact.attributes.email}`"
@@ -56,7 +58,9 @@
             data-scroll-reveal-delay="0.5"
             data-scroll-reveal-duration="0.5"
           >
-            <span>Phone &nbsp;</span>
+            <span
+              data-cursor="hover"
+            >Phone &nbsp;</span>
             <a 
               v-if="showTel"
               :href="`tel:${datasContact.attributes.tel}`"

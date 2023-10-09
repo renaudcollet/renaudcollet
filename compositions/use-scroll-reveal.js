@@ -2,11 +2,12 @@ import gsap from 'gsap'
 
 /**
  * Usage: 
- * Add 'scroll-opacity' class to the elements you want to animate on scroll
- * Add 'data-scroll-index' attribute to the elements to delay the animation
+ * Add 'scroll-reveal' class to the elements you want to animate on scroll
  * 
- * <div class="scroll-opacity" data-scroll-index="0">Lorem ipsum dolor sit amet</div>
- * <div class="scroll-opacity" data-scroll-index="1">Lorem ipsum dolor sit amet</div>
+ * <div class="scroll-reveal" 
+    data-scroll-reveal-opacity-y OR data-scroll-reveal-height OR data-scroll-reveal-clip-path
+    data-scroll-reveal-delay="0.0"
+    data-scroll-reveal-duration="0.5">Lorem ipsum dolor sit amet</div>
  */
 export default function useScrollReveal() {
 

@@ -3,6 +3,7 @@
   <Curtains id="CurtainsCanvas" @success="onCurtainsReady" ref="curtains">
     <NuxtPage :scrollVelocity="scrollVelocity" :class="[currentPage.value]" />
   </Curtains>
+  <MouseCursor />
   <span v-if="config" id="config"></span>
 </template>
 
@@ -10,6 +11,7 @@
 import { useDatasStore, S_DATA_SEO } from '~/stores/datas';
 import { Curtains } from "vue-curtains";
 import Lenis from '@studio-freight/lenis';
+import MouseCursor from '~/components/ui/MouseCursor.vue';
 
 // const datasSEO = storeDatas.seo.data.attributes;
 // useHead({
