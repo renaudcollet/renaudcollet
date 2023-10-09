@@ -147,12 +147,18 @@ onUnmounted(() => {
 
 .description {
   margin-bottom: 20px;
-  margin-left: 10px;
+
+  @include media-breakpoint-up(lg) {
+    margin-left: 10px;
+  }
 }
 
 .link-item {
-  margin-bottom: 10px;
-  margin-left: 10px;
+  margin-bottom: 13px;
+
+  @include media-breakpoint-up(lg) {
+    margin-left: 10px;
+  }
 }
 
 #contact {
@@ -195,7 +201,7 @@ onUnmounted(() => {
 
   p {
     text-align: center;
-    font-size: 14px;
+    font-size: $font-size-text-sm;
     font-weight: 300;
     margin-bottom: 26px;
     user-select: all;
@@ -203,7 +209,7 @@ onUnmounted(() => {
 
     @include media-breakpoint-up(md) {
       text-align: left;
-      font-size: 22px;
+      font-size: $font-size-text-md;
       line-height: 1.15;
       text-align: center;
     }
@@ -211,10 +217,12 @@ onUnmounted(() => {
     @include media-breakpoint-up(lg) {
       text-align: left;
       width: 80%;
+      font-size: $font-size-text-lg;
     }
 
     @include media-breakpoint-up(xl) {
       line-height: 1.15;
+      font-size: $font-size-text-xl;
     }
   }
 

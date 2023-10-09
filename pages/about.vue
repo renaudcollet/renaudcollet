@@ -91,14 +91,20 @@ onUnmounted(() => {
     }
 
     .description {
-      font-size: 12px;
+      font-size: $font-size-text-sm;
+      line-height: $font-line-height-sm;
+      color: #928282;
 
       @include media-breakpoint-up(md) {
-        font-size: 18px;
+        font-size: $font-size-text-md;
       }
 
       @include media-breakpoint-up(lg) {
-        font-size: 24px;
+        font-size: $font-size-text-lg;
+      }
+
+      @include media-breakpoint-up(xl) {
+        font-size: $font-size-text-xl;
       }
     }
   }
@@ -129,33 +135,5 @@ onUnmounted(() => {
     }
   }
 
-  
-  .page__title {
-    margin-top: 100px;
-    margin-bottom: 100px;
-    text-align: center;
-    font-size: $font-size-big-title-sm;
-    font-weight: 800;
-
-    @include media-breakpoint-up(md) {
-      font-size: $font-size-big-title-md;
-    }
-
-    @include media-breakpoint-up(lg) {
-      margin-top: 0;
-      padding-top: 160px;
-      margin-bottom: 200px;
-      font-size: $font-size-big-title-lg;
-      width: 580px;
-    }
-
-    @include media-breakpoint-up(xl) {
-      margin-top: 0;
-      padding-top: 170px;
-      margin-bottom: 200px;
-      font-size: $font-size-big-title-xl;
-      width: 650px;
-    }
-  }
 }
 </style>
