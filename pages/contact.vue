@@ -2,44 +2,70 @@
   <div ref="root" class="page">
     <section id="contact">
       <div class="header-minimize" data-header-scroll-minimize></div>
-      <h1 
-        class="scroll-reveal"
-        data-scroll-reveal-opacity-y
-        data-scroll-reveal-delay="0.2"
-        data-scroll-reveal-duration="0.5"
-      >
-        {{ datasContact.attributes.titre }}
-      </h1>
-      <p>
-        <span 
+      <div class="bloc">
+        <h1 
           class="scroll-reveal"
           data-scroll-reveal-opacity-y
-          data-scroll-reveal-delay="0.2"
+          data-scroll-reveal-delay="0.0"
           data-scroll-reveal-duration="0.5"
         >
-          {{ datasContact.attributes.description }}
-        </span>
-        <br />
-        <a 
-          :href="`tel:${datasContact.attributes.tel}`"
-          class="scroll-reveal"
-          data-scroll-reveal-opacity-y
-          data-scroll-reveal-delay="0.2"
-          data-scroll-reveal-duration="0.5"
-        >
-          {{ datasContact.attributes.tel }}
-        </a>
-        <br />
-        <a
-          :href="`mailto:${datasContact.attributes.email}`"
-          class="scroll-reveal"
-          data-scroll-reveal-opacity-y
-          data-scroll-reveal-delay="0.2"
-          data-scroll-reveal-duration="0.5"
-        >
-          {{ datasContact.attributes.email }}
-        </a>
-      </p>
+          {{ datasContact.attributes.titre }}
+        </h1>
+        <p>
+          <span 
+            class="description scroll-reveal"
+            data-scroll-reveal-opacity-y
+            data-scroll-reveal-delay="0.2"
+            data-scroll-reveal-duration="0.5"
+          >
+            {{ datasContact.attributes.description }}
+          </span>
+          <br />
+          <div
+            class="link-item scroll-reveal"
+            data-scroll-reveal-opacity-y
+            data-scroll-reveal-delay="0.3"
+            data-scroll-reveal-duration="0.5"
+          >
+            <a 
+              :href="`${datasContact.attributes.linkedin}`" 
+              target="_blank"
+            >
+              LinkedIn
+            </a>
+          </div>
+          <div
+            @click="clickShowEmail"
+            class="link-item pointer-cursor scroll-reveal"
+            data-scroll-reveal-opacity-y
+            data-scroll-reveal-delay="0.4"
+            data-scroll-reveal-duration="0.5"
+          >
+            <span>Email &nbsp;</span>
+            <a
+              v-if="showEmail"
+              :href="`mailto:${datasContact.attributes.email}`"
+            >
+              {{ datasContact.attributes.email }}
+            </a>
+          </div>
+          <div
+            @click="clickShowTel"
+            class="link-item pointer-cursor scroll-reveal"
+            data-scroll-reveal-opacity-y
+            data-scroll-reveal-delay="0.5"
+            data-scroll-reveal-duration="0.5"
+          >
+            <span>Phone &nbsp;</span>
+            <a 
+              v-if="showTel"
+              :href="`tel:${datasContact.attributes.tel}`"
+            >
+              {{ datasContact.attributes.tel }}
+            </a>
+          </div>
+        </p>
+      </div>
     </section>
     <FooterSimple />
   </div>  
@@ -61,6 +87,35 @@ const datasContact = storeDatas.contact.data;
 
 const root = ref(null);
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
+
+const email = datasContact.attributes.email;
+const tel = datasContact.attributes.tel;
+const linkedin = datasContact.attributes.linkedin;
+
+const clickElementToShow = (e) => {
+  console.log('clickElementToShow', e.target.dataset.email);
+  e.preventDefault()
+  e.stopImmediatePropagation()
+
+  if (e.target.dataset['mail'] === 'A') {
+    return
+  }
+  // showEmail.value = true
+  // showTel.value = true
+}
+
+const clickShowEmail = () => {
+  console.log('clickShowEmail');
+  showEmail.value = true
+}
+
+const clickShowTel = () => {
+  console.log('clickShowTel');
+  showTel.value = true
+}
+
+const showTel = ref(false)
+const showEmail = ref(false)
 
 onMounted(() => {
   gsap.killTweensOf('#header-logo')
@@ -86,48 +141,54 @@ onUnmounted(() => {
   height: 10px;
 }
 
+.pointer-cursor {
+  cursor: pointer;
+}
+
+.description {
+  margin-bottom: 20px;
+  margin-left: 10px;
+}
+
+.link-item {
+  margin-bottom: 10px;
+  margin-left: 10px;
+}
+
 #contact {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin-bottom: 60px;
-
-  @include media-breakpoint-up(md) {
-    width: auto;
-    margin-right: auto;
-    margin-left: auto;
-    height: 100vh;
-    align-items: center;
-  }
+  height: 100vh;
+  user-select: none;
 
   @include media-breakpoint-up(lg) {
-    width: auto;
-    margin-right: auto;
-    margin-left: 40%;
     align-items: flex-start;
   }
 
-  @include media-breakpoint-up(xl) {
-    width: auto;
-    margin-right: auto;
-    margin-left: 45%;
-    height: 100vh;
-  }
-
   h1 {
-    font-size: 24px;
+    font-size: $font-size-big-title-sm;
     font-weight: 700;
-    margin-bottom: 41px;
-    margin-top: 45vh;
+    margin-bottom: 20px;
+    text-align: center;
 
     @include media-breakpoint-up(md) {
-      font-size: 72px;
+      font-size: $font-size-big-title-md;
       margin-top: 10vh;
+      width: 80%;
+    }
+
+    @include media-breakpoint-up(lg) {
+      font-size: $font-size-big-title-lg;
+      // margin-top: 10vh;
+      width: 80%;
+      text-align: left;
     }
 
     @include media-breakpoint-up(xl) {
-      font-size: 72px;
+      font-size: $font-size-big-title-xl;
       margin-top: 10vh;
     }
   }
@@ -138,22 +199,18 @@ onUnmounted(() => {
     font-weight: 300;
     margin-bottom: 26px;
     user-select: all;
+    user-select: none;
 
     @include media-breakpoint-up(md) {
       text-align: left;
       font-size: 22px;
-      width: auto;
-      margin-left: auto;
-      margin-right: auto;
       line-height: 1.15;
       text-align: center;
     }
 
     @include media-breakpoint-up(lg) {
-      width: auto;
       text-align: left;
-      margin-left: 0;
-      margin-right: auto;
+      width: 80%;
     }
 
     @include media-breakpoint-up(xl) {
@@ -169,6 +226,27 @@ onUnmounted(() => {
     display: inline-flex;
     color: #ffffff;
     text-decoration: none;
+  }
+}
+
+.bloc {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 296px;
+  margin: 0 auto;
+
+  @include media-breakpoint-up(md) {
+    width: 100%;
+  }
+
+  @include media-breakpoint-up(lg) {
+    width: 82vw;
+  }
+
+  @include media-breakpoint-up(xl) {
+    width: 900px;
   }
 }
 </style>
