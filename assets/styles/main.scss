@@ -38,7 +38,7 @@ html {
 body {
   line-height: 1;
   background: linear-gradient(180deg, rgb(14,14,14) 0%, rgb(27,25,25) 54%, rgb(5,5,5) 100%);
-  color: rgb(146, 130, 130);
+  color: $font-color;
   font-family: $font-main;
   min-height: 100vh;
 }

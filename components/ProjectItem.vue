@@ -127,7 +127,7 @@ watch(isVisible, (newVal, oldVal) => {
   position: relative;
   display: flex;
   margin: 0 auto 90px;
-  color: #fff;
+  color: $font-color;
   text-decoration: none;
   width: calc(100vw - 60px);
   height: 56.25vw;

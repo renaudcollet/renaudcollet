@@ -264,7 +264,6 @@ SECTION .cover-top
   &__title {
     display: flex;
     position: absolute;
-    color: #ffffff;
     bottom: 140px;
     // width: 100%;
     flex-direction: column;

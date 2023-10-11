@@ -56,7 +56,6 @@ export default {
           font-weight: 300;
           font-size: 24px;
           // text-decoration: underline;
-          color: #fff;
           margin-bottom: 20px;
           margin-top: 30px;
           font-weight: 700;
