@@ -406,21 +406,23 @@ export default {
 </script>
 
 <style lang="scss">
-body,
-a,
-button,
-[data-mouse-cursor='hover']
-{
-    cursor: none !important;
-}
+@include media-breakpoint-up(md) {
+  body,
+  a,
+  button,
+  [data-mouse-cursor='hover']
+  {
+      cursor: none !important;
+  }
 
-[data-mouse-cursor='hide'],
-[data-mouse-cursor='zoom']
-{
-    cursor: none !important;
-    & > * {
-        pointer-events: none;
-    }
+  [data-mouse-cursor='hide'],
+  [data-mouse-cursor='zoom']
+  {
+      cursor: none !important;
+      & > * {
+          pointer-events: none;
+      }
+  }
 }
 </style>
 
