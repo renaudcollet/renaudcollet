@@ -80,7 +80,13 @@ export default {
         opacity: 1,
         rotation: 0,
         scale: 1,
-        attr: { 'stroke-opacity': 0.3 },
+        attr: {   
+          'stroke': '#FFFFFF',
+          'stroke-width': 1,
+          'fill': '#000',
+          'fill-opacity': 0.1,
+          'stroke-opacity': 1
+        },
       },
       oTweenOutlineBigHover: {
         delay: 0,
