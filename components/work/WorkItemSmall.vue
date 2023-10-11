@@ -58,8 +58,9 @@
           data-scroll-reveal-opacity-y
           data-scroll-reveal-delay="0.2"
           data-scroll-reveal-duration="0.5"
-          v-html="content.title"
-        ></h3>
+        >
+          {{ content.title === null ? '' : content.title }}
+        </h3>
       </div>
       <div 
         class="work-item-small__content__text scroll-reveal"

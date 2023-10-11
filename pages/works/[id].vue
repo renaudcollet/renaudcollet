@@ -360,6 +360,7 @@ SECTION .cover-top
   @include media-breakpoint-up(lg) {
     padding-top: 100px;  
     max-width: 1920px;
+    margin: 0 auto;
   }
 }
 

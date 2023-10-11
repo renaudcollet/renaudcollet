@@ -9,7 +9,7 @@
     >
       <ClientOnly>
         <ImagePlane 
-          v-if="!playVideo"
+          v-if="!bPlayVideo"
           :src="src"
           :video-src="videoSrc" 
           :onRender="onRender"
@@ -19,12 +19,12 @@
         />
       </ClientOnly>
       <VideoComponent
-          v-if="playVideo"
+          v-if="bPlayVideo"
           class="work-item-big__image__video"
           :src="src" 
           :video-src="videoSrc" 
           :id="titleAlphaNumeric" 
-          :play="activateVideo"
+          :play="bActivateVideo"
           :onRender="onRender"
           @videoEnded="onVideoEnded"
           @videoOutOfView="onVideoOutOfView"
@@ -33,7 +33,7 @@
           alt=""
       ></VideoComponent>
     </div>
-    <div class="work-item-big__content z-index-text" :class="{'hide': playVideo}" ref="txtContent">
+    <div class="work-item-big__content z-index-text" :class="{'hide': bPlayVideo}" ref="elContent">
       <div class="work-item-big__content__abs">
         <div 
           v-if="isVideo" 
@@ -42,7 +42,7 @@
           data-scroll-reveal-opacity-y
           data-scroll-reveal-delay="0.2"
           data-scroll-reveal-duration="0.5"
-          ref="btnPlay"
+          ref="elBtnPlay"
           @click="onClickPlayVideo"
         >
           <svg x="0px" y="0px" viewBox="-27 -15 162 150">
@@ -57,8 +57,9 @@
           data-scroll-reveal-opacity-y
           data-scroll-reveal-delay="0.2"
           data-scroll-reveal-duration="0.5"
-          v-html="title"
-        ></h3>
+        >
+          {{ title }}
+        </h3>
       </div>
       <div 
         class="work-item-big__content__text scroll-reveal"
@@ -88,6 +89,7 @@ const props = defineProps({
   content: {
     type: String,
     required: false,
+    default: '',
   },
   src: {
     type: String,
@@ -110,10 +112,10 @@ const props = defineProps({
   }
 })
 
-const btnPlay = ref(null);
-const txtContent = ref(null);
-const playVideo = ref(false);
-const activateVideo = ref(false);
+const elBtnPlay = ref(null);
+const elContent = ref(null);
+const bPlayVideo = ref(false);
+const bActivateVideo = ref(false);
 const titleAlphaNumeric = computed(() => {
   return toAlphaNumeric(props.title);
 })
@@ -140,7 +142,7 @@ const toAlphaNumeric = (str) => {
 }
 
 const onClickPlayVideo = () => {
-  playVideo.value = true;
+  bPlayVideo.value = true;
 
   const t = {v: 0}
   // Hide the block, after the css animation is complete
@@ -148,10 +150,10 @@ const onClickPlayVideo = () => {
     delay: 0.0,
     v: 1,
     onComplete: () => {
-      activateVideo.value = true;
+      bActivateVideo.value = true;
       
       // const el = this.$el.querySelector('.work-item-big__content');
-      gsap.to(txtContent.value, {
+      gsap.to(elContent.value, {
         duration: 0.3,
         autoAlpha: 0,
         transform: 'translateY(50px)',
@@ -173,9 +175,9 @@ const onVideoPaused = () => {
 }
 
 const onVideoOutOfView = () => {
-  playVideo.value = false;
-  activateVideo.value = false;
-  gsap.to(txtContent.value, {
+  bPlayVideo.value = false;
+  bActivateVideo.value = false;
+  gsap.to(elContent.value, {
     duration: 0.3,
     autoAlpha: 1,
     transform: 'translateY(0px)',
