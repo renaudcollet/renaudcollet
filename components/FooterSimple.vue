@@ -7,11 +7,16 @@
 
     <div class="footer__bottom">
       <div class="footer__bottom__social">
-        <a v-if="linkedin" :href="linkedin" target="_blank" class="footer__bottom__social__link">
-          Connect on linkedin &nbsp;<img src="~/assets/svg/social-linkedin-white.svg" alt="Linkedin" class="footer__bottom__social__link__icon">
+        <a 
+          v-if="linkedin"
+          :href="linkedin"
+          data-mouse-cursor="hover"
+          target="_blank"
+          class="footer__bottom__social__link"
+        >
+          <img src="~/assets/svg/social-linkedin-white.svg" alt="Linkedin" class="footer__bottom__social__link__icon">
         </a>
       </div>
-      <!-- <NuxtLink to="/legal" class="footer__bottom__legal">Mentions légales</NuxtLink> -->
     </div>
 
     <div class="footer__since">
@@ -41,7 +46,7 @@ const currentYear = computed(() => {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-top: 30px;
+  padding-top: 40px;
   padding-bottom: 51px;
 
   @include media-breakpoint-up(md) {
@@ -58,6 +63,7 @@ const currentYear = computed(() => {
     display: flex;
     width: 296px;
     margin-bottom: 26px;
+    justify-content: center;
 
     @include media-breakpoint-up(md) {
       width: 82.22vw;
@@ -156,6 +162,7 @@ const currentYear = computed(() => {
     flex-direction: row;
     align-items: flex-end;
     margin-top: 0;
+    justify-content: center;
 
     @include media-breakpoint-up(md) {
       width: 82.222222vw;
@@ -170,16 +177,10 @@ const currentYear = computed(() => {
       align-items: flex-end;
 
       &__link {
-        margin-right: 20px;
         display: flex;
         align-items: baseline;
         text-decoration: none;
         color: $font-color;
-
-
-        @include media-breakpoint-up(md) {
-          margin-right: 5.555556vw;
-        }
 
         @include media-breakpoint-up(xl) {
           margin-right: 40px;
@@ -224,13 +225,20 @@ const currentYear = computed(() => {
     font-size: 9px;
     display: flex;
     letter-spacing: 0.3px;
+    margin-top: 30px;
 
     @include media-breakpoint-up(md) {
+      font-size: 11px;
+      margin-top: 40px;
+    }
+
+    @include media-breakpoint-up(lg) {
+      margin-top: 50px;
       font-size: 11px;
     }
 
     @include media-breakpoint-up(xl) {
-      margin-top: 20px;
+      margin-top: 70px;
       font-size: 11px;
     }
   }
