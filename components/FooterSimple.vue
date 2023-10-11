@@ -54,9 +54,19 @@ const currentYear = computed(() => {
     padding-bottom: 70px;
   }
 
+  @include media-breakpoint-up(lg) {
+    flex-direction: row;    
+    justify-content: space-between;
+    padding-left: 50px;
+    padding-right: 50px;
+    align-items: baseline;
+  }
+
   @include media-breakpoint-up(xl) {
     padding-top: 48px;
     padding-bottom: 76px;
+    padding-left: 10vw;
+    padding-right: 10vw;
   }
 
   &__top {
@@ -70,9 +80,9 @@ const currentYear = computed(() => {
       margin-bottom: 3.62vw;
     }
 
-    @include media-breakpoint-up(xl) {
-      width: 1146px;
-      margin-bottom: 48px;
+    @include media-breakpoint-up(lg) {
+      margin-bottom: 0;
+      width: auto;
     }
 
     &__logo {
@@ -168,8 +178,9 @@ const currentYear = computed(() => {
       width: 82.222222vw;
     }
 
-    @include media-breakpoint-up(xl) {
-      width: 1146px;
+    @include media-breakpoint-up(lg) {
+      width: auto;
+      order: 3;
     }
 
     &__social {
@@ -196,25 +207,10 @@ const currentYear = computed(() => {
           }
 
           @include media-breakpoint-up(xl) {
-            width: 14px;
-            height: 14px;
+            width: 24px;
+            height: 24px;
           }
         }
-      }
-    }
-
-    &__legal {
-      color:#fff;
-      text-decoration: none;
-      font-size: 9px;
-
-      @include media-breakpoint-up(md) {
-        font-size: 11px;
-      }
-
-      @include media-breakpoint-up(xl) {
-        margin-top: 20px;
-        font-size: 11px;
       }
     }
   }
@@ -233,13 +229,10 @@ const currentYear = computed(() => {
     }
 
     @include media-breakpoint-up(lg) {
-      margin-top: 50px;
+      margin-top: 0;
       font-size: 11px;
-    }
-
-    @include media-breakpoint-up(xl) {
-      margin-top: 70px;
-      font-size: 11px;
+      order: 2;
+      width: 380px;
     }
   }
 }
