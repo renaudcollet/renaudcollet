@@ -48,23 +48,10 @@ import gsap from 'gsap'
 
 export default {
   name: 'Header',
-  props: {},
   data() {
     return {
       isMenuOpened: false
     }
-  },
-  computed: {
-    isDesktop() {
-      return window.innerWidth >= 1200
-    },
-  },
-  watch: {
-    // $route() {
-    //   // if (this.isMenuOpened) {
-    //   //   this.closeMenu()
-    //   // }
-    // }
   },
   mounted() {
     gsap.set('.header__menu', { visibility: 'visible' })
@@ -72,16 +59,17 @@ export default {
     gsap.set('.header__menu__zone', { autoAlpha: 0 })
     gsap.set('.header__menu__button__arrow__right', { autoAlpha: 0, transform: 'scale(0)' })
 
-    if (this.isDesktop)
+    if (this.isDesktop())
       this.openMenu()
 
-    // window.addEventListener('resize', this.onResize)
+    window.addEventListener('resize', this.onResize)
   },
   methods: {
+    isDesktop() {
+      return window.innerWidth >= 992
+    },
     onResize() {
-      if (this.isDesktop) {
-        this.openMenu()
-      } else {
+      if (!this.isDesktop()) {
         this.closeMenu()
       }
     },
@@ -96,6 +84,8 @@ export default {
       }
     },
     openMenu() {
+      if (this.isMenuOpened) return
+
       this.isMenuOpened = true
       gsap.to('.header__menu__zone', {
         duration: 0.2,
@@ -111,7 +101,7 @@ export default {
       })
       gsap.to('.header__menu__content', {
         duration: 0.5,
-        height: this.isDesktop ? 'auto' : window.innerHeight,
+        height: this.isDesktop() ? 'auto' : window.innerHeight,
         ease: 'power4.out',
         top: 0
       })
@@ -141,7 +131,7 @@ export default {
         delay: 0.5,
         duration: 0.5,
         height: 0,
-        top: this.isDesktop ? '-300px' : 0,
+        top: this.isDesktop() ? '-300px' : 0,
         ease: 'power4.out'
       })
       gsap.to('.header__menu__button__arrow__right', {
@@ -205,7 +195,7 @@ export default {
     text-decoration: none;
     color: #fff;
 
-    @include media-breakpoint-up(xl) {
+    @include media-breakpoint-up(lg) {
       margin-top: 30px;
       margin-left: 130px;
       width: 90px;
@@ -233,11 +223,15 @@ export default {
         top: 10px;
       }
 
-      @include media-breakpoint-up(xl) {
+      @include media-breakpoint-up(lg) {
         transform-origin: center;
         transform: rotate(0);
-        // flex-direction: column;
         flex-direction: row-reverse;
+        top: 20px;
+        right: 8px;
+      }
+
+      @include media-breakpoint-up(xl) {
         top: 25px;
         right: 105px;
       }
@@ -255,7 +249,7 @@ export default {
           font-size: 11px;
         }
 
-        @include media-breakpoint-up(xl) {
+        @include media-breakpoint-up(lg) {
           font-size: 14px;
           font-weight: 400;
           order: 1;
@@ -268,7 +262,7 @@ export default {
         position: relative;
         display: none;
 
-        @include media-breakpoint-up(xl) {
+        @include media-breakpoint-up(lg) {
           order: 2;
           // transform: rotate(-90deg);
           // margin-top: 10px;
@@ -297,21 +291,24 @@ export default {
       align-items: center;
       width: 100%;
       height: 600px;
-      background-color: #1b89a5;
+      background-color: #1e2122;
       overflow: hidden;
       padding: 0;
 
-      @include media-breakpoint-up(xl) {
+      @include media-breakpoint-up(lg) {
         background-color: transparent;
         width: auto;
-        // transform: rotate(-90deg);
         flex-direction: row-reverse;
-        // right: -105px;
-        right: 150px;
+        right: 70px;
         height: fit-content;
-        transform: translateY(25px);
+        transform: translateY(20px);
         pointer-events: none;
         padding: 0;
+      }
+
+      @include media-breakpoint-up(xl) {
+        right: 150px;
+        transform: translateY(25px);
       }
 
       a {
@@ -323,7 +320,7 @@ export default {
         margin-bottom: 15px;
         justify-content: center;
 
-        @include media-breakpoint-up(xl) {
+        @include media-breakpoint-up(lg) {
           font-size: 14px;
           font-weight: 300;
           margin-right: 45px;
@@ -382,7 +379,7 @@ export default {
           // background-size: contain;
         }
 
-        @include media-breakpoint-up(xl) {
+        @include media-breakpoint-up(lg) {
           display: none;
         }
       }
@@ -395,7 +392,7 @@ export default {
       height: 100vh;
       z-index: $z-menu-zone;
 
-      @include media-breakpoint-up(xl) {
+      @include media-breakpoint-up(lg) {
         display: none;
       }
     }
