@@ -11,7 +11,7 @@
       <div 
         class="header__menu__button"
         v-on:click="onClickMenuButton"
-        data-cursor="hover"
+        data-mouse-cursor="hover"
       >
         <div class="header__menu__button__arrow">
           <svg width="14px" height="27px" viewBox="0 0 14 27">

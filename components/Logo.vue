@@ -59,6 +59,6 @@
 
 
 <style scoped>
-    .st0{fill:none; stroke:#FFFFFF; stroke-miterlimit:10;}
-    .st2{fill:#FFFFFF;}
+.st0{fill:none; stroke:#FFFFFF; stroke-miterlimit:10;}
+.st2{fill:#FFFFFF;}
 </style>

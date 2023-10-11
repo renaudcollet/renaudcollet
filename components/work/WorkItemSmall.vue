@@ -9,6 +9,7 @@
           :onRender="onRender"
           :isVisible="isVisible"
           :class="{'scroll-reveal': !supportsCurtains, 'zoomable': !isVideo}" 
+          :data-mouse-cursor="isVideo ? null : 'zoom'"
           data-scroll-reveal-opacity-y
           data-scroll-reveal-delay="0.2"
           data-scroll-reveal-duration="0.5"
@@ -35,6 +36,7 @@
           @click="onClickPlayVideo"
           ref="btnPlay" 
           class="work-item-small__content__button scroll-reveal" 
+          data-mouse-cursor="hide"
           data-scroll-reveal-opacity-y
           data-scroll-reveal-delay="0.2"
           data-scroll-reveal-duration="0.5"
@@ -182,6 +184,9 @@ const onVideoOutOfView = () => {
 </script>
 
 <style lang="scss">
+[data-mouse-cursor='hover'] > * {
+  pointer-events: none;
+}
 .work-item-small {
   display: flex;
   flex-direction: column;
@@ -292,6 +297,7 @@ const onVideoOutOfView = () => {
       height: 50px;
       margin-left: -6px;
       pointer-events: all;
+      filter: drop-shadow(2px 4px 6px black);
 
       svg {
         transform-origin: center;

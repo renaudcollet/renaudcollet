@@ -16,10 +16,11 @@ Intégration:
 
 Bug:
     ☐ Little black flash when pause the video
-    ☐ Error when go from another page to homepage
+    ✘ Error when go from another page to homepage @cancelled(23-10-10 11:56)
+        Might be du to .env file wrong IPs
 
 Menu: 
-    ☐ Rollover triangle
+    ✔ Rollover triangle @done(23-10-10 10:07)
 
 Animation:
     ✔ Titles and Vignettes should appear with a skew mask animation @done(23-09-21 16:56)
@@ -33,7 +34,7 @@ Webgl:
     Particles : 
         Joshua Davis - https://codepen.io/jshuadvd/pen/ogKeBB
         https://nullprogram.com/webgl-particles/
-    (☐ Would be great to only have threejs to do curtains effect (like on lusion.co))
+        (☐ Would be great to only have threejs to do curtains effect (like on lusion.co))
 
 Curtains: 
     ☐ Optimize, Pass along a unique Date.getTime() to curtains Plane in ImagePlane

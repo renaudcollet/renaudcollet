@@ -4,7 +4,7 @@
       <div 
         class="keywords__menu__button"
         v-on:click="onClickMenuButton"
-        data-cursor="hover"
+        data-mouse-cursor="hover"
       >
         <div class="keywords__menu__button__label">Filtres</div>
         <div class="keywords__menu__button__arrow">

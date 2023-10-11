@@ -1,7 +1,10 @@
 .zoomable {
   cursor: auto;
-  &:hover {
-    cursor: url('~/assets/svg/zoom-open-triangle.svg') 15 15, zoom-in;
+  &:not([data-mouse-cursor='hover']) {
+    // data-mouse-cursor is used by MouseCursor component
+    &:hover {
+      cursor: url('~/assets/svg/zoom-open-triangle.svg') 15 15, zoom-in;
+    }
   }
 }
 
@@ -15,7 +18,6 @@
   background-repeat: no-repeat;
   z-index: $z-zoomable;
   // overflow: auto;
-  cursor: url('~/assets/svg/zoom-close-triangle.svg') 15 15, zoom-out;
 }
 
 .zoomable-image {
@@ -24,6 +26,10 @@
   background-size: contain;
   width: 100%;
   height: 100%;
+  
+  &:not([data-mouse-cursor='zoom']) {
+    cursor: url('~/assets/svg/zoom-close-triangle.svg') 15 15, zoom-out;
+  }
 }
 
 .zoomable-exit-button {

@@ -11,6 +11,7 @@ export default function useZoomableImage() {
 
   let isZoomed = false;
   let zoomableContainer;
+  let zoomableImage;
   let fClickUnzoomable;
   let fClickZoomable;
   let elZoomables;
@@ -48,18 +49,20 @@ export default function useZoomableImage() {
       const img = e.currentTarget.querySelector('img');
       const imgSrc = zoomableUrl ? zoomableUrl : img.getAttribute('src');
 
-      // const imgWidth = img.offsetWidth;
-      // const imgHeight = img.offsetHeight;
-      // const imgNaturalWidth = img.naturalWidth;
-      // const imgNaturalHeight = img.naturalHeight;
-      // const imgOffset = img.getBoundingClientRect();
-
       zoomableContainer = document.createElement('div');
       zoomableContainer.classList.add('zoomable-container');
+
       fClickUnzoomable = onClickUnzoomable.bind(this)
       zoomableContainer.addEventListener('click', fClickUnzoomable)
 
-      const zoomableImage = document.createElement('div');
+      zoomableImage = document.createElement('div');
+
+      // Check if MouseCursor is used
+      if (e.currentTarget.dataset.mouseCursor === 'zoom') {
+        zoomableImage.dataset.mouseCursor = 'zoom-out'
+      } else {
+        zoomableImage.dataset.cursor = 'hide' // For MouseCursor component
+      }
       zoomableImage.classList.add('zoomable-image');  
       zoomableImage.style.backgroundImage = `url(${imgSrc})`;
       zoomableImage.style.width = `${window.innerWidth}px`

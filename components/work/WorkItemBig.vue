@@ -38,6 +38,7 @@
         <div 
           v-if="isVideo" 
           class="work-item-big__content__button scroll-reveal" 
+          data-mouse-cursor="hide"
           data-scroll-reveal-opacity-y
           data-scroll-reveal-delay="0.2"
           data-scroll-reveal-duration="0.5"
@@ -250,6 +251,7 @@ onMounted(() => {
       width: 50px;
       height: 50px;
       margin-left: -6px;
+      filter: drop-shadow(2px 4px 6px black);
 
       svg {
         transform-origin: center;

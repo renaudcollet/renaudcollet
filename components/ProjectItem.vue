@@ -144,6 +144,10 @@ watch(isVisible, (newVal, oldVal) => {
     height: 580px;
   }
 
+  & > * {
+    pointer-events: none;
+  }
+
   svg {
     transition: transform 0.3s ease;
 

@@ -42,7 +42,7 @@
             data-scroll-reveal-duration="0.5"
           >
             <span
-              data-cursor="hover"
+              data-mouse-cursor="hover"
             >Email &nbsp;</span>
             <a
               v-if="showEmail"
@@ -59,7 +59,7 @@
             data-scroll-reveal-duration="0.5"
           >
             <span
-              data-cursor="hover"
+              data-mouse-cursor="hover"
             >Phone &nbsp;</span>
             <a 
               v-if="showTel"
