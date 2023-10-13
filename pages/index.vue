@@ -7,7 +7,8 @@
         @ready="onFirstPassReady"
       />
     </ClientOnly>
-    <div class="header">
+    <div class="cover">
+      <Cover3D />
       <div id="index-logo" class="logo" data-header-scroll-minimize alt="">
         <Logo />
       </div>
@@ -31,6 +32,7 @@
 </template>
 
 <script setup>
+import Cover3D from '~/components/webgl/Cover3D.vue';
 import { ShaderPass } from 'vue-curtains';
 import { useDatasStore, S_DATA_ACCUEIL } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
@@ -66,7 +68,7 @@ watch(scrollVelocity, (newVal, oldVal) => {
 })
 
 onMounted(() => {
-  gsap.set('#header-logo', { translateX: -20, opacity: 0 })
+  gsap.set('#cover-logo', { translateX: -20, opacity: 0 })
   gsap.set('#index-logo', { translateX: -20, opacity: 0 })
   gsap.to('#index-logo', { delay: 1, translateX: 0, opacity: 1 })
   
@@ -93,7 +95,7 @@ onUnmounted(() => {
   width: 100px;
   height: 50px;
 }
-.header {
+.cover {
   height: 100vh;
   width: 100%;
   display: flex;
@@ -111,7 +113,7 @@ onUnmounted(() => {
 }
 
 @media only screen and (min-width: 768px) {
-  .header {
+  .cover {
     justify-content: left;
     margin-left: 20vw;
     width: calc(100% - 20vw);

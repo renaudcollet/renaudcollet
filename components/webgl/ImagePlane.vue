@@ -245,7 +245,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  console.log(`unmounted ${props.src}`);
+  // console.log(`unmounted ${props.src}`);
   window.removeEventListener('resize', onResize)
   //unmount curtains
 })
