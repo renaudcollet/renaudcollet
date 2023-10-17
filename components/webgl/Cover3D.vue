@@ -8,15 +8,41 @@
 import GUI from 'lil-gui';
 
 import * as THREE from 'three'
+import { REVISION } from 'three'
+
+import gsap from 'gsap';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
+
+import sweepFrag from '~/shaders/sweep.frag'
+import coverFrag from '~/shaders/cover.frag'
+import coverVert from '~/shaders/cover.vert'
 
 import modelNature from '~/assets/3d/nature-scene.glb'
+import lethargy from 'lethargy'
+import VirtualScroll from 'virtual-scroll'
+
+import bg1 from '~/assets/textures/matcap_2.png'
+import bg2 from '~/assets/textures/matcap_3.png'
+
+
 
 export default {
   mounted() {
+    
     this.init()
+
+    // Use a virtual scroll while the scroll is locked untill cover 3d animations are finished
+    // Once the animations are finished, the scroll is unlocked and the virtual scroll is disabled
+    this.currentState = 0;
+    this.scroller = new VirtualScroll()
+    this.scroller.on(event => {
+      console.log(this.currentState)
+      this.currentState -= event.deltaY / 4000;
+      this.currentState = (this.currentState + 3000) % 3;
+    })
   },
 
   unmounted() {
@@ -43,26 +69,71 @@ export default {
 
   methods: {
     init() {
-      this.debugGUI = window.location.hash === '#debug'
+      this.bDebugGUI = window.location.hash === '#debug'
 
       this.config = {
-        cameraTarget: new THREE.Vector3(0, 0, 0),
+        cameraLookAt: new THREE.Vector3(0, 0, 0),
+        progress: 0,
+        camera: {
+          fov: 45,
+          near: 0.1,
+          far: 1000,
+          x: 0,
+          y: 3,
+          z: 35
+        },
+        camera2: {
+          fov: 45,
+          near: 0.1,
+          far: 1000,
+          x: 10,
+          y: 37,
+          z: 35
+        },
+        showPostProcessing: true,
+        shader: {
+          progress: 0,
+          simpleSweep: true
+        }
       }
 
       this.canvas = document.querySelector('#three-canvas')
+      this.width = this.canvas.offsetWidth;
+      this.height = this.canvas.offsetHeight;
       this.scene = new THREE.Scene()
       this.scene.fog = new THREE.FogExp2(0xcccccc, 0.002);
       // this.scene.background = new Color(0xff0000);
-      this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000)
+      this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 0.1, 1000)
       this.camera.position.set(0, 3, 35)
-      this.camera.lookAt(this.config.cameraTarget)
+      this.camera.lookAt(this.config.cameraLookAt)
+
+      this.camera2 = new THREE.PerspectiveCamera(45, this.width / this.height, 0.1, 1000)
+      this.camera2.position.set(10, 37, 35)
+      this.camera2.lookAt(this.config.cameraLookAt)
+
+      // gsap.to(this.camera.position, {x: 0, y: 5, z: 20, duration: 1.5, delay: 0.5, repeat: -1, yoyo: true})
+
+      this.pixelRatio = Math.min(window.devicePixelRatio, 2)
       this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: true })
       this.renderer.outputColorSpace = THREE.SRGBColorSpace
       this.renderer.toneMapping = THREE.LinearToneMapping // ACESFilmicToneMapping
-      this.renderer.setSize(window.innerWidth, window.innerHeight)
-      this.renderer.setPixelRatio(window.devicePixelRatio)
+      this.renderer.setSize(this.width, this.height)
+      this.renderer.setPixelRatio(this.pixelRatio)
+      this.renderer.setClearColor(0xeeeeee, 1)
 
-      if (this.debugGUI) {
+      // Render Targets
+      this.renderTarget1 = new THREE.WebGLRenderTarget(this.width * this.pixelRatio, this.height * this.pixelRatio)
+      this.renderTarget2 = new THREE.WebGLRenderTarget(this.width * this.pixelRatio, this.height * this.pixelRatio)
+      this.renderTarget1.outputColorSpace = THREE.SRGBColorSpace
+      this.renderTarget1.toneMapping = THREE.LinearToneMapping
+
+      // Draco
+      const THREE_PATH = `https://unpkg.com/three@0.${REVISION}.x`
+      this.dracoLoader = new DRACOLoader( new THREE.LoadingManager() ).setDecoderPath( `${THREE_PATH}/examples/jsm/libs/draco/gltf/` );
+      this.gltfLoader = new GLTFLoader();
+      this.gltfLoader.setDRACOLoader(this.dracoLoader);
+
+      if (this.bDebugGUI) {
         this.gui = new GUI().title('Cover 3D').open()
         this.guiDebugObject = {}
         this.guiDebugObject.envMapIntensity = 1
@@ -90,18 +161,16 @@ export default {
         folder.add(this.camera.position, 'z', -100, 100, 0.001)
 
         folder = this.gui.addFolder('Camera Target')
-        const onCameraTargetChange = () => {
-          console.log('onCameraTargetChange')
-          this.camera.lookAt(this.config.cameraTarget)
+        const onCameraLookAtChange = () => {
+          console.log('onCameraLookAtChange')
+          this.camera.lookAt(this.config.cameraLookAt)
         }
-        folder.add(this.config.cameraTarget, "x", -200, 200, 0.01).onChange(() => onCameraTargetChange)
-        folder.add(this.config.cameraTarget, "y", -200, 200, 0.01).onChange(() => onCameraTargetChange)
-        folder.add(this.config.cameraTarget, "z", -200, 200, 0.01).onChange(() => onCameraTargetChange)
+        folder.add(this.config.cameraLookAt, "x", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
+        folder.add(this.config.cameraLookAt, "y", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
+        folder.add(this.config.cameraLookAt, "z", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
       }
 
-      const gltfLoader = new GLTFLoader()
-
-      gltfLoader.load(
+      this.gltfLoader.load(
         modelNature,
         (gltf) => {
           this.scene.add(gltf.scene)
@@ -110,6 +179,7 @@ export default {
         }
       )
 
+      this.initPostprocessing()
       this.addLights()
 
       this.controls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -119,14 +189,77 @@ export default {
 
       this.appear = 0
       this.scroll = window.scrollY / window.innerHeight
-      this.raf = requestAnimationFrame(this.animate)
+      this.raf = requestAnimationFrame(this.render)
+    },
+
+    initPostprocessing() {
+      this.postScene = new THREE.Scene()
+      const frustumSize = 1
+      const aspect = 1
+      this.postCamera = new THREE.OrthographicCamera(frustumSize * aspect / -2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / - 2, -1000, 1000 );
+
+      this.material = new THREE.ShaderMaterial({
+        side: THREE.DoubleSide,
+        uniforms: {
+          progress : { type: "f", value: 0 },
+          uTexture1: { type: "t", value: new THREE.TextureLoader().load(bg1) },
+          uTexture2: { type: "t", value: new THREE.TextureLoader().load(bg2) },
+        },
+        // wireframe: true,
+        // transparent: true,
+        vertexShader: coverVert,
+        // fragmentShader: coverFrag,
+        fragmentShader: sweepFrag,
+      })
+
+      this.quad = new THREE.Mesh(
+        new THREE.PlaneGeometry(1, 1),
+        this.material
+      )
+
+      this.postScene.add(this.quad)
+
+      if (this.bDebugGUI) {
+        const folder = this.gui.addFolder('SHADER')
+        folder.add(this.config, "progress", 0, 1, 0.01).onChange((val)=>{})
+        folder.add(this.config, 'showPostProcessing')
+        folder.add(this.config.shader, 'simpleSweep').onChange(() => {
+          this.material.fragmentShader = this.config.shader.simpleSweep ? sweepFrag : coverFrag
+          this.material.needsUpdate = true
+        })
+      }
+    },
+
+    render(t) {
+      this.controls.update();
+
+      this.progress = this.config.progress
+
+      this.renderer.setRenderTarget(this.renderTarget1)
+      this.renderer.render(this.scene, this.camera)
+
+      this.renderer.setRenderTarget(this.renderTarget2)
+      this.renderer.render(this.scene, this.camera2)
+
+      this.renderer.setRenderTarget(null)
+
+      this.material.uniforms.uTexture1.value = this.renderTarget1.texture
+      this.material.uniforms.uTexture2.value = this.renderTarget2.texture
+      this.material.uniforms.progress.value = this.progress
+
+      
+      if (this.config.showPostProcessing)
+        this.renderer.render(this.postScene, this.postCamera);
+      else 
+        this.renderer.render(this.scene, this.camera);
+
+      this.raf = requestAnimationFrame(this.render)
     },
 
     addLights() {
-      // LIGHTS
-      const hemisphereLight = new THREE.HemisphereLight(0xf9fcc3, 0xa2a2a2) // Cast no shadows
-      hemisphereLight.position.set(0, 10, 0)
-      hemisphereLight.name = 'light-hemisphere'
+      // const hemisphereLight = new THREE.HemisphereLight(0xf9fcc3, 0xa2a2a2) // Cast no shadows
+      // hemisphereLight.position.set(0, 10, 0)
+      // hemisphereLight.name = 'light-hemisphere'
       // this.scene.add( hemisphereLight )
 
       // Hemisphere Light Helper
@@ -175,10 +308,10 @@ export default {
       // light_point.distance = 0
       // this.scene.add(light_point)
 
-      if (this.debugGUI) {
-        const hemisphereLightFolder = this.gui.addFolder("Light Hemisphere")
-        hemisphereLightFolder.add(hemisphereLight, "visible", false)
-        hemisphereLightFolder.add(hemisphereLight, "intensity", 0, 10, 0.0001)
+      if (this.bDebugGUI) {
+        // const hemisphereLightFolder = this.gui.addFolder("Light Hemisphere")
+        // hemisphereLightFolder.add(hemisphereLight, "visible", false)
+        // hemisphereLightFolder.add(hemisphereLight, "intensity", 0, 10, 0.0001)
 
         // Ambient Light
         const ambientLightFolder = this.gui.addFolder("Light Ambient")
@@ -216,7 +349,6 @@ export default {
       }
     },
 
-
     updateAllMaterials() {
       this.scene.traverse((child) => {
         if (child instanceof Mesh && child.material instanceof MeshStandardMaterial) {
@@ -232,11 +364,13 @@ export default {
       return window.matchMedia("(pointer:coarse)").matches || window.innerWidth < 769 || window.innerHeight > window.innerWidth
     },
 
-    animate(t) {
-      this.controls.update();
-      this.renderer.render(this.scene, this.camera);
-      this.raf = requestAnimationFrame(this.animate)
-    },
+    resize() {
+      this.width = this.canvas.offsetWidth;
+      this.height = this.canvas.offsetHeight;
+      this.renderer.setSize(this.width, this.height);
+      this.camera.aspect = this.width / this.height;
+      this.camera.updateProjectionMatrix();
+    }
   }
 }
 </script>

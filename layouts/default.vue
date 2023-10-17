@@ -13,11 +13,19 @@ import { Curtains } from "vue-curtains";
 import Lenis from '@studio-freight/lenis';
 import MouseCursor from '~/components/ui/MouseCursor.vue';
 
+const route = useRoute()
+
 // const datasSEO = storeDatas.seo.data.attributes;
-// useHead({
-//   // titleTemplate: '%s - Accueil',
-//   titleTemplate: '%s',
-//   })
+useHead({
+  // titleTemplate: '%s - Accueil',
+  titleTemplate: '%s',
+  htmlAttrs: {
+    class: computed(() => {
+      if (route.name === 'index') return 'scroll-lock';
+      return '';
+    }),
+  }
+})
 
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
@@ -27,8 +35,6 @@ const scrollVelocity = ref(0);
 let lenis;
 let lastScroll = 0;
 let config = false;
-
-const route = useRoute()
 
 const currentPage = computed(() => {
   return `page-${route.name}`
@@ -76,7 +82,9 @@ const lerp = (a, b, n) => {
   return (1 - n) * a + n * b;
 }
 
+// For shader effect on scroll
 const onScroll = () => {
+  // console.log('onScroll', lenis.scroll);
   scrollVelocity.value = lenis.scroll - lastScroll
   lastScroll = lenis.scroll
 }
@@ -109,14 +117,15 @@ onMounted(() => {
   window.lenis = lenis
   lastScroll = lenis.scroll
 
-  // TODO: debounce the scroll
-  window.addEventListener('scroll', onScroll)
+  // window.addEventListener('scroll', onScroll)
+  lenis.on('scroll', onScroll)
 
   requestAnimationFrame(update)
 })
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', onScroll)
+  // window.removeEventListener('scroll', onScroll)
+  lenis.off('scroll', onScroll)
 })
 </script>
 
