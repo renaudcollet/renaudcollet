@@ -1,7 +1,7 @@
 <template>
   <Header></Header>
   <Curtains id="CurtainsCanvas" @success="onCurtainsReady" ref="curtains">
-    <NuxtPage :scrollVelocity="scrollVelocity" :class="[currentPage.value]" />
+    <NuxtPage :scrollVelocity="scrollVelocity" :class="[currentPage.value]" class="page" />
   </Curtains>
   <MouseCursor />
   <span v-if="config" id="config"></span>
@@ -12,24 +12,28 @@ import { useDatasStore, S_DATA_SEO } from '~/stores/datas';
 import { Curtains } from "vue-curtains";
 import Lenis from '@studio-freight/lenis';
 import MouseCursor from '~/components/ui/MouseCursor.vue';
-
 const route = useRoute()
+
+const storeDatas = useDatasStore();
+const { fetchDatas } = storeDatas;
+await fetchDatas(S_DATA_SEO);
+
+storeDatas.lockScroll = (route.name === 'index');
+let scrollLockClass = ref((route.name === 'index') ? 'scroll-lock' : '');
+
+watch(() => storeDatas.lockScroll, (newVal, oldVal) => {
+  console.log('changed - lockScroll = ', newVal);
+  scrollLockClass.value = (route.name === 'index' && newVal) ? 'scroll-lock' : ''
+})
 
 // const datasSEO = storeDatas.seo.data.attributes;
 useHead({
   // titleTemplate: '%s - Accueil',
   titleTemplate: '%s',
   htmlAttrs: {
-    class: computed(() => {
-      if (route.name === 'index') return 'scroll-lock';
-      return '';
-    }),
+    class: scrollLockClass,
   }
 })
-
-const storeDatas = useDatasStore();
-const { fetchDatas } = storeDatas;
-await fetchDatas(S_DATA_SEO);
 
 const scrollVelocity = ref(0);
 let lenis;
@@ -82,11 +86,24 @@ const lerp = (a, b, n) => {
   return (1 - n) * a + n * b;
 }
 
+let firstTimeScrollUnlockedValue
 // For shader effect on scroll
 const onScroll = () => {
-  // console.log('onScroll', lenis.scroll);
+  console.log('onScroll', lenis.scroll, window.scrollY);
   scrollVelocity.value = lenis.scroll - lastScroll
   lastScroll = lenis.scroll
+
+  if (storeDatas.lockScroll === false) {
+    // Get firstime scroll was unlocked and check that value on every scroll
+    if (!firstTimeScrollUnlockedValue) {
+      firstTimeScrollUnlockedValue = lenis.scroll;
+      console.log('lenis scroll value = ', firstTimeScrollUnlockedValue);
+    }
+    if (lenis.scroll < firstTimeScrollUnlockedValue) {
+      console.log('lock the scroll !');
+      storeDatas.setIsScrollLocked(true)
+    }
+  }
 }
 
 onMounted(() => {

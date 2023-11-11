@@ -1,5 +1,10 @@
-html.scroll-lock,
-html.scroll-lock body {
+html.scroll-lock
+,html.scroll-lock body {
   height: 100%;
-  overflow: hidden;
+  overflow-y: scroll; /* Show default bar to prevent jumps */
+}
+
+html.scroll-lock .page {
+  position: fixed;
+  width: 100%;
 }

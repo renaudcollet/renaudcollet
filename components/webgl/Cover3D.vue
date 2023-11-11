@@ -6,6 +6,7 @@
 
 <script setup>
 import GUI from 'lil-gui';
+import { useDatasStore } from '~/stores/datas';
 
 import * as THREE from 'three'
 import { REVISION } from 'three'
@@ -26,6 +27,9 @@ import VirtualScroll from 'virtual-scroll'
 
 import bg1 from '~/assets/textures/matcap_2.png'
 import bg2 from '~/assets/textures/matcap_3.png'
+
+const storeDatas = useDatasStore();
+console.log('Cover3D storeDatas', storeDatas);
 
 let bDebugGUI = false
 let gui
@@ -69,6 +73,63 @@ let controls
 let scroll
 let scroller
 let raf
+
+onMounted(() => {    
+    init()
+
+    // TODO: THIS IS NOT THE GOOD WAY TO HANDLE THE SCROLL
+    // I SHOULD NOT HIJACK THE SCROLL, BUT INSTEAD ADD A BIG EMPTY DIV BEFORE ALL THE PROJECTS
+    // THEN LET THE SCROLL PAGE SCROLL NORMALY AND MAKE THE SHADER PROGRESS ACCORDING TO THE SCROLL OVER THE EMPTY DIV
+    // OR: KEEP IT THAT WAY AND USE overscroll-behavior: none; ON THE BODY, to prevent page to reload on mobile
+
+    // Use a virtual scroll while the scroll is locked untill cover 3d animations are finished
+    // Once the animations are finished, the scroll is unlocked and the virtual scroll is disabled
+    let currentState = 0;
+    let prcnt = 0;
+    scroller = new VirtualScroll()
+    scroller.on(event => {
+      // TODO: To prevent jumps when scrolling up, need to use scroll event in default.vue
+      console.log(event, window.scrollY)
+      if(storeDatas.lockScroll) {
+        currentState -= event.deltaY / 4000;
+        // currentState = (currentState + 3000) % 3;
+        prcnt -= event.deltaY / 4000;
+
+        if (prcnt < 0) prcnt = 0
+        console.log('prcnt', prcnt);
+
+        gsap.killTweensOf(config)
+        gsap.to(config, {
+          progress: prcnt, duration: 0.5, 
+          onUpdate: () => {
+            updateMaterial()
+            // storeDatas.setIsScrollLocked(prcnt < 1)
+            if (prcnt > 1)
+              storeDatas.setIsScrollLocked(false)
+          },
+          onComplete: () => {
+            if (prcnt > 1)
+              storeDatas.setIsScrollLocked(false)
+            // storeDatas.setIsScrollLocked(prcnt < 1)
+          }
+        })
+      }
+    })
+})
+
+onUnmounted(() => {
+  if (renderer) {
+    renderer.dispose()
+  }
+
+  if (gui) {
+    gui.destroy()
+  }
+
+  window.removeEventListener('resize', resize)
+
+  window.cancelAnimationFrame(raf)
+})
 
 const init = () => {
   bDebugGUI = window.location.hash === '#debug'
@@ -192,9 +253,10 @@ const init = () => {
   controls = new OrbitControls(camera, renderer.domElement);
   controls.update();
 
+  // TODO: Handle resize
   window.addEventListener('resize', resize)
 
-  scroll = window.scrollY / window.innerHeight
+  // scroll = window.scrollY / window.innerHeight
   raf = requestAnimationFrame(render)
 }
 
@@ -245,7 +307,7 @@ const initPostprocessing = () => {
 }
 
 const updateMaterial = () => {
-  console.log('updateMaterial', config.progress);
+  // console.log('updateMaterial', config.progress);
 
   renderer.setRenderTarget(renderTarget1)
   renderer.render(scene, camera)
@@ -388,45 +450,6 @@ const resize = () => {
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
 }
-
-
-onMounted(() => {    
-    init()
-
-    // Use a virtual scroll while the scroll is locked untill cover 3d animations are finished
-    // Once the animations are finished, the scroll is unlocked and the virtual scroll is disabled
-    let currentState = 0;
-    scroller = new VirtualScroll()
-    scroller.on(event => {
-      // console.log(event, currentState)
-      currentState -= event.deltaY / 4000;
-      // currentState = (currentState + 3000) % 3;
-      gsap.to(config, {progress: currentState, duration: 1, onUpdate: () => {
-        updateMaterial()
-      }})
-      console.log(progress)
-      if (currentState > 1) {
-        scroller.destroy()
-        currentState = 1
-        document.querySelector('html').classList.remove('scroll-locked')
-      }
-    })
-})
-
-onUnmounted(() => {
-  if (renderer) {
-    renderer.dispose()
-  }
-
-  if (gui) {
-    gui.destroy()
-  }
-
-  // TODO: Handle resize
-  window.removeEventListener('resize', this.resize)
-
-  window.cancelAnimationFrame(raf)
-})
 </script>
 
 <style lang="scss">

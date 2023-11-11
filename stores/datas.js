@@ -22,9 +22,14 @@ export const useDatasStore = defineStore( 'datas', {
     projectsHomepage: null,
     footer: null,
     keywords: null,
+    lockScroll: false,
   }),
 
   actions: {
+    setIsScrollLocked(value) {
+      this.lockScroll = value
+    },
+
     filterProjects(datasKeywordsSelected) {
       let tmp = []
       datasKeywordsSelected.forEach(item => {
