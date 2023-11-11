@@ -4,7 +4,7 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import GUI from 'lil-gui';
 
 import * as THREE from 'three'
@@ -27,352 +27,406 @@ import VirtualScroll from 'virtual-scroll'
 import bg1 from '~/assets/textures/matcap_2.png'
 import bg2 from '~/assets/textures/matcap_3.png'
 
+let bDebugGUI = false
+let gui
+
+const config = {
+  cameraLookAt: new THREE.Vector3(0, 0, 0),
+  progress: 0,
+  camera: {
+    fov: 45,
+    near: 0.1,
+    far: 1000,
+    x: 0,
+    y: 3,
+    z: 35
+  },
+  camera2: {
+    fov: 45,
+    near: 0.1,
+    far: 1000,
+    x: 10,
+    y: 37,
+    z: 35
+  },
+  showPostProcessing: true,
+  shader: {
+    progress: 0,
+    simpleSweep: true
+  }
+}
+
+let canvas
+let width
+let height
+let scene, postScene
+let renderer
+let camera, camera2, postCamera
+let pixelRatio
+let renderTarget1, renderTarget2
+let dracoLoader, gltfLoader
+let controls
+let scroll
+let scroller
+let raf
+
+const init = () => {
+  bDebugGUI = window.location.hash === '#debug'
+
+  canvas = document.querySelector('#three-canvas')
+  width = canvas.offsetWidth;
+  height = canvas.offsetHeight;
+  scene = new THREE.Scene()
+  // scene.fog = new THREE.FogExp2(0xcccccc, 0.002);
+  // scene.background = new Color(0xff0000);
+  camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000)
+  camera.position.set(0, 3, 35)
+  camera.lookAt(config.cameraLookAt)
+
+  camera2 = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000)
+  camera2.position.set(10, 37, 35)
+  camera2.lookAt(config.cameraLookAt)
+
+  // gsap.to(camera.position, {x: 0, y: 5, z: 20, duration: 1.5, delay: 0.5, repeat: -1, yoyo: true})
+
+  // THREE.ColorManagement.enabled = false
+
+  // TODO: Probleme de colorspace avec les textures utilisées dans le ShaderMaterial
+  // TODO:  Créer un codepen pour reproduire le problème
+  pixelRatio = Math.min(window.devicePixelRatio, 2)
+  renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true })
+  renderer.outputColorSpace = THREE.SRGBColorSpace
+  renderer.toneMapping = THREE.LinearToneMapping // ACESFilmicToneMapping
+  renderer.setSize(width, height)
+  renderer.setPixelRatio(pixelRatio)
+  renderer.setClearColor(0xeeeeee, 1)
+
+  // Render Targets
+  renderTarget1 = new THREE.WebGLRenderTarget(width * pixelRatio, height * pixelRatio, {
+    minFilter: THREE.LinearFilter,
+    magFilter: THREE.LinearFilter,
+    format: THREE.RGBAFormat,
+    colorSpace: THREE.SRGBColorSpace
+  })
+  renderTarget2 = new THREE.WebGLRenderTarget(width * pixelRatio, height * pixelRatio, {
+    minFilter: THREE.LinearFilter,
+    magFilter: THREE.LinearFilter,
+    format: THREE.RGBAFormat,
+    colorSpace: THREE.SRGBColorSpace
+  })
+
+  // Env Map
+  // https://github.com/mrdoob/three.js/blob/master/examples/webgl_materials_envmaps.html
+  // const loader = new THREE.CubeTextureLoader()
+  // loader.setPath( 'assets/textures/' )
+  // this.backgroundTexture = loader.load( [ 'px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg' ] )
+  // this.backgroundTexture.encoding = sRGBEncoding
+  // scene.background = this.backgroundTexture
+  // scene.background = new Color(0xffffff)
+  // this.environmentTexture = loader.load( [ 'px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg' ] )
+  // // this.environmentTexture = loader.load( [ 'nx-fef8e7.jpg', 'nx-fef8e7.jpg', 'nx-fef8e7.jpg', 'nx-fef8e7.jpg', 'nx-fef8e7.jpg', 'nx-fef8e7.jpg' ] )
+  // this.environmentTexture.encoding = THREE.SRGBColorSpace
+  // scene.environment = this.environmentTexture
+
+  // KTX2 Loader
+  // this.ktx2Loader = new KTX2Loader()
+  // this.ktx2Loader.setTranscoderPath(window.theme_path + 'js/libs/basis/')
+  // this.ktx2Loader.setResourcePath(window.theme_path + 'js/libs/basis/')
+  // this.ktx2Loader.detectSupport(renderer)
+
+  // Draco
+  const THREE_PATH = `https://unpkg.com/three@0.${REVISION}.x`
+  dracoLoader = new DRACOLoader( new THREE.LoadingManager() ).setDecoderPath( `${THREE_PATH}/examples/jsm/libs/draco/gltf/` );
+  gltfLoader = new GLTFLoader();
+  gltfLoader.setDRACOLoader(dracoLoader);
+
+  if (bDebugGUI) {
+    gui = new GUI().title('Cover 3D').open()
+    const guiDebugObject = {}
+    guiDebugObject.envMapIntensity = 1
+    // gui = gui.addFolder('Cover 3D') // redefine gui to add folder
+    gui.add(guiDebugObject, 'envMapIntensity', 0, 10, 0.001).onChange(updateAllMaterials.bind(this))
+
+    gui
+      .add(renderer, 'toneMapping', {
+        No: THREE.NoToneMapping,
+        Linear: THREE.LinearToneMapping,
+        Reinhard: THREE.ReinhardToneMapping,
+        Cineon: THREE.CineonToneMapping,
+        ACESFilmic: THREE.ACESFilmicToneMapping
+      })
+      .onFinishChange(() => {
+        renderer.toneMapping = Number(renderer.toneMapping)
+        updateAllMaterials()
+      })
+
+    gui.add(renderer, 'toneMappingExposure', 0, 10, 0.001)
+
+    let folder = gui.addFolder('CAMERA')
+    folder.add(camera.position, 'x', -100, 100, 0.001)
+    folder.add(camera.position, 'y', -100, 100, 0.001)
+    folder.add(camera.position, 'z', -100, 100, 0.001)
+
+    folder = gui.addFolder('CAMERA TARGET')
+    const onCameraLookAtChange = () => {
+      camera.lookAt(config.cameraLookAt)
+    }
+    folder.add(config.cameraLookAt, "x", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
+    folder.add(config.cameraLookAt, "y", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
+    folder.add(config.cameraLookAt, "z", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
+  }
+
+  gltfLoader.load(
+    modelNature,
+    (gltf) => {
+      scene.add(gltf.scene)
+      gltf.scene.scale.set(1, 1, 1)
+      console.log('GlTF loaded and added to scene.');
+      updateMaterial()
+    }
+  )
+
+  initPostprocessing()
+  addLights()
+
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.update();
+
+  window.addEventListener('resize', resize)
+
+  scroll = window.scrollY / window.innerHeight
+  raf = requestAnimationFrame(render)
+}
+
+let material
+let quad
+
+const initPostprocessing = () => {
+  postScene = new THREE.Scene()
+  const frustumSize = 1
+  const aspect = 1
+  postCamera = new THREE.OrthographicCamera(frustumSize * aspect / -2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / - 2, -1000, 1000 );
+
+  material = new THREE.ShaderMaterial({
+    side: THREE.DoubleSide,
+    uniforms: {
+      progress : { type: "f", value: 0 },
+      uTexture1: { type: "t", value: null },
+      uTexture2: { type: "t", value: null },
+    },
+    // wireframe: true,
+    // transparent: true,
+    vertexShader: coverVert,
+    // fragmentShader: coverFrag,
+    fragmentShader: sweepFrag,
+  })
+
+  quad = new THREE.Mesh(
+    new THREE.PlaneGeometry(1, 1),
+    material
+  )
+
+  postScene.add(quad)
+
+  if (bDebugGUI) {
+    const folder = gui.addFolder('SHADER')
+    folder.add(config, "progress", 0, 1, 0.01).onChange((val)=>{
+      updateMaterial()
+    })
+    folder.add(config, 'showPostProcessing').onChange(() => {
+      updateMaterial()
+    })
+    folder.add(config.shader, 'simpleSweep').onChange(() => {
+      material.fragmentShader = config.shader.simpleSweep ? sweepFrag : coverFrag
+      material.needsUpdate = true
+      updateMaterial()
+    })
+  }
+}
+
+const updateMaterial = () => {
+  console.log('updateMaterial', config.progress);
+
+  renderer.setRenderTarget(renderTarget1)
+  renderer.render(scene, camera)
+
+  renderer.setRenderTarget(renderTarget2)
+  renderer.render(scene, camera2)
+
+  renderer.setRenderTarget(null)
+
+  renderTarget1.texture.format = THREE.RGBAFormat
+  renderTarget2.texture.format = THREE.RGBAFormat
+
+  material.uniforms.uTexture1.value = renderTarget1.texture
+  material.uniforms.uTexture2.value = renderTarget2.texture
+  material.uniforms.progress.value = config.progress
+}
+
+const render = (t) => {
+  controls.update();      
+  if (config.showPostProcessing)
+    renderer.render(postScene, postCamera);
+  else 
+    renderer.render(scene, camera);
+
+  raf = requestAnimationFrame(render)
+}
+
+const addLights = () => {
+  // const hemisphereLight = new THREE.HemisphereLight(0xf9fcc3, 0xa2a2a2) // Cast no shadows
+  // hemisphereLight.position.set(0, 10, 0)
+  // hemisphereLight.name = 'light-hemisphere'
+  // scene.add( hemisphereLight )
+
+  // Hemisphere Light Helper
+  // const helper = new HemisphereLightHelper( hemisphereLight, 5 )
+  // scene.add( helper )
+
+  const ambientLight = new THREE.AmbientLight(0xffffff, 2)
+  scene.add(ambientLight)
+
+  // Directional Light
+  // See this https://stackoverflow.com/questions/65655433/why-is-three-js-cast-shadow-not-working-on-a-3d-model
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 5)
+  directionalLight.position.set(101, 35, 9)
+  directionalLight.target.position.set(0, 0, 0)
+  directionalLight.castShadow = true
+  // directionalLight.visible = false
+
+  // directionalLight.shadow.radius = 2// Not working with PCFSoftShadowMap
+  directionalLight.shadow.camera.left = -120;
+  directionalLight.shadow.camera.right = 175;
+  directionalLight.shadow.camera.top = 50;
+  directionalLight.shadow.camera.bottom = - 30;
+  directionalLight.shadow.camera.near = 0.1
+  directionalLight.shadow.camera.far = 160
+  directionalLight.shadow.mapSize.set(512, 512)
+  directionalLight.name = 'light-direction'
+  // // directionalLight.shadow.bias = 0.007
+  // directionalLight.shadow.normalBias = 1
+
+  scene.add(directionalLight)
+  scene.add(directionalLight.target)
+
+  // Directional Light Camera Helper
+  // const directionalLightCameraHelper = new CameraHelper(directionalLight.shadow.camera)
+  // scene.add(directionalLightCameraHelper)
+
+  // Directional Light Helper
+  // const lightHelper = new DirectionalLightHelper(directionalLight, 5, 0xffff00)
+  // scene.add( lightHelper )
+
+  // Point Light
+  // const light_point:PointLight = new PointLight(0xffffff, 8, 100, 1)
+  // light_point.position.set(200, 78, 186)
+  // light_point.intensity = 0.9
+  // light_point.decay = 0
+  // light_point.distance = 0
+  // scene.add(light_point)
+
+  if (bDebugGUI) {
+    // const hemisphereLightFolder = gui.addFolder("Light Hemisphere")
+    // hemisphereLightFolder.add(hemisphereLight, "visible", false)
+    // hemisphereLightFolder.add(hemisphereLight, "intensity", 0, 10, 0.0001)
+
+    // Ambient Light
+    const ambientLightFolder = gui.addFolder("LIGHT AMBIENT")
+    ambientLightFolder.add(directionalLight, "visible", false)
+    ambientLightFolder.add(directionalLight, "intensity", 0, 10, 0.0001)
+
+    // Directional Light
+    const onDirectionalLightChange = () => {
+      directionalLight.target.updateMatrixWorld()
+      // lightHelper.update()
+    }
+
+    // light1Folder.open()
+    const light2Folder = gui.addFolder("LIGHT DIRECTIONAL")
+    light2Folder.add(directionalLight, "visible", false)
+    light2Folder.add(directionalLight.position, "x", -200, 200, 0.01).onChange(() => onDirectionalLightChange)
+    light2Folder.add(directionalLight.position, "y", -200, 200, 0.01).onChange(() => onDirectionalLightChange)
+    light2Folder.add(directionalLight.position, "z", -200, 200, 0.01).onChange(() => onDirectionalLightChange)
+    light2Folder.add(directionalLight, "intensity", 0, 10, 0.0001)
+
+    const light3Folder = gui.addFolder("LIGHT DIR. TARGET")
+    light3Folder.add(directionalLight.target.position, "x", -200, 200, 0.01).onChange(() => onDirectionalLightChange)
+    light3Folder.add(directionalLight.target.position, "y", -200, 200, 0.01).onChange(() => onDirectionalLightChange)
+    light3Folder.add(directionalLight.target.position, "z", -200, 200, 0.01).onChange(() => onDirectionalLightChange)
+
+    // Point Light
+    // const lightPointFolder = gui.addFolder("light point")
+    // lightPointFolder.add(light_point, "visible", false)
+    // lightPointFolder.add(light_point.position, "x", -300, 300, 0.01)
+    // lightPointFolder.add(light_point.position, "y", -300, 300, 0.01)
+    // lightPointFolder.add(light_point.position, "z", -300, 300, 0.01)
+    // lightPointFolder.add(light_point, "intensity", 0, 10, 0.001)
+    // lightPointFolder.add(light_point, "decay", 0, 10, 0.001)
+    // lightPointFolder.add(light_point, "distance", 0, 20, 0.001)
+  }
+}
+
+const updateAllMaterials = () => {
+  scene.traverse((child) => {
+    if (child instanceof THREE.Mesh && child.material instanceof THREE.MeshStandardMaterial) {
+      child.material.envMapIntensity = guiDebugObject.envMapIntensity
+      child.material.needsUpdate = true
+      child.castShadow = true
+      child.receiveShadow = true
+    }
+  })
+}
+
+const isMobile = () => {
+  return window.matchMedia("(pointer:coarse)").matches || window.innerWidth < 769 || window.innerHeight > window.innerWidth
+}
+
+const resize = () => {
+  width = canvas.offsetWidth;
+  height = canvas.offsetHeight;
+  renderer.setSize(width, height);
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+}
 
 
-export default {
-  mounted() {
-    
-    this.init()
+onMounted(() => {    
+    init()
 
     // Use a virtual scroll while the scroll is locked untill cover 3d animations are finished
     // Once the animations are finished, the scroll is unlocked and the virtual scroll is disabled
-    this.currentState = 0;
-    this.scroller = new VirtualScroll()
-    this.scroller.on(event => {
-      console.log(this.currentState)
-      this.currentState -= event.deltaY / 4000;
-      this.currentState = (this.currentState + 3000) % 3;
+    let currentState = 0;
+    scroller = new VirtualScroll()
+    scroller.on(event => {
+      // console.log(event, currentState)
+      currentState -= event.deltaY / 4000;
+      // currentState = (currentState + 3000) % 3;
+      gsap.to(config, {progress: currentState, duration: 1, onUpdate: () => {
+        updateMaterial()
+      }})
+      console.log(progress)
+      if (currentState > 1) {
+        scroller.destroy()
+        currentState = 1
+        document.querySelector('html').classList.remove('scroll-locked')
+      }
     })
-  },
+})
 
-  unmounted() {
-    if (this.renderer) {
-      this.renderer.dispose()
-    }
-
-    if (this.controlElem) {
-      this.controlElem.removeEventListener('mousedown', this.onMouseDown)
-      this.controlElem.removeEventListener('touchstart', this.onMouseDown)
-      this.controlElem.removeEventListener('pointermove', this.onPointerMove)
-    }
-
-    if (this.gui) {
-      this.gui.destroy()
-    }
-
-    document.removeEventListener('mouseup', this.onMouseUp)
-    document.removeEventListener('touchend', this.onTouchEnd)
-    window.removeEventListener('resize', this.setSize)
-
-    window.cancelAnimationFrame(this.raf)
-  },
-
-  methods: {
-    init() {
-      this.bDebugGUI = window.location.hash === '#debug'
-
-      this.config = {
-        cameraLookAt: new THREE.Vector3(0, 0, 0),
-        progress: 0,
-        camera: {
-          fov: 45,
-          near: 0.1,
-          far: 1000,
-          x: 0,
-          y: 3,
-          z: 35
-        },
-        camera2: {
-          fov: 45,
-          near: 0.1,
-          far: 1000,
-          x: 10,
-          y: 37,
-          z: 35
-        },
-        showPostProcessing: true,
-        shader: {
-          progress: 0,
-          simpleSweep: true
-        }
-      }
-
-      this.canvas = document.querySelector('#three-canvas')
-      this.width = this.canvas.offsetWidth;
-      this.height = this.canvas.offsetHeight;
-      this.scene = new THREE.Scene()
-      this.scene.fog = new THREE.FogExp2(0xcccccc, 0.002);
-      // this.scene.background = new Color(0xff0000);
-      this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 0.1, 1000)
-      this.camera.position.set(0, 3, 35)
-      this.camera.lookAt(this.config.cameraLookAt)
-
-      this.camera2 = new THREE.PerspectiveCamera(45, this.width / this.height, 0.1, 1000)
-      this.camera2.position.set(10, 37, 35)
-      this.camera2.lookAt(this.config.cameraLookAt)
-
-      // gsap.to(this.camera.position, {x: 0, y: 5, z: 20, duration: 1.5, delay: 0.5, repeat: -1, yoyo: true})
-
-      this.pixelRatio = Math.min(window.devicePixelRatio, 2)
-      this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: true })
-      this.renderer.outputColorSpace = THREE.SRGBColorSpace
-      this.renderer.toneMapping = THREE.LinearToneMapping // ACESFilmicToneMapping
-      this.renderer.setSize(this.width, this.height)
-      this.renderer.setPixelRatio(this.pixelRatio)
-      this.renderer.setClearColor(0xeeeeee, 1)
-
-      // Render Targets
-      this.renderTarget1 = new THREE.WebGLRenderTarget(this.width * this.pixelRatio, this.height * this.pixelRatio)
-      this.renderTarget2 = new THREE.WebGLRenderTarget(this.width * this.pixelRatio, this.height * this.pixelRatio)
-      this.renderTarget1.outputColorSpace = THREE.SRGBColorSpace
-      this.renderTarget1.toneMapping = THREE.LinearToneMapping
-
-      // Draco
-      const THREE_PATH = `https://unpkg.com/three@0.${REVISION}.x`
-      this.dracoLoader = new DRACOLoader( new THREE.LoadingManager() ).setDecoderPath( `${THREE_PATH}/examples/jsm/libs/draco/gltf/` );
-      this.gltfLoader = new GLTFLoader();
-      this.gltfLoader.setDRACOLoader(this.dracoLoader);
-
-      if (this.bDebugGUI) {
-        this.gui = new GUI().title('Cover 3D').open()
-        this.guiDebugObject = {}
-        this.guiDebugObject.envMapIntensity = 1
-        // this.gui = this.gui.addFolder('Cover 3D') // redefine gui to add folder
-        this.gui.add(this.guiDebugObject, 'envMapIntensity', 0, 10, 0.001).onChange(this.updateAllMaterials.bind(this))
-
-        this.gui
-          .add(this.renderer, 'toneMapping', {
-            No: THREE.NoToneMapping,
-            Linear: THREE.LinearToneMapping,
-            Reinhard: THREE.ReinhardToneMapping,
-            Cineon: THREE.CineonToneMapping,
-            ACESFilmic: THREE.ACESFilmicToneMapping
-          })
-          .onFinishChange(() => {
-            this.renderer.toneMapping = Number(this.renderer.toneMapping)
-            this.updateAllMaterials()
-          })
-
-        this.gui.add(this.renderer, 'toneMappingExposure', 0, 10, 0.001)
-
-        let folder = this.gui.addFolder('Camera')
-        folder.add(this.camera.position, 'x', -100, 100, 0.001)
-        folder.add(this.camera.position, 'y', -100, 100, 0.001)
-        folder.add(this.camera.position, 'z', -100, 100, 0.001)
-
-        folder = this.gui.addFolder('Camera Target')
-        const onCameraLookAtChange = () => {
-          console.log('onCameraLookAtChange')
-          this.camera.lookAt(this.config.cameraLookAt)
-        }
-        folder.add(this.config.cameraLookAt, "x", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
-        folder.add(this.config.cameraLookAt, "y", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
-        folder.add(this.config.cameraLookAt, "z", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
-      }
-
-      this.gltfLoader.load(
-        modelNature,
-        (gltf) => {
-          this.scene.add(gltf.scene)
-          gltf.scene.scale.set(1, 1, 1)
-          console.log('GlTF loaded and added to scene.');
-        }
-      )
-
-      this.initPostprocessing()
-      this.addLights()
-
-      this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-      this.controls.update();
-
-      window.addEventListener('resize', this.setSize)
-
-      this.appear = 0
-      this.scroll = window.scrollY / window.innerHeight
-      this.raf = requestAnimationFrame(this.render)
-    },
-
-    initPostprocessing() {
-      this.postScene = new THREE.Scene()
-      const frustumSize = 1
-      const aspect = 1
-      this.postCamera = new THREE.OrthographicCamera(frustumSize * aspect / -2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / - 2, -1000, 1000 );
-
-      this.material = new THREE.ShaderMaterial({
-        side: THREE.DoubleSide,
-        uniforms: {
-          progress : { type: "f", value: 0 },
-          uTexture1: { type: "t", value: new THREE.TextureLoader().load(bg1) },
-          uTexture2: { type: "t", value: new THREE.TextureLoader().load(bg2) },
-        },
-        // wireframe: true,
-        // transparent: true,
-        vertexShader: coverVert,
-        // fragmentShader: coverFrag,
-        fragmentShader: sweepFrag,
-      })
-
-      this.quad = new THREE.Mesh(
-        new THREE.PlaneGeometry(1, 1),
-        this.material
-      )
-
-      this.postScene.add(this.quad)
-
-      if (this.bDebugGUI) {
-        const folder = this.gui.addFolder('SHADER')
-        folder.add(this.config, "progress", 0, 1, 0.01).onChange((val)=>{})
-        folder.add(this.config, 'showPostProcessing')
-        folder.add(this.config.shader, 'simpleSweep').onChange(() => {
-          this.material.fragmentShader = this.config.shader.simpleSweep ? sweepFrag : coverFrag
-          this.material.needsUpdate = true
-        })
-      }
-    },
-
-    render(t) {
-      this.controls.update();
-
-      this.progress = this.config.progress
-
-      this.renderer.setRenderTarget(this.renderTarget1)
-      this.renderer.render(this.scene, this.camera)
-
-      this.renderer.setRenderTarget(this.renderTarget2)
-      this.renderer.render(this.scene, this.camera2)
-
-      this.renderer.setRenderTarget(null)
-
-      this.material.uniforms.uTexture1.value = this.renderTarget1.texture
-      this.material.uniforms.uTexture2.value = this.renderTarget2.texture
-      this.material.uniforms.progress.value = this.progress
-
-      
-      if (this.config.showPostProcessing)
-        this.renderer.render(this.postScene, this.postCamera);
-      else 
-        this.renderer.render(this.scene, this.camera);
-
-      this.raf = requestAnimationFrame(this.render)
-    },
-
-    addLights() {
-      // const hemisphereLight = new THREE.HemisphereLight(0xf9fcc3, 0xa2a2a2) // Cast no shadows
-      // hemisphereLight.position.set(0, 10, 0)
-      // hemisphereLight.name = 'light-hemisphere'
-      // this.scene.add( hemisphereLight )
-
-      // Hemisphere Light Helper
-      // const helper = new HemisphereLightHelper( hemisphereLight, 5 )
-      // this.scene.add( helper )
-
-      const ambientLight = new THREE.AmbientLight(0xffffff, 2)
-      this.scene.add(ambientLight)
-
-      // Directional Light
-      // See this https://stackoverflow.com/questions/65655433/why-is-three-js-cast-shadow-not-working-on-a-3d-model
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 5)
-      directionalLight.position.set(101, 35, 9)
-      directionalLight.target.position.set(0, 0, 0)
-      directionalLight.castShadow = true
-      // directionalLight.visible = false
-
-      // directionalLight.shadow.radius = 2// Not working with PCFSoftShadowMap
-      directionalLight.shadow.camera.left = -120;
-      directionalLight.shadow.camera.right = 175;
-      directionalLight.shadow.camera.top = 50;
-      directionalLight.shadow.camera.bottom = - 30;
-      directionalLight.shadow.camera.near = 0.1
-      directionalLight.shadow.camera.far = 160
-      directionalLight.shadow.mapSize.set(512, 512)
-      directionalLight.name = 'light-direction'
-      // // directionalLight.shadow.bias = 0.007
-      // directionalLight.shadow.normalBias = 1
-
-      this.scene.add(directionalLight)
-      this.scene.add(directionalLight.target)
-
-      // Directional Light Camera Helper
-      // const directionalLightCameraHelper = new CameraHelper(directionalLight.shadow.camera)
-      // this.scene.add(directionalLightCameraHelper)
-
-      // Directional Light Helper
-      // const lightHelper = new DirectionalLightHelper(directionalLight, 5, 0xffff00)
-      // this.scene.add( lightHelper )
-
-      // Point Light
-      // const light_point:PointLight = new PointLight(0xffffff, 8, 100, 1)
-      // light_point.position.set(200, 78, 186)
-      // light_point.intensity = 0.9
-      // light_point.decay = 0
-      // light_point.distance = 0
-      // this.scene.add(light_point)
-
-      if (this.bDebugGUI) {
-        // const hemisphereLightFolder = this.gui.addFolder("Light Hemisphere")
-        // hemisphereLightFolder.add(hemisphereLight, "visible", false)
-        // hemisphereLightFolder.add(hemisphereLight, "intensity", 0, 10, 0.0001)
-
-        // Ambient Light
-        const ambientLightFolder = this.gui.addFolder("Light Ambient")
-        ambientLightFolder.add(directionalLight, "visible", false)
-        ambientLightFolder.add(directionalLight, "intensity", 0, 10, 0.0001)
-
-        // Directional Light
-        const onDirectionalLightChange = () => {
-          directionalLight.target.updateMatrixWorld()
-          // lightHelper.update()
-        }
-
-        // light1Folder.open()
-        const light2Folder = this.gui.addFolder("Light Directional")
-        light2Folder.add(directionalLight, "visible", false)
-        light2Folder.add(directionalLight.position, "x", -200, 200, 0.01).onChange(() => onDirectionalLightChange)
-        light2Folder.add(directionalLight.position, "y", -200, 200, 0.01).onChange(() => onDirectionalLightChange)
-        light2Folder.add(directionalLight.position, "z", -200, 200, 0.01).onChange(() => onDirectionalLightChange)
-        light2Folder.add(directionalLight, "intensity", 0, 10, 0.0001)
-
-        const light3Folder = this.gui.addFolder("Light Dir. target")
-        light3Folder.add(directionalLight.target.position, "x", -200, 200, 0.01).onChange(() => onDirectionalLightChange)
-        light3Folder.add(directionalLight.target.position, "y", -200, 200, 0.01).onChange(() => onDirectionalLightChange)
-        light3Folder.add(directionalLight.target.position, "z", -200, 200, 0.01).onChange(() => onDirectionalLightChange)
-
-        // Point Light
-        // const lightPointFolder = this.gui.addFolder("light point")
-        // lightPointFolder.add(light_point, "visible", false)
-        // lightPointFolder.add(light_point.position, "x", -300, 300, 0.01)
-        // lightPointFolder.add(light_point.position, "y", -300, 300, 0.01)
-        // lightPointFolder.add(light_point.position, "z", -300, 300, 0.01)
-        // lightPointFolder.add(light_point, "intensity", 0, 10, 0.001)
-        // lightPointFolder.add(light_point, "decay", 0, 10, 0.001)
-        // lightPointFolder.add(light_point, "distance", 0, 20, 0.001)
-      }
-    },
-
-    updateAllMaterials() {
-      this.scene.traverse((child) => {
-        if (child instanceof Mesh && child.material instanceof MeshStandardMaterial) {
-          child.material.envMapIntensity = this.guiDebugObject.envMapIntensity
-          child.material.needsUpdate = true
-          child.castShadow = true
-          child.receiveShadow = true
-        }
-      })
-    },
-
-    isMobile() {
-      return window.matchMedia("(pointer:coarse)").matches || window.innerWidth < 769 || window.innerHeight > window.innerWidth
-    },
-
-    resize() {
-      this.width = this.canvas.offsetWidth;
-      this.height = this.canvas.offsetHeight;
-      this.renderer.setSize(this.width, this.height);
-      this.camera.aspect = this.width / this.height;
-      this.camera.updateProjectionMatrix();
-    }
+onUnmounted(() => {
+  if (renderer) {
+    renderer.dispose()
   }
-}
+
+  if (gui) {
+    gui.destroy()
+  }
+
+  // TODO: Handle resize
+  window.removeEventListener('resize', this.resize)
+
+  window.cancelAnimationFrame(raf)
+})
 </script>
 
 <style lang="scss">
