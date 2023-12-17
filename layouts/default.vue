@@ -89,7 +89,7 @@ const lerp = (a, b, n) => {
 let firstTimeScrollUnlockedValue
 // For shader effect on scroll
 const onScroll = () => {
-  console.log('onScroll', lenis.scroll, window.scrollY);
+  // console.log('onScroll', lenis.scroll, window.scrollY);
   scrollVelocity.value = lenis.scroll - lastScroll
   lastScroll = lenis.scroll
 

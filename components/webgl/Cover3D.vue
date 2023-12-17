@@ -79,7 +79,7 @@ onMounted(() => {
 
     // TODO: THIS IS NOT THE GOOD WAY TO HANDLE THE SCROLL
     // I SHOULD NOT HIJACK THE SCROLL, BUT INSTEAD ADD A BIG EMPTY DIV BEFORE ALL THE PROJECTS
-    // THEN LET THE SCROLL PAGE SCROLL NORMALY AND MAKE THE SHADER PROGRESS ACCORDING TO THE SCROLL OVER THE EMPTY DIV
+    // THEN LET THE PAGE SCROLL NORMALY AND MAKE THE SHADER PROGRESS ACCORDING TO THE SCROLL OVER THE EMPTY DIV
     // OR: KEEP IT THAT WAY AND USE overscroll-behavior: none; ON THE BODY, to prevent page to reload on mobile
 
     // Use a virtual scroll while the scroll is locked untill cover 3d animations are finished
@@ -89,14 +89,14 @@ onMounted(() => {
     scroller = new VirtualScroll()
     scroller.on(event => {
       // TODO: To prevent jumps when scrolling up, need to use scroll event in default.vue
-      console.log(event, window.scrollY)
+      // console.log(event, window.scrollY)
       if(storeDatas.lockScroll) {
         currentState -= event.deltaY / 4000;
         // currentState = (currentState + 3000) % 3;
         prcnt -= event.deltaY / 4000;
 
         if (prcnt < 0) prcnt = 0
-        console.log('prcnt', prcnt);
+        // console.log('prcnt', prcnt);
 
         gsap.killTweensOf(config)
         gsap.to(config, {
