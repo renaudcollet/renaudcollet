@@ -1,6 +1,6 @@
 <template>
   <Header></Header>
-  <Curtains id="CurtainsCanvas" @success="onCurtainsReady" ref="curtains">
+  <Curtains id="CurtainsCanvas" @success="onCurtainsReady">
     <NuxtPage :scrollVelocity="scrollVelocity" :class="[currentPage.value]" class="page" />
   </Curtains>
   <MouseCursor />

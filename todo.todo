@@ -24,7 +24,9 @@ Menu:
 
 Animation:
     ✔ Titles and Vignettes should appear with a skew mask animation @done(23-09-21 16:56)
-    ☐ Transition on the cover when click homepage project to project page
+    ✘ Transition on the cover when click homepage project to project page @cancelled(23-12-20 16:42)
+        ->  I am unable to do that with curtains.js, 
+            when I use a nuxt transition, the curtains.js is erased before the end of the transition
     ☐ Mouse Cursor - make big triangle smaller based on speed of mouse
 
 Webgl:
