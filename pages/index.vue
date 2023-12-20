@@ -1,12 +1,5 @@
 <template>
   <div ref="root">
-    <ClientOnly>
-      <ShaderPass 
-        :params="firstPassProps"
-        @render="onFirstPassRender"
-        @ready="onFirstPassReady"
-      />
-    </ClientOnly>
     <div class="cover">
       <Cover3D />
       <div id="index-logo" class="logo" data-header-scroll-minimize alt="">
@@ -33,12 +26,13 @@
 
 <script setup>
 import Cover3D from '~/components/webgl/Cover3D.vue';
-import { ShaderPass } from 'vue-curtains';
 import { useDatasStore, S_DATA_ACCUEIL } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 import useLogoObserver from '~/compositions/use-logo-observer';
 import useCurtainsShader from '~/compositions/use-curtains-shader';
 import gsap from 'gsap';
+import workTransition from '../transitions/work-transition';
+import { transitionState } from '../compositions/use-transition';
 
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
@@ -48,16 +42,28 @@ const props = defineProps({
   scrollVelocity: {
     type: Number
   },
+  onRender: {
+    type: Function,
+    required: true,
+  }
 })
+
+/**
+ *  page transition
+ * https://stackblitz.com/edit/nuxt-starter-bthjlg?file=pages%2Flayers.vue
+ * */
+definePageMeta({
+  pageTransition: workTransition,
+});
 
 const root = ref(null);
 const { initLogoObserver, clearLogoObserver } = useLogoObserver();
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 const { 
-  firstPassProps, 
-  onFirstPassReady, 
-  onFirstPassRender, 
-  onRender, 
+  // firstPassProps, 
+  // onFirstPassReady, 
+  // onFirstPassRender, 
+  // onRender, 
   updateScrollVelocity
 } = useCurtainsShader();
 
@@ -83,7 +89,6 @@ onUnmounted(() => {
   clearLogoObserver()
   clearScrollReveal()
 })
-
 </script>
 
 <style lang="scss" scoped>

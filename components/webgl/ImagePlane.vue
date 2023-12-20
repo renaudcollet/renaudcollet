@@ -4,6 +4,8 @@
     :params="planeProps"
     @render="onRender"
     @ready="onReady"
+    @onLeaveView="onLeaveView"
+    @before-remove="onBeforeRemove"
   >
     <img 
       :src="src  + '?' + new Date().getTime()" 
@@ -24,13 +26,20 @@
 </template>
 
 <script setup>
-import { Plane } from "vue-curtains";
+// import { Plane } from "vue-curtains";
+import Plane from "~/components/curtains/Plane/index.vue";
 import fragmentShader from "~/shaders/planes.frag";
 import vertexShader from "~/shaders/planes.vert";
 // import supportsCurtains from '~~/mixins/utils-device.js';
 import gsap from 'gsap';
 
-let this_plane = null;
+// let test = ref('TEST');
+let planeShaderMat = ref(null);
+
+defineExpose({
+  planeShaderMat,
+  // test
+})
 
 const props = defineProps({
   objectFit: {
@@ -139,8 +148,8 @@ watch(isVisible, (newVal, oldVal) => {
 })
 
 const reveal = () => {
-  // console.log('reveal', this_plane);
-  if(!this_plane) return
+  // console.log('reveal', planeShaderMat.value);
+  if(!planeShaderMat.value) return
 
   const t = {u: 0, v: 0}
   gsap.to(t, {
@@ -149,16 +158,24 @@ const reveal = () => {
     delay: 0.2,
     // repeat: -1,
     onUpdate: () => {
-        this_plane.uniforms.uOpenProgress.value = t.v
+        planeShaderMat.value.uniforms.uOpenProgress.value = t.v
     },
     onComplete: () => {
-        this_plane.uniforms.uOpenProgress.value = t.v
+        planeShaderMat.value.uniforms.uOpenProgress.value = t.v
     },
   })
 }
 
+const onLeaveView = () => {
+  console.log('onLeaveView', planeShaderMat.value);
+}
+
+const onBeforeRemove = () => {
+  console.log('onBeforeRemove', planeShaderMat.value);
+}
+
 const onReady = (plane) => {
-  this_plane = plane;
+  planeShaderMat.value = plane;
   nextTick(() => {
       plane.images[0].style.opacity = 0
 
@@ -212,14 +229,14 @@ const updateRatioUniforms = (plane) => {
 }
 
 const onResize = () => {
-  if(!this_plane) return
-  // console.log('onResize', this_plane);
-  this_plane.resize()
-  if(this_plane.textures.length > 0) {
-      this_plane.textures[0].resize();
-      this_plane.textures[0].needUpdate();
+  if(!planeShaderMat.value) return
+  // console.log('onResize', planeShaderMat.value);
+  planeShaderMat.value.resize()
+  if(planeShaderMat.value.textures.length > 0) {
+      planeShaderMat.value.textures[0].resize();
+      planeShaderMat.value.textures[0].needUpdate();
 
-      updateRatioUniforms(this_plane)
+      updateRatioUniforms(planeShaderMat.value)
   }
 }
 

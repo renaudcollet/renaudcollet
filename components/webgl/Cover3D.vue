@@ -74,7 +74,7 @@ let scroll
 let scroller
 let raf
 
-onMounted(() => {    
+onMounted(() => {
     init()
 
     // TODO: THIS IS NOT THE GOOD WAY TO HANDLE THE SCROLL

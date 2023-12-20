@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink class="project-item project-item-this" ref="el">
+  <NuxtLink class="project-item project-item-this" ref="el" @click="onClickProjectItem">
     <!-- <ClientOnly> -->
       <div 
         class="image-container scroll-reveal"
@@ -13,6 +13,7 @@
           :isVisible="isVisible"
           object-fit="cover" 
           class="project-item__image" 
+          ref="imagePlane"
         />
       </div>
     <!-- </ClientOnly> -->
@@ -113,6 +114,12 @@ watch(isVisible, (newVal, oldVal) => {
   }
 })
 
+const imagePlane = ref(null);
+const onClickProjectItem = () => {
+  // console.log('onClickProjectItem', props.id);
+  console.log('onClickProjectItem', imagePlane.value.planeShaderMat);
+}
+
 // onMounted(() => {
 //   console.log('mounted ProjectItem', props.id, props.datas);
 // })
@@ -120,6 +127,10 @@ watch(isVisible, (newVal, oldVal) => {
 // onUnmounted(() => {
 //   console.log('Unmounted ProjectItem', props.id, props.datas);
 // })
+
+onBeforeUnmount(() => {
+  console.log('onBeforeUnmount ProjectItem', props.id, props.datas);
+})
 </script>
 
 <style lang="scss">

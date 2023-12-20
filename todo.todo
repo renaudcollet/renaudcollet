@@ -14,8 +14,12 @@ Intégration:
     ☐ Page projet, add a link to next project
     ☐ + of the triangle is not centered in x (on homepage)
 
+Page transition:
+    // Nuxt page transition with gsap : https://stackblitz.com/edit/nuxt-starter-bthjlg
+    ☐ Home to works page transition
+
 Bug:
-    ☐ Little black flash when pause the video
+    ☐ Little black flash when pause the video -> Bug from Brave browser
     ✘ Error when go from another page to homepage @cancelled(23-10-10 11:56)
         Might be du to .env file wrong IPs
 
@@ -25,7 +29,7 @@ Menu:
 Animation:
     ✔ Titles and Vignettes should appear with a skew mask animation @done(23-09-21 16:56)
     ☐ Transition on the cover when click homepage project to project page
-    ☐ Mouse Cursor - make big triangle smaller based on speed of mouse
+    ☐ Mouse Cursor - Should be in shader - make a trail of triangles smaller and smaller
 
 Webgl:
     ☐ Use shaderPass.loadCanvas() to load a canvas as a texture (https://www.psychoactive.co.nz/content-hub/fixing-scrolling-jank-in-webgl-using-curtain-js-and-virtual-scroll)
@@ -50,6 +54,9 @@ Webgl:
     For transitions between pages :
         ☐ Postprocessing crossfade (for transitions between pages)
 
+Music:
+    ☐ Add a music player on the homepage (https://developers.soundcloud.com/docs/api/html5-widget#resources)
+    ☐ Add a music player on the project page (https://developers.soundcloud.com/docs/api/html5-widget#resources)
 
 Curtains: 
     ☐ Optimize, Pass along a unique Date.getTime() to curtains Plane in ImagePlane

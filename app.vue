@@ -13,6 +13,14 @@
 //   ],
 //   link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
 // })
+
+import { useTransitionComposable } from './compositions/use-transition';
+
+const { toggleTransitionComplete } = useTransitionComposable();
+
+onMounted(() => {
+  toggleTransitionComplete(true);
+});
 </script>
 
 <template>

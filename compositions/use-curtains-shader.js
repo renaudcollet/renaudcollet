@@ -40,7 +40,6 @@ export default function useCurtainsShader() {
   }
 
   let scrollVelocity = 0;
-  let shaderPass = null;
   let gui = null;
 
   const onRender = (plane) => {
@@ -59,16 +58,12 @@ export default function useCurtainsShader() {
   }
 
   const onFirstPassRender = (shaderPass) => {
-    // let d = new Date()
-    // shaderPass.uniforms.timer.value = d.getTime() / 1000;
-    // shaderPass.uniforms.timer.value++;
     let displacement = shaderPass.uniforms.displacement.value
     shaderPass.uniforms.displacement.value = lerp(displacement, scrollVelocity * 0.01, 0.2);
     // console.log('onFirstPassRender', scrollVelocity);
   }
 
   const onFirstPassReady = (shaderPass) => {
-    shaderPass = shaderPass;
     // console.log('onFirstPassReady', shaderPass);
 
   if(window.location.hash == '#config'){

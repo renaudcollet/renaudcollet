@@ -96,17 +96,21 @@
     </section>
     <!-- <Footer :projects="projectsFooter" :footer="footer"></Footer> -->
     <!-- <img :class="showScrollArrow ? 'active' : ''" class="scroll-arrow" src="~~/assets/svg/scroll.svg" width="50px" height="50px" alt=""> -->
+      
   </div>
 </template>
   
 <script setup>
-import { ShaderPass } from 'vue-curtains';
+// import { ShaderPass } from 'vue-curtains';
+import RenderTarget from '~/components/curtains/RenderTarget/index.vue';
+import ShaderPass from '~/components/curtains/ShaderPass/index.vue';
 import { useDatasStore, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 // import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
 import useZoomableImage from '~/compositions/use-zoomable-image';
 import useCurtainsShader from '~/compositions/use-curtains-shader';
 import gsap from 'gsap';
+import workTransition from '../transitions/work-transition';
 
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
@@ -117,6 +121,14 @@ const props = defineProps({
     type: Number
   },
 })
+
+/**
+ *  page transition
+ * https://stackblitz.com/edit/nuxt-starter-bthjlg?file=pages%2Flayers.vue
+ * */
+definePageMeta({
+  pageTransition: workTransition,
+});
 
 const config = useRuntimeConfig()
 const route = useRoute()

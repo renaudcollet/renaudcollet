@@ -1,7 +1,12 @@
 <template>
   <Header></Header>
-  <Curtains id="CurtainsCanvas" @success="onCurtainsReady" ref="curtains">
-    <NuxtPage :scrollVelocity="scrollVelocity" :class="[currentPage.value]" class="page" />
+  <Curtains id="CurtainsCanvas" @success="onCurtainsReady" ref="curtains" @onContextLost="onContextLost">
+    <!-- <ShaderPass 
+      :params="firstPassProps"
+      @render="onFirstPassRender"
+      @ready="onFirstPassReady"
+    /> -->
+    <NuxtPage :scrollVelocity="scrollVelocity" :class="[currentPage.value]" class="page" :onRender="onRender"/>
   </Curtains>
   <MouseCursor />
   <span v-if="config" id="config"></span>
@@ -9,9 +14,12 @@
 
 <script setup>
 import { useDatasStore, S_DATA_SEO } from '~/stores/datas';
-import { Curtains } from "vue-curtains";
+// import { Curtains } from "vue-curtains";
+import Curtains from "~/components/curtains/Curtains/index.vue";
+import ShaderPass from '~/components/curtains/ShaderPass/index.vue';
 import Lenis from '@studio-freight/lenis';
 import MouseCursor from '~/components/ui/MouseCursor.vue';
+import useCurtainsShader from '~/compositions/use-curtains-shader';
 const route = useRoute()
 
 const storeDatas = useDatasStore();
@@ -35,6 +43,14 @@ useHead({
   }
 })
 
+const { 
+  firstPassProps, 
+  onFirstPassReady, 
+  onFirstPassRender, 
+  onRender, 
+  updateScrollVelocity
+} = useCurtainsShader();
+
 const scrollVelocity = ref(0);
 let lenis;
 let lastScroll = 0;
@@ -43,6 +59,11 @@ let config = false;
 const currentPage = computed(() => {
   return `page-${route.name}`
 })
+
+const onContextLost = () => {
+  console.log('onContextLost');
+  // curtains.disableDrawing();
+}
 
 const onCurtainsReady = (_curtains) => {
   console.log('onCurtainsReady', _curtains);
