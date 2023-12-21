@@ -26,32 +26,25 @@ import modelNature from '~/assets/3d/nature-scene.glb'
 import VirtualScroll from 'virtual-scroll'
 import { toRef } from '@vueuse/core';
 
+let canvas
+let width
+let height
+let scene, postScene
+let renderer
+let camera, camera2, postCamera
+let pixelRatio
+let renderTarget1, renderTarget2
+let dracoLoader, gltfLoader
+let controls
+let scroller
+let raf
+
 const storeDatas = useDatasStore();
 
 const props = defineProps({
   start: {
     type: Boolean,
     default: false
-  }
-})
-
-// Play start animation
-const startAnimation = toRef(props, 'start')
-watch(startAnimation, (newVal, oldVal) => {
-  console.log('startAnimation', newVal);
-  if (newVal) {      
-      const { end } = config.camera
-      const tl = gsap.timeline()
-      tl 
-        .to('#three-canvas', { opacity: 1, duration: 1 })
-        .to(camera.position, {
-          x: end.x, y: end.y, z: end.z, 
-          duration: 2, delay: 1, 
-          ease: 'power2.inOut',
-          onUpdate: () => {
-            updateMaterial()
-          }
-        })
   }
 })
 
@@ -64,9 +57,9 @@ const config = {
     fov: 45,
     near: 0.1,
     far: 500,
-    start: { x: 0, y: 16, z: 50, },
-    lookAt: new THREE.Vector3(0, 0, 0),
-    end: { x: 1, y: 7, z: 35, } 
+    start: { x: 0, y: 16, z: 35, lookAt: new THREE.Vector3(0, 2, 35) },
+    rise: { x: 0, y: 70, z: 35, lookAt: new THREE.Vector3(0, 2, 35) },
+    end: { x: -5, y: 9, z: 50, lookAt: new THREE.Vector3(0, 2, 0) },
   },
   camera2: {
     fov: 45,
@@ -82,21 +75,61 @@ const config = {
   }
 }
 
-let canvas
-let width
-let height
-let scene, postScene
-let renderer
-let camera, camera2, postCamera
-let pixelRatio
-let renderTarget1, renderTarget2
-let dracoLoader, gltfLoader
-let controls
-let scroller
-let raf
+// Play start animation
+const playStartAnimation = () => {
+  const { start } = config.camera
+  const { rise } = config.camera
+  const { end } = config.camera
+  const tl = gsap.timeline()
+  tl 
+    .to('#three-canvas', { opacity: 1, duration: 1 })
+    .to(camera.position, {
+      x: rise.x, y: rise.y, z: rise.z, duration: 1,
+      ease: 'power2.outIn',
+      onUpdate: function() {
+        updateMaterial()
+      }
+    }, '+=0.5')
+    .to(camera.position, {
+      x: end.x, y: end.y, z: end.z, 
+      duration: 2, 
+      ease: 'power2.inOut',
+      onUpdate: function() {
+        const lerpX = THREE.MathUtils.lerp(start.lookAt.x, end.lookAt.x, this.progress())
+        const lerpZ = THREE.MathUtils.lerp(start.lookAt.z, end.lookAt.z, this.progress())
+        camera.lookAt(lerpX, 0, lerpZ)
+        updateMaterial()
+      },
+      onComplete: () => {
+        initControls()
+      }
+    })
+}
+const startAnimation = toRef(props, 'start')
+watch(startAnimation, (newVal, oldVal) => {
+  if (newVal) { 
+    playStartAnimation()     
+  }
+})
+
+const initControls = () => {
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.addEventListener('change', () => {
+    console.log('controls change');
+    updateMaterial()
+  })
+  controls.enabled = true
+  controls.update()
+}
+
 
 onMounted(() => {
     init()
+
+    // For hmr reload
+    if (startAnimation.value || props.start) {
+      playStartAnimation()
+    }
 
     // TODO: THIS IS NOT THE GOOD WAY TO HANDLE THE SCROLL
     // I SHOULD NOT HIJACK THE SCROLL, BUT INSTEAD ADD A BIG EMPTY DIV BEFORE ALL THE PROJECTS
@@ -158,8 +191,9 @@ const init = () => {
   scene = new THREE.Scene()
 
   camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000)
-  camera.position.set(config.camera.start.x, config.camera.start.y, config.camera.start.z)
-  camera.lookAt(config.camera.lookAt)
+  const { start } = config.camera
+  camera.position.set(start.x, start.y, start.z)
+  camera.lookAt(start.lookAt) 
 
   camera2 = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000)
   camera2.position.set(config.camera2.start.x, config.camera2.start.y, config.camera2.start.z)
@@ -169,7 +203,7 @@ const init = () => {
 
   // TODO: Probleme de colorspace avec les textures utilisées dans le ShaderMaterial
   // TODO:  Créer un codepen pour reproduire le problème
-  pixelRatio = Math.min(window.devicePixelRatio, 2)
+  pixelRatio = Math.max(window.devicePixelRatio, 2)
   renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true })
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.toneMapping = THREE.LinearToneMapping // ACESFilmicToneMapping
@@ -263,9 +297,6 @@ const init = () => {
 
   initPostprocessing()
   addLights()
-
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.update();
   
   window.addEventListener('resize', resize)
   
@@ -319,8 +350,6 @@ const initPostprocessing = () => {
 }
 
 const updateMaterial = () => {
-  // console.log('updateMaterial', config.progress);
-
   renderer.setRenderTarget(renderTarget1)
   renderer.render(scene, camera)
 
@@ -338,7 +367,9 @@ const updateMaterial = () => {
 }
 
 const render = (t) => {
-  controls.update();      
+  if (controls && controls.enabled) {
+    controls.update()
+  }
   if (config.showPostProcessing)
     renderer.render(postScene, postCamera);
   else 

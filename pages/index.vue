@@ -76,11 +76,14 @@ onMounted(() => {
   tl
     .to('#job', { delay: 0.5, opacity: 1 })
     .to('#job', { opacity: 0 }, '+=1')
-    .to('#index-logo', { opacity: 1 }, '+=0.5')
-    .to('#index-logo', { opacity: 0, onComplete: () => {
-      // initLogoObserver()
-      startCover3d.value = true
-    }}, '+=1')
+    .to('#index-logo', { opacity: 1, 
+      onComplete: () => {
+        startCover3d.value = true
+      }}, '+=0.5')
+    .to('#index-logo', { opacity: 0, 
+      onComplete: () => {
+        // initLogoObserver()
+      }}, '+=3')
     .to('#header-logo', {
       duration: 1,
       translateX: 0,
