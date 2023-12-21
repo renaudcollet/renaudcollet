@@ -17,6 +17,9 @@ Intégration:
 Page transition:
     // Nuxt page transition with gsap : https://stackblitz.com/edit/nuxt-starter-bthjlg
     ☐ Home to works page transition
+        //TODO: Important: -> See https://codesandbox.io/p/devbox/nuxt3-vue-curtains-transition-between-pages-jh9ky5
+        Add transitions problem and ask the guy behind curtains.js:
+        https://github.com/martinlaxenaire/vue-curtains/issues/1#issue-2052188725
 
 Bug:
     ☐ Little black flash when pause the video -> Bug from Brave browser
