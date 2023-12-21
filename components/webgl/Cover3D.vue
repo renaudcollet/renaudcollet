@@ -279,11 +279,15 @@ const init = () => {
 
     folder = gui.addFolder('CAMERA TARGET')
     const onCameraLookAtChange = () => {
-      camera.lookAt(config.cameraLookAt)
+      controls.enabled = false
+      controls.target.copy(config.camera.end.lookAt)
+      controls.update()
+      controls.enabled = true
+      // camera.lookAt(config.camera.end.lookAt)
     }
-    folder.add(config.cameraLookAt, "x", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
-    folder.add(config.cameraLookAt, "y", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
-    folder.add(config.cameraLookAt, "z", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
+    folder.add(config.camera.end.lookAt, "x", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
+    folder.add(config.camera.end.lookAt, "y", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
+    folder.add(config.camera.end.lookAt, "z", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
   }
 
   gltfLoader.load(
