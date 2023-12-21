@@ -8,11 +8,11 @@
       />
     </ClientOnly>
     <div class="cover">
-      <Cover3D />
-      <div id="index-logo" class="logo" data-header-scroll-minimize alt="">
+      <Cover3D :start="startCover3d" />
+      <div id="index-logo" class="logo" data-header-scroll-minimize>
         <Logo />
       </div>
-      <div>
+      <div id="job" class="job">
         Freelance Web Developer
       </div>
     </div>
@@ -51,7 +51,9 @@ const props = defineProps({
 })
 
 const root = ref(null);
-const { initLogoObserver, clearLogoObserver } = useLogoObserver();
+const startCover3d = ref(false);
+
+// const { initLogoObserver, clearLogoObserver } = useLogoObserver();
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 const { 
   firstPassProps, 
@@ -63,16 +65,28 @@ const {
 
 const scrollVelocity = toRef(props, 'scrollVelocity');
 watch(scrollVelocity, (newVal, oldVal) => {
-  // console.log('watch scrollVelocity', newVal, oldVal);
   updateScrollVelocity(newVal)
 })
 
 onMounted(() => {
-  gsap.set('#cover-logo', { translateX: -20, opacity: 0 })
-  gsap.set('#index-logo', { translateX: -20, opacity: 0 })
-  gsap.to('#index-logo', { delay: 1, translateX: 0, opacity: 1 })
-  
-  initLogoObserver()
+  gsap.set('#index-logo', { top: '50%', left: '50%', translateX: '-50%', translateY: '-50%', opacity: 0 })
+  gsap.set('#job', { top: '50%', left: '50%', translateX: '-50%', translateY: '-50%', opacity: 0 })
+
+  const tl = gsap.timeline()
+  tl
+    .to('#job', { delay: 0.5, opacity: 1 })
+    .to('#job', { opacity: 0 }, '+=1')
+    .to('#index-logo', { opacity: 1 }, '+=0.5')
+    .to('#index-logo', { opacity: 0, onComplete: () => {
+      // initLogoObserver()
+      startCover3d.value = true
+    }}, '+=1')
+    .to('#header-logo', {
+      duration: 1,
+      translateX: 0,
+      autoAlpha: 1,
+      ease: 'power4.out',
+    })
 
   nextTick(() => {
     initScrollReveal(root.value)
@@ -80,7 +94,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  clearLogoObserver()
+  // clearLogoObserver()
   clearScrollReveal()
 })
 
@@ -99,31 +113,29 @@ onUnmounted(() => {
   height: 100vh;
   width: 100%;
   display: flex;
-  justify-content: center;
-  align-items: center;
   user-select: none;
   pointer-events: none;
   position: relative;
+}
   
-  .logo{
-    margin-bottom: 0;
-    width: 170px;
-    opacity: 0;
-  }
+.logo{
+  position: absolute;
+  width: 170px;
+  opacity: 0;
+}
+
+.job {
+  position: absolute;
+  opacity: 0;
+  font-size: 1.5rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 @media only screen and (min-width: 768px) {
-  .cover {
-    justify-content: left;
-    margin-left: 20vw;
-    width: calc(100% - 20vw);
-    
-    .logo{
-      margin-top: 0px;
-      width: 250px;
-      position: relative;
-      bottom: auto;
-    }
+  .logo{
+    width: 250px;
   }
 }
 

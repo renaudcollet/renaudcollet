@@ -42,11 +42,11 @@ export default function useLogoObserver() {
     }
     const hideCoverLogo = () => {
         gsap.killTweensOf('#index-logo')
-        gsap.to('#index-logo', { translateX: -20, opacity: 0 })
+        gsap.to('#index-logo', { translateX: '-50%', opacity: 0 })
     }
     const showCoverLogo = () => {
         gsap.killTweensOf('#index-logo')
-        gsap.to('#index-logo', { delay: 0.3, translateX: 0, opacity: 1 })
+        gsap.to('#index-logo', { delay: 0.1, duration: 2, translateX: '-125%', ease: 'power2.out', opacity: 1 })
     }
 
     return {

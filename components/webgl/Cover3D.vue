@@ -22,36 +22,58 @@ import coverFrag from '~/shaders/cover.frag'
 import coverVert from '~/shaders/cover.vert'
 
 import modelNature from '~/assets/3d/nature-scene.glb'
-import lethargy from 'lethargy'
+// import lethargy from 'lethargy'
 import VirtualScroll from 'virtual-scroll'
-
-import bg1 from '~/assets/textures/matcap_2.png'
-import bg2 from '~/assets/textures/matcap_3.png'
+import { toRef } from '@vueuse/core';
 
 const storeDatas = useDatasStore();
-console.log('Cover3D storeDatas', storeDatas);
+
+const props = defineProps({
+  start: {
+    type: Boolean,
+    default: false
+  }
+})
+
+// Play start animation
+const startAnimation = toRef(props, 'start')
+watch(startAnimation, (newVal, oldVal) => {
+  console.log('startAnimation', newVal);
+  if (newVal) {      
+      const { end } = config.camera
+      const tl = gsap.timeline()
+      tl 
+        .to('#three-canvas', { opacity: 1, duration: 1 })
+        .to(camera.position, {
+          x: end.x, y: end.y, z: end.z, 
+          duration: 2, delay: 1, 
+          ease: 'power2.inOut',
+          onUpdate: () => {
+            updateMaterial()
+          }
+        })
+  }
+})
 
 let bDebugGUI = false
 let gui
 
 const config = {
-  cameraLookAt: new THREE.Vector3(0, 0, 0),
   progress: 0,
   camera: {
     fov: 45,
     near: 0.1,
-    far: 1000,
-    x: 0,
-    y: 3,
-    z: 35
+    far: 500,
+    start: { x: 0, y: 16, z: 50, },
+    lookAt: new THREE.Vector3(0, 0, 0),
+    end: { x: 1, y: 7, z: 35, } 
   },
   camera2: {
     fov: 45,
     near: 0.1,
     far: 1000,
-    x: 10,
-    y: 37,
-    z: 35
+    start: { x: 10, y: 24, z: 35, },
+    lookAt: new THREE.Vector3(25, 0, 0),
   },
   showPostProcessing: true,
   shader: {
@@ -70,11 +92,10 @@ let pixelRatio
 let renderTarget1, renderTarget2
 let dracoLoader, gltfLoader
 let controls
-let scroll
 let scroller
 let raf
 
-onMounted(() => {    
+onMounted(() => {
     init()
 
     // TODO: THIS IS NOT THE GOOD WAY TO HANDLE THE SCROLL
@@ -92,11 +113,9 @@ onMounted(() => {
       // console.log(event, window.scrollY)
       if(storeDatas.lockScroll) {
         currentState -= event.deltaY / 4000;
-        // currentState = (currentState + 3000) % 3;
         prcnt -= event.deltaY / 4000;
 
         if (prcnt < 0) prcnt = 0
-        // console.log('prcnt', prcnt);
 
         gsap.killTweensOf(config)
         gsap.to(config, {
@@ -127,7 +146,6 @@ onUnmounted(() => {
   }
 
   window.removeEventListener('resize', resize)
-
   window.cancelAnimationFrame(raf)
 })
 
@@ -138,17 +156,14 @@ const init = () => {
   width = canvas.offsetWidth;
   height = canvas.offsetHeight;
   scene = new THREE.Scene()
-  // scene.fog = new THREE.FogExp2(0xcccccc, 0.002);
-  // scene.background = new Color(0xff0000);
+
   camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000)
-  camera.position.set(0, 3, 35)
-  camera.lookAt(config.cameraLookAt)
+  camera.position.set(config.camera.start.x, config.camera.start.y, config.camera.start.z)
+  camera.lookAt(config.camera.lookAt)
 
   camera2 = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000)
-  camera2.position.set(10, 37, 35)
-  camera2.lookAt(config.cameraLookAt)
-
-  // gsap.to(camera.position, {x: 0, y: 5, z: 20, duration: 1.5, delay: 0.5, repeat: -1, yoyo: true})
+  camera2.position.set(config.camera2.start.x, config.camera2.start.y, config.camera2.start.z)
+  camera2.lookAt(config.camera2.lookAt)
 
   // THREE.ColorManagement.enabled = false
 
@@ -242,7 +257,6 @@ const init = () => {
     (gltf) => {
       scene.add(gltf.scene)
       gltf.scene.scale.set(1, 1, 1)
-      console.log('GlTF loaded and added to scene.');
       updateMaterial()
     }
   )
@@ -252,11 +266,9 @@ const init = () => {
 
   controls = new OrbitControls(camera, renderer.domElement);
   controls.update();
-
-  // TODO: Handle resize
+  
   window.addEventListener('resize', resize)
-
-  // scroll = window.scrollY / window.innerHeight
+  
   raf = requestAnimationFrame(render)
 }
 
@@ -466,6 +478,7 @@ const resize = () => {
         width: 100%;
         height: 100%;
         // mix-blend-mode: screen; // MAYBE ADD THIS BACK IN ?
+        opacity: 0;
     }
 
     #scene-controls {

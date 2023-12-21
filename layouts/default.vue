@@ -22,7 +22,7 @@ storeDatas.lockScroll = (route.name === 'index');
 let scrollLockClass = ref((route.name === 'index') ? 'scroll-lock' : '');
 
 watch(() => storeDatas.lockScroll, (newVal, oldVal) => {
-  console.log('changed - lockScroll = ', newVal);
+  // console.log('changed - lockScroll = ', newVal);
   scrollLockClass.value = (route.name === 'index' && newVal) ? 'scroll-lock' : ''
 })
 
@@ -45,7 +45,7 @@ const currentPage = computed(() => {
 })
 
 const onCurtainsReady = (_curtains) => {
-  console.log('onCurtainsReady', _curtains);
+  // console.log('onCurtainsReady', _curtains);
   // curtains.disableDrawing();
   _curtains.autoResize = false
   let timeout = false
@@ -97,10 +97,10 @@ const onScroll = () => {
     // Get firstime scroll was unlocked and check that value on every scroll
     if (!firstTimeScrollUnlockedValue) {
       firstTimeScrollUnlockedValue = lenis.scroll;
-      console.log('lenis scroll value = ', firstTimeScrollUnlockedValue);
+      // console.log('lenis scroll value = ', firstTimeScrollUnlockedValue);
     }
     if (lenis.scroll < firstTimeScrollUnlockedValue) {
-      console.log('lock the scroll !');
+      // console.log('lock the scroll !');
       storeDatas.setIsScrollLocked(true)
     }
   }
