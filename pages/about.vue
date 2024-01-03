@@ -31,6 +31,7 @@
 import { useDatasStore, S_DATA_ABOUT } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 import gsap from 'gsap';
+import workTransition from '../transitions/work-transition';
 
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
@@ -41,6 +42,14 @@ console.log('datasAbout', datasAbout);
 
 const root = ref(null);
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
+
+/**
+ *  page transition
+ * https://stackblitz.com/edit/nuxt-starter-bthjlg?file=pages%2Flayers.vue
+ * */
+definePageMeta({
+  pageTransition: workTransition,
+});
 
 onMounted(() => {
   gsap.killTweensOf('#header-logo')

@@ -1,7 +1,18 @@
 <template>
   <Header></Header>
-  <Curtains id="CurtainsCanvas" @success="onCurtainsReady">
-    <NuxtPage :scrollVelocity="scrollVelocity" :class="[currentPage.value]" class="page" />
+  <Curtains id="CurtainsCanvas" @success="onCurtainsReady" ref="curtains" @onContextLost="onContextLost">
+    <!-- <ShaderPass 
+      :params="firstPassProps"
+      @render="onFirstPassRender"
+      @ready="onFirstPassReady"
+    /> -->
+    <NuxtPage 
+      :scrollVelocity="scrollVelocity"
+      :class="[currentPage.value]"
+      :onRender="onRender"
+      class="page"
+      @onLockScroll="onLockScroll"
+    />
   </Curtains>
   <MouseCursor />
   <span v-if="config" id="config"></span>
@@ -9,9 +20,12 @@
 
 <script setup>
 import { useDatasStore, S_DATA_SEO } from '~/stores/datas';
-import { Curtains } from "vue-curtains";
+// import { Curtains } from "vue-curtains";
+import Curtains from "~/components/curtains/Curtains/index.vue";
+import ShaderPass from '~/components/curtains/ShaderPass/index.vue';
 import Lenis from '@studio-freight/lenis';
 import MouseCursor from '~/components/ui/MouseCursor.vue';
+import useCurtainsShader from '~/compositions/use-curtains-shader';
 const route = useRoute()
 
 const storeDatas = useDatasStore();
@@ -22,9 +36,19 @@ storeDatas.lockScroll = (route.name === 'index');
 let scrollLockClass = ref((route.name === 'index') ? 'scroll-lock' : '');
 
 watch(() => storeDatas.lockScroll, (newVal, oldVal) => {
-  // console.log('changed - lockScroll = ', newVal);
+  console.log('watch - lockScroll newval', newVal);
   scrollLockClass.value = (route.name === 'index' && newVal) ? 'scroll-lock' : ''
 })
+
+const onLockScroll = (isLocked) => {
+  console.log('---> onLockScroll', isLocked);
+  if (!isLocked) {
+    lenis.start()
+    lenis.scrollTo(0, {immediate: true})
+  } else {
+    lenis.stop()
+  } 
+}
 
 // const datasSEO = storeDatas.seo.data.attributes;
 useHead({
@@ -35,6 +59,14 @@ useHead({
   }
 })
 
+const { 
+  firstPassProps, 
+  onFirstPassReady, 
+  onFirstPassRender, 
+  onRender, 
+  updateScrollVelocity
+} = useCurtainsShader();
+
 const scrollVelocity = ref(0);
 let lenis;
 let lastScroll = 0;
@@ -43,6 +75,11 @@ let config = false;
 const currentPage = computed(() => {
   return `page-${route.name}`
 })
+
+const onContextLost = () => {
+  console.log('onContextLost');
+  // curtains.disableDrawing();
+}
 
 const onCurtainsReady = (_curtains) => {
   // console.log('onCurtainsReady', _curtains);
@@ -71,7 +108,8 @@ watch(route, (to, from) => {
   const gtag = useGtag()
   gtag('set', 'page_title', to)
     
-  lenis.scrollTo(0, 0)
+  lenis.scrollTo(0)
+  // lenis.start()
 })
 
 const update = (time) => {

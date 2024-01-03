@@ -24,13 +24,14 @@
 </template>
 
 <script setup>
-import { Plane } from "vue-curtains";
+// import { Plane } from "vue-curtains";
+import Plane from "~/components/curtains/Plane/index.vue";
 import fragmentShader from "~/shaders/planes.frag";
 import vertexShader from "~/shaders/planes.vert";
 // import supportsCurtains from '~~/mixins/utils-device.js';
 import gsap from 'gsap';
 
-let this_plane = null;
+const planeMesh = ref(null);
 
 const props = defineProps({
   objectFit: {
@@ -80,25 +81,15 @@ const planeProps = {
         type: "1f",
         value: 0,
     },
-    needsRatio: {
-        name: "uNeedsRatio",
-        type: "1f",
-        value: 0,
-    },
     resolution: {
         name: "uResolution",
         type: "2f",
         value: [0, 0],
     },
-    ratio: {
-        name: "uRatio",
-        type: "1f",
-        value: 0,
-    },
-    naturalRatio: {
-        name: "uNaturalRatio",
-        type: "1f",
-        value: 0,
+    size: {
+        name: "uSize",
+        type: "2f",
+        value: [0, 0],
     },
     scale: {
         name: "uScale",
@@ -139,8 +130,8 @@ watch(isVisible, (newVal, oldVal) => {
 })
 
 const reveal = () => {
-  // console.log('reveal', this_plane);
-  if(!this_plane) return
+  // console.log('reveal', planeMesh.value);
+  if(!planeMesh.value) return
 
   const t = {u: 0, v: 0}
   gsap.to(t, {
@@ -149,16 +140,24 @@ const reveal = () => {
     delay: 0.2,
     // repeat: -1,
     onUpdate: () => {
-        this_plane.uniforms.uOpenProgress.value = t.v
+        planeMesh.value.uniforms.uOpenProgress.value = t.v
     },
     onComplete: () => {
-        this_plane.uniforms.uOpenProgress.value = t.v
+        planeMesh.value.uniforms.uOpenProgress.value = t.v
     },
   })
 }
 
+// const onLeaveView = () => {
+//   console.log('onLeaveView', planeMesh.value);
+// }
+
+// const onBeforeRemove = () => {
+//   console.log('onBeforeRemove', planeMesh.value);
+// }
+
 const onReady = (plane) => {
-  this_plane = plane;
+  planeMesh.value = plane; // extends DOMMesh
   nextTick(() => {
       plane.images[0].style.opacity = 0
 
@@ -183,45 +182,28 @@ const onReady = (plane) => {
 }
 
 const updateRatioUniforms = (plane) => {
-    let width = plane.images[0].width
-    let height = plane.images[0].height
-    let nWidth = plane.images[0].naturalWidth
-    let nHeight = plane.images[0].naturalHeight
-
-    let ratio = Math.round(width/height*100)/100
-    let naturalRatio = Math.round(nWidth/nHeight*100)/100
+    const image = plane.images[0]
     
-    plane.uniforms.naturalRatio.value = naturalRatio
-    plane.uniforms.ratio.value = ratio
-    plane.uniforms.needsRatio.value = (ratio != naturalRatio) ? 1 : 0
-    // plane.uniforms.
-    // console.log(plane.images[0])
-    // console.log('w/h', width, height)
-    // console.log('n w/h', nWidth, nHeight)
-    // console.log('ratio', ratio, naturalRatio)
-    // console.log(width, nWidth, plane.images[0].offsetWidth, plane.images[0].parentElement.offsetWidth)
-    // console.log(height, nHeight, plane.images[0].offsetHeight, plane.images[0].parentElement.offsetHeight)
-    let xRatio =  width / nWidth
-    let yRatio = height / nHeight
-
-    if(props.objectFit == 'contain')
-        plane.uniforms.scale.value = Math.min(xRatio, yRatio)
-
-    // console.log('scale', plane.uniforms.scale.value)
-
+    // For uCover
+    plane.uniforms.resolution.value = [image.width, image.height]
+    plane.uniforms.size.value = [image.naturalWidth, image.naturalHeight]
 }
 
 const onResize = () => {
-  if(!this_plane) return
-  // console.log('onResize', this_plane);
-  this_plane.resize()
-  if(this_plane.textures.length > 0) {
-      this_plane.textures[0].resize();
-      this_plane.textures[0].needUpdate();
-
-      updateRatioUniforms(this_plane)
+  if(!planeMesh.value) return
+  // console.log('onResize', planeMesh.value);
+  if(planeMesh.value.textures.length > 0) {
+    updateRatioUniforms(planeMesh.value)
+    // planeMesh.value.textures[0].resize();
+    // planeMesh.value.textures[0].needUpdate();
   }
+  planeMesh.value.resize()
 }
+
+defineExpose({
+  planeMesh,
+  resize: onResize,
+})
 
 onMounted(() => {
   // console.log(`mounted ${props.src}`, `isVisible ${props.isVisible}`);
