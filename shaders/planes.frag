@@ -8,9 +8,7 @@ varying float yPos;
 
 uniform sampler2D uTexture;
 uniform vec2 uResolution;
-uniform float uNeedsRatio;
-uniform float uRatio;
-uniform float uNaturalRatio;
+uniform vec2 uSize;
 uniform float hovered;
 uniform float isText;
 uniform float uScale;
@@ -22,25 +20,26 @@ uniform float uOpenProgress;
 #include "/lygia/math/rotate2d.glsl";
 // #include "/lygia/generative/psrdnoise.glsl";
 
+// Source : https://gist.github.com/raphaelameaume/d1731132ef01efd948e67c0778770981
+vec2 uvCover (vec2 uv, vec2 size, vec2 resolution) {
+    vec2 coverUv = uv;
+    vec2 s = resolution; // Screen
+    vec2 i = size; // Image
+
+    float rs = s.x / s.y;
+    float ri = i.x / i.y;
+    vec2 new = rs < ri ? vec2(i.x * s.y / i.y, s.y) : vec2(s.x, i.y * s.x / i.x);
+    vec2 offset = (rs < ri ? vec2((new.x - s.x) / 2.0, 0.0) : vec2(0.0, (new.y - s.y) / 2.0)) / new;
+    
+    coverUv = coverUv * s / new + offset;
+
+    return coverUv;
+}
+
 void main() {
   vec2 uv = vTextureCoord;
 
-  vec2 cover_uv = uv;
-
-  // Cover / Contain
-  cover_uv -= 0.5;
-  cover_uv /= 1. - uScale;
-  if(uNeedsRatio == 1.){
-    if(uNaturalRatio > 1.){
-      cover_uv.x *= uRatio;
-      cover_uv.x /= uNaturalRatio;
-    } else { 
-      cover_uv.y /= uRatio;
-      cover_uv.y *= uNaturalRatio;
-    }
-    cover_uv /= 1. + max(0., uRatio - uNaturalRatio);
-  }
-  cover_uv += 0.5;
+  vec2 cover_uv = uvCover(uv, uSize, uResolution);
 
   // Draw texture
   vec4 color = texture2D(uTexture, cover_uv);

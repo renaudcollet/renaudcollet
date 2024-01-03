@@ -28,7 +28,7 @@ const workTransition = {
     toggleTransitionComplete(false);
     gsap
       .timeline({ paused: true, onComplete: done })
-      .to(el, { autoAlpha: 0, delay: 5, duration: 5 })
+      .to(el, { autoAlpha: 0, delay: 0, duration: 2 })
       .play();
   },
 };

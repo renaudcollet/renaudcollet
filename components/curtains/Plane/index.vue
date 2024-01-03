@@ -5,11 +5,12 @@
 </template>
 
 <script>
-import { ref, inject, onBeforeUnmount, onUnmounted, watch, toRaw } from "vue";
+import { ref, inject, onBeforeUnmount, onUnmounted, watch, toRaw, useSlots, defineExpose } from "vue";
 import { useCurtains } from "../hooks";
 import { flattenDefaultParams } from "../utils";
 import { params } from "./params.js";
 import { Plane } from "curtainsjs";
+import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 
 export default {
   name: "Plane",
@@ -40,6 +41,8 @@ export default {
     const renderTarget = inject("renderTarget", null);
 
     const params = flattenDefaultParams(props.params);
+    
+    const storeDatasCurtains = useDatasCurtainsStore();
 
     const setRenderTarget = (target) => {
       if (target.renderer) {
@@ -65,82 +68,43 @@ export default {
       plane
         .onError(() => emit("error", plane))
         .onLoading((texture) => emit("loading", plane, texture))
-        .onReady(() => emit("ready", plane))
+        .onReady(() => {
+          // console.log("ready", plane);
+          emit("ready", plane)
+        })
         .onAfterResize(() => emit("after-resize", plane))
-        .onLeaveView(() => emit("leave-view", plane))
-        .onReEnterView(() => emit("re-enter-view", plane))
-        .onRender(() => emit("render", plane))
+        .onLeaveView(() => {
+          // console.log("leave-view", plane);
+          emit("leave-view", plane)
+        })
+        .onReEnterView(() => {
+          // console.log("re-enter-view", plane);
+          emit("re-enter-view", plane)
+        })
+        .onRender(() => {
+          emit("render", plane)
+        })
         .onAfterRender(() => emit("after-render", plane));
     });
 
-    onMounted(() => {
-      console.log("Plane mounted");
-    })
-
     onBeforeUnmount(() => {
       if (plane) {
+        // console.log("on before unmount", planeEl.value);
+          
+        storeDatasCurtains.addPlaneToRemove(plane)
         emit("before-remove", plane);
-
+        
         // plane.remove();
       }
     });
 
-    onUnmounted(() => {
-      if (plane) {
-        emit("remove", plane);
+    // onUnmounted(() => {
+    //   if (plane) {
+    //     emit("remove", plane);
 
-        plane.remove();
-      }
-    });
-
-    /*const curtains = useCurtains();
-    const planeEl = ref(null);
-
-    const renderTarget = inject("renderTarget", null);
-
-    let plane;
-
-    const params = flattenDefaultParams(props.params);
-
-    const setRenderTarget = (target) => {
-      if (target.renderer) {
-        plane.setRenderTarget(target);
-      }
-    };
-
-    onMounted(() => {
-      emit("before-create");
-
-      plane = new Plane(curtains, planeEl.value, params);
-
-      const rt =
-        renderTarget && renderTarget.value
-          ? renderTarget && renderTarget.value
-          : params.target
-          ? params.target
-          : null;
-      if (rt) {
-        setRenderTarget(toRaw(rt));
-      }
-
-      plane
-        .onError(() => emit("error", plane))
-        .onLoading((texture) => emit("loading", plane, texture))
-        .onReady(() => emit("ready", plane))
-        .onAfterResize(() => emit("after-resize", plane))
-        .onLeaveView(() => emit("leave-view", plane))
-        .onReEnterView(() => emit("re-enter-view", plane))
-        .onRender(() => emit("render", plane))
-        .onAfterRender(() => emit("after-render", plane));
-    });
-
-    onBeforeUnmount(() => {
-      if (plane) {
-        emit("before-remove", plane);
-
-        plane.remove();
-      }
-    });*/
+    //     plane.remove();
+    //   }
+    // });
 
     // watch simple properties
     [
@@ -153,6 +117,7 @@ export default {
       watch(
         () => props.params[prop],
         (newValue) => {
+          console.log(prop, newValue);
           plane[prop] = newValue;
         }
       );
@@ -162,6 +127,7 @@ export default {
     watch(
       () => props.params.depthTest,
       (newValue) => {
+        // console.log("depthTest", newValue);
         plane.enableDepthTest(newValue);
       }
     );
@@ -169,6 +135,7 @@ export default {
     watch(
       () => props.params.renderOrder,
       (newValue) => {
+        // console.log("renderOrder", newValue);
         plane.setRenderOrder(newValue);
       }
     );
@@ -177,6 +144,7 @@ export default {
     watch(
       () => props.params.target,
       (newValue) => {
+        // console.log("target", newValue);
         setRenderTarget(newValue);
       },
       { deep: true }
@@ -186,6 +154,7 @@ export default {
       () => renderTarget,
       (newValue) => {
         if (newValue.value) {
+          // console.log("renderTarget", newValue.value);
           setRenderTarget(toRaw(newValue.value));
         }
       },

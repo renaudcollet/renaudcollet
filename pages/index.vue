@@ -17,6 +17,7 @@
           :datas="item"
           :to="`/works/${item.attributes.slug}`"
           :onRender="onRender"
+          @onClick="onClickProjectItem"
         />
       </template>
     </section>
@@ -32,7 +33,7 @@ import useLogoObserver from '~/compositions/use-logo-observer';
 import useCurtainsShader from '~/compositions/use-curtains-shader';
 import gsap from 'gsap';
 import workTransition from '../transitions/work-transition';
-import { transitionState } from '../compositions/use-transition';
+import { useTransitionComposable } from '../compositions/use-transition';
 
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
@@ -56,6 +57,14 @@ definePageMeta({
   pageTransition: workTransition,
 });
 
+const emit = defineEmits(['onLockScroll'])
+
+const { transitionState } = useTransitionComposable();
+watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
+  console.log('!!!!! watch transitionComplete', newVal, oldVal);
+  emit('onLockScroll', false)
+})
+
 const root = ref(null);
 const { initLogoObserver, clearLogoObserver } = useLogoObserver();
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
@@ -72,6 +81,11 @@ watch(scrollVelocity, (newVal, oldVal) => {
   // console.log('watch scrollVelocity', newVal, oldVal);
   updateScrollVelocity(newVal)
 })
+
+const onClickProjectItem = (id) => {
+  console.log('!!!!!!!!!!!!  ----   onClickProjectItem', id);
+  emit('onLockScroll', true)
+}
 
 onMounted(() => {
   gsap.set('#cover-logo', { translateX: -20, opacity: 0 })

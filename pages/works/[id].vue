@@ -111,6 +111,8 @@ import useZoomableImage from '~/compositions/use-zoomable-image';
 import useCurtainsShader from '~/compositions/use-curtains-shader';
 import gsap from 'gsap';
 import workTransition from '../transitions/work-transition';
+import { useTransitionComposable } from '../compositions/use-transition';
+import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
@@ -129,6 +131,22 @@ const props = defineProps({
 definePageMeta({
   pageTransition: workTransition,
 });
+
+const emit = defineEmits(['onLockScroll'])
+
+const storeDatasCurtains = useDatasCurtainsStore();
+
+const { transitionState } = useTransitionComposable();
+watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
+  console.log('!!!!! watch transitionComplete', newVal, oldVal);
+  if (newVal) {
+    emit('onLockScroll', false)
+    console.log('SHOULD REMOVE PLANES FROM PREVIOUS PAGE', storeDatasCurtains.planesToRemove.length);
+    storeDatasCurtains.planesToRemove.forEach(plane => {
+      plane.remove();
+    })
+  }
+})
 
 const config = useRuntimeConfig()
 const route = useRoute()

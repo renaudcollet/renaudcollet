@@ -4,6 +4,9 @@
 
 /**
 	From Yuri Artiukh - https://www.youtube.com/watch?v=EcEFrA_6kzM
+
+	This fragment shader is used to transition between two textures. 
+	It is not a cover/contain shader :)
 **/
 
 

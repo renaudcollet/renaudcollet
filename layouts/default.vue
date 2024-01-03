@@ -6,7 +6,13 @@
       @render="onFirstPassRender"
       @ready="onFirstPassReady"
     /> -->
-    <NuxtPage :scrollVelocity="scrollVelocity" :class="[currentPage.value]" class="page" :onRender="onRender"/>
+    <NuxtPage 
+      :scrollVelocity="scrollVelocity"
+      :class="[currentPage.value]"
+      :onRender="onRender"
+      class="page"
+      @onLockScroll="onLockScroll"
+    />
   </Curtains>
   <MouseCursor />
   <span v-if="config" id="config"></span>
@@ -30,9 +36,19 @@ storeDatas.lockScroll = (route.name === 'index');
 let scrollLockClass = ref((route.name === 'index') ? 'scroll-lock' : '');
 
 watch(() => storeDatas.lockScroll, (newVal, oldVal) => {
-  console.log('changed - lockScroll = ', newVal);
+  console.log('watch - lockScroll newval', newVal);
   scrollLockClass.value = (route.name === 'index' && newVal) ? 'scroll-lock' : ''
 })
+
+const onLockScroll = (isLocked) => {
+  console.log('---> onLockScroll', isLocked);
+  if (!isLocked) {
+    lenis.start()
+    lenis.scrollTo(0, {immediate: true})
+  } else {
+    lenis.stop()
+  } 
+}
 
 // const datasSEO = storeDatas.seo.data.attributes;
 useHead({
@@ -92,7 +108,8 @@ watch(route, (to, from) => {
   const gtag = useGtag()
   gtag('set', 'page_title', to)
     
-  lenis.scrollTo(0, 0)
+  lenis.scrollTo(0)
+  // lenis.start()
 })
 
 const update = (time) => {
@@ -118,10 +135,10 @@ const onScroll = () => {
     // Get firstime scroll was unlocked and check that value on every scroll
     if (!firstTimeScrollUnlockedValue) {
       firstTimeScrollUnlockedValue = lenis.scroll;
-      console.log('lenis scroll value = ', firstTimeScrollUnlockedValue);
+      // console.log('lenis scroll value = ', firstTimeScrollUnlockedValue);
     }
     if (lenis.scroll < firstTimeScrollUnlockedValue) {
-      console.log('lock the scroll !');
+      // console.log('lock the scroll !');
       storeDatas.setIsScrollLocked(true)
     }
   }

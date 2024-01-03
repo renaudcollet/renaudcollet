@@ -4,8 +4,6 @@
     :params="planeProps"
     @render="onRender"
     @ready="onReady"
-    @onLeaveView="onLeaveView"
-    @before-remove="onBeforeRemove"
   >
     <img 
       :src="src  + '?' + new Date().getTime()" 
@@ -33,13 +31,7 @@ import vertexShader from "~/shaders/planes.vert";
 // import supportsCurtains from '~~/mixins/utils-device.js';
 import gsap from 'gsap';
 
-// let test = ref('TEST');
-let planeShaderMat = ref(null);
-
-defineExpose({
-  planeShaderMat,
-  // test
-})
+const planeMesh = ref(null);
 
 const props = defineProps({
   objectFit: {
@@ -89,25 +81,15 @@ const planeProps = {
         type: "1f",
         value: 0,
     },
-    needsRatio: {
-        name: "uNeedsRatio",
-        type: "1f",
-        value: 0,
-    },
     resolution: {
         name: "uResolution",
         type: "2f",
         value: [0, 0],
     },
-    ratio: {
-        name: "uRatio",
-        type: "1f",
-        value: 0,
-    },
-    naturalRatio: {
-        name: "uNaturalRatio",
-        type: "1f",
-        value: 0,
+    size: {
+        name: "uSize",
+        type: "2f",
+        value: [0, 0],
     },
     scale: {
         name: "uScale",
@@ -148,8 +130,8 @@ watch(isVisible, (newVal, oldVal) => {
 })
 
 const reveal = () => {
-  // console.log('reveal', planeShaderMat.value);
-  if(!planeShaderMat.value) return
+  // console.log('reveal', planeMesh.value);
+  if(!planeMesh.value) return
 
   const t = {u: 0, v: 0}
   gsap.to(t, {
@@ -158,24 +140,24 @@ const reveal = () => {
     delay: 0.2,
     // repeat: -1,
     onUpdate: () => {
-        planeShaderMat.value.uniforms.uOpenProgress.value = t.v
+        planeMesh.value.uniforms.uOpenProgress.value = t.v
     },
     onComplete: () => {
-        planeShaderMat.value.uniforms.uOpenProgress.value = t.v
+        planeMesh.value.uniforms.uOpenProgress.value = t.v
     },
   })
 }
 
-const onLeaveView = () => {
-  console.log('onLeaveView', planeShaderMat.value);
-}
+// const onLeaveView = () => {
+//   console.log('onLeaveView', planeMesh.value);
+// }
 
-const onBeforeRemove = () => {
-  console.log('onBeforeRemove', planeShaderMat.value);
-}
+// const onBeforeRemove = () => {
+//   console.log('onBeforeRemove', planeMesh.value);
+// }
 
 const onReady = (plane) => {
-  planeShaderMat.value = plane;
+  planeMesh.value = plane; // extends DOMMesh
   nextTick(() => {
       plane.images[0].style.opacity = 0
 
@@ -200,45 +182,28 @@ const onReady = (plane) => {
 }
 
 const updateRatioUniforms = (plane) => {
-    let width = plane.images[0].width
-    let height = plane.images[0].height
-    let nWidth = plane.images[0].naturalWidth
-    let nHeight = plane.images[0].naturalHeight
-
-    let ratio = Math.round(width/height*100)/100
-    let naturalRatio = Math.round(nWidth/nHeight*100)/100
+    const image = plane.images[0]
     
-    plane.uniforms.naturalRatio.value = naturalRatio
-    plane.uniforms.ratio.value = ratio
-    plane.uniforms.needsRatio.value = (ratio != naturalRatio) ? 1 : 0
-    // plane.uniforms.
-    // console.log(plane.images[0])
-    // console.log('w/h', width, height)
-    // console.log('n w/h', nWidth, nHeight)
-    // console.log('ratio', ratio, naturalRatio)
-    // console.log(width, nWidth, plane.images[0].offsetWidth, plane.images[0].parentElement.offsetWidth)
-    // console.log(height, nHeight, plane.images[0].offsetHeight, plane.images[0].parentElement.offsetHeight)
-    let xRatio =  width / nWidth
-    let yRatio = height / nHeight
-
-    if(props.objectFit == 'contain')
-        plane.uniforms.scale.value = Math.min(xRatio, yRatio)
-
-    // console.log('scale', plane.uniforms.scale.value)
-
+    // For uCover
+    plane.uniforms.resolution.value = [image.width, image.height]
+    plane.uniforms.size.value = [image.naturalWidth, image.naturalHeight]
 }
 
 const onResize = () => {
-  if(!planeShaderMat.value) return
-  // console.log('onResize', planeShaderMat.value);
-  planeShaderMat.value.resize()
-  if(planeShaderMat.value.textures.length > 0) {
-      planeShaderMat.value.textures[0].resize();
-      planeShaderMat.value.textures[0].needUpdate();
-
-      updateRatioUniforms(planeShaderMat.value)
+  if(!planeMesh.value) return
+  // console.log('onResize', planeMesh.value);
+  if(planeMesh.value.textures.length > 0) {
+    updateRatioUniforms(planeMesh.value)
+    // planeMesh.value.textures[0].resize();
+    // planeMesh.value.textures[0].needUpdate();
   }
+  planeMesh.value.resize()
 }
+
+defineExpose({
+  planeMesh,
+  resize: onResize,
+})
 
 onMounted(() => {
   // console.log(`mounted ${props.src}`, `isVisible ${props.isVisible}`);

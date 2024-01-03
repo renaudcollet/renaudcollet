@@ -1,9 +1,14 @@
 <template>
-  <NuxtLink class="project-item project-item-this" ref="el" @click="onClickProjectItem">
+  <NuxtLink class="project-item project-item-this" ref="el" @click="onClick" @mouseover="onMouseover" @mouseout="onMouseout">
     <!-- <ClientOnly> -->
-      <div 
+      <!-- <div 
         class="image-container scroll-reveal"
         data-scroll-reveal-clip-path="polygon(0% 0, 175% 0, 100% 100%, -75% 100%)"
+        data-scroll-reveal-delay="0.3"
+        data-scroll-reveal-duration="1.6"
+      > -->
+      <div 
+        class="image-container scroll-reveal"
         data-scroll-reveal-delay="0.3"
         data-scroll-reveal-duration="1.6"
       >
@@ -73,7 +78,7 @@
 <script setup>
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
 import useElementVisibility from '~/compositions/use-element-visibility';
-// import gsap from 'gsap'
+import gsap from 'gsap'
 
 const config = useRuntimeConfig()
 const props = defineProps({
@@ -91,6 +96,8 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['onClick'])
+
 const keywords = computed(() => {
   return props.datas.attributes.keywords.data;
 })
@@ -104,6 +111,7 @@ const paraphToLines = computed(() => {
 })
 
 const el = ref(null);
+const imagePlane = ref(null);
 
 const visibilityObserver = useElementVisibility(el);
 const isVisible = visibilityObserver.isVisible;
@@ -114,22 +122,130 @@ watch(isVisible, (newVal, oldVal) => {
   }
 })
 
-const imagePlane = ref(null);
-const onClickProjectItem = () => {
-  // console.log('onClickProjectItem', props.id);
-  console.log('onClickProjectItem', imagePlane.value.planeShaderMat);
+let isClicked = false;
+
+const onClick = () => {
+
+  isClicked = true;
+
+  // stop scroll
+  emit('onClick', props.id)
+
+  console.log('//// CLICK - onClick', el.value, imagePlane.value.planeMesh.htmlElement);
+
+  // animate imagePlane to full screen, and position it to the center
+  const planeHtml = imagePlane.value.planeMesh.htmlElement;
+  // Get the bounding rectangle of the relative element
+  const rect = planeHtml.parentNode.parentNode.getBoundingClientRect()
+  // const rect = planeHtml.getBoundingClientRect();
+
+  gsap.killTweensOf(planeHtml)
+
+  console.log('rect', rect);
+  planeHtml.style.position = 'fixed';
+  planeHtml.style.top = `${rect.top}px`;
+  planeHtml.style.left = `${rect.left}px`;
+
+
+  gsap.to(planeHtml, {
+    duration: 0.5,
+    ease: 'power4.out',
+    scale: 1,
+    // top: `${-rect.top}px`,
+    // left: `${-rect.left}px`,
+    top: `0px`,
+    left: `0px`,
+    width: window.innerWidth,
+    height: window.innerHeight,
+    onStart: () => {
+      imagePlane.value.resize();
+    },
+    onUpdate: () => {
+      imagePlane.value.resize();
+    },
+    onComplete: () => {
+      imagePlane.value.resize();
+    }
+  })
 }
 
-// onMounted(() => {
-//   console.log('mounted ProjectItem', props.id, props.datas);
-// })
+const onMouseover = () => {
+  // console.log('//// MOUSEOVER - onMouseover', imagePlane.value, imagePlane.value.planeMesh);
+  if (isClicked) return;
 
-// onUnmounted(() => {
-//   console.log('Unmounted ProjectItem', props.id, props.datas);
-// })
+  gsap.to(imagePlane.value.planeMesh.htmlElement, {
+    duration: 0.5,
+    ease: 'power4.out',
+    scale: 1.1,
+    onUpdate: () => {
+      imagePlane.value.resize();
+    },
+    onComplete: () => {
+      imagePlane.value.resize();
+    }
+  })
+}
+
+const onMouseout = () => {
+  // console.log('//// MOUSEOUT - onMouseout', imagePlane.value, imagePlane.value.planeMesh);
+  gsap.to(imagePlane.value.planeMesh.htmlElement, {
+    duration: 0.5,
+    ease: 'power4.out',
+    scale: 1,
+    onUpdate: () => {
+      imagePlane.value.resize();
+    },
+    onComplete: () => {
+      imagePlane.value.resize();
+    }
+  })
+}
+
+onMounted(() => {
+  // console.log('mounted ProjectItem', props.id, props.datas);
+
+  // Debug resize
+  window['resizeItem'+props.id] = () => {
+    console.log('resizeItem', imagePlane.value.planeMesh.htmlElement);
+    const htmlElement = imagePlane.value.planeMesh.htmlElement;
+    htmlElement.style.position = 'absolute';
+    htmlElement.style.top = '-116px';
+    htmlElement.style.left = '-337px';
+    htmlElement.style.width = (window.innerWidth - 10) + 'px'; // -10 is for scroll track width
+    htmlElement.style.height = window.innerHeight + 'px';
+    htmlElement.style.zIndex = 999999;
+
+    const img = htmlElement.querySelector('img')
+    img.style.opacity = 0.2;
+    img.style.zIndex = 999999;
+
+    // imagePlane.value.planeMesh.resize();
+    setTimeout(() => {
+      imagePlane.value.planeMesh.resize();
+    }, 1000);
+    imagePlane.value.resize()
+    return imagePlane.value.planeMesh.htmlElement;
+  }
+
+  // console.log('UNMOUNTED', el.value.querySelector('.plane'));
+  // let mo = new MutationObserver((mutations) => {
+  //   console.log("mutations", mutations);
+  //   mutations.forEach((mutation) => {
+  //     console.log("mutation", mutation);
+  //     if (mutation.type === "attributes") {
+  //       console.log("attributes changed", mutation);
+  //     }
+  //   });
+  // });
+  // mo.observe(el.value.querySelector('.plane'), { childList: true, subtree: true });
+})
+
+onUnmounted(() => {
+  // console.log('Unmounted ProjectItem', props.id, props.datas);
+})
 
 onBeforeUnmount(() => {
-  console.log('onBeforeUnmount ProjectItem', props.id, props.datas);
+  // console.log('onBeforeUnmount ProjectItem', props.id, props.datas);
 })
 </script>
 
@@ -236,9 +352,9 @@ onBeforeUnmount(() => {
     }
   }
 
-  .image-container {
-    clip-path: polygon(75% 0, 75% 0, 25% 100%, 25% 100%);
-  }
+  // .image-container {
+  //   clip-path: polygon(75% 0, 75% 0, 25% 100%, 25% 100%);
+  // }
   
   &__alt {
     display: flex;
@@ -268,8 +384,7 @@ onBeforeUnmount(() => {
       right: 0;
       top: 0;
       user-select: none;
-      // // clip-path: polygon(0 0, 0 75%, 25% 100%, 100% 100%, 100% 25%, 75% 0);
-      clip-path: polygon(25% 0, 100% 0, 100% 75%, 75% 100%, 0 100%, 0 25%);
+      // clip-path: polygon(25% 0, 100% 0, 100% 75%, 75% 100%, 0 100%, 0 25%);
 
       @include media-breakpoint-up(lg) {
         height: 500px;

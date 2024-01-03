@@ -33,6 +33,8 @@ Animation:
     ✔ Titles and Vignettes should appear with a skew mask animation @done(23-09-21 16:56)
     ☐ Transition on the cover when click homepage project to project page
     ☐ Mouse Cursor - Should be in shader - make a trail of triangles smaller and smaller
+    ☐ Mouse hover on project item should apply when scrolling while mouse not moving
+        -> https://codepen.io/kleinfreund/pen/XYdBYP
 
 Webgl:
     ☐ Use shaderPass.loadCanvas() to load a canvas as a texture (https://www.psychoactive.co.nz/content-hub/fixing-scrolling-jank-in-webgl-using-curtain-js-and-virtual-scroll)
@@ -44,6 +46,9 @@ Webgl:
         Joshua Davis - https://codepen.io/jshuadvd/pen/ogKeBB
         https://nullprogram.com/webgl-particles/
         (☐ Would be great to only have threejs to do curtains effect (like on lusion.co))
+    
+    Glow:
+        https://github.com/kiwipxl/GLSL-shaders/blob/master/glow.glsl
     
     For the cover - List of interesting effects from Threejs examples :
         - ASCII (https://threejs.org/examples/?q=ASCII#webgl_effects_ascii)

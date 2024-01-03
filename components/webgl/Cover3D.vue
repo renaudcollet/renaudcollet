@@ -460,6 +460,7 @@ const resize = () => {
         top: 0;
         left: 0;
         z-index: $z-3d-scene-container;
+        // display: none;
     }
 
     #three-canvas {
