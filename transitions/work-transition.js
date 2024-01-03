@@ -8,8 +8,33 @@ const { toggleTransitionComplete } = useTransitionComposable();
  * Inspired by https://stackblitz.com/edit/nuxt-starter-bthjlg
  */
 
-const workTransition = {
+export const workTransition = {
   name: 'work-transiton',
+  mode: 'out-in',
+  onEnter: (el, done) => {
+    gsap.set(el, { autoAlpha: 1 });
+    gsap
+      .timeline({
+        paused: true,
+        onComplete() {
+          toggleTransitionComplete(true);
+          done();
+        },
+      })
+      .to(el, { autoAlpha: 1, duration: 1 })
+      .play();
+  },
+  onLeave: (el, done) => {
+    toggleTransitionComplete(false);
+    gsap
+      .timeline({ paused: true, onComplete: done })
+      .to(el, { autoAlpha: 0, delay: 0, duration: 2 })
+      .play();
+  },
+};
+
+const defaultTransition = {
+  name: 'default-transiton',
   mode: 'out-in',
   onEnter: (el, done) => {
     gsap.set(el, { autoAlpha: 0 });
@@ -60,4 +85,4 @@ const workTransition = {
 //   },
 // };
 
-export default workTransition;
+export default defaultTransition;

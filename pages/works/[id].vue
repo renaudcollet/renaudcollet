@@ -9,7 +9,16 @@
     </ClientOnly>
     <section class="cover-top">
       <div class="cover-top__image">
-        <picture>
+        
+        <ImagePlane 
+          :src="config.public.backendUrl + coverSrc"
+          :onRender="onRender"
+          :isVisible="true"
+          object-fit="cover" 
+          class="project-item__image" 
+          ref="imagePlane"
+        />
+        <!-- <picture>
           <source
             :srcset="config.public.backendUrl + xxlarge"
             media="(min-width: 1600px) and (orientation: landscape)"
@@ -26,7 +35,7 @@
             :srcset="config.public.backendUrl + currentProjectCover.formats.medium.url"
             alt=""
           />
-        </picture>
+        </picture> -->
       </div>
       <div class="cover-top__title z-index-text">
         <div class="cover-top__title__header-minimize" data-header-scroll-minimize></div>
@@ -102,15 +111,16 @@
   
 <script setup>
 // import { ShaderPass } from 'vue-curtains';
-import RenderTarget from '~/components/curtains/RenderTarget/index.vue';
+// import RenderTarget from '~/components/curtains/RenderTarget/index.vue';
 import ShaderPass from '~/components/curtains/ShaderPass/index.vue';
 import { useDatasStore, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 // import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
 import useZoomableImage from '~/compositions/use-zoomable-image';
 import useCurtainsShader from '~/compositions/use-curtains-shader';
+import ImagePlane from '~/components/webgl/ImagePlane.vue';
 import gsap from 'gsap';
-import workTransition from '../transitions/work-transition';
+import { workTransition } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 
@@ -164,6 +174,8 @@ const currentProjectBlocs = currentProject.attributes.bloc
 const keywords = currentProject.attributes.keywords.data
 
 const root = ref(null);
+const imagePlane = ref(null);
+
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 const { initZoomableImage, clearZoomableImage } = useZoomableImage();
 const { 
@@ -180,6 +192,9 @@ watch(scrollVelocity, (newVal, oldVal) => {
   updateScrollVelocity(newVal)
 })
 
+const coverSrc = computed(() => {
+  return currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
+})
 const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProjectCover.formats.xxlarge.url : currentProjectCover.url;
 const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
 const large = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;

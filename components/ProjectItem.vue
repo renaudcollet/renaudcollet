@@ -102,9 +102,14 @@ const keywords = computed(() => {
   return props.datas.attributes.keywords.data;
 })
 
+const currentProjectCover = props.datas.attributes.cover.data.attributes
+
 const coverSrc = computed(() => {
-  return props.datas.attributes.cover.data.attributes.formats.large !== undefined ? props.datas.attributes.cover.data.attributes.formats.large.url : props.datas.attributes.cover.data.attributes.url;
+  return currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
 })
+const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProjectCover.formats.xxlarge.url : currentProjectCover.url;
+const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
+const large = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
 
 const paraphToLines = computed(() => {
   return props.datas.attributes.titre.split('<br />');
@@ -131,21 +136,29 @@ const onClick = () => {
   // stop scroll
   emit('onClick', props.id)
 
-  console.log('//// CLICK - onClick', el.value, imagePlane.value.planeMesh.htmlElement);
+  console.log('//// CLICK - onClick', imagePlane.value.planeMesh.renderer.canvas);
+
+  // imagePlane.value.planeMesh.forEach((o) => {
+  //   console.log('   ', o);
+  // })
 
   // animate imagePlane to full screen, and position it to the center
   const planeHtml = imagePlane.value.planeMesh.htmlElement;
   // Get the bounding rectangle of the relative element
+  // const coverElement = imagePlane.value.renderer
   const rect = planeHtml.parentNode.parentNode.getBoundingClientRect()
   // const rect = planeHtml.getBoundingClientRect();
+  
+  // This would be eq to the final size of the imagePlane (aka the cover image in page id)
+  const rectFinal = imagePlane.value.planeMesh.renderer.canvas.getBoundingClientRect()
+  // console.log('final size', elFinalSize.width, elFinalSize.height);
 
   gsap.killTweensOf(planeHtml)
 
-  console.log('rect', rect);
+  // console.log('rect', rect);
   planeHtml.style.position = 'fixed';
   planeHtml.style.top = `${rect.top}px`;
   planeHtml.style.left = `${rect.left}px`;
-
 
   gsap.to(planeHtml, {
     duration: 0.5,
@@ -155,8 +168,8 @@ const onClick = () => {
     // left: `${-rect.left}px`,
     top: `0px`,
     left: `0px`,
-    width: window.innerWidth,
-    height: window.innerHeight,
+    width: rectFinal.width,
+    height: rectFinal.height,
     onStart: () => {
       imagePlane.value.resize();
     },

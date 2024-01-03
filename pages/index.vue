@@ -32,7 +32,7 @@ import useScrollReveal from '~/compositions/use-scroll-reveal';
 import useLogoObserver from '~/compositions/use-logo-observer';
 import useCurtainsShader from '~/compositions/use-curtains-shader';
 import gsap from 'gsap';
-import workTransition from '../transitions/work-transition';
+import defaultTransition from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
 
 const storeDatas = useDatasStore();
@@ -54,7 +54,7 @@ const props = defineProps({
  * https://stackblitz.com/edit/nuxt-starter-bthjlg?file=pages%2Flayers.vue
  * */
 definePageMeta({
-  pageTransition: workTransition,
+  pageTransition: defaultTransition,
 });
 
 const emit = defineEmits(['onLockScroll'])
