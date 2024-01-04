@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink class="project-item project-item-this" ref="el" @click="onClick" @mouseover="onMouseover" @mouseout="onMouseout">
+  <NuxtLink class="project-item project-item-this" ref="el" @click="onClick">
     <!-- <ClientOnly> -->
       <!-- <div 
         class="image-container scroll-reveal"
@@ -182,38 +182,6 @@ const onClick = () => {
     onStart: () => {
       imagePlane.value.resize();
     },
-    onUpdate: () => {
-      imagePlane.value.resize();
-    },
-    onComplete: () => {
-      imagePlane.value.resize();
-    }
-  })
-}
-
-const onMouseover = () => {
-  // console.log('//// MOUSEOVER - onMouseover', imagePlane.value, imagePlane.value.planeMesh);
-  if (isClicked) return;
-
-  gsap.to(imagePlane.value.planeMesh.htmlElement, {
-    duration: 0.5,
-    ease: 'power4.out',
-    scale: 1.1,
-    onUpdate: () => {
-      imagePlane.value.resize();
-    },
-    onComplete: () => {
-      imagePlane.value.resize();
-    }
-  })
-}
-
-const onMouseout = () => {
-  // console.log('//// MOUSEOUT - onMouseout', imagePlane.value, imagePlane.value.planeMesh);
-  gsap.to(imagePlane.value.planeMesh.htmlElement, {
-    duration: 0.5,
-    ease: 'power4.out',
-    scale: 1,
     onUpdate: () => {
       imagePlane.value.resize();
     },
