@@ -21,11 +21,12 @@
         <template v-for="(item, index) in storeDatas.projectsFiltered">
           <ProjectItem 
             class="projects-home__item"
-            v-if="bMountPlanes"
             :id="index" 
             :to="`/works/${item.attributes.slug}`"
             :datas="item"
             :onRender="onRender"
+            :mountPlanes="bMountPlanes"
+            @onClick="onClickProjectItem"
           />
         </template>
       </section>
@@ -104,6 +105,10 @@ watch(() => storeDatas.projectsFiltered, (newVal, oldVal) => {
     initScrollReveal(root.value)
   })
 })
+
+const onClickProjectItem = (id) => {
+  emit('onLockScroll', true)
+}
 
 onMounted(() => {
   gsap.killTweensOf('#header-logo')

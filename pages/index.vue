@@ -94,7 +94,6 @@ watch(scrollVelocity, (newVal, oldVal) => {
 })
 
 const onClickProjectItem = (id) => {
-  console.log('!!!!!!!!!!!!  ----   onClickProjectItem', id);
   emit('onLockScroll', true)
 }
 
