@@ -3,7 +3,7 @@
     <div class="work-item-small__image">
       <ClientOnly>
         <ImagePlane 
-          v-if="!playVideo"
+          v-if="mountPlane && !playVideo"
           :src="src" 
           :data-zoomable-url="src"
           :onRender="onRender"
@@ -106,15 +106,28 @@ const props = defineProps({
     type: Boolean,
     required: false,
     default: true,
+  },
+  mountPlanes: {
+    type: Boolean,
+    default: false,
   }
 })
 
+
+const el = ref(null);
+const mountPlane = toRef(props, 'mountPlanes');
 const btnPlay = ref(null);
 const txtContent = ref(null);
 const playVideo = ref(false);
 const activateVideo = ref(false);
 const titleAlphaNumeric = computed(() => {
   return toAlphaNumeric(props.content.title);
+})
+
+watch(mountPlane, (newVal, oldVal) => {
+  console.log('watch mountPlane', newVal, oldVal);
+  if (newVal) {
+  }
 })
 
 const isVideo = computed(() => {
@@ -124,12 +137,10 @@ const isVideo = computed(() => {
     return true;
 })
 
-const el = ref(null);
-
 const visibilityObserver = useElementVisibility(el);
 const isVisible = visibilityObserver.isVisible;
 watch(isVisible, (newVal, oldVal) => {
-  console.log(`projectitem ${ props.src} isVisible`, newVal);
+  // console.log(`projectitem ${ props.src} isVisible`, newVal);
   if (newVal) {
     visibilityObserver.observer.stop();
   }

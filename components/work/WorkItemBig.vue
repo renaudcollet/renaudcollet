@@ -9,7 +9,7 @@
     >
       <ClientOnly>
         <ImagePlane 
-          v-if="!bPlayVideo"
+          v-if="mountPlane && !bPlayVideo"
           :src="src"
           :video-src="videoSrc" 
           :onRender="onRender"
@@ -109,9 +109,14 @@ const props = defineProps({
   onRender: {
     type: Function,
     required: true,
+  },
+  mountPlanes: {
+    type: Boolean,
+    default: false,
   }
 })
 
+const mountPlane = toRef(props, 'mountPlanes');
 const elBtnPlay = ref(null);
 const elContent = ref(null);
 const bPlayVideo = ref(false);

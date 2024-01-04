@@ -123,14 +123,14 @@ const planeProps = {
 const isReady = ref(false);
 const isVisible = toRef(props, 'isVisible');
 watch(isVisible, (newVal, oldVal) => {
-  // console.log(`${ props.id} isVisible`, newVal);
+  console.log(`${ props.id} isVisible`, newVal);
   if (newVal) {
     reveal();
   }
 })
 
 const reveal = () => {
-  // console.log('reveal', planeMesh.value);
+  console.log('/!/ reveal', planeMesh.value);
   if(!planeMesh.value) return
 
   const t = {u: 0, v: 0}
@@ -159,7 +159,7 @@ const reveal = () => {
 const onReady = (plane) => {
   planeMesh.value = plane; // extends DOMMesh
   nextTick(() => {
-      plane.images[0].style.opacity = 0
+      // plane.images[0].style.opacity = 0
 
       updateRatioUniforms(plane)
 
@@ -173,7 +173,7 @@ const onReady = (plane) => {
       })
 
       isReady.value = true;
-      // console.log(`onReady ${props.src}`, `isVisible ${props.isVisible}`, `isReady ${isReady.value}` );
+      console.log(`onReady ${props.src}`, `isVisible ${props.isVisible}`, `isReady ${isReady.value}` );
       if (props.isVisible) {
         reveal();
       }
@@ -220,7 +220,7 @@ onMounted(() => {
   
   // plane.uniforms.zPos.value = isVideo ? 0. : 0.25;
 
-  // console.log(`mounted ${props.src}`, `isVisible ${props.isVisible}`, `isReady ${isReady.value}` );
+  console.log(`mounted ${props.src}`, `isVisible ${props.isVisible}`, `isReady ${isReady.value}` );
   if (props.isVisible && isReady.value) {
     reveal();
   }

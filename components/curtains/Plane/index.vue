@@ -90,21 +90,15 @@ export default {
     onBeforeUnmount(() => {
       if (plane) {
         // console.log("on before unmount", planeEl.value);
-          
+        
+        // Need to delay the remove because of how transitions work in vuejs
+        // ie: onBeforeUnmount and onUnmounted are called before the transition is finished
         storeDatasCurtains.addPlaneToRemove(plane)
         emit("before-remove", plane);
         
         // plane.remove();
       }
     });
-
-    // onUnmounted(() => {
-    //   if (plane) {
-    //     emit("remove", plane);
-
-    //     plane.remove();
-    //   }
-    // });
 
     // watch simple properties
     [

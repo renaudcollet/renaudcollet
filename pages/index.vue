@@ -17,6 +17,7 @@
           :datas="item"
           :to="`/works/${item.attributes.slug}`"
           :onRender="onRender"
+          :mountPlanes="bMountPlanes"
           @onClick="onClickProjectItem"
         />
       </template>
@@ -29,11 +30,12 @@
 import Cover3D from '~/components/webgl/Cover3D.vue';
 import { useDatasStore, S_DATA_ACCUEIL } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
-import useLogoObserver from '~/compositions/use-logo-observer';
+// import useLogoObserver from '~/compositions/use-logo-observer';
 import useCurtainsShader from '~/compositions/use-curtains-shader';
 import gsap from 'gsap';
 import defaultTransition from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
+import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
@@ -59,10 +61,18 @@ definePageMeta({
 
 const emit = defineEmits(['onLockScroll'])
 
+// Curtains
+const storeDatasCurtains = useDatasCurtainsStore();
+const bMountPlanes = computed(() => {
+  return storeDatasCurtains.planesToRemove.length === 0;
+});
 const { transitionState } = useTransitionComposable();
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
-  console.log('!!!!! watch transitionComplete', newVal, oldVal);
-  emit('onLockScroll', false)
+  if (newVal) {
+    emit('onLockScroll', false)
+    // Remove planes from previous page
+    storeDatasCurtains.removePlanes();
+  }
 })
 
 const root = ref(null);

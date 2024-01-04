@@ -13,6 +13,7 @@
         data-scroll-reveal-duration="1.6"
       >
         <ImagePlane 
+          v-if="mountPlane"
           :src="config.public.backendUrl + coverSrc"
           :onRender="onRender"
           :isVisible="isVisible"
@@ -79,6 +80,7 @@
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
 import useElementVisibility from '~/compositions/use-element-visibility';
 import gsap from 'gsap'
+import { toRef } from '@vueuse/core';
 
 const config = useRuntimeConfig()
 const props = defineProps({
@@ -93,8 +95,15 @@ const props = defineProps({
   onRender: {
     type: Function,
     required: true,
+  },
+  mountPlanes: {
+    type: Boolean,
+    required: false,
+    default: false,
   }
 })
+
+const mountPlane = toRef(props, 'mountPlanes')
 
 const emit = defineEmits(['onClick'])
 

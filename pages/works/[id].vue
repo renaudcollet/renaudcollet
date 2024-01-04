@@ -11,6 +11,7 @@
       <div class="cover-top__image">
         
         <ImagePlane 
+          v-if="bMountPlanes"
           :src="config.public.backendUrl + coverSrc"
           :onRender="onRender"
           :isVisible="true"
@@ -91,6 +92,7 @@
           :title="item.Titre"
           :content="item.Resume"
           :onRender="onRender"
+          :mountPlanes="bMountPlanes"
         />
         <WorkItemSmall
           v-else-if="item.type === 'Small'"
@@ -100,6 +102,7 @@
           :content="{title: item.Titre, content: item.Resume}" 
           :class="{'right': index%4 === 0, 'left': index%4 === 2}"
           :onRender="onRender"
+          :mountPlanes="bMountPlanes"
         />
       </template>
     </section>
@@ -144,17 +147,17 @@ definePageMeta({
 
 const emit = defineEmits(['onLockScroll'])
 
+// Curtains
 const storeDatasCurtains = useDatasCurtainsStore();
-
+const bMountPlanes = computed(() => {
+  return storeDatasCurtains.planesToRemove.length === 0;
+});
 const { transitionState } = useTransitionComposable();
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
-  console.log('!!!!! watch transitionComplete', newVal, oldVal);
   if (newVal) {
     emit('onLockScroll', false)
-    console.log('SHOULD REMOVE PLANES FROM PREVIOUS PAGE', storeDatasCurtains.planesToRemove.length);
-    storeDatasCurtains.planesToRemove.forEach(plane => {
-      plane.remove();
-    })
+    // Remove planes from previous page
+    storeDatasCurtains.removePlanes();
   }
 })
 

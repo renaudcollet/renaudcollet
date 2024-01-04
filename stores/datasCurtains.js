@@ -4,22 +4,19 @@ export const useDatasCurtainsStore = defineStore( 'datasCurtains', {
   
   state: () => ({
     planesToRemove: [],
-    planesToAdd: [],
   }),
 
   actions: {
     addPlaneToRemove(value) {
-        value.index = this.planesToRemove.length + 20
+        // value.index = this.planesToRemove.length - 1
         this.planesToRemove.push(value)
         // console.log('addPlaneToRemove', value, this.planesToRemove);
     },
-    addPlaneToAdd(value) {
-        // if (this.planesToRemove === null) {
-        //     this.planesToRemove = []
-        // }
-        // value.index = this.planesToRemove.length + 20
-        // this.planesToRemove.push(value)
-        // console.log('addPlaneToRemove', value, this.planesToRemove);
+    removePlanes() {
+      this.planesToRemove.forEach(plane => {
+        plane.remove();
+      })
+      this.planesToRemove = []
     },
   }
 })
