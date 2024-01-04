@@ -62,6 +62,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  skipAnimation: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const planeProps = {
@@ -123,21 +127,21 @@ const planeProps = {
 const isReady = ref(false);
 const isVisible = toRef(props, 'isVisible');
 watch(isVisible, (newVal, oldVal) => {
-  console.log(`${ props.id} isVisible`, newVal);
+  // console.log(`${ props.id} isVisible`, newVal);
   if (newVal) {
     reveal();
   }
 })
 
 const reveal = () => {
-  console.log('/!/ reveal', planeMesh.value);
+  // console.log('/!/ reveal', planeMesh.value);
   if(!planeMesh.value) return
 
   const t = {u: 0, v: 0}
   gsap.to(t, {
     v: 0.7,
-    duration: 1,
-    delay: 0.2,
+    duration: props.skipAnimation ? 0 : 1,
+    delay: props.skipAnimation ? 0 : 0.2,
     // repeat: -1,
     onUpdate: () => {
         planeMesh.value.uniforms.uOpenProgress.value = t.v
@@ -173,7 +177,7 @@ const onReady = (plane) => {
       })
 
       isReady.value = true;
-      console.log(`onReady ${props.src}`, `isVisible ${props.isVisible}`, `isReady ${isReady.value}` );
+      // console.log(`onReady ${props.src}`, `isVisible ${props.isVisible}`, `isReady ${isReady.value}` );
       if (props.isVisible) {
         reveal();
       }
@@ -220,7 +224,7 @@ onMounted(() => {
   
   // plane.uniforms.zPos.value = isVideo ? 0. : 0.25;
 
-  console.log(`mounted ${props.src}`, `isVisible ${props.isVisible}`, `isReady ${isReady.value}` );
+  // console.log(`mounted ${props.src}`, `isVisible ${props.isVisible}`, `isReady ${isReady.value}` );
   if (props.isVisible && isReady.value) {
     reveal();
   }

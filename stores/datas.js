@@ -23,9 +23,19 @@ export const useDatasStore = defineStore( 'datas', {
     footer: null,
     keywords: null,
     lockScroll: false,
+    currentPage: null,
+    previousPage: null,
   }),
 
   actions: {
+    setCurrentPage(page) {
+      if (this.currentPage === page) return
+      
+      this.previousPage = this.currentPage
+      this.currentPage = page
+      console.log('--- setCurrentPage', this.currentPage, this.previousPage);
+    },
+
     setIsScrollLocked(value) {
       this.lockScroll = value
     },
@@ -56,7 +66,7 @@ export const useDatasStore = defineStore( 'datas', {
 
     async fetchDatas(apiId) {
 
-      console.log('--- Fetching datas for ', apiId);
+      // console.log('--- Fetching datas for ', apiId);
 
       switch (apiId) {
         case S_DATA_ACCUEIL:
@@ -121,8 +131,8 @@ export const useDatasStore = defineStore( 'datas', {
           query
         })
 
-        console.log('Data ERROR', error);
-        console.log(`Data from ${apiId}`, data.value);
+        // console.log('Data ERROR', error);
+        // console.log(`Data from ${apiId}`, data.value);
 
         switch (apiId) {
           case S_DATA_CONTACT:

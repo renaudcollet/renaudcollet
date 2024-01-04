@@ -21,11 +21,12 @@
 <script setup>
 import { useDatasStore, S_DATA_SEO } from '~/stores/datas';
 // import { Curtains } from "vue-curtains";
+// import ShaderPass from '~/components/curtains/ShaderPass/index.vue';
 import Curtains from "~/components/curtains/Curtains/index.vue";
-import ShaderPass from '~/components/curtains/ShaderPass/index.vue';
 import Lenis from '@studio-freight/lenis';
 import MouseCursor from '~/components/ui/MouseCursor.vue';
 import useCurtainsShader from '~/compositions/use-curtains-shader';
+
 const route = useRoute()
 
 const storeDatas = useDatasStore();
@@ -36,12 +37,12 @@ storeDatas.lockScroll = (route.name === 'index');
 let scrollLockClass = ref((route.name === 'index') ? 'scroll-lock' : '');
 
 watch(() => storeDatas.lockScroll, (newVal, oldVal) => {
-  console.log('watch - lockScroll newval', newVal);
+  // console.log('watch - lockScroll newval', newVal);
   scrollLockClass.value = (route.name === 'index' && newVal) ? 'scroll-lock' : ''
 })
 
 const onLockScroll = (isLocked) => {
-  console.log('---> onLockScroll', isLocked);
+  // console.log('---> onLockScroll', isLocked);
   if (!isLocked) {
     lenis.start()
     lenis.scrollTo(0, {immediate: true})
@@ -60,11 +61,11 @@ useHead({
 })
 
 const { 
-  firstPassProps, 
-  onFirstPassReady, 
-  onFirstPassRender, 
+  // firstPassProps, 
+  // onFirstPassReady, 
+  // onFirstPassRender, 
   onRender, 
-  updateScrollVelocity
+  // updateScrollVelocity
 } = useCurtainsShader();
 
 const scrollVelocity = ref(0);
@@ -100,15 +101,18 @@ const onCurtainsReady = (_curtains) => {
   })
 }
 
-watch(route, (to, from) => {
-  // console.log('default layout - route changed', to, from)
+storeDatas.setCurrentPage(route.fullPath)
+watch(() => route.fullPath, (value) => {
+  console.log('DEFAULT LAYOUT - WACH route', value)
+  storeDatas.setCurrentPage(value)
+
   // if (window.gtag)
   //   window.gtag('page_view', to.name)
 
-  const gtag = useGtag()
-  gtag('set', 'page_title', to)
+  // const gtag = useGtag()
+  // gtag('set', 'page_title', to)
     
-  lenis.scrollTo(0)
+  // lenis.scrollTo(0)
   // lenis.start()
 })
 

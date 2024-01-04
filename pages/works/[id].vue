@@ -9,34 +9,16 @@
     </ClientOnly>
     <section class="cover-top">
       <div class="cover-top__image">
-        
         <ImagePlane 
           v-if="bMountPlanes"
           :src="config.public.backendUrl + coverSrc"
           :onRender="onRender"
           :isVisible="true"
+          :skip-animation="skipCoverAnimation"
           object-fit="cover" 
           class="project-item__image" 
           ref="imagePlane"
         />
-        <!-- <picture>
-          <source
-            :srcset="config.public.backendUrl + xxlarge"
-            media="(min-width: 1600px) and (orientation: landscape)"
-          />
-          <source
-            :srcset="config.public.backendUrl + xlarge"
-            media="(orientation: landscape)"
-          />
-          <source
-            :srcset="config.public.backendUrl + large"
-            media="(min-width: 600px) and (orientation: portrait)"
-          />
-          <img
-            :srcset="config.public.backendUrl + currentProjectCover.formats.medium.url"
-            alt=""
-          />
-        </picture> -->
       </div>
       <div class="cover-top__title z-index-text">
         <div class="cover-top__title__header-minimize" data-header-scroll-minimize></div>
@@ -163,7 +145,6 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
 
 const config = useRuntimeConfig()
 const route = useRoute()
-// console.log('route.params.id', route.params.id);
 
 const datasProjets = storeDatas.projects;
 
@@ -201,6 +182,10 @@ const coverSrc = computed(() => {
 const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProjectCover.formats.xxlarge.url : currentProjectCover.url;
 const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
 const large = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
+
+const skipCoverAnimation = computed(() => {
+  return storeDatas.previousPage !== null
+})
 
 onMounted(() => {
   gsap.killTweensOf('#header-logo')
