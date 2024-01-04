@@ -31,6 +31,13 @@
 // @import 'stripe';
 
 
+html, body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+  font-synthesis: none;
+}
+
 html {
   min-height: 100vh;
   // height: 100%;
