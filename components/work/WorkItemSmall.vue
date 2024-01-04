@@ -124,12 +124,6 @@ const titleAlphaNumeric = computed(() => {
   return toAlphaNumeric(props.content.title);
 })
 
-watch(mountPlane, (newVal, oldVal) => {
-  console.log('watch mountPlane', newVal, oldVal);
-  if (newVal) {
-  }
-})
-
 const isVideo = computed(() => {
   if (!props.videoSrc)
     return false;
