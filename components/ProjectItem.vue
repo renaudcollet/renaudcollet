@@ -1,12 +1,6 @@
 <template>
   <NuxtLink class="project-item project-item-this" ref="el" @click="onClick">
     <!-- <ClientOnly> -->
-      <!-- <div 
-        class="image-container scroll-reveal"
-        data-scroll-reveal-clip-path="polygon(0% 0, 175% 0, 100% 100%, -75% 100%)"
-        data-scroll-reveal-delay="0.3"
-        data-scroll-reveal-duration="1.6"
-      > -->
       <div 
         class="image-container scroll-reveal"
         data-scroll-reveal-delay="0.3"
