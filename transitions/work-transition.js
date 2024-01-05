@@ -4,6 +4,9 @@ import { useTransitionComposable } from '../compositions/use-transition';
 
 const { toggleTransitionComplete } = useTransitionComposable();
 
+export const durationEnterDefault = 1;
+export const durationLeaveDefault = 1;
+
 /**
  * Inspired by https://stackblitz.com/edit/nuxt-starter-bthjlg
  */
@@ -21,19 +24,19 @@ export const workTransition = {
           done();
         },
       })
-      .to(el, { autoAlpha: 1, duration: 1 })
+      .to(el, { autoAlpha: 1, duration: durationEnterDefault })
       .play();
   },
   onLeave: (el, done) => {
     toggleTransitionComplete(false);
     gsap
       .timeline({ paused: true, onComplete: done })
-      .to(el, { autoAlpha: 0, delay: 0, duration: 2 })
+      .to(el, { autoAlpha: 0, delay: 0, duration: durationLeaveDefault })
       .play();
   },
 };
 
-const defaultTransition = {
+export const defaultTransition = {
   name: 'default-transiton',
   mode: 'out-in',
   onEnter: (el, done) => {
@@ -46,14 +49,14 @@ const defaultTransition = {
           done();
         },
       })
-      .to(el, { autoAlpha: 1, duration: 1 })
+      .to(el, { autoAlpha: 1, duration: durationEnterDefault })
       .play();
   },
   onLeave: (el, done) => {
     toggleTransitionComplete(false);
     gsap
       .timeline({ paused: true, onComplete: done })
-      .to(el, { autoAlpha: 0, delay: 0, duration: 2 })
+      .to(el, { autoAlpha: 0, delay: 0, duration: durationLeaveDefault })
       .play();
   },
 };

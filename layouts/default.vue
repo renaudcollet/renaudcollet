@@ -1,6 +1,11 @@
 <template>
   <Header></Header>
-  <Curtains id="CurtainsCanvas" @success="onCurtainsReady" ref="curtains" @onContextLost="onContextLost">
+  <Curtains 
+    id="CurtainsCanvas" 
+    ref="curtains" 
+    @success="onCurtainsReady" 
+    @onContextLost="onContextLost"
+  >
     <!-- <ShaderPass 
       :params="firstPassProps"
       @render="onFirstPassRender"
@@ -20,6 +25,7 @@
 
 <script setup>
 import { useDatasStore, S_DATA_SEO } from '~/stores/datas';
+import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 // import { Curtains } from "vue-curtains";
 // import ShaderPass from '~/components/curtains/ShaderPass/index.vue';
 import Curtains from "~/components/curtains/Curtains/index.vue";
@@ -33,20 +39,24 @@ const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
 await fetchDatas(S_DATA_SEO);
 
+const storeDatasCurtains = useDatasCurtainsStore();
+
 storeDatas.lockScroll = (route.name === 'index');
 let scrollLockClass = ref((route.name === 'index') ? 'scroll-lock' : '');
 
 watch(() => storeDatas.lockScroll, (newVal, oldVal) => {
-  // console.log('watch - lockScroll newval', newVal);
+  console.log('watch - lockScroll newval', newVal);
   scrollLockClass.value = (route.name === 'index' && newVal) ? 'scroll-lock' : ''
 })
 
 const onLockScroll = (isLocked) => {
-  // console.log('---> onLockScroll', isLocked);
+  console.log('---> onLockScroll', isLocked);
+  // storeDatas.lockScroll = isLocked;
   if (!isLocked) {
     lenis.start()
     lenis.scrollTo(0, {immediate: true})
   } else {
+    storeDatasCurtains.scrollY = window.scrollY
     lenis.stop()
   } 
 }
@@ -56,7 +66,7 @@ useHead({
   // titleTemplate: '%s - Accueil',
   titleTemplate: '%s',
   htmlAttrs: {
-    class: scrollLockClass,
+    class: scrollLockClass.value,
   }
 })
 

@@ -111,7 +111,7 @@ export default {
       watch(
         () => props.params[prop],
         (newValue) => {
-          console.log(prop, newValue);
+          // console.log(prop, newValue);
           plane[prop] = newValue;
         }
       );

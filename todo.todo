@@ -78,6 +78,8 @@ SEO:
     ☐ Add meta tags
     ☐ Add sitemap
     ☐ Add robots.txt
+    ☐ Add google analytics - Use partytown https://partytown.builder.io/getting-started
+        -> See lusion.co for example
 
 Build: 
     ☐ Create a clear console, then add console.log (like lusion.co)

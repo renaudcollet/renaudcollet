@@ -33,7 +33,7 @@ import useScrollReveal from '~/compositions/use-scroll-reveal';
 // import useLogoObserver from '~/compositions/use-logo-observer';
 import useCurtainsShader from '~/compositions/use-curtains-shader';
 import gsap from 'gsap';
-import defaultTransition from '../transitions/work-transition';
+import { defaultTransition } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 
@@ -69,7 +69,10 @@ const bMountPlanes = computed(() => {
 const { transitionState } = useTransitionComposable();
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
-    emit('onLockScroll', false)
+    if (storeDatas.previousPage !== null){
+      console.log('emit onLockScroll', false);
+      emit('onLockScroll', false)
+    }
     // Remove planes from previous page
     storeDatasCurtains.removePlanes();
   }
@@ -93,9 +96,23 @@ watch(scrollVelocity, (newVal, oldVal) => {
   updateScrollVelocity(newVal)
 })
 
-const onClickProjectItem = (id) => {
-  emit('onLockScroll', true)
+const onClickProjectItem = (id, plane) => {
+  storeDatasCurtains.currentPlaneCover = plane
+  console.log('onClickProjectItem', id, plane);
+  console.log('emit onLockScroll', false);
+  emit('onLockScroll', false)
 }
+
+// const onClickAnimationComplete = (plane, rect) => {
+//   console.log('onClickAnimationComplete', window.scrollY);
+//   storeDatasCurtains.scrollY = window.scrollY
+//   emit('onLockScroll', false)
+//   plane.resetPlane()
+//   plane.setRelativeTranslation(new Vec3(0, -storeDatasCurtains.scrollY, 0))
+//   // plane.htmlElement.style.top = -scrollY + 'px';
+//   // plane.resize()
+//   // router.push(`/works/${storeDatas.projectsHomepage[id].attributes.slug}`)
+// }
 
 onMounted(() => {
   gsap.set('#index-logo', { top: '50%', left: '50%', translateX: '-50%', translateY: '-50%', opacity: 0 })

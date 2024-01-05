@@ -25,7 +25,7 @@
         <h1 
           class="cover-top__title__project scroll-reveal"
           data-scroll-reveal-opacity-y
-          data-scroll-reveal-delay="0"
+          data-scroll-reveal-delay="0.6"
           data-scroll-reveal-duration="0.7"
         >
           {{ currentProject.attributes.titre }}
@@ -33,7 +33,7 @@
         <div
           class="cover-top__title__brand scroll-reveal"
           data-scroll-reveal-opacity-y
-          data-scroll-reveal-delay="0.6"
+          data-scroll-reveal-delay="0.9"
           data-scroll-reveal-duration="0.3"
         >
           Client : {{ currentProject.attributes.brand }}
@@ -41,7 +41,7 @@
         <div
           class="cover-top__title__brand scroll-reveal"
           data-scroll-reveal-opacity-y
-          data-scroll-reveal-delay="0.8"
+          data-scroll-reveal-delay="1.2"
           data-scroll-reveal-duration="0.3"
         >
           Agency : {{ currentProject.attributes.agency }}
@@ -49,7 +49,7 @@
         <div
           class="cover-top__title__brand scroll-reveal"
           data-scroll-reveal-opacity-y
-          data-scroll-reveal-delay="1.0"
+          data-scroll-reveal-delay="1.5"
           data-scroll-reveal-duration="0.3"
         >
           Filters : 
@@ -108,6 +108,7 @@ import gsap from 'gsap';
 import { workTransition } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
+import { Vec3 } from 'curtainsjs'
 
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
@@ -137,9 +138,17 @@ const bMountPlanes = computed(() => {
 const { transitionState } = useTransitionComposable();
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
+    console.log('PAGE ID - transitionState.transitionComplete', storeDatasCurtains.scrollY);
+
+    setTimeout(() => {
+      // Remove planes from previous page
+      storeDatasCurtains.removePlanes();
+    }, 500)
+    
+    console.log('emit - onLockScroll', false);
     emit('onLockScroll', false)
-    // Remove planes from previous page
-    storeDatasCurtains.removePlanes();
+    // storeDatas.lockScroll = false;
+    document.body.getBoundingClientRect() // Necessary to force repaint
   }
 })
 

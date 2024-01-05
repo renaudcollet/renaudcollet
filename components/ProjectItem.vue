@@ -1,5 +1,10 @@
 <template>
-  <NuxtLink class="project-item project-item-this" ref="el" @click="onClick">
+  <NuxtLink 
+    class="project-item project-item-this" 
+    ref="el"
+    @click="onClick()"
+    @mouseover="onMouseover"
+  >
     <!-- <ClientOnly> -->
       <div 
         class="image-container scroll-reveal"
@@ -75,6 +80,7 @@ import ImagePlane from '~/components/webgl/ImagePlane.vue';
 import useElementVisibility from '~/compositions/use-element-visibility';
 import gsap from 'gsap'
 import { toRef } from '@vueuse/core';
+import { durationLeaveDefault } from '../transitions/work-transition';
 
 const config = useRuntimeConfig()
 const props = defineProps({
@@ -99,7 +105,7 @@ const props = defineProps({
 
 const mountPlane = toRef(props, 'mountPlanes')
 
-const emit = defineEmits(['onClick'])
+const emit = defineEmits(['onClick', 'onClickAnimationComplete'])
 
 const keywords = computed(() => {
   return props.datas.attributes.keywords.data;
@@ -137,13 +143,7 @@ const onClick = () => {
   isClicked = true;
 
   // stop scroll
-  emit('onClick', props.id)
-
-  console.log('//// CLICK - onClick', imagePlane.value.planeMesh.renderer.canvas);
-
-  // imagePlane.value.planeMesh.forEach((o) => {
-  //   console.log('   ', o);
-  // })
+  emit('onClick', props.id, imagePlane.value.planeMesh)
 
   // animate imagePlane to full screen, and position it to the center
   const planeHtml = imagePlane.value.planeMesh.htmlElement;
@@ -164,7 +164,7 @@ const onClick = () => {
   planeHtml.style.left = `${rect.left}px`;
 
   gsap.to(planeHtml, {
-    duration: 0.5,
+    duration: durationLeaveDefault,
     ease: 'power4.out',
     scale: 1,
     // top: `${-rect.top}px`,
@@ -181,8 +181,20 @@ const onClick = () => {
     },
     onComplete: () => {
       imagePlane.value.resize();
+      // emit('onClickAnimationComplete', props.id, imagePlane.value.planeMesh) // Never triggered because of vuejs transition already unmounted this component  
     }
   })
+}
+
+const onMouseover = () => {
+  if (isClicked) {
+    return;
+  }
+
+  // gsap.to(imagePlane.value.planeMesh.scale, {
+  //   x: 1.5,
+  //   y: 1.5,
+  // })
 }
 
 onMounted(() => {
@@ -190,47 +202,20 @@ onMounted(() => {
 
   // Debug resize
   window['resizeItem'+props.id] = () => {
-    console.log('resizeItem', imagePlane.value.planeMesh.htmlElement);
-    const htmlElement = imagePlane.value.planeMesh.htmlElement;
-    htmlElement.style.position = 'absolute';
-    htmlElement.style.top = '-116px';
-    htmlElement.style.left = '-337px';
-    htmlElement.style.width = (window.innerWidth - 10) + 'px'; // -10 is for scroll track width
-    htmlElement.style.height = window.innerHeight + 'px';
-    htmlElement.style.zIndex = 999999;
 
-    const img = htmlElement.querySelector('img')
-    img.style.opacity = 0.2;
-    img.style.zIndex = 999999;
+    onClick();
 
-    // imagePlane.value.planeMesh.resize();
-    setTimeout(() => {
-      imagePlane.value.planeMesh.resize();
-    }, 1000);
-    imagePlane.value.resize()
     return imagePlane.value.planeMesh.htmlElement;
   }
-
-  // console.log('UNMOUNTED', el.value.querySelector('.plane'));
-  // let mo = new MutationObserver((mutations) => {
-  //   console.log("mutations", mutations);
-  //   mutations.forEach((mutation) => {
-  //     console.log("mutation", mutation);
-  //     if (mutation.type === "attributes") {
-  //       console.log("attributes changed", mutation);
-  //     }
-  //   });
-  // });
-  // mo.observe(el.value.querySelector('.plane'), { childList: true, subtree: true });
 })
 
-onUnmounted(() => {
-  // console.log('Unmounted ProjectItem', props.id, props.datas);
-})
+// onUnmounted(() => {
+//   // console.log('Unmounted ProjectItem', props.id, props.datas);
+// })
 
-onBeforeUnmount(() => {
-  // console.log('onBeforeUnmount ProjectItem', props.id, props.datas);
-})
+// onBeforeUnmount(() => {
+//   // console.log('onBeforeUnmount ProjectItem', props.id, props.datas);
+// })
 </script>
 
 <style lang="scss">
