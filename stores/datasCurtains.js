@@ -13,22 +13,17 @@ export const useDatasCurtainsStore = defineStore( 'datasCurtains', {
     addPlaneToRemove(value) {
         // value.index = this.planesToRemove.length + 20
         this.planesToRemove.push(value)
-        // console.log('addPlaneToRemove', value, this.planesToRemove);
     },
     removePlanes() {
       if (this.currentPlaneCover) 
-        console.log('currentPlaneCover', this.currentPlaneCover, this.currentPlaneCover.index);
-
+        console.log(`Remove all planes (${this.planesToRemove.length - 1}) except currentPlaneCover - remove it later`, this.currentPlaneCover);
+      else
+        console.log(`Remove all planes (${this.planesToRemove.length})`);
+      
       this.planesToRemove.forEach(plane => {
-        if (plane.index !== this.currentPlaneCover.index) {
+        if (!this.currentPlaneCover || plane.index !== this.currentPlaneCover.index) {
           // console.log('removePlanes', plane, plane.index);
           plane.remove();
-        } else {
-          setTimeout(() => {
-            console.log('removePlanes currentPlaneCover');
-            this.currentPlaneCover.remove();
-            this.currentPlaneCover = null
-          }, 1000);
         }
 
         // https://www.curtainsjs.com/plane-class.html#reset-plane
@@ -38,5 +33,12 @@ export const useDatasCurtainsStore = defineStore( 'datasCurtains', {
       })
       this.planesToRemove = []
     },
+    removeCurrentPlaneCover() {
+      if (this.currentPlaneCover) {
+        console.log('Remove plane cover', this.currentPlaneCover);
+        this.currentPlaneCover.remove();
+        this.currentPlaneCover = null
+      }
+    }
   }
 })

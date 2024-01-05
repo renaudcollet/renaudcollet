@@ -100,9 +100,9 @@
 import ShaderPass from '~/components/curtains/ShaderPass/index.vue';
 import { useDatasStore, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
-// import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
 import useZoomableImage from '~/compositions/use-zoomable-image';
 import useCurtainsShader from '~/compositions/use-curtains-shader';
+// import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
 import gsap from 'gsap';
 import { workTransition } from '../transitions/work-transition';
@@ -130,6 +130,9 @@ definePageMeta({
 
 const emit = defineEmits(['onLockScroll'])
 
+const root = ref(null);
+const imagePlane = ref(null);
+
 // Curtains
 const storeDatasCurtains = useDatasCurtainsStore();
 const bMountPlanes = computed(() => {
@@ -139,16 +142,22 @@ const { transitionState } = useTransitionComposable();
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
     console.log('PAGE ID - transitionState.transitionComplete', storeDatasCurtains.scrollY);
-
-    setTimeout(() => {
-      // Remove planes from previous page
-      storeDatasCurtains.removePlanes();
-    }, 500)
     
     console.log('emit - onLockScroll', false);
     emit('onLockScroll', false)
+
     // storeDatas.lockScroll = false;
-    document.body.getBoundingClientRect() // Necessary to force repaint
+    // document.body.getBoundingClientRect() // Necessary to force repaint
+
+    // Remove planes from previous page
+    storeDatasCurtains.removePlanes();
+
+    setTimeout(() => {
+      storeDatasCurtains.removeCurrentPlaneCover()
+
+      initScrollReveal(root.value)
+      initZoomableImage(root.value)
+    }, 500)
   }
 })
 
@@ -165,9 +174,6 @@ const currentProject = datasProjets.find(project => {
 const currentProjectCover = currentProject.attributes.cover.data.attributes
 const currentProjectBlocs = currentProject.attributes.bloc
 const keywords = currentProject.attributes.keywords.data
-
-const root = ref(null);
-const imagePlane = ref(null);
 
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 const { initZoomableImage, clearZoomableImage } = useZoomableImage();
@@ -207,8 +213,10 @@ onMounted(() => {
   // useTrackEvent('work-id-page', route.params.id)
 
   nextTick(() => {
-    initScrollReveal(root.value)
-    initZoomableImage(root.value)
+    // if (skipCoverAnimation.value) {
+    //   initScrollReveal(root.value)
+    //   initZoomableImage(root.value)
+    // }
   })
 })
 

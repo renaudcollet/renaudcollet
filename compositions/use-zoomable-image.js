@@ -18,7 +18,7 @@ export default function useZoomableImage() {
 
   const initZoomableImage = (elRoot) => {
     elZoomables = elRoot.querySelectorAll('.zoomable');
-    // console.log('initZoomableImage', elZoomables);
+    console.log('initZoomableImage', elZoomables.length);
     fClickZoomable = onClickZoomable.bind(this);
     elZoomables.forEach((el) => {
       // console.log('initZoomableImage foreach', el);
