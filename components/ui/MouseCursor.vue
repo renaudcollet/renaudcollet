@@ -287,7 +287,7 @@ export default {
         } else if (
           e.target.dataset.mouseCursor === 'zoom-out'
         ) {
-          console.log('MOUSE OVER ZOOM OUT');
+          // console.log('MOUSE OVER ZOOM OUT');
           gsap.killTweensOf(this.mouseSVGOutlineBig)
           gsap.to(
             this.mouseSVGOutlineBig,
@@ -350,7 +350,7 @@ export default {
         } else if (
           e.target.dataset.mouseCursor === 'zoom'
         ) {
-          console.log('MOUSE OUT ZOOM');
+          // console.log('MOUSE OUT ZOOM');
           
           gsap.killTweensOf(this.mouseSVGOutlineBig)
           gsap.to (
