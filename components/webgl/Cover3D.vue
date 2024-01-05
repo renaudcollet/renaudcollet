@@ -1,6 +1,6 @@
 <template>
     <div class="scene-container">
-        <canvas id="three-canvas"></canvas>
+        <canvas ref="canvas" id="three-canvas"></canvas>
     </div>
 </template>
 
@@ -26,7 +26,7 @@ import modelNature from '~/assets/3d/nature-scene.glb'
 import VirtualScroll from 'virtual-scroll'
 import { toRef } from '@vueuse/core';
 
-let canvas
+const canvas = ref(null)
 let width
 let height
 let scene, postScene
@@ -185,9 +185,8 @@ onUnmounted(() => {
 const init = () => {
   bDebugGUI = window.location.hash === '#debug'
 
-  canvas = document.querySelector('#three-canvas')
-  width = canvas.offsetWidth;
-  height = canvas.offsetHeight;
+  width = canvas.value.offsetWidth;
+  height = canvas.value.offsetHeight;
   scene = new THREE.Scene()
 
   camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000)
@@ -204,7 +203,7 @@ const init = () => {
   // TODO: Probleme de colorspace avec les textures utilisées dans le ShaderMaterial
   // TODO:  Créer un codepen pour reproduire le problème
   pixelRatio = Math.max(window.devicePixelRatio, 2)
-  renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true })
+  renderer = new THREE.WebGLRenderer({ canvas: canvas.value, antialias: true })
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.toneMapping = THREE.LinearToneMapping // ACESFilmicToneMapping
   renderer.setSize(width, height)
