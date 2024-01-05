@@ -289,8 +289,6 @@ SECTION .cover-top
     height: calc(100vh);
     font-size: 0;
     position: absolute;
-    background: black;
-    clip-path: polygon(25% 0, 100% 0, 100% 75%, 75% 100%, 0 100%, 0 25%);
 
     img {
       width: 100%;
