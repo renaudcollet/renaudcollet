@@ -31,14 +31,15 @@
 import { useDatasStore, S_DATA_ABOUT } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 import gsap from 'gsap';
-import workTransition from '../transitions/work-transition';
+import { defaultTransition } from '../transitions/work-transition';
+import { useTransitionComposable } from '../compositions/use-transition';
+import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
 await fetchDatas(S_DATA_ABOUT);
 
 const datasAbout = storeDatas.about.data;
-console.log('datasAbout', datasAbout);
 
 const root = ref(null);
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
@@ -48,8 +49,21 @@ const { initScrollReveal, clearScrollReveal } = useScrollReveal();
  * https://stackblitz.com/edit/nuxt-starter-bthjlg?file=pages%2Flayers.vue
  * */
 definePageMeta({
-  pageTransition: workTransition,
+  pageTransition: defaultTransition,
 });
+
+const storeDatasCurtains = useDatasCurtainsStore();
+const { transitionState } = useTransitionComposable();
+watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
+  if (newVal) {
+    if (storeDatas.previousPage !== null){
+      // console.log('emit onLockScroll', false);
+      // emit('onLockScroll', false)
+    }
+    // Remove planes from previous page
+    storeDatasCurtains.removePlanes();
+  }
+})
 
 onMounted(() => {
   gsap.killTweensOf('#header-logo')

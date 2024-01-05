@@ -82,6 +82,9 @@ import { onMounted, onUnmounted, ref, nextTick } from "vue";
 import { useDatasStore, S_DATA_CONTACT } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 import gsap from 'gsap';
+import { defaultTransition } from '../transitions/work-transition';
+import { useTransitionComposable } from '../compositions/use-transition';
+import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
@@ -91,6 +94,24 @@ const datasContact = storeDatas.contact.data;
 
 const root = ref(null);
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
+
+definePageMeta({
+  pageTransition: defaultTransition,
+});
+
+const storeDatasCurtains = useDatasCurtainsStore();
+const { transitionState } = useTransitionComposable();
+watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
+  if (newVal) {
+    if (storeDatas.previousPage !== null){
+      // console.log('emit onLockScroll', false);
+      // emit('onLockScroll', false)
+    }
+    // Remove planes from previous page
+    storeDatasCurtains.removePlanes();
+  }
+})
+
 
 const clickShowEmail = () => {
   console.log('clickShowEmail');
