@@ -45,8 +45,14 @@ const props = defineProps({
   start: {
     type: Boolean,
     default: false
+  },
+  scrollZone: {
+    type: Object,
+    default: null
   }
 })
+
+const scrollZone = toRef(props, 'scrollZone')
 
 let bDebugGUI = false
 let gui
@@ -122,6 +128,7 @@ const initControls = () => {
   controls.update()
 }
 
+let zoneHeight = 0
 
 onMounted(() => {
     init()
@@ -138,7 +145,7 @@ onMounted(() => {
 
     // Use a virtual scroll while the scroll is locked untill cover 3d animations are finished
     // Once the animations are finished, the scroll is unlocked and the virtual scroll is disabled
-    let currentState = 0;
+    /* let currentState = 0;
     let prcnt = 0;
     scroller = new VirtualScroll()
     scroller.on(event => {
@@ -163,6 +170,24 @@ onMounted(() => {
             if (prcnt > 1)
               storeDatas.setIsScrollLocked(false)
             // storeDatas.setIsScrollLocked(prcnt < 1)
+          }
+        })
+      }
+    }) */
+
+    console.log('scrollZone', scrollZone.value);
+    // zoneHeight = scrollZone.value.offsetHeight
+    let prc = 0
+    window.lenis.on('scroll', () => {
+      zoneHeight = scrollZone.value.offsetHeight
+      prc = window.scrollY / zoneHeight
+      // console.log(`cover3d onScroll, scrollY: ${window.scrollY}, zone: ${zoneHeight}`, prc);
+      if (prc < 1.1) {
+        gsap.killTweensOf(config)
+        gsap.to(config, {
+          progress: prc, duration: 0.5, 
+          onUpdate: () => {
+            updateMaterial()
           }
         })
       }

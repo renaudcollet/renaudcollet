@@ -1,7 +1,7 @@
 <template>
   <div ref="root">
     <div class="cover">
-      <Cover3D :start="startCover3d" />
+      <Cover3D :start="startCover3d" :scrollZone="scrollZone"/>
       <div id="index-logo" class="logo" data-header-scroll-minimize>
         <Logo />
       </div>
@@ -9,6 +9,7 @@
         Freelance Web Developer
       </div>
     </div>
+    <div ref="scrollZone" class="scroll-zone"></div>
     <section class="projects-home">
       <template v-for="(item, index) in storeDatas.projectsHomepage" :key="index">
         <ProjectItem 
@@ -51,6 +52,8 @@ const props = defineProps({
   }
 })
 
+const scrollZone = ref(null);
+
 /**
  *  page transition
  * https://stackblitz.com/edit/nuxt-starter-bthjlg?file=pages%2Flayers.vue
@@ -70,8 +73,8 @@ const { transitionState } = useTransitionComposable();
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
     if (storeDatas.previousPage !== null){
-      console.log('emit onLockScroll', false);
-      emit('onLockScroll', false)
+      // console.log('emit onLockScroll', false);
+      // emit('onLockScroll', false)
     }
     // Remove planes from previous page
     storeDatasCurtains.removePlanes();
@@ -149,6 +152,10 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped>
+
+.scroll-zone {
+  height: 200vh;
+}
 .props {
   position: fixed;
   background-color: #000;
