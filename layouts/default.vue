@@ -117,11 +117,12 @@ watch(() => route.fullPath, (value) => {
 })
 
 const update = (time) => {
-  lenis.raf(time)
-  scrollVelocity.value = lerp(scrollVelocity.value, 0, 0.2);
   requestAnimationFrame((time) => {
     update(time)
   })
+  
+  lenis.raf(time)
+  onScroll()
 }
 
 const lerp = (a, b, n) => {
@@ -131,8 +132,9 @@ const lerp = (a, b, n) => {
 let firstTimeScrollUnlockedValue
 // For shader effect on scroll
 const onScroll = () => {
-  // console.log('onScroll', lenis.scroll, window.scrollY);
-  scrollVelocity.value = lenis.scroll - lastScroll
+  // console.log('onScroll', lenis.scroll, lastScroll, window.scrollY);
+  // scrollVelocity.value = lenis.scroll - lastScroll
+  scrollVelocity.value = lerp(lenis.scroll - lastScroll, 0, 0.2);
   lastScroll = lenis.scroll
 
   if (storeDatas.lockScroll === false) {
@@ -177,7 +179,7 @@ onMounted(() => {
   lastScroll = lenis.scroll
 
   // window.addEventListener('scroll', onScroll)
-  lenis.on('scroll', onScroll)
+  // lenis.on('scroll', onScroll)
 
   requestAnimationFrame(update)
 })
