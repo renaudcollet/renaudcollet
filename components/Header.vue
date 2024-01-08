@@ -329,7 +329,8 @@ export default {
           padding: 10px;
           pointer-events: all;
 
-          &:hover {
+          &:hover,
+          &.router-link-active {
             // text-decoration: underline;
             &::before {
               transition: transform 0.3s;
