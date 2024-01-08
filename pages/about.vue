@@ -104,13 +104,17 @@ onUnmounted(() => {
     margin-left: auto;
     margin-bottom: 50px;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 
     @include media-breakpoint-up(lg) {
       width: 60%;
     }
 
     @include media-breakpoint-up(xl) {
-      width: 700px;
+      width: 100%;
     }
 
     .description {
@@ -124,6 +128,7 @@ onUnmounted(() => {
 
       @include media-breakpoint-up(lg) {
         font-size: $font-size-text-lg;
+        width: 700px;
       }
 
       @include media-breakpoint-up(xl) {

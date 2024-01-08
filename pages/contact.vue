@@ -11,7 +11,7 @@
         >
           {{ datasContact.attributes.titre }}
         </h1>
-        <p>
+        <div class="content">
           <span 
             class="description scroll-reveal"
             data-scroll-reveal-opacity-y
@@ -68,7 +68,7 @@
               {{ datasContact.attributes.tel }}
             </a>
           </div>
-        </p>
+        </div>
       </div>
     </section>
     <FooterSimple />
@@ -93,6 +93,9 @@ await fetchDatas(S_DATA_CONTACT);
 const datasContact = storeDatas.contact.data;
 
 const root = ref(null);
+const showTel = ref(false)
+const showEmail = ref(false)
+
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 
 definePageMeta({
@@ -103,28 +106,18 @@ const storeDatasCurtains = useDatasCurtainsStore();
 const { transitionState } = useTransitionComposable();
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
-    if (storeDatas.previousPage !== null){
-      // console.log('emit onLockScroll', false);
-      // emit('onLockScroll', false)
-    }
-    // Remove planes from previous page
     storeDatasCurtains.removePlanes();
   }
 })
 
 
 const clickShowEmail = () => {
-  console.log('clickShowEmail');
   showEmail.value = true
 }
 
 const clickShowTel = () => {
-  console.log('clickShowTel');
   showTel.value = true
 }
-
-const showTel = ref(false)
-const showEmail = ref(false)
 
 onMounted(() => {
   gsap.killTweensOf('#header-logo')
@@ -176,7 +169,7 @@ onUnmounted(() => {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 60px;
+  // margin-bottom: 60px;
   height: 100vh;
   user-select: none;
 
@@ -209,7 +202,7 @@ onUnmounted(() => {
     }
   }
 
-  p {
+  .content {
     text-align: center;
     font-size: $font-size-text-sm;
     font-weight: 300;
