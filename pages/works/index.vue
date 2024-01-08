@@ -1,12 +1,12 @@
 <template>
   <div ref="root">
-    <ClientOnly>
+    <!-- <ClientOnly>
       <ShaderPass 
         :params="firstPassProps"
         @render="onFirstPassRender"
         @ready="onFirstPassReady"
       />
-    </ClientOnly>
+    </ClientOnly> -->
     <div class="container">
       <!-- <div class="container__header-minimize" data-header-scroll-minimize></div> -->
       <h1 
@@ -37,7 +37,7 @@
 </template>
   
 <script setup>
-import { ShaderPass } from 'vue-curtains';
+// import { ShaderPass } from 'vue-curtains';
 import { useDatasStore, S_DATA_ACCUEIL, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 // import useLogoObserver from '~/compositions/use-logo-observer';
@@ -57,13 +57,17 @@ const props = defineProps({
   scrollVelocity: {
     type: Number
   },
+  onRender: {
+    type: Function,
+    required: true,
+  }
 })
 
 /**
  *  page transition
  * https://stackblitz.com/edit/nuxt-starter-bthjlg?file=pages%2Flayers.vue
  * */
- definePageMeta({
+definePageMeta({
   pageTransition: workTransition,
 });
 
@@ -77,7 +81,7 @@ const bMountPlanes = computed(() => {
 const { transitionState } = useTransitionComposable();
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
-    emit('onLockScroll', false)
+    // emit('onLockScroll', false)
     // Remove planes from previous page
     storeDatasCurtains.removePlanes();
   }
@@ -86,16 +90,15 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
 const root = ref(null);
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 const { 
-  firstPassProps, 
-  onFirstPassReady, 
-  onFirstPassRender, 
-  onRender, 
+  // firstPassProps, 
+  // onFirstPassReady, 
+  // onFirstPassRender, 
+  // onRender, 
   updateScrollVelocity
 } = useCurtainsShader();
 
 const scrollVelocity = toRef(props, 'scrollVelocity');
 watch(scrollVelocity, (newVal, oldVal) => {
-  // console.log('watch scrollVelocity', newVal, oldVal);
   updateScrollVelocity(newVal)
 })
 
@@ -106,8 +109,11 @@ watch(() => storeDatas.projectsFiltered, (newVal, oldVal) => {
   })
 })
 
-const onClickProjectItem = (id) => {
-  emit('onLockScroll', true)
+const onClickProjectItem = (id, plane) => {
+  storeDatasCurtains.currentPlaneCover = plane
+  console.log('onClickProjectItem', id, plane);
+  console.log('emit onLockScroll', false);
+  emit('onLockScroll', false)
 }
 
 onMounted(() => {

@@ -115,7 +115,7 @@ const onCurtainsReady = (_curtains) => {
 
 storeDatas.setCurrentPage(route.fullPath)
 watch(() => route.fullPath, (value) => {
-  console.log('DEFAULT LAYOUT - WACH route', value)
+  // console.log('DEFAULT LAYOUT - WACH route', value)
   storeDatas.setCurrentPage(value)
 
   // if (window.gtag)
