@@ -438,6 +438,7 @@ onMounted(() => {
     width: fit-content;
     margin: 0;
     font-family: $font-main;
+    color: $font-title-color;
   }
 
   h1 {
