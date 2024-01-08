@@ -13,6 +13,9 @@ Intégration:
     ☐ Bug header when resize from xl to lg
     ☐ Page projet, add a link to next project
     ☐ + of the triangle is not centered in x (on homepage)
+    ☐ Titles colors change each load :
+        $font-title-color: #f7eedd;
+        $font-color: #fffaf2; // #928282
 
 Page transition:
     // Nuxt page transition with gsap : https://stackblitz.com/edit/nuxt-starter-bthjlg
@@ -42,6 +45,8 @@ Webgl:
     ✔ Déclencher l'ouverture quand l'image apparait dans le viewport @done(23-10-03 15:42)
     ✔ Probleme d'image resolution, sur luna rossa et digital mirror, les coins n'ont pas la même taille @done(23-10-03 17:07)
     ☐ Add effect on vignettes when hovering : https://pixallus.com/creating-webgl-effects-with-curtainsjs/
+    ☐ Improve speed with OffscreenCanvas (https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas)
+
     Particles : 
         Joshua Davis - https://codepen.io/jshuadvd/pen/ogKeBB
         https://nullprogram.com/webgl-particles/

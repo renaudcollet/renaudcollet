@@ -10,10 +10,15 @@ export const useDatasCurtainsStore = defineStore( 'datasCurtains', {
   }),
 
   actions: {
+
+    // Add plane to remove, done by custom vue-curtains
     addPlaneToRemove(value) {
         // value.index = this.planesToRemove.length + 20
         this.planesToRemove.push(value)
+        console.log('addPlaneToRemove', value, this.planesToRemove.length);
     },
+    
+    // Remove planes from previous page
     removePlanes() {
       if (this.currentPlaneCover) 
         console.log(`Remove all planes (${this.planesToRemove.length - 1}) except currentPlaneCover - remove it later`, this.currentPlaneCover);

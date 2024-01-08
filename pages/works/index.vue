@@ -15,10 +15,11 @@
         data-scroll-reveal-delay="0.0"
         data-scroll-reveal-duration="0.5"
       >
-        All my works
+        All my <br v-if="projectsFilteredLabelDelay !== ''" /><span class="filtered-label">{{ projectsFilteredLabelDelay }}</span> <br v-if="projectsFilteredLabelDelay !== ''" /> works
       </h1>
       <section class="projects-work">
-        <template v-for="(item, index) in storeDatas.projectsFiltered">
+        <!-- <template v-for="(item, index) in storeDatas.projectsFiltered"> -->
+        <template v-for="(item, index) in projectsFilteredDelay">
           <ProjectItem 
             class="projects-home__item"
             :id="index" 
@@ -63,6 +64,12 @@ const props = defineProps({
   }
 })
 
+const projectsFilteredDelay = ref(null);
+projectsFilteredDelay.value = storeDatas.projectsFiltered;
+
+const projectsFilteredLabelDelay = ref(null);
+projectsFilteredLabelDelay.value = '';
+
 /**
  *  page transition
  * https://stackblitz.com/edit/nuxt-starter-bthjlg?file=pages%2Flayers.vue
@@ -82,7 +89,6 @@ const { transitionState } = useTransitionComposable();
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
     // emit('onLockScroll', false)
-    // Remove planes from previous page
     storeDatasCurtains.removePlanes();
   }
 })
@@ -102,17 +108,37 @@ watch(scrollVelocity, (newVal, oldVal) => {
   updateScrollVelocity(newVal)
 })
 
+// Select filter
 watch(() => storeDatas.projectsFiltered, (newVal, oldVal) => {
-  // console.log('watch projectsFiltered', newVal, oldVal);
+  console.log('watch projectsFiltered', newVal, oldVal);
   nextTick(() => {
-    initScrollReveal(root.value)
+    clearScrollReveal()
+    projectsFilteredDelay.value = null
+
+    nextTick(() => {
+      storeDatasCurtains.removePlanes()
+
+      emit('onLockScroll', false, true)
+    })
+    
+    setTimeout(() => {
+      projectsFilteredDelay.value = newVal
+      projectsFilteredLabelDelay.value = 
+        storeDatas.keywordsSelected && storeDatas.keywordsSelected.length > 0 
+        ? `${storeDatas.keywordsSelected[0].attributes.key}` 
+        : '';
+
+      nextTick(() => {
+        initScrollReveal(root.value)
+      })
+    }, 150)
   })
 })
 
 const onClickProjectItem = (id, plane) => {
   storeDatasCurtains.currentPlaneCover = plane
-  console.log('onClickProjectItem', id, plane);
-  console.log('emit onLockScroll', false);
+  console.log('onClickProjectItem', id, plane)
+  console.log('emit onLockScroll', false)
   emit('onLockScroll', false)
 }
 
@@ -138,6 +164,11 @@ onUnmounted(() => {
   user-select: none;
   align-items: center;
   z-index: $z-projects;
+  min-height: 100vh;
+}
+
+.filtered-label {
+  font-style: italic;
 }
 
 .space {

@@ -41,22 +41,12 @@ await fetchDatas(S_DATA_SEO);
 
 const storeDatasCurtains = useDatasCurtainsStore();
 
-// storeDatas.lockScroll = (route.name === 'index');
-// let scrollLockClass = ref((route.name === 'index') ? 'scroll-lock' : '');
-// let scrollLockClass = ref((route.name === 'index') ? 'scroll-lock' : '');
-// let scrollLockClass = ref(false);
-
-// watch(() => storeDatas.lockScroll, (newVal, oldVal) => {
-//   console.log('watch - lockScroll newval', newVal);
-//   scrollLockClass.value = (route.name === 'index' && newVal) ? 'scroll-lock' : ''
-// })
-
-const onLockScroll = (isLocked) => {
+const onLockScroll = (isLocked, animate) => {
   // console.log('---> onLockScroll', isLocked);
   // storeDatas.lockScroll = isLocked;
   if (!isLocked) {
     lenis.start()
-    lenis.scrollTo(0, {immediate: true})
+    lenis.scrollTo(0, {immediate: !animate })
   } else {
     storeDatasCurtains.scrollY = window.scrollY
     lenis.stop()

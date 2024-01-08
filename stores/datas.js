@@ -22,6 +22,7 @@ export const useDatasStore = defineStore( 'datas', {
     projectsHomepage: null,
     footer: null,
     keywords: null,
+    keywordsSelected: null,
     lockScroll: false,
     currentPage: null,
     previousPage: null,
@@ -41,6 +42,8 @@ export const useDatasStore = defineStore( 'datas', {
     },
 
     filterProjects(datasKeywordsSelected) {
+      console.log('--- Filter projects', datasKeywordsSelected);
+      this.keywordsSelected = datasKeywordsSelected
       let tmp = []
       datasKeywordsSelected.forEach(item => {
         item.attributes.projets.data.forEach(project => {

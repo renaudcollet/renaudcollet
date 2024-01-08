@@ -72,11 +72,6 @@ const bMountPlanes = computed(() => {
 const { transitionState } = useTransitionComposable();
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
-    // if (storeDatas.previousPage !== null){
-    //   // console.log('emit onLockScroll', false);
-    //   // emit('onLockScroll', false)
-    // }
-    // Remove planes from previous page
     storeDatasCurtains.removePlanes();
   }
 })
