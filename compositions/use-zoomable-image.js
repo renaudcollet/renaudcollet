@@ -27,6 +27,7 @@ export default function useZoomableImage() {
   }
 
   const clearZoomableImage = () => {
+    if (!elZoomables) return;
     elZoomables.forEach((el) => {
       el.removeEventListener('click', fClickZoomable);
     });
