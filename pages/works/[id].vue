@@ -108,7 +108,6 @@ import gsap from 'gsap';
 import { workTransition } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
-import { Vec3 } from 'curtainsjs'
 
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
@@ -155,8 +154,11 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
     setTimeout(() => {
       storeDatasCurtains.removeCurrentPlaneCover()
 
-      initScrollReveal(root.value)
-      initZoomableImage(root.value)
+      if (root.value) {
+        // Add if condition in case user change page quickly, because where are in a setTimeout
+        initScrollReveal(root.value)
+        initZoomableImage(root.value)
+      }
     }, 500)
   }
 })

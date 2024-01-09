@@ -69,6 +69,7 @@ const { transitionState } = useTransitionComposable();
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
     storeDatasCurtains.removePlanes();
+    storeDatasCurtains.removeCurrentPlaneCover();
   }
 })
 
@@ -123,8 +124,11 @@ const onClickProjectItem = (id, plane) => {
 // }
 
 onMounted(() => {
-  console.log('INDEX PAGE - MOUNTED');
-  emit('onScrollZone', scrollZone.value)
+  // ERROR: After page is unmounted, 
+  // and then mounted again, 
+  // root.value is not null, but I can't access its offsetHeight nor getBoundingClientRect()
+  // in console.log, it's not null, but I can't right click on it to inspect it
+  console.log('INDEX PAGE - MOUNTED', root.value);
 
   gsap.set(indexLogo.value, { top: '50%', left: '50%', translateX: '-50%', translateY: '-50%', opacity: 0 })
   gsap.set(job.value, { top: '50%', left: '50%', translateX: '-50%', translateY: '-50%', opacity: 0 })
@@ -151,6 +155,9 @@ onMounted(() => {
     })
 
   nextTick(() => {
+    scrollZone.value.style.height = `${window.innerHeight * 2}px`  
+    emit('onScrollZone', scrollZone.value)
+
     initScrollReveal(root.value)
   })
 })

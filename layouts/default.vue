@@ -17,7 +17,6 @@
       :class="[currentPage.value]"
       :onRender="onRender"
       class="page"
-      ref="page"
       @onLockScroll="onLockScroll"
       @onStartCover3d="onStartCover3d"
       @onScrollZone="onScrollZone"
@@ -63,12 +62,12 @@ const onLockScroll = (isLocked, animate) => {
 }
 
 const onStartCover3d = (value) => {
-  // console.log('default - onStartCover3d', value);
+  console.log('default - onStartCover3d', value);
   showCover3d.value = value
 }
 
 const onScrollZone = (value) => {
-  // console.log('onScrollZone', value);
+  console.log('default - onScrollZone', value);
   scrollZone.value = value
 }
 
@@ -90,7 +89,6 @@ const {
 } = useCurtainsShader();
 
 const scrollVelocity = ref(0);
-const page = ref(null);
 
 let lenis;
 let lastScroll = 0;
@@ -153,6 +151,7 @@ const lerp = (a, b, n) => {
 }
 
 let firstTimeScrollUnlockedValue
+
 // For shader effect on scroll
 const onScroll = () => {
   // console.log('onScroll', lenis.scroll, lastScroll, window.scrollY);
@@ -171,13 +170,9 @@ const onScroll = () => {
       storeDatas.setIsScrollLocked(true)
     }
   }
-
-  // if (page.value && page.value.pageRef.onScroll) {
-  //   // console.log('onScroll default');
-  //   page.value.pageRef.onScroll()
-  // }
   
-  if (cover3d.value) {
+  // console.log('default - onScroll', cover3d.value, showCover3d.value);
+  if (cover3d.value && showCover3d.value) {
     cover3d.value.onScroll()
   }
 }
@@ -218,7 +213,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  // window.removeEventListener('scroll', onScroll)
+  console.log('DEFAULT LAYOUT - UNMOUNTED');
   lenis.destroy()
 })
 

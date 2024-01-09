@@ -53,9 +53,14 @@ const props = defineProps({
 
 const scrollZone = toRef(props, 'scrollZone')
 watch(scrollZone, (newVal, oldVal) => {
+  // console.log('//// scrollZone in cover3d', newVal);
   if (newVal) {
-    // console.log('scrollZone in cover3d', newVal);
     zoneHeight = scrollZone.value.offsetHeight
+    if (zoneHeight === 0) {
+      // I have a bug where height is 0 after unmount and remount
+      zoneHeight = parseInt(scrollZone.value.style.height, 10);
+    }
+    console.log('zoneHeight =', zoneHeight);
   }
 })
 
@@ -75,13 +80,12 @@ const config = {
   camera2: {
     fov: 45,
     near: 0.1,
-    far: 1000,
+    far: 500,
     start: { x: 10, y: 24, z: 35, },
     lookAt: new THREE.Vector3(25, 0, 0),
   },
   showPostProcessing: true,
   shader: {
-    progress: 0,
     simpleSweep: true
   }
 }
@@ -91,9 +95,8 @@ let tlAnimation = gsap.timeline()
 
 // Play start animation
 const startAnimation = () => {
-  
-  window.removeEventListener('resize', resize)
-  raf = requestAnimationFrame(render)
+
+  reInit()
 
   animationStarted = true
   const { start } = config.camera
@@ -103,7 +106,7 @@ const startAnimation = () => {
   tlAnimation.kill()
   tlAnimation = gsap.timeline()  
   tlAnimation
-    .to(canvas.value, { autoAlpha: 1, duration: 1 })
+    .to(canvas.value, { delay: 0.5, autoAlpha: 1, duration: 1 })
     .to(camera.position, {
       x: rise.x, y: rise.y, z: rise.z, duration: 1,
       ease: 'power2.outIn',
@@ -135,6 +138,9 @@ const stopAnimation = () => {
     tlAnimation = gsap.timeline()
     tlAnimation
       .to(canvas.value, { autoAlpha: 0, duration: 1, onComplete: () => {
+        config.progress = 0
+        resetControls()
+        updateMaterial()
         window.removeEventListener('resize', resize)
         window.cancelAnimationFrame(raf)
       } })
@@ -150,6 +156,12 @@ watch(showCover, (newVal, oldVal) => {
     stopAnimation()
   }
 })
+
+const resetControls = () => {
+  controls.enabled = false
+  controls.dispose()
+  controls = null
+}
 
 const initControls = () => {
   controls = new OrbitControls(camera, renderer.domElement);
@@ -174,6 +186,7 @@ const onScroll = () => {
       config.progress = prc
       updateMaterial()
 
+      // Is this smoother ?
       // gsap.killTweensOf(config)
       // gsap.to(config, {
       //   progress: prc, duration: 0.5, 
@@ -192,27 +205,29 @@ onMounted(() => {
     init()
 
     // For hmr reload
-    if (showCover.value || props.start) {
+    if (showCover.value || props.showCover) { 
       startAnimation()
     }
 })
+const reInit = () => {
+  const { start } = config.camera
+  camera.position.set(start.x, start.y, start.z)
+  camera.lookAt(start.lookAt) 
+  
+  camera2.position.set(config.camera2.start.x, config.camera2.start.y, config.camera2.start.z)
+  camera2.lookAt(config.camera2.lookAt)
 
-onUnmounted(() => {
-  if (renderer) {
-    renderer.dispose()
-  }
-
-  if (gui) {
-    gui.destroy()
-  }
-
+  updateMaterial()
+  
   window.removeEventListener('resize', resize)
-  window.cancelAnimationFrame(raf)
-})
+  raf = requestAnimationFrame(render)
+}
 
 const init = () => {
-  if (scene)
+  if (scene) {
+    reInit()
     return
+  }
   
   bDebugGUI = window.location.hash === '#debug'
 
@@ -332,8 +347,8 @@ const init = () => {
   initPostprocessing()
   addLights()
   
-  // window.addEventListener('resize', resize)
-  // raf = requestAnimationFrame(render)
+  window.addEventListener('resize', resize)
+  raf = requestAnimationFrame(render)
 }
 
 let material
@@ -405,7 +420,7 @@ const render = (t) => {
   }
   if (config.showPostProcessing)
     renderer.render(postScene, postCamera);
-  else 
+  else
     renderer.render(scene, camera);
 
   raf = requestAnimationFrame(render)
@@ -527,6 +542,20 @@ const resize = () => {
   camera.updateProjectionMatrix();
   zoneHeight = scrollZone.value.offsetHeight
 }
+
+// NOTE: The component is never unMounted, so this is never called
+onUnmounted(() => {
+  if (renderer) {
+    renderer.dispose()
+  }
+
+  if (gui) {
+    gui.destroy()
+  }
+
+  window.removeEventListener('resize', resize)
+  window.cancelAnimationFrame(raf)
+})
 </script>
 
 <style lang="scss">
