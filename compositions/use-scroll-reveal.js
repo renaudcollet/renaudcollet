@@ -14,6 +14,8 @@ export default function useScrollReveal() {
   let intersectionObserver = null
 
   function initScrollReveal(el) {
+    if (!el) return;
+    
       const targets = Array.from(el.querySelectorAll('.scroll-reveal'))
       if (targets.length === 0) return
 

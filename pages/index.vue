@@ -2,10 +2,10 @@
   <div ref="root">
     <div class="cover">
       <Cover3D ref="cover3d" :start="startCover3d" :scrollZone="scrollZone"/>
-      <div id="index-logo" class="logo" data-header-scroll-minimize>
+      <div id="index-logo" ref="indexLogo" class="logo" data-header-scroll-minimize>
         <Logo />
       </div>
-      <div id="job" class="job">
+      <div id="job" ref="job" class="job">
         Freelance Web Developer
       </div>
     </div>
@@ -52,8 +52,6 @@ const props = defineProps({
   }
 })
 
-const scrollZone = ref(null);
-
 /**
  *  page transition
  * https://stackblitz.com/edit/nuxt-starter-bthjlg?file=pages%2Flayers.vue
@@ -79,6 +77,9 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
 const root = ref(null);
 const startCover3d = ref(false);
 const cover3d = ref(null);
+const scrollZone = ref(null);
+const indexLogo = ref(null);
+const job = ref(null);
 
 const onScroll = () => {
   // console.log(' onScroll index');
@@ -125,18 +126,18 @@ const onClickProjectItem = (id, plane) => {
 // }
 
 onMounted(() => {
-  gsap.set('#index-logo', { top: '50%', left: '50%', translateX: '-50%', translateY: '-50%', opacity: 0 })
-  gsap.set('#job', { top: '50%', left: '50%', translateX: '-50%', translateY: '-50%', opacity: 0 })
+  gsap.set(indexLogo.value, { top: '50%', left: '50%', translateX: '-50%', translateY: '-50%', opacity: 0 })
+  gsap.set(job.value, { top: '50%', left: '50%', translateX: '-50%', translateY: '-50%', opacity: 0 })
 
   const tl = gsap.timeline()
   tl
-    .to('#job', { delay: 0.5, opacity: 1 })
-    .to('#job', { opacity: 0 }, '+=1')
-    .to('#index-logo', { opacity: 1, 
+    .to(job.value, { delay: 0.5, opacity: 1 })
+    .to(job.value, { opacity: 0 }, '+=1')
+    .to(indexLogo.value, { opacity: 1, 
       onComplete: () => {
         startCover3d.value = true
       }}, '+=0.5')
-    .to('#index-logo', { opacity: 0, 
+    .to(indexLogo.value, { opacity: 0, 
       onComplete: () => {
         // initLogoObserver()
       }}, '+=3')
@@ -148,6 +149,7 @@ onMounted(() => {
     })
 
   nextTick(() => {
+    console.log('nextTick initScrollReveal', root.value);
     initScrollReveal(root.value)
   })
 })
