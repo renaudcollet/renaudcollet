@@ -152,7 +152,9 @@ export default {
         },
 
         toggleFullscreen() {
-            const element = this.$el.parentNode
+            let element
+            if (this.$el)
+                element = this.$el.parentNode
 
             // console.log('TOGGLE FULLSCREEN', screenfull.isEnabled, document.fullscreenElement)
             // if fullscreen is enabled (has capabilites)
