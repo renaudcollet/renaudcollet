@@ -2,7 +2,7 @@
 	precision mediump float;
 #endif
 
-uniform float time;
+// uniform float time;
 uniform float progress;
 uniform sampler2D uTexture1;
 uniform sampler2D uTexture2;

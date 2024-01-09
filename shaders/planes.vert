@@ -18,9 +18,9 @@ varying vec3 vVertexPosition;
 varying vec2 vTextureCoord;
 
 uniform float uPlaneDeformation;
-uniform float hovered;
+// uniform float hovered;
 uniform float uZPos;
-uniform float isText;
+// uniform float isText;
 
 void main() {
   vec3 vertexPosition = aVertexPosition;

@@ -60,16 +60,16 @@
                         type: "1f",
                         value: 1,
                     },
-                    hovered: {
-                        name: "uHovered",
-                        type: "1f",
-                        value: 0,
-                    },
-                    isText: {
-                        name: "isText",
-                        type: "1f",
-                        value: 1,
-                    }
+                    // hovered: {
+                    //     name: "uHovered",
+                    //     type: "1f",
+                    //     value: 0,
+                    // },
+                    // isText: {
+                    //     name: "isText",
+                    //     type: "1f",
+                    //     value: 1,
+                    // }
                 },
             };
 

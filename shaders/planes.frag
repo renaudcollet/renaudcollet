@@ -9,8 +9,8 @@ varying float yPos;
 uniform sampler2D uTexture;
 uniform vec2 uResolution;
 uniform vec2 uSize;
-uniform float hovered;
-uniform float isText;
+// uniform float hovered;
+// uniform float isText;
 uniform float uScale;
 
 uniform float uOpenProgress;

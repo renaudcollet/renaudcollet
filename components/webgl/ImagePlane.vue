@@ -106,16 +106,16 @@ const planeProps = {
         // value: isVideo() ? 0. : 0.2,
         value: 0.,
     },
-    hovered: {
-        name: "uHovered",
-        type: "1f",
-        value: 0,
-    },
-    isText: {
-        name: "isText",
-        type: "1f",
-        value: 0,
-    },
+    // hovered: {
+    //     name: "uHovered",
+    //     type: "1f",
+    //     value: 0,
+    // },
+    // isText: {
+    //     name: "isText",
+    //     type: "1f",
+    //     value: 0,
+    // },
     uOpenProgress: {
         name: "uOpenProgress",
         type: "1f",

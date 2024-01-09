@@ -19,9 +19,9 @@ export const vertexShader = `
   varying vec2 vTextureCoord;
 
   uniform float uPlaneDeformation;
-  uniform float hovered;
+  // uniform float hovered;
   uniform float uZPos;
-  uniform float isText;
+  // uniform float isText;
 
   void main() {
     vec3 vertexPosition = aVertexPosition;
@@ -58,7 +58,7 @@ export const fragmentShader = `
   uniform float uNeedsRatio;
   uniform float uRatio;
   uniform float uNaturalRatio;
-  uniform float hovered;
+  // uniform float hovered;
   uniform float isText;
   uniform float uScale;
 
