@@ -21,6 +21,13 @@ import sweepFrag from '~/shaders/sweep.frag'
 import coverFrag from '~/shaders/cover.frag'
 import coverVert from '~/shaders/cover.vert'
 
+import px from '~/assets/textures/px.png'
+import nx from '~/assets/textures/nx.png'
+import py from '~/assets/textures/py.png'
+import ny from '~/assets/textures/ny.png'
+import pz from '~/assets/textures/pz.png'
+import nz from '~/assets/textures/nz.png'
+
 import modelNature from '~/assets/3d/nature-scene.glb'
 // import lethargy from 'lethargy'
 // import VirtualScroll from 'virtual-scroll'
@@ -272,16 +279,15 @@ const init = () => {
 
   // Env Map
   // https://github.com/mrdoob/three.js/blob/master/examples/webgl_materials_envmaps.html
-  // const loader = new THREE.CubeTextureLoader()
+  const loader = new THREE.CubeTextureLoader()
   // loader.setPath( 'assets/textures/' )
-  // this.backgroundTexture = loader.load( [ 'px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg' ] )
-  // this.backgroundTexture.encoding = sRGBEncoding
-  // scene.background = this.backgroundTexture
-  // scene.background = new Color(0xffffff)
-  // this.environmentTexture = loader.load( [ 'px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg' ] )
-  // // this.environmentTexture = loader.load( [ 'nx-fef8e7.jpg', 'nx-fef8e7.jpg', 'nx-fef8e7.jpg', 'nx-fef8e7.jpg', 'nx-fef8e7.jpg', 'nx-fef8e7.jpg' ] )
-  // this.environmentTexture.encoding = THREE.SRGBColorSpace
-  // scene.environment = this.environmentTexture
+  const backgroundTexture = loader.load( [ px, nx, py, ny, pz, nz ] )
+  // backgroundTexture.encoding = sRGBEncoding
+  scene.background = backgroundTexture
+  scene.background = new THREE.Color(0xffffff)
+  const environmentTexture = loader.load( [ px, nx, py, ny, pz, nz ] )
+  // environmentTexture.encoding = THREE.SRGBColorSpace
+  scene.environment = environmentTexture
 
   // KTX2 Loader
   // this.ktx2Loader = new KTX2Loader()
