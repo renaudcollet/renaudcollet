@@ -6,7 +6,7 @@
 
 <script setup>
 import GUI from 'lil-gui';
-import { useDatasStore } from '~/stores/datas';
+// import { useDatasStore } from '~/stores/datas';
 
 import * as THREE from 'three'
 import { REVISION } from 'three'
@@ -23,7 +23,7 @@ import coverVert from '~/shaders/cover.vert'
 
 import modelNature from '~/assets/3d/nature-scene.glb'
 // import lethargy from 'lethargy'
-import VirtualScroll from 'virtual-scroll'
+// import VirtualScroll from 'virtual-scroll'
 import { toRef } from '@vueuse/core';
 
 const canvas = ref(null)
@@ -36,13 +36,12 @@ let pixelRatio
 let renderTarget1, renderTarget2
 let dracoLoader, gltfLoader
 let controls
-let scroller
 let raf
 
-const storeDatas = useDatasStore();
+// const storeDatas = useDatasStore();
 
 const props = defineProps({
-  start: {
+  showCover: {
     type: Boolean,
     default: false
   },
@@ -53,6 +52,12 @@ const props = defineProps({
 })
 
 const scrollZone = toRef(props, 'scrollZone')
+watch(scrollZone, (newVal, oldVal) => {
+  if (newVal) {
+    // console.log('scrollZone in cover3d', newVal);
+    zoneHeight = scrollZone.value.offsetHeight
+  }
+})
 
 let bDebugGUI = false
 let gui
@@ -81,14 +86,24 @@ const config = {
   }
 }
 
+let animationStarted = false
+let tlAnimation = gsap.timeline()
+
 // Play start animation
-const playStartAnimation = () => {
+const startAnimation = () => {
+  
+  window.removeEventListener('resize', resize)
+  raf = requestAnimationFrame(render)
+
+  animationStarted = true
   const { start } = config.camera
   const { rise } = config.camera
   const { end } = config.camera
-  const tl = gsap.timeline()
-  tl 
-    .to('#three-canvas', { opacity: 1, duration: 1 })
+
+  tlAnimation.kill()
+  tlAnimation = gsap.timeline()  
+  tlAnimation
+    .to(canvas.value, { autoAlpha: 1, duration: 1 })
     .to(camera.position, {
       x: rise.x, y: rise.y, z: rise.z, duration: 1,
       ease: 'power2.outIn',
@@ -111,17 +126,35 @@ const playStartAnimation = () => {
       }
     })
 }
-const startAnimation = toRef(props, 'start')
-watch(startAnimation, (newVal, oldVal) => {
+
+const stopAnimation = () => {
+  console.log('stopAnimation', animationStarted);
+  if (animationStarted) {
+    animationStarted = false
+    tlAnimation.kill()
+    tlAnimation = gsap.timeline()
+    tlAnimation
+      .to(canvas.value, { autoAlpha: 0, duration: 1, onComplete: () => {
+        window.removeEventListener('resize', resize)
+        window.cancelAnimationFrame(raf)
+      } })
+  }
+}
+
+const showCover = toRef(props, 'showCover')
+watch(showCover, (newVal, oldVal) => {
+  // console.log('WATCH - showCover', newVal);
   if (newVal) { 
-    playStartAnimation()     
+    startAnimation()     
+  } else {
+    stopAnimation()
   }
 })
 
 const initControls = () => {
   controls = new OrbitControls(camera, renderer.domElement);
   controls.addEventListener('change', () => {
-    console.log('controls change');
+    // console.log('controls change');
     updateMaterial()
   })
   controls.enabled = true
@@ -132,8 +165,9 @@ let zoneHeight = 0
 let prc = 0
 
 const onScroll = () => {
-    // console.log('   onScroll cover3d');
-    zoneHeight = scrollZone.value.offsetHeight
+    // console.log('   onScroll cover3d', zoneHeight);
+    if (zoneHeight === 0) return
+
     prc = window.scrollY / zoneHeight
     // console.log(`cover3d onScroll, scrollY: ${window.scrollY}, zone: ${zoneHeight}`, prc);
     if (prc < 1.1) {
@@ -158,50 +192,9 @@ onMounted(() => {
     init()
 
     // For hmr reload
-    if (startAnimation.value || props.start) {
-      playStartAnimation()
+    if (showCover.value || props.start) {
+      startAnimation()
     }
-
-    // TODO: THIS IS NOT THE GOOD WAY TO HANDLE THE SCROLL
-    // I SHOULD NOT HIJACK THE SCROLL, BUT INSTEAD ADD A BIG EMPTY DIV BEFORE ALL THE PROJECTS
-    // THEN LET THE PAGE SCROLL NORMALY AND MAKE THE SHADER PROGRESS ACCORDING TO THE SCROLL OVER THE EMPTY DIV
-    // OR: KEEP IT THAT WAY AND USE overscroll-behavior: none; ON THE BODY, to prevent page to reload on mobile
-
-    // Use a virtual scroll while the scroll is locked untill cover 3d animations are finished
-    // Once the animations are finished, the scroll is unlocked and the virtual scroll is disabled
-    /* let currentState = 0;
-    let prcnt = 0;
-    scroller = new VirtualScroll()
-    scroller.on(event => {
-      // TODO: To prevent jumps when scrolling up, need to use scroll event in default.vue
-      // console.log(event, window.scrollY)
-      if(storeDatas.lockScroll) {
-        currentState -= event.deltaY / 4000;
-        prcnt -= event.deltaY / 4000;
-
-        if (prcnt < 0) prcnt = 0
-
-        gsap.killTweensOf(config)
-        gsap.to(config, {
-          progress: prcnt, duration: 0.5, 
-          onUpdate: () => {
-            updateMaterial()
-            // storeDatas.setIsScrollLocked(prcnt < 1)
-            if (prcnt > 1)
-              storeDatas.setIsScrollLocked(false)
-          },
-          onComplete: () => {
-            if (prcnt > 1)
-              storeDatas.setIsScrollLocked(false)
-            // storeDatas.setIsScrollLocked(prcnt < 1)
-          }
-        })
-      }
-    }) */
-
-    // console.log('scrollZone', scrollZone.value);
-    // zoneHeight = scrollZone.value.offsetHeight
-    // window.lenis.on('scroll', onScrollCover)
 })
 
 onUnmounted(() => {
@@ -218,6 +211,9 @@ onUnmounted(() => {
 })
 
 const init = () => {
+  if (scene)
+    return
+  
   bDebugGUI = window.location.hash === '#debug'
 
   width = canvas.value.offsetWidth;
@@ -336,9 +332,8 @@ const init = () => {
   initPostprocessing()
   addLights()
   
-  window.addEventListener('resize', resize)
-  
-  raf = requestAnimationFrame(render)
+  // window.addEventListener('resize', resize)
+  // raf = requestAnimationFrame(render)
 }
 
 let material
@@ -530,6 +525,7 @@ const resize = () => {
   renderer.setSize(width, height);
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
+  zoneHeight = scrollZone.value.offsetHeight
 }
 </script>
 

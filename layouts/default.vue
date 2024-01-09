@@ -1,5 +1,6 @@
 <template>
   <Header></Header>
+  <Cover3D ref="cover3d" :showCover="showCover3d" :scrollZone="scrollZone"/>
   <Curtains 
     id="CurtainsCanvas" 
     ref="curtains" 
@@ -18,6 +19,8 @@
       class="page"
       ref="page"
       @onLockScroll="onLockScroll"
+      @onStartCover3d="onStartCover3d"
+      @onScrollZone="onScrollZone"
     />
   </Curtains>
   <MouseCursor />
@@ -25,6 +28,7 @@
 </template>
 
 <script setup>
+import Cover3D from '~/components/webgl/Cover3D.vue';
 import { useDatasStore, S_DATA_SEO } from '~/stores/datas';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 // import { Curtains } from "vue-curtains";
@@ -40,6 +44,10 @@ const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
 await fetchDatas(S_DATA_SEO);
 
+const showCover3d = ref(false)
+const scrollZone = ref(null)
+const cover3d = ref(null);
+
 const storeDatasCurtains = useDatasCurtainsStore();
 
 const onLockScroll = (isLocked, animate) => {
@@ -52,6 +60,16 @@ const onLockScroll = (isLocked, animate) => {
     storeDatasCurtains.scrollY = window.scrollY
     lenis.stop()
   } 
+}
+
+const onStartCover3d = (value) => {
+  // console.log('default - onStartCover3d', value);
+  showCover3d.value = value
+}
+
+const onScrollZone = (value) => {
+  // console.log('onScrollZone', value);
+  scrollZone.value = value
 }
 
 // const datasSEO = storeDatas.seo.data.attributes;
@@ -108,7 +126,7 @@ const onCurtainsReady = (_curtains) => {
 
 storeDatas.setCurrentPage(route.fullPath)
 watch(() => route.fullPath, (value) => {
-  // console.log('DEFAULT LAYOUT - WACH route', value)
+  console.log('DEFAULT LAYOUT - WACH route', value)
   storeDatas.setCurrentPage(value)
 
   // if (window.gtag)
@@ -154,13 +172,18 @@ const onScroll = () => {
     }
   }
 
-  if (page.value && page.value.pageRef.onScroll) {
-    // console.log('onScroll default');
-    page.value.pageRef.onScroll()
+  // if (page.value && page.value.pageRef.onScroll) {
+  //   // console.log('onScroll default');
+  //   page.value.pageRef.onScroll()
+  // }
+  
+  if (cover3d.value) {
+    cover3d.value.onScroll()
   }
 }
 
 onMounted(() => {
+  console.log('DEFAULT LAYOUT - MOUNTED');
   config = window.location.hash === '#config'
 
   const c1 = 1.70158;

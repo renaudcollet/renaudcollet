@@ -1,7 +1,6 @@
 <template>
   <div ref="root">
     <div class="cover">
-      <Cover3D ref="cover3d" :start="startCover3d" :scrollZone="scrollZone"/>
       <div id="index-logo" ref="indexLogo" class="logo" data-header-scroll-minimize>
         <Logo />
       </div>
@@ -28,7 +27,6 @@
 </template>
 
 <script setup>
-import Cover3D from '~/components/webgl/Cover3D.vue';
 import { useDatasStore, S_DATA_ACCUEIL } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 // import useLogoObserver from '~/compositions/use-logo-observer';
@@ -60,7 +58,7 @@ definePageMeta({
   pageTransition: defaultTransition,
 });
 
-const emit = defineEmits(['onLockScroll'])
+const emit = defineEmits(['onLockScroll', 'onStartCover3d', 'onScrollZone'])
 
 // Curtains
 const storeDatasCurtains = useDatasCurtainsStore();
@@ -76,7 +74,6 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
 
 const root = ref(null);
 const startCover3d = ref(false);
-const cover3d = ref(null);
 const scrollZone = ref(null);
 const indexLogo = ref(null);
 const job = ref(null);
@@ -126,6 +123,9 @@ const onClickProjectItem = (id, plane) => {
 // }
 
 onMounted(() => {
+  console.log('INDEX PAGE - MOUNTED');
+  emit('onScrollZone', scrollZone.value)
+
   gsap.set(indexLogo.value, { top: '50%', left: '50%', translateX: '-50%', translateY: '-50%', opacity: 0 })
   gsap.set(job.value, { top: '50%', left: '50%', translateX: '-50%', translateY: '-50%', opacity: 0 })
 
@@ -136,6 +136,8 @@ onMounted(() => {
     .to(indexLogo.value, { opacity: 1, 
       onComplete: () => {
         startCover3d.value = true
+        console.log('emit onStartCover3d', true);
+        emit('onStartCover3d', true)
       }}, '+=0.5')
     .to(indexLogo.value, { opacity: 0, 
       onComplete: () => {
@@ -149,7 +151,6 @@ onMounted(() => {
     })
 
   nextTick(() => {
-    console.log('nextTick initScrollReveal', root.value);
     initScrollReveal(root.value)
   })
 })

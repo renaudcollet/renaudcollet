@@ -128,7 +128,7 @@ definePageMeta({
   pageTransition: workTransition,
 });
 
-const emit = defineEmits(['onLockScroll'])
+const emit = defineEmits(['onLockScroll', 'onStartCover3d'])
 
 const root = ref(null);
 const imagePlane = ref(null);
@@ -203,6 +203,8 @@ const skipCoverAnimation = computed(() => {
 })
 
 onMounted(() => {
+  console.log('WORK ID PAGE - MOUNTED');
+
   gsap.killTweensOf('#header-logo')
   gsap.to('#header-logo', { autoAlpha: 1 })
 
@@ -217,6 +219,11 @@ onMounted(() => {
     //   initScrollReveal(root.value)
     //   initZoomableImage(root.value)
     // }
+
+      setTimeout(() => {
+        console.log('emit onStartCover3d', false);
+        emit('onStartCover3d', false)
+      }, 1000)
   })
 })
 
