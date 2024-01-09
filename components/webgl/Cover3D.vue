@@ -129,6 +129,30 @@ const initControls = () => {
 }
 
 let zoneHeight = 0
+let prc = 0
+
+const onScroll = () => {
+    // console.log('   onScroll cover3d');
+    zoneHeight = scrollZone.value.offsetHeight
+    prc = window.scrollY / zoneHeight
+    // console.log(`cover3d onScroll, scrollY: ${window.scrollY}, zone: ${zoneHeight}`, prc);
+    if (prc < 1.1) {
+      config.progress = prc
+      updateMaterial()
+
+      // gsap.killTweensOf(config)
+      // gsap.to(config, {
+      //   progress: prc, duration: 0.5, 
+      //   onUpdate: () => {
+      //     updateMaterial()
+      //   }
+      // })
+    }
+}
+
+defineExpose({
+  onScroll
+})
 
 onMounted(() => {
     init()
@@ -175,23 +199,9 @@ onMounted(() => {
       }
     }) */
 
-    console.log('scrollZone', scrollZone.value);
+    // console.log('scrollZone', scrollZone.value);
     // zoneHeight = scrollZone.value.offsetHeight
-    let prc = 0
-    window.lenis.on('scroll', () => {
-      zoneHeight = scrollZone.value.offsetHeight
-      prc = window.scrollY / zoneHeight
-      // console.log(`cover3d onScroll, scrollY: ${window.scrollY}, zone: ${zoneHeight}`, prc);
-      if (prc < 1.1) {
-        gsap.killTweensOf(config)
-        gsap.to(config, {
-          progress: prc, duration: 0.5, 
-          onUpdate: () => {
-            updateMaterial()
-          }
-        })
-      }
-    })
+    // window.lenis.on('scroll', onScrollCover)
 })
 
 onUnmounted(() => {

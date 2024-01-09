@@ -1,7 +1,7 @@
 <template>
   <div ref="root">
     <div class="cover">
-      <Cover3D :start="startCover3d" :scrollZone="scrollZone"/>
+      <Cover3D ref="cover3d" :start="startCover3d" :scrollZone="scrollZone"/>
       <div id="index-logo" class="logo" data-header-scroll-minimize>
         <Logo />
       </div>
@@ -78,6 +78,18 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
 
 const root = ref(null);
 const startCover3d = ref(false);
+const cover3d = ref(null);
+
+const onScroll = () => {
+  // console.log(' onScroll index');
+  if (cover3d.value) {
+    cover3d.value.onScroll()
+  }
+}
+
+defineExpose({
+  onScroll
+})
 
 // const { initLogoObserver, clearLogoObserver } = useLogoObserver();
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();

@@ -54,7 +54,7 @@ export default {
       emit("before-create");
 
       plane = new Plane(curtains, planeEl.value, params);
-      console.log('Add plane', plane);
+      // console.log('Add plane', plane);
 
       const rt =
         renderTarget && renderTarget.value

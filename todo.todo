@@ -17,6 +17,11 @@ Intégration:
         $font-title-color: #f7eedd;
         $font-color: #fffaf2; // #928282
 
+Optimization:
+    https://medium.com/@khalidoghli7/lets-cover-some-powerful-feature-to-be-vue-jedi-master-2e0134910a0b#de97
+    ☐ Use defineAsyncComponent for footer
+    ☐ Use defineAsyncComponent for filters ?
+
 Page transition:
     // Nuxt page transition with gsap : https://stackblitz.com/edit/nuxt-starter-bthjlg
     ☐ Home to works page transition

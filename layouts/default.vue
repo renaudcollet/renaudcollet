@@ -16,6 +16,7 @@
       :class="[currentPage.value]"
       :onRender="onRender"
       class="page"
+      ref="page"
       @onLockScroll="onLockScroll"
     />
   </Curtains>
@@ -71,6 +72,8 @@ const {
 } = useCurtainsShader();
 
 const scrollVelocity = ref(0);
+const page = ref(null);
+
 let lenis;
 let lastScroll = 0;
 let config = false;
@@ -150,6 +153,11 @@ const onScroll = () => {
       storeDatas.setIsScrollLocked(true)
     }
   }
+
+  if (page.value && page.value.pageRef.onScroll) {
+    // console.log('onScroll default');
+    page.value.pageRef.onScroll()
+  }
 }
 
 onMounted(() => {
@@ -188,7 +196,12 @@ onMounted(() => {
 
 onUnmounted(() => {
   // window.removeEventListener('scroll', onScroll)
-  lenis.off('scroll', onScroll)
+  lenis.destroy()
+})
+
+onErrorCaptured((err) => {
+  // handle the error here
+  console.error('default layer error captured : ' , err)
 })
 </script>
 
