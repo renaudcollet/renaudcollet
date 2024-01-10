@@ -67,7 +67,7 @@ watch(scrollZone, (newVal, oldVal) => {
       // I have a bug where height is 0 after unmount and remount
       zoneHeight = parseInt(scrollZone.value.style.height, 10);
     }
-    console.log('zoneHeight =', zoneHeight);
+    // console.log('zoneHeight =', zoneHeight);
   }
 })
 
@@ -138,7 +138,7 @@ const startAnimation = () => {
 }
 
 const stopAnimation = () => {
-  console.log('stopAnimation', animationStarted);
+  // console.log('stopAnimation', animationStarted);
   if (animationStarted) {
     animationStarted = false
     tlAnimation.kill()

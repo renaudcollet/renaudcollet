@@ -142,6 +142,7 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
     console.log('PAGE ID - transitionState.transitionComplete', storeDatasCurtains.scrollY);
     
+    storeDatasCurtains.scrollToTopCompleteAfterTransition = false;
     console.log('emit - onLockScroll', false);
     emit('onLockScroll', false)
 
@@ -160,8 +161,9 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
     }, 500)
 
     setTimeout(() => {
+      storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
       storeDatasCurtains.removeCurrentPlaneCover()
-    }, 1000)
+    }, 2000)
   }
 })
 
@@ -192,7 +194,8 @@ const {
 const scrollVelocity = toRef(props, 'scrollVelocity');
 watch(scrollVelocity, (newVal, oldVal) => {
   // console.log('watch scrollVelocity', newVal, oldVal);
-  updateScrollVelocity(newVal)
+  if (storeDatasCurtains.scrollToTopCompleteAfterTransition)
+    updateScrollVelocity(newVal)
 })
 
 const coverSrc = computed(() => {

@@ -7,6 +7,7 @@ export const useDatasCurtainsStore = defineStore( 'datasCurtains', {
     planesToRemove: [],
     currentPlaneCover: null,
     scrollY: 0,
+    scrollToTopCompleteAfterTransition: true
   }),
 
   actions: {
