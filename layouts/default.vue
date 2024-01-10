@@ -50,15 +50,15 @@ const cover3d = ref(null);
 const storeDatasCurtains = useDatasCurtainsStore();
 
 const onLockScroll = (isLocked, animate) => {
-  // console.log('---> onLockScroll', isLocked);
-  // storeDatas.lockScroll = isLocked;
-  if (!isLocked) {
-    lenis.start()
-    // lenis.scrollTo(0, {immediate: !animate })
-  } else {
-    storeDatasCurtains.scrollY = window.scrollY
-    lenis.stop()
-  } 
+  // // console.log('---> onLockScroll', isLocked);
+  // // storeDatas.lockScroll = isLocked;
+  // if (!isLocked) {
+  //   lenis.start()
+  //   // lenis.scrollTo(0, {immediate: !animate })
+  // } else {
+  //   storeDatasCurtains.scrollY = window.scrollY
+  //   lenis.stop()
+  // } 
 }
 
 const onStartCover3d = (value) => {
@@ -159,17 +159,17 @@ const onScroll = () => {
   scrollVelocity.value = lerp(lenis.scroll - lastScroll, 0, 0.2);
   lastScroll = lenis.scroll
 
-  if (storeDatas.lockScroll === false) {
-    // Get firstime scroll was unlocked and check that value on every scroll
-    if (!firstTimeScrollUnlockedValue) {
-      firstTimeScrollUnlockedValue = lenis.scroll;
-      // console.log('lenis scroll value = ', firstTimeScrollUnlockedValue);
-    }
-    if (lenis.scroll < firstTimeScrollUnlockedValue) {
-      // console.log('lock the scroll !');
-      storeDatas.setIsScrollLocked(true)
-    }
-  }
+  // if (storeDatas.lockScroll === false) {
+  //   // Get firstime scroll was unlocked and check that value on every scroll
+  //   if (!firstTimeScrollUnlockedValue) {
+  //     firstTimeScrollUnlockedValue = lenis.scroll;
+  //     // console.log('lenis scroll value = ', firstTimeScrollUnlockedValue);
+  //   }
+  //   if (lenis.scroll < firstTimeScrollUnlockedValue) {
+  //     // console.log('lock the scroll !');
+  //     storeDatas.setIsScrollLocked(true)
+  //   }
+  // }
   
   // console.log('default - onScroll', cover3d.value, showCover3d.value);
   if (cover3d.value && showCover3d.value) {

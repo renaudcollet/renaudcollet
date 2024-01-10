@@ -43,8 +43,8 @@ export default function useCurtainsShader() {
   let gui = null;
 
   const onRender = (plane) => {
-    let planeDeformation = plane.uniforms.planeDeformation.value;
-    plane.uniforms.planeDeformation.value = lerp(planeDeformation, scrollVelocity * 0.01, 0.2);
+    // let planeDeformation = plane.uniforms.planeDeformation.value;
+    // plane.uniforms.planeDeformation.value = lerp(planeDeformation, scrollVelocity * 0.01, 0.2);
   }
 
   const regularLerp = (a, b, n) => {

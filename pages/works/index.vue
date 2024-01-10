@@ -88,8 +88,13 @@ const bMountPlanes = computed(() => {
 const { transitionState } = useTransitionComposable();
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
-    // emit('onLockScroll', false)
+    storeDatasCurtains.scrollToTopCompleteAfterTransition = false;
+
     storeDatasCurtains.removePlanes();
+
+    setTimeout(() => {
+      storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
+    }, 2000)
   }
 })
 
@@ -105,7 +110,8 @@ const {
 
 const scrollVelocity = toRef(props, 'scrollVelocity');
 watch(scrollVelocity, (newVal, oldVal) => {
-  updateScrollVelocity(newVal)
+  if (storeDatasCurtains.scrollToTopCompleteAfterTransition)
+    updateScrollVelocity(newVal)
 })
 
 // Select filter

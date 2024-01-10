@@ -1,12 +1,12 @@
 <template>
   <div ref="root" class="page">
-    <ClientOnly>
+    <!-- <ClientOnly>
       <ShaderPass 
         :params="firstPassProps"
         @render="onFirstPassRender"
         @ready="onFirstPassReady"
       />
-    </ClientOnly>
+    </ClientOnly> -->
     <section class="cover-top">
       <div class="cover-top__image">
         <ImagePlane 
@@ -146,9 +146,6 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
     console.log('emit - onLockScroll', false);
     emit('onLockScroll', false)
 
-    // storeDatas.lockScroll = false;
-    // document.body.getBoundingClientRect() // Necessary to force repaint
-
     // Remove planes from previous page
     storeDatasCurtains.removePlanes();
 
@@ -173,7 +170,6 @@ const route = useRoute()
 const datasProjets = storeDatas.projects;
 
 const currentProject = datasProjets.find(project => {
-  // console.log('project.slug', `${project.attributes.slug} === ${route.params.id}`);
   return project.attributes.slug === route.params.id
 })
 
@@ -194,7 +190,7 @@ const {
 const scrollVelocity = toRef(props, 'scrollVelocity');
 watch(scrollVelocity, (newVal, oldVal) => {
   // console.log('watch scrollVelocity', newVal, oldVal);
-  if (storeDatasCurtains.scrollToTopCompleteAfterTransition)
+  // if (storeDatasCurtains.scrollToTopCompleteAfterTransition)
     updateScrollVelocity(newVal)
 })
 
