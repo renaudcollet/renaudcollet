@@ -68,6 +68,8 @@ const bMountPlanes = computed(() => {
 const { transitionState } = useTransitionComposable();
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
+    console.log('emit onLockScroll', false);
+    emit('onLockScroll', false)
     storeDatasCurtains.removePlanes();
     storeDatasCurtains.removeCurrentPlaneCover();
   }
@@ -108,8 +110,6 @@ watch(scrollVelocity, (newVal, oldVal) => {
 const onClickProjectItem = (id, plane) => {
   storeDatasCurtains.currentPlaneCover = plane
   console.log('onClickProjectItem', id, plane);
-  console.log('emit onLockScroll', false);
-  emit('onLockScroll', false)
 }
 
 // const onClickAnimationComplete = (plane, rect) => {

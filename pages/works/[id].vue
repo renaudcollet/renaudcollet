@@ -159,7 +159,7 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
         initScrollReveal(root.value)
         initZoomableImage(root.value)
       }
-    }, 500)
+    }, 700)
   }
 })
 

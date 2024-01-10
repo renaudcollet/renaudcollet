@@ -137,16 +137,24 @@ watch(isVisible, (newVal, oldVal) => {
 })
 
 let isClicked = false;
+let planeHtml = null;
 
 const onClick = () => {
 
   isClicked = true;
 
+  imagePlane.value.planeMesh.htmlElement.style.zIndex = 1000;
+  imagePlane.value.resize();
+
   // stop scroll
   emit('onClick', props.id, imagePlane.value.planeMesh)
 
+  console.log('Selected Plane render order', imagePlane.value.planeMesh.renderOrder);
+  // imagePlane.value.planeMesh.setRenderOrder(50)
+  // console.log('Selected Plane render order', imagePlane.value.planeMesh.renderOrder);
+
   // animate imagePlane to full screen, and position it to the center
-  const planeHtml = imagePlane.value.planeMesh.htmlElement;
+  planeHtml = imagePlane.value.planeMesh.htmlElement;
   // Get the bounding rectangle of the relative element
   // const coverElement = imagePlane.value.renderer
   const rect = planeHtml.parentNode.parentNode.getBoundingClientRect()
@@ -164,6 +172,7 @@ const onClick = () => {
   planeHtml.style.left = `${rect.left}px`;
 
   gsap.to(planeHtml, {
+    // delay: 0.01,
     duration: durationLeaveDefault,
     ease: 'power4.out',
     scale: 1,
@@ -181,6 +190,7 @@ const onClick = () => {
     },
     onComplete: () => {
       imagePlane.value.resize();
+      imagePlane.value.planeMesh.watchScroll = false;
       // emit('onClickAnimationComplete', props.id, imagePlane.value.planeMesh) // Never triggered because of vuejs transition already unmounted this component  
     }
   })
@@ -202,9 +212,7 @@ onMounted(() => {
 
   // Debug resize
   window['resizeItem'+props.id] = () => {
-
     onClick();
-
     return imagePlane.value.planeMesh.htmlElement;
   }
 })
@@ -213,9 +221,10 @@ onMounted(() => {
 //   // console.log('Unmounted ProjectItem', props.id, props.datas);
 // })
 
-// onBeforeUnmount(() => {
-//   // console.log('onBeforeUnmount ProjectItem', props.id, props.datas);
-// })
+onBeforeUnmount(() => {
+  // console.log('onBeforeUnmount ProjectItem', props.id, props.datas);
+  // gsap.killTweensOf(planeHtml)
+})
 </script>
 
 <style lang="scss">

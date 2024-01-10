@@ -31,6 +31,7 @@ export const workTransition = {
     toggleTransitionComplete(false);
     gsap
       .timeline({ paused: true, onComplete: done })
+      // .timeline({ paused: true })
       .to(el, { autoAlpha: 0, delay: 0, duration: durationLeaveDefault })
       .play();
   },
@@ -56,6 +57,7 @@ export const defaultTransition = {
     toggleTransitionComplete(false);
     gsap
       .timeline({ paused: true, onComplete: done })
+      // .timeline({ paused: true })
       .to(el, { autoAlpha: 0, delay: 0, duration: durationLeaveDefault })
       .play();
   },

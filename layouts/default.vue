@@ -54,7 +54,7 @@ const onLockScroll = (isLocked, animate) => {
   // storeDatas.lockScroll = isLocked;
   if (!isLocked) {
     lenis.start()
-    lenis.scrollTo(0, {immediate: !animate })
+    // lenis.scrollTo(0, {immediate: !animate })
   } else {
     storeDatasCurtains.scrollY = window.scrollY
     lenis.stop()
