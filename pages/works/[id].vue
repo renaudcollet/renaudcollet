@@ -152,14 +152,16 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
     storeDatasCurtains.removePlanes();
 
     setTimeout(() => {
-      storeDatasCurtains.removeCurrentPlaneCover()
-
       if (root.value) {
         // Add if condition in case user change page quickly, because where are in a setTimeout
         initScrollReveal(root.value)
         initZoomableImage(root.value)
       }
-    }, 700)
+    }, 500)
+
+    setTimeout(() => {
+      storeDatasCurtains.removeCurrentPlaneCover()
+    }, 1000)
   }
 })
 
