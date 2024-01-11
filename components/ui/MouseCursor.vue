@@ -1,5 +1,5 @@
 <template>
-  <div class="mousecursor" :class="{ mounted: isMounted }">
+  <div class="mousecursor">
     <svg
       class="outline"
       x="0px"
@@ -65,6 +65,8 @@ export default {
       mouseSVGCenter: null,
       mouseSVGZoomIn: null,
       isMounted: false,
+      hasMouseMoved: false,
+      isMobileOrTablet : true,
 
       oTweenOutlineBigShow: {
         delay: 0,
@@ -141,8 +143,17 @@ export default {
     }
   },
   mounted() {
-    if (!this.isServer) {
+    // if (!this.isServer) {
       this.isMounted = true
+
+      // Detect if mobile or tablet device
+      if (window.innerWidth < 1024) {
+        this.isMobileOrTablet = true
+      } else {
+        this.isMobileOrTablet = false
+      }
+
+
       this.mouseContainer = document.querySelector('.mousecursor')
       this.mouseSVGOutline = document.querySelector('.mousecursor svg.outline')
       this.mouseSVGOutlineBig = document.querySelector(
@@ -375,13 +386,21 @@ export default {
         }
       })
       document.addEventListener('mousemove', this.onMouseMove)
-    }
+    // }
   },
   methods: {
     onMouseMove(e) {
       // console.log(`onMouseMove`, e)
+      // TODO: Draw triangle in the shader
+
+      if (!this.isMobileOrTablet && !this.hasMouseMoved) {
+        this.hasMouseMoved = true
+        this.mouseContainer.style.display = 'block'
+      }
+
       gsap.set(this.mouseSVGCenter, {
         // duration: 0.1,
+        opacity: 1,
         x: e.clientX - 20, // / window.innerWidth,
         y: e.clientY - 30 // / window.innerHeight
       })
@@ -456,10 +475,6 @@ export default {
 .mousecursor {
   display: none;
 
-  .has-touch & {
-    display: none !important;
-  }
-
   @include media-breakpoint-up(md) {
     position: fixed;
     z-index: 10001;
@@ -468,9 +483,9 @@ export default {
     top: -31px;
     // mix-blend-mode: difference;
     filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.5));
-    &.mounted {
-      display: block;
-    }
+    // &.mounted {
+    //   display: block;
+    // }
     svg {
       position: absolute;
     }
