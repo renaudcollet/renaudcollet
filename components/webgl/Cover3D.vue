@@ -193,7 +193,6 @@ const onScroll = () => {
       config.progress = prc
       updateMaterial()
 
-      // Is this smoother ?
       // gsap.killTweensOf(config)
       // gsap.to(config, {
       //   progress: prc, duration: 0.5, 

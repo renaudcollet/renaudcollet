@@ -7,6 +7,10 @@
       <div id="job" ref="job" class="job">
         Freelance Web Developer
       </div>
+      <div ref="scrollDown" class="scroll-down">
+        <div>SCROLL</div>
+        <div ref="scrollSvg" class="scroll-svg"></div>
+      </div>
     </div>
     <div ref="scrollZone" class="scroll-zone"></div>
     <section class="projects-home">
@@ -84,17 +88,8 @@ const startCover3d = ref(false);
 const scrollZone = ref(null);
 const indexLogo = ref(null);
 const job = ref(null);
-
-const onScroll = () => {
-  // console.log(' onScroll index');
-  if (cover3d.value) {
-    cover3d.value.onScroll()
-  }
-}
-
-defineExpose({
-  onScroll
-})
+const scrollDown = ref(null);
+const scrollSvg = ref(null);
 
 // const { initLogoObserver, clearLogoObserver } = useLogoObserver();
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
@@ -117,17 +112,6 @@ const onClickProjectItem = (id, plane) => {
   storeDatasCurtains.scrollToTopCompleteAfterTransition = false
   console.log('onClickProjectItem', id, plane);
 }
-
-// const onClickAnimationComplete = (plane, rect) => {
-//   console.log('onClickAnimationComplete', window.scrollY);
-//   storeDatasCurtains.scrollY = window.scrollY
-//   emit('onLockScroll', false)
-//   plane.resetPlane()
-//   plane.setRelativeTranslation(new Vec3(0, -storeDatasCurtains.scrollY, 0))
-//   // plane.htmlElement.style.top = -scrollY + 'px';
-//   // plane.resize()
-//   // router.push(`/works/${storeDatas.projectsHomepage[id].attributes.slug}`)
-// }
 
 onMounted(() => {
   // ERROR: After page is unmounted, 
@@ -153,6 +137,14 @@ onMounted(() => {
       onComplete: () => {
         // initLogoObserver()
       }}, '+=3')
+    .to(scrollDown.value, { opacity: 1, onComplete: () => {
+      gsap.to(scrollSvg.value, { y: 10, repeat: -1, yoyo: true, duration: 0.7, ease: 'power1.inOut', onRepeat: () => {
+          if (window.scrollY > window.innerHeight) {
+            gsap.killTweensOf(scrollSvg.value)
+            gsap.to(scrollDown.value, { autoAlpha: 0, duration: 0.5, ease: 'power1.inOut' })
+          }
+        } })
+    } }, '-=1')
     .to('#header-logo', {
       duration: 1,
       translateX: 0,
@@ -179,6 +171,38 @@ onUnmounted(() => {
 .scroll-zone {
   height: 200vh;
 }
+.scroll-down {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  opacity: 0;
+}
+
+.scroll-svg {
+  width: 20px;
+  height: 20px;
+  margin: 0 auto;
+  background-image: url('/assets/svg/scroll-svg.svg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+  // animation: scroll-down 1s infinite;
+}
+
+// @keyframes scroll-down {
+//   0% {
+//     transform: translate(0, 0);
+//   }
+//   50% {
+//     transform: translate(0, 10px);
+//   }
+//   100% {
+//     transform: translate(0, 0);
+//   }
+// }
+
 .props {
   position: fixed;
   background-color: #000;

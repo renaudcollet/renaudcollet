@@ -29,7 +29,7 @@
 <script setup>
 import Cover3D from '~/components/webgl/Cover3D.vue';
 import { useDatasStore, S_DATA_SEO } from '~/stores/datas';
-import { useDatasCurtainsStore } from "~/stores/datasCurtains";
+// import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 // import { Curtains } from "vue-curtains";
 // import ShaderPass from '~/components/curtains/ShaderPass/index.vue';
 import Curtains from "~/components/curtains/Curtains/index.vue";
@@ -47,7 +47,7 @@ const showCover3d = ref(false)
 const scrollZone = ref(null)
 const cover3d = ref(null);
 
-const storeDatasCurtains = useDatasCurtainsStore();
+// const storeDatasCurtains = useDatasCurtainsStore();
 
 const onLockScroll = (isLocked, animate) => {
   // // console.log('---> onLockScroll', isLocked);
@@ -62,12 +62,12 @@ const onLockScroll = (isLocked, animate) => {
 }
 
 const onStartCover3d = (value) => {
-  console.log('default - onStartCover3d', value);
+  // console.log('default - onStartCover3d', value);
   showCover3d.value = value
 }
 
 const onScrollZone = (value) => {
-  console.log('default - onScrollZone', value);
+  // console.log('default - onScrollZone', value);
   scrollZone.value = value
 }
 
@@ -150,7 +150,7 @@ const lerp = (a, b, n) => {
   return (1 - n) * a + n * b;
 }
 
-let firstTimeScrollUnlockedValue
+// let firstTimeScrollUnlockedValue
 
 // For shader effect on scroll
 const onScroll = () => {
@@ -158,18 +158,6 @@ const onScroll = () => {
   // scrollVelocity.value = lenis.scroll - lastScroll
   scrollVelocity.value = lerp(lenis.scroll - lastScroll, 0, 0.2);
   lastScroll = lenis.scroll
-
-  // if (storeDatas.lockScroll === false) {
-  //   // Get firstime scroll was unlocked and check that value on every scroll
-  //   if (!firstTimeScrollUnlockedValue) {
-  //     firstTimeScrollUnlockedValue = lenis.scroll;
-  //     // console.log('lenis scroll value = ', firstTimeScrollUnlockedValue);
-  //   }
-  //   if (lenis.scroll < firstTimeScrollUnlockedValue) {
-  //     // console.log('lock the scroll !');
-  //     storeDatas.setIsScrollLocked(true)
-  //   }
-  // }
   
   // console.log('default - onScroll', cover3d.value, showCover3d.value);
   if (cover3d.value && showCover3d.value) {
