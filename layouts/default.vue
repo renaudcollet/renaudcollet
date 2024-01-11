@@ -7,6 +7,12 @@
     @success="onCurtainsReady" 
     @onContextLost="onContextLost"
   >
+    <!-- <ShaderPass 
+      :params="firstPassProps"
+      @render="onFirstPassRender"
+      @ready="onFirstPassReady"
+      ref="shaderPass"
+    /> -->
     <NuxtPage 
       :scrollVelocity="scrollVelocity"
       :class="[currentPage.value]"
@@ -24,6 +30,9 @@
 <script setup>
 import Cover3D from '~/components/webgl/Cover3D.vue';
 import { useDatasStore, S_DATA_SEO } from '~/stores/datas';
+// import { useDatasCurtainsStore } from "~/stores/datasCurtains";
+// import { Curtains } from "vue-curtains";
+import ShaderPass from '~/components/curtains/ShaderPass/index.vue';
 import Curtains from "~/components/curtains/Curtains/index.vue";
 import Lenis from '@studio-freight/lenis';
 import MouseCursor from '~/components/ui/MouseCursor.vue';
@@ -38,6 +47,7 @@ await fetchDatas(S_DATA_SEO);
 const showCover3d = ref(false)
 const scrollZone = ref(null)
 const cover3d = ref(null);
+const shaderPass = ref(null);
 
 // const storeDatasCurtains = useDatasCurtainsStore();
 
@@ -73,9 +83,9 @@ useHead({
 })
 
 const { 
-  // firstPassProps, 
-  // onFirstPassReady, 
-  // onFirstPassRender, 
+  firstPassProps, 
+  onFirstPassReady, 
+  onFirstPassRender, 
   onRender, 
   // updateScrollVelocity
 } = useCurtainsShader();
@@ -96,8 +106,11 @@ const onContextLost = () => {
 }
 
 const onCurtainsReady = (_curtains) => {
-  // console.log('onCurtainsReady', _curtains);
+  console.log('onCurtainsReady', _curtains);
   // curtains.disableDrawing();
+
+  console.log('shaderPass', shaderPass.value);
+
   _curtains.autoResize = false
   let timeout = false
   window.addEventListener('resize', () => {

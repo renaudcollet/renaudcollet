@@ -126,15 +126,18 @@ const planeProps = {
 
 const isReady = ref(false);
 const isVisible = toRef(props, 'isVisible');
+
 watch(isVisible, (newVal, oldVal) => {
-  // console.log(`${ props.id} isVisible`, newVal);
+  console.log(`${ props.id} isVisible`, newVal);
   if (newVal) {
-    reveal();
+    appear();
+  } else {
+    disappear();
   }
 })
 
-const reveal = () => {
-  // console.log('/!/ reveal', planeMesh.value);
+const appear = () => {
+  // console.log('/!/ appear', planeMesh.value);
   if(!planeMesh.value) return
 
   const t = {u: 0, v: 0}
@@ -150,6 +153,11 @@ const reveal = () => {
         planeMesh.value.uniforms.uOpenProgress.value = t.v
     },
   })
+}
+
+const disappear = () => {
+  // is handled in datasCurtains.js
+  // Because of vuejs transitions starting and ending after unmounted
 }
 
 // const onLeaveView = () => {
@@ -179,7 +187,7 @@ const onReady = (plane) => {
       isReady.value = true;
       // console.log(`onReady ${props.src}`, `isVisible ${props.isVisible}`, `isReady ${isReady.value}` );
       if (props.isVisible) {
-        reveal();
+        appear();
       }
   })
     
@@ -226,7 +234,7 @@ onMounted(() => {
 
   // console.log(`mounted ${props.src}`, `isVisible ${props.isVisible}`, `isReady ${isReady.value}` );
   if (props.isVisible && isReady.value) {
-    reveal();
+    appear();
   }
 })
 

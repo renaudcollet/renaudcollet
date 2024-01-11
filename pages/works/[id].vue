@@ -133,7 +133,7 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
     console.log('PAGE ID - transitionState.transitionComplete', storeDatasCurtains.scrollY);
     
     storeDatasCurtains.scrollToTopCompleteAfterTransition = false;
-    console.log('emit - onLockScroll', false);
+    // console.log('emit - onLockScroll', false);
     emit('onLockScroll', false)
 
     // Remove planes from previous page
@@ -214,7 +214,7 @@ onMounted(() => {
     // }
 
       setTimeout(() => {
-        console.log('emit onStartCover3d', false);
+        // console.log('emit onStartCover3d', false);
         emit('onStartCover3d', false)
       }, 1000)
   })
@@ -223,18 +223,8 @@ onMounted(() => {
 onUnmounted(() => {
   clearScrollReveal()
   clearZoomableImage()
+  // Note: imageplane disappear animation is in dataCurtains.js
 })
-
-// computed( paraphToLines => datasProjets.attributes.)
-
-//   computed: {
-//     paraphToLines() {
-//       return this.sections[0].blocks[0].value.split('<br />');
-//     },
-//     paraphToLinesLength() {
-//       return this.paraphToLines.length;
-//     },
-//   },
 </script>
   
 <style lang="scss" scoped>

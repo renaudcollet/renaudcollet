@@ -72,7 +72,7 @@ const { transitionState } = useTransitionComposable();
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
     storeDatasCurtains.scrollToTopCompleteAfterTransition = false;
-    console.log('emit onLockScroll', false);
+    // console.log('emit onLockScroll', false);
     emit('onLockScroll', false)
     storeDatasCurtains.removePlanes();
     storeDatasCurtains.removeCurrentPlaneCover();
@@ -129,7 +129,7 @@ onMounted(() => {
     .to(indexLogo.value, { opacity: 1, 
       onComplete: () => {
         startCover3d.value = true
-        console.log('emit onStartCover3d', true);
+        // console.log('emit onStartCover3d', true);
         emit('onStartCover3d', true)
       }}, '+=0.5')
     .to(indexLogo.value, { opacity: 0, 

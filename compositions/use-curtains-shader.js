@@ -58,8 +58,8 @@ export default function useCurtainsShader() {
   }
 
   const onFirstPassRender = (shaderPass) => {
-    let displacement = shaderPass.uniforms.displacement.value
-    shaderPass.uniforms.displacement.value = lerp(displacement, scrollVelocity * 0.01, 0.2);
+    // let displacement = shaderPass.uniforms.displacement.value
+    // shaderPass.uniforms.displacement.value = lerp(displacement, scrollVelocity * 0.01, 0.2);
     // console.log('onFirstPassRender', scrollVelocity);
   }
 
