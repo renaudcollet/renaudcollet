@@ -18,8 +18,9 @@
 @import 'scrollbar-body';
 @import 'video';
 @import 'canvas';
-@import 'project-item';
 @import 'page';
+@import 'project-item';
+@import 'image-plane';
 
 @import 'scroll-opacity';
 @import 'scroll-reveal';
@@ -57,13 +58,4 @@ body {
 
 .big-underscore {
   font-weight: 300;
-}
-
-/**
-  This is important to put text over the canvas
-**/
-.z-index-text
-{  
-  position: relative;
-  z-index: $z-text;
 }

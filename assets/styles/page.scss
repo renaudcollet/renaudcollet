@@ -1,3 +1,11 @@
+/**
+  This is important to put text over the canvas
+**/
+.z-index-text
+{  
+  position: relative;
+  z-index: $z-text;
+}
 
 .page__title {
   margin-top: 100px;
@@ -7,8 +15,6 @@
   font-weight: 800;
   color: $font-title-color;
   width: calc(100% - 60px);
-
-
 
   @include media-breakpoint-up(md) {
     font-size: $font-size-big-title-md;

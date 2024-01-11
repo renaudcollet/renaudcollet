@@ -246,7 +246,7 @@ onUnmounted(() => {
 </script>
 
 <style scoped lang="scss">
-.plane, 
+/* .plane, 
 .not-plane {
   position: relative;
   width: 100%;
@@ -284,5 +284,5 @@ video{
   position: absolute;
   top: 0;
   left: 0;
-}
+} */
 </style>

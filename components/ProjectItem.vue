@@ -22,7 +22,7 @@
         />
       </div>
     <!-- </ClientOnly> -->
-    <h1 class="project-item__title display-none">
+    <h1 class="project-item__title">
       <div v-for="(line, index) in paraphToLines" class="line">
         <div 
           class="scroll-reveal"
@@ -35,7 +35,7 @@
       </div>
     </h1>
     <div 
-      class="project-item__text scroll-reveal z-index-text display-none"
+      class="project-item__text scroll-reveal z-index-text"
       data-scroll-reveal-height
       data-scroll-reveal-delay="1"
       data-scroll-reveal-duration="0.4"
@@ -55,7 +55,7 @@
       </div>
     </div>
     <div 
-      class="project-item__button scroll-reveal  display-none"
+      class="project-item__button scroll-reveal "
       :data-scroll-index="paraphToLines.length + keywords.length + 4"
       data-scroll-reveal-opacity-y
       data-scroll-reveal-delay="2"
@@ -166,6 +166,8 @@ const onClick = () => {
 
   gsap.killTweensOf(planeHtml)
 
+  console.log('planeHtml', planeHtml);
+
   // console.log('rect', rect);
   planeHtml.style.position = 'fixed';
   planeHtml.style.top = `${rect.top}px`;
@@ -228,9 +230,9 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss">
-.display-none {
-  display: none !important;
-}
+// .display-none {
+//   display: none !important;
+// }
 /* 
 .project-item {
   position: relative;
