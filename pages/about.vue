@@ -26,8 +26,6 @@
 </template>
 
 <script setup>
-// import utilsDevice from '~~/mixins/utils-device.js';
-// import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
 import { useDatasStore, S_DATA_ABOUT } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 import gsap from 'gsap';

@@ -33,7 +33,6 @@
 <script setup>
 import { useDatasStore, S_DATA_ACCUEIL } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
-// import useLogoObserver from '~/compositions/use-logo-observer';
 import useCurtainsShader from '~/compositions/use-curtains-shader';
 import gsap from 'gsap';
 import { defaultTransition } from '../transitions/work-transition';
@@ -188,20 +187,7 @@ onUnmounted(() => {
   background-repeat: no-repeat;
   background-position: center center;
   background-size: contain;
-  // animation: scroll-down 1s infinite;
 }
-
-// @keyframes scroll-down {
-//   0% {
-//     transform: translate(0, 0);
-//   }
-//   50% {
-//     transform: translate(0, 10px);
-//   }
-//   100% {
-//     transform: translate(0, 0);
-//   }
-// }
 
 .props {
   position: fixed;

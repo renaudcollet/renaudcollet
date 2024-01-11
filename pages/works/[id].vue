@@ -1,12 +1,5 @@
 <template>
   <div ref="root" class="page">
-    <!-- <ClientOnly>
-      <ShaderPass 
-        :params="firstPassProps"
-        @render="onFirstPassRender"
-        @ready="onFirstPassReady"
-      />
-    </ClientOnly> -->
     <section class="cover-top">
       <div class="cover-top__image">
         <ImagePlane 
@@ -87,22 +80,15 @@
           :mountPlanes="bMountPlanes"
         />
       </template>
-    </section>
-    <!-- <Footer :projects="projectsFooter" :footer="footer"></Footer> -->
-    <!-- <img :class="showScrollArrow ? 'active' : ''" class="scroll-arrow" src="~~/assets/svg/scroll.svg" width="50px" height="50px" alt=""> -->
-      
+    </section>      
   </div>
 </template>
   
 <script setup>
-// import { ShaderPass } from 'vue-curtains';
-// import RenderTarget from '~/components/curtains/RenderTarget/index.vue';
-import ShaderPass from '~/components/curtains/ShaderPass/index.vue';
 import { useDatasStore, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 import useZoomableImage from '~/compositions/use-zoomable-image';
 import useCurtainsShader from '~/compositions/use-curtains-shader';
-// import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
 import gsap from 'gsap';
 import { workTransition } from '../transitions/work-transition';
@@ -117,6 +103,10 @@ const props = defineProps({
   scrollVelocity: {
     type: Number
   },
+  onRender: {
+    type: Function,
+    required: true,
+  }
 })
 
 /**
@@ -180,10 +170,10 @@ const keywords = currentProject.attributes.keywords.data
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 const { initZoomableImage, clearZoomableImage } = useZoomableImage();
 const { 
-  firstPassProps, 
-  onFirstPassReady, 
-  onFirstPassRender, 
-  onRender, 
+  // firstPassProps, 
+  // onFirstPassReady, 
+  // onFirstPassRender, 
+  // onRender, 
   updateScrollVelocity
 } = useCurtainsShader();
 

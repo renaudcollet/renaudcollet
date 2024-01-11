@@ -76,8 +76,6 @@
 </template>
 
 <script setup>
-// import utilsDevice from '~~/mixins/utils-device.js';
-// import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
 import { onMounted, onUnmounted, ref, nextTick } from "vue";
 import { useDatasStore, S_DATA_CONTACT } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';

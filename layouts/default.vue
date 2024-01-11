@@ -7,11 +7,6 @@
     @success="onCurtainsReady" 
     @onContextLost="onContextLost"
   >
-    <!-- <ShaderPass 
-      :params="firstPassProps"
-      @render="onFirstPassRender"
-      @ready="onFirstPassReady"
-    /> -->
     <NuxtPage 
       :scrollVelocity="scrollVelocity"
       :class="[currentPage.value]"
@@ -29,9 +24,6 @@
 <script setup>
 import Cover3D from '~/components/webgl/Cover3D.vue';
 import { useDatasStore, S_DATA_SEO } from '~/stores/datas';
-// import { useDatasCurtainsStore } from "~/stores/datasCurtains";
-// import { Curtains } from "vue-curtains";
-// import ShaderPass from '~/components/curtains/ShaderPass/index.vue';
 import Curtains from "~/components/curtains/Curtains/index.vue";
 import Lenis from '@studio-freight/lenis';
 import MouseCursor from '~/components/ui/MouseCursor.vue';
@@ -149,8 +141,6 @@ const update = (time) => {
 const lerp = (a, b, n) => {
   return (1 - n) * a + n * b;
 }
-
-// let firstTimeScrollUnlockedValue
 
 // For shader effect on scroll
 const onScroll = () => {

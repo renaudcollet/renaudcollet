@@ -1,12 +1,5 @@
 <template>
   <div ref="root">
-    <!-- <ClientOnly>
-      <ShaderPass 
-        :params="firstPassProps"
-        @render="onFirstPassRender"
-        @ready="onFirstPassReady"
-      />
-    </ClientOnly> -->
     <div class="container">
       <!-- <div class="container__header-minimize" data-header-scroll-minimize></div> -->
       <h1 
@@ -38,11 +31,8 @@
 </template>
   
 <script setup>
-// import { ShaderPass } from 'vue-curtains';
 import { useDatasStore, S_DATA_ACCUEIL, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
-// import useLogoObserver from '~/compositions/use-logo-observer';
-// import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
 import useCurtainsShader from '~/compositions/use-curtains-shader';
 import gsap from 'gsap';
 import { workTransition } from '../transitions/work-transition';
@@ -94,7 +84,8 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
 
     setTimeout(() => {
       storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
-    }, 2000)
+      storeDatasCurtains.removeCurrentPlaneCover()
+    }, 100)
   }
 })
 
