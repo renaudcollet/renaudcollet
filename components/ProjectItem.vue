@@ -13,7 +13,7 @@
       >
         <ImagePlane 
           v-if="mountPlane"
-          :src="config.public.backendUrl + coverSrc"
+          :src="config.public.backendUrl + xxlarge"
           :onRender="onRender"
           :isVisible="isVisible"
           object-fit="cover" 
@@ -231,7 +231,7 @@ onBeforeUnmount(() => {
 .project-item {
   position: relative;
   display: flex;
-  margin: 0 auto 90px;
+  margin: 0 auto 140px;
   color: $font-color;
   text-decoration: none;
   width: calc(100vw - 60px);

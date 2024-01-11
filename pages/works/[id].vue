@@ -4,7 +4,7 @@
       <div class="cover-top__image">
         <ImagePlane 
           v-if="bMountPlanes"
-          :src="config.public.backendUrl + coverSrc"
+          :src="config.public.backendUrl + xxlarge"
           :onRender="onRender"
           :isVisible="true"
           :skip-animation="skipCoverAnimation"
