@@ -128,14 +128,13 @@ const isReady = ref(false);
 const isVisible = toRef(props, 'isVisible');
 
 watch(isVisible, (newVal, oldVal) => {
-  console.log(`${ props.id} isVisible`, newVal);
+  // console.log(`${ props.id} isVisible`, newVal);
   if (newVal) {
     appear();
-  } else {
-    disappear();
   }
 })
 
+// Disappear is handled in datasCurtains.js
 const appear = () => {
   // console.log('/!/ appear', planeMesh.value);
   if(!planeMesh.value) return

@@ -91,7 +91,7 @@ import useZoomableImage from '~/compositions/use-zoomable-image';
 import useCurtainsShader from '~/compositions/use-curtains-shader';
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
 import gsap from 'gsap';
-import { workTransition } from '../transitions/work-transition';
+import { workIdTransition } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 
@@ -114,7 +114,7 @@ const props = defineProps({
  * https://stackblitz.com/edit/nuxt-starter-bthjlg?file=pages%2Flayers.vue
  * */
 definePageMeta({
-  pageTransition: workTransition,
+  pageTransition: workIdTransition,
 });
 
 const emit = defineEmits(['onLockScroll', 'onStartCover3d'])
