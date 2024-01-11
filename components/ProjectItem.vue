@@ -22,7 +22,7 @@
         />
       </div>
     <!-- </ClientOnly> -->
-    <h1 class="project-item__title">
+    <h1 class="project-item__title display-none">
       <div v-for="(line, index) in paraphToLines" class="line">
         <div 
           class="scroll-reveal"
@@ -35,7 +35,7 @@
       </div>
     </h1>
     <div 
-      class="project-item__text scroll-reveal z-index-text"
+      class="project-item__text scroll-reveal z-index-text display-none"
       data-scroll-reveal-height
       data-scroll-reveal-delay="1"
       data-scroll-reveal-duration="0.4"
@@ -55,7 +55,7 @@
       </div>
     </div>
     <div 
-      class="project-item__button scroll-reveal"
+      class="project-item__button scroll-reveal  display-none"
       :data-scroll-index="paraphToLines.length + keywords.length + 4"
       data-scroll-reveal-opacity-y
       data-scroll-reveal-delay="2"
@@ -228,6 +228,10 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss">
+.display-none {
+  display: none !important;
+}
+/* 
 .project-item {
   position: relative;
   display: flex;
@@ -505,5 +509,5 @@ onBeforeUnmount(() => {
       line-height: 1;
     }
   }
-}
+} */
 </style>

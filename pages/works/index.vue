@@ -154,16 +154,6 @@ onUnmounted(() => {
 </script>
   
 <style lang="scss" scoped>
-.projects-work {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  user-select: none;
-  align-items: center;
-  z-index: $z-projects;
-  min-height: 100vh;
-}
-
 .filtered-label {
   font-style: italic;
 }

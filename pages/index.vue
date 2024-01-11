@@ -226,13 +226,4 @@ onUnmounted(() => {
     width: 250px;
   }
 }
-
-.projects-home {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  user-select: none;
-  z-index: $z-projects;
-  margin-top: 50px;
-}
 </style>

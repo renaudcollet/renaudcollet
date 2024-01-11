@@ -15,7 +15,7 @@ export const workTransition = {
   name: 'work-transiton',
   mode: 'out-in',
   onEnter: (el, done) => {
-    gsap.set(el, { autoAlpha: 1 });
+    gsap.set(el, { autoAlpha: 0 });
     gsap
       .timeline({
         paused: true,
