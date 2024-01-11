@@ -172,7 +172,6 @@ const onReady = (plane) => {
   planeMesh.value = plane; // extends DOMMesh
   nextTick(() => {
       // plane.images[0].style.opacity = 0
-
       updateRatioUniforms(plane)
 
       const t = {u: 0, v: 0}
@@ -245,6 +244,44 @@ onUnmounted(() => {
 })
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
+/* .plane, 
+.not-plane {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.plane img {
+  opacity: 0;
+}
 
+@include media-breakpoint-up(xl) {
+  .plane img.cover {
+    opacity: 1;
+  }
+}
+
+.plane video {
+opacity: 0;
+}
+
+.not-plane img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1; 
+}
+
+img{
+  width: 100%;
+  height: 100%;
+}
+
+video{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+} */
 </style>
