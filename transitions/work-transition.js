@@ -10,7 +10,7 @@ export const durationLeaveDefault = 1;
 export const durationEnterWork = 2;
 export const durationLeaveWork = 1;
 
-export const durationEnterWorkId = 1;
+export const durationEnterWorkId = 0.5;
 export const durationLeaveWorkId = 1;
 
 /**

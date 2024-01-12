@@ -128,8 +128,8 @@ const onCurtainsReady = (_curtains) => {
 }
 
 storeDatas.setCurrentPage(route.fullPath)
-watch(() => route.fullPath, (value) => {
-  console.log('DEFAULT LAYOUT - WACH route', value)
+watch(() => route.path, (value) => {
+  console.log('➮ DEFAULT LAYOUT - WATCH route fullpath ', value)
   storeDatas.setCurrentPage(value)
 
   // if (window.gtag)
@@ -140,6 +140,14 @@ watch(() => route.fullPath, (value) => {
     
   // lenis.scrollTo(0)
   // lenis.start()
+
+  // hide cover 3d, show is emitted by index page
+  if (value !== '/') {
+    setTimeout(() => {
+      showCover3d.value = false
+    }, 500)
+  }
+
 })
 
 const update = (time) => {

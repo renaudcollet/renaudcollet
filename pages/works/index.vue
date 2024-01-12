@@ -146,6 +146,7 @@ onMounted(() => {
   nextTick(() => {
     initScrollReveal(root.value)
   })
+
 })
 
 onUnmounted(() => {

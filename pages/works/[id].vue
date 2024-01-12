@@ -117,7 +117,7 @@ definePageMeta({
   pageTransition: workIdTransition,
 });
 
-const emit = defineEmits(['onLockScroll', 'onStartCover3d'])
+const emit = defineEmits(['onLockScroll'])
 
 const root = ref(null);
 const imagePlane = ref(null);
@@ -150,7 +150,7 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
     setTimeout(() => {
       storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
       storeDatasCurtains.removeCurrentPlaneCover()
-    }, 2000)
+    }, 750)
   }
 })
 
@@ -212,11 +212,6 @@ onMounted(() => {
     //   initScrollReveal(root.value)
     //   initZoomableImage(root.value)
     // }
-
-      setTimeout(() => {
-        // console.log('emit onStartCover3d', false);
-        emit('onStartCover3d', false)
-      }, 1000)
   })
 })
 
