@@ -165,9 +165,11 @@ watch(showCover, (newVal, oldVal) => {
 })
 
 const resetControls = () => {
-  controls.enabled = false
-  controls.dispose()
-  controls = null
+  if (controls) {
+    controls.enabled = false
+    controls.dispose()
+    controls = null
+  }
 }
 
 const initControls = () => {
@@ -216,7 +218,7 @@ onMounted(() => {
     }
 })
 const reInit = () => {
-  const { start } = config.camera
+  const { start } = config.camera 
   camera.position.set(start.x, start.y, start.z)
   camera.lookAt(start.lookAt) 
   
