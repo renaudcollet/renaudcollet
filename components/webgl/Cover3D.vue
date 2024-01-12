@@ -285,7 +285,7 @@ const init = () => {
   const backgroundTexture = loader.load( [ px, nx, py, ny, pz, nz ] )
   // backgroundTexture.encoding = sRGBEncoding
   scene.background = backgroundTexture
-  scene.background = new THREE.Color(0xffffff)
+  scene.background = new THREE.Color(0x000000)
   const environmentTexture = loader.load( [ px, nx, py, ny, pz, nz ] )
   // environmentTexture.encoding = THREE.SRGBColorSpace
   scene.environment = environmentTexture
