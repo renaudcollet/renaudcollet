@@ -3,14 +3,26 @@
     <section id="about">
       <div class="block">
         <div class="header-minimize" data-header-scroll-minimize></div>
-        <h1 
-          class="page__title scroll-reveal"
-          data-scroll-reveal-opacity-y
-          data-scroll-reveal-delay="0.0"
-          data-scroll-reveal-duration="0.5"
-        >
-          {{ datasAbout.attributes.titre }}
-        </h1>
+
+        <div class="page__header">
+          <ImagePlane 
+            v-if="bMountPlanes"
+            :src="config.public.backendUrl + xxlarge"
+            :onRender="onRender"
+            :isVisible="true"
+            object-fit="cover" 
+            class="cover__image" 
+            ref="imagePlane"
+          />
+          <h1 
+            class="page__title scroll-reveal"
+            data-scroll-reveal-opacity-y
+            data-scroll-reveal-delay="0.0"
+            data-scroll-reveal-duration="0.5"
+          >
+            {{ datasAbout.attributes.titre }}
+          </h1>
+        </div>
         <div
           class="description scroll-reveal"
           data-scroll-reveal-opacity-y
@@ -32,12 +44,21 @@ import gsap from 'gsap';
 import { defaultTransition } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
+import ImagePlane from '~/components/webgl/ImagePlane.vue';
 
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
 await fetchDatas(S_DATA_ABOUT);
 
+const props = defineProps({
+  onRender: {
+    type: Function,
+    required: true,
+  },
+})
+
 const datasAbout = storeDatas.about.data;
+const config = useRuntimeConfig()
 
 const root = ref(null);
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
@@ -50,18 +71,32 @@ definePageMeta({
   pageTransition: defaultTransition,
 });
 
+// Curtains
 const storeDatasCurtains = useDatasCurtainsStore();
+const bMountPlanes = computed(() => {
+  return storeDatasCurtains.planesToRemove.length === 0;
+});
 const { transitionState } = useTransitionComposable();
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
-    if (storeDatas.previousPage !== null){
-      // console.log('emit onLockScroll', false);
-      // emit('onLockScroll', false)
-    }
-    // Remove planes from previous page
+    storeDatasCurtains.scrollToTopCompleteAfterTransition = false;
     storeDatasCurtains.removePlanes();
+    storeDatasCurtains.removeCurrentPlaneCover();
+    setTimeout(() => {
+      storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
+    }, 1000)
   }
 })
+
+const currentProjectCover = datasAbout.attributes.cover.data.attributes
+
+const coverSrc = computed(() => {
+  return currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
+})
+const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProjectCover.formats.xxlarge.url : currentProjectCover.url;
+const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
+const large = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
+
 
 onMounted(() => {
   gsap.killTweensOf('#header-logo')
@@ -83,6 +118,29 @@ onUnmounted(() => {
   top: 30vh;
   width: 10px;
   height: 10px;
+}
+
+.page__header {
+  width: 700px;
+  height: 360px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cover__image {
+  width: 700px;
+  height: 360px;
+  position: absolute;
+}
+
+.page__title {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  z-index: 10;
+  width: 100%;
 }
 
 #about {
@@ -108,11 +166,7 @@ onUnmounted(() => {
     flex-direction: column;
 
     @include media-breakpoint-up(lg) {
-      width: 60%;
-    }
-
-    @include media-breakpoint-up(xl) {
-      width: 100%;
+      width: 700px;
     }
 
     .description {
@@ -122,11 +176,11 @@ onUnmounted(() => {
 
       @include media-breakpoint-up(md) {
         font-size: $font-size-text-md;
+        width: 700px;
       }
 
       @include media-breakpoint-up(lg) {
         font-size: $font-size-text-lg;
-        width: 700px;
       }
 
       @include media-breakpoint-up(xl) {

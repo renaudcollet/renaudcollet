@@ -1,8 +1,17 @@
 <template>
   <div ref="root" class="page">
     <section id="contact">
+      <ImagePlane 
+        v-if="bMountPlanes"
+        :src="config.public.backendUrl + xxlarge"
+        :onRender="onRender"
+        :isVisible="true"
+        object-fit="cover" 
+        class="cover__image" 
+        ref="imagePlane"
+      />
       <div class="header-minimize" data-header-scroll-minimize></div>
-      <div class="bloc">
+      <div class="block">
         <h1 
           class="scroll-reveal"
           data-scroll-reveal-opacity-y
@@ -83,12 +92,21 @@ import gsap from 'gsap';
 import { defaultTransition } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
+import ImagePlane from '~/components/webgl/ImagePlane.vue';
 
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
 await fetchDatas(S_DATA_CONTACT);
 
+const props = defineProps({
+  onRender: {
+    type: Function,
+    required: true,
+  },
+})
+
 const datasContact = storeDatas.contact.data;
+const config = useRuntimeConfig()
 
 const root = ref(null);
 const showTel = ref(false)
@@ -100,13 +118,31 @@ definePageMeta({
   pageTransition: defaultTransition,
 });
 
+// Curtains
 const storeDatasCurtains = useDatasCurtainsStore();
+const bMountPlanes = computed(() => {
+  return storeDatasCurtains.planesToRemove.length === 0;
+});
 const { transitionState } = useTransitionComposable();
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
+    storeDatasCurtains.scrollToTopCompleteAfterTransition = false;
     storeDatasCurtains.removePlanes();
+    storeDatasCurtains.removeCurrentPlaneCover();
+    setTimeout(() => {
+      storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
+    }, 1000)
   }
 })
+
+const currentProjectCover = datasContact.attributes.cover.data.attributes
+
+const coverSrc = computed(() => {
+  return currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
+})
+const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProjectCover.formats.xxlarge.url : currentProjectCover.url;
+const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
+const large = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
 
 
 const clickShowEmail = () => {
@@ -143,6 +179,10 @@ onUnmounted(() => {
 
 .pointer-cursor {
   cursor: pointer;
+}
+
+.cover__image {
+  position: absolute;
 }
 
 .description {
@@ -238,24 +278,19 @@ onUnmounted(() => {
   }
 }
 
-.bloc {
+.block {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 296px;
   margin: 0 auto;
+  position: relative;
+  z-index: 10;
+  filter: drop-shadow(2px 2px 10px rgba(0, 0, 0, 0.6));
 
   @include media-breakpoint-up(md) {
-    width: 100%;
-  }
-
-  @include media-breakpoint-up(lg) {
-    width: 82vw;
-  }
-
-  @include media-breakpoint-up(xl) {
-    width: 900px;
+    width: 530px;
   }
 }
 </style>

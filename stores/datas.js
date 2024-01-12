@@ -135,7 +135,7 @@ export const useDatasStore = defineStore( 'datas', {
         })
 
         // console.log('Data ERROR', error);
-        // console.log(`Data from ${apiId}`, data.value);
+        console.log(`Data from ${apiId}`, data.value);
 
         switch (apiId) {
           case S_DATA_CONTACT:
