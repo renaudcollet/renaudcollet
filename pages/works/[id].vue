@@ -224,48 +224,11 @@ onUnmounted(() => {
   clearScrollReveal()
   clearZoomableImage()
   // Note: imageplane disappear animation is in dataCurtains.js
+  storeDatasCurtains.removePlanes()
 })
 </script>
   
 <style lang="scss" scoped>
-@keyframes appearin {
-  from {
-    opacity: 0;
-    filter: blur(30px);
-    transform: scale3d(2, 2, 2);
-    line-height: 5;
-  }
-
-  50% {
-    opacity: 1;
-  }
-
-  // 90% {
-  //   transform: scale3d(0.98, 0.98, 0.98);
-  // }
-
-  to {
-    opacity: 1;
-    filter: blur(0px);
-    transform: scale3d(1, 1, 1);
-    line-height: 1;
-  }
-}
-
-.blur-effect {
-  opacity: 0;
-  transform-origin: left center;
-  // filter: blur(30px);
-  // transform: scale3d(2, 2, 2);
-  // line-height: 0.5;
-  animation-delay: 250ms;
-  animation-duration: 1s;
-  animation-name: appearin;
-  animation-timing-function: ease-in-out;
-  // animation-timing-function: cubic-bezier(.43,.24,.5,1.1); // Small bounce
-  animation-fill-mode: forwards;
-}
-
 /**
 SECTION .cover-top
 **/

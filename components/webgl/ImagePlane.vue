@@ -193,7 +193,6 @@ const onReady = (plane) => {
 
 const updateRatioUniforms = (plane) => {
     const image = plane.images[0]
-    
     // For uCover
     plane.uniforms.resolution.value = [image.width, image.height]
     plane.uniforms.size.value = [image.naturalWidth, image.naturalHeight]

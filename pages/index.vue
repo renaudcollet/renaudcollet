@@ -1,5 +1,11 @@
 <template>
   <div ref="root">
+    <!-- <ShaderPass 
+      :params="firstPassProps"
+      @render="onFirstPassRender"
+      @ready="onFirstPassReady"
+      ref="shaderPass"
+    /> -->
     <div class="cover">
       <div id="index-logo" ref="indexLogo" class="logo" data-header-scroll-minimize>
         <Logo />
@@ -31,6 +37,7 @@
 </template>
 
 <script setup>
+// import ShaderPass from '~/components/curtains/ShaderPass/index.vue';
 import { useDatasStore, S_DATA_ACCUEIL } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 import useCurtainsShader from '~/compositions/use-curtains-shader';
