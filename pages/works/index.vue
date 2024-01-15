@@ -5,7 +5,7 @@
       <h1 
         class="page__title scroll-reveal"
         data-scroll-reveal-opacity-y
-        data-scroll-reveal-delay="0.0"
+        :data-scroll-reveal-delay="durationEnterDefault + 0.2"
         data-scroll-reveal-duration="0.5"
       >
         All my <br v-if="projectsFilteredLabelDelay !== ''" /><span class="filtered-label">{{ projectsFilteredLabelDelay }}</span> <br v-if="projectsFilteredLabelDelay !== ''" /> works
@@ -35,7 +35,7 @@ import { useDatasStore, S_DATA_ACCUEIL, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 import useCurtainsShader from '~/compositions/use-curtains-shader';
 import gsap from 'gsap';
-import { workTransition } from '../transitions/work-transition';
+import { workTransition, durationEnterDefault } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 
@@ -124,11 +124,13 @@ watch(() => storeDatas.projectsFiltered, (newVal, oldVal) => {
         storeDatas.keywordsSelected && storeDatas.keywordsSelected.length > 0 
         ? `${storeDatas.keywordsSelected[0].attributes.key}` 
         : '';
-
+    }, 150)
+    
+    setTimeout(() => {
       nextTick(() => {
         initScrollReveal(root.value)
       })
-    }, 150)
+    }, 500)
   })
 })
 
@@ -151,6 +153,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   clearScrollReveal()
+  storeDatasCurtains.removePlanes()
 })
 </script>
   

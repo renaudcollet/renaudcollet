@@ -5,13 +5,13 @@ import { useTransitionComposable } from '../compositions/use-transition';
 const { toggleTransitionComplete } = useTransitionComposable();
 
 export const durationEnterDefault = 1;
-export const durationLeaveDefault = 1;
+export const durationLeaveDefault = 0.5;
 
 export const durationEnterWork = 2;
 export const durationLeaveWork = 1;
 
 export const durationEnterWorkId = 0.5;
-export const durationLeaveWorkId = 1;
+export const durationLeaveWorkId = 0.5;
 
 /**
  * Inspired by https://stackblitz.com/edit/nuxt-starter-bthjlg

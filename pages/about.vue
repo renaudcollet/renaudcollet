@@ -17,7 +17,7 @@
           <h1 
             class="page__title scroll-reveal"
             data-scroll-reveal-opacity-y
-            data-scroll-reveal-delay="0.0"
+            :data-scroll-reveal-delay="durationEnterDefault + 0.2"
             data-scroll-reveal-duration="0.5"
           >
             {{ datasAbout.attributes.titre }}
@@ -26,7 +26,7 @@
         <div
           class="description scroll-reveal"
           data-scroll-reveal-opacity-y
-          data-scroll-reveal-delay="0.2"
+          :data-scroll-reveal-delay="durationEnterDefault + 0.4"
           data-scroll-reveal-duration="0.5"
           v-html="datasAbout.attributes.description"
         >
@@ -41,7 +41,7 @@
 import { useDatasStore, S_DATA_ABOUT } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 import gsap from 'gsap';
-import { defaultTransition } from '../transitions/work-transition';
+import { defaultTransition, durationEnterDefault } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
@@ -109,6 +109,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   clearScrollReveal()
+  storeDatasCurtains.removePlanes()
 })
 </script>
 

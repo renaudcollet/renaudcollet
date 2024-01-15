@@ -15,7 +15,7 @@
         <h1 
           class="scroll-reveal"
           data-scroll-reveal-opacity-y
-          data-scroll-reveal-delay="0.0"
+          :data-scroll-reveal-delay="durationEnterDefault + 0.2"
           data-scroll-reveal-duration="0.5"
         >
           {{ datasContact.attributes.titre }}
@@ -24,7 +24,7 @@
           <span 
             class="description scroll-reveal"
             data-scroll-reveal-opacity-y
-            data-scroll-reveal-delay="0.2"
+            :data-scroll-reveal-delay="durationEnterDefault + 0.4"
             data-scroll-reveal-duration="0.5"
           >
             {{ datasContact.attributes.description }}
@@ -33,7 +33,7 @@
           <div
             class="link-item scroll-reveal"
             data-scroll-reveal-opacity-y
-            data-scroll-reveal-delay="0.3"
+            :data-scroll-reveal-delay="durationEnterDefault + 0.5"
             data-scroll-reveal-duration="0.5"
           >
             <a 
@@ -47,7 +47,7 @@
             @click="clickShowEmail"
             class="link-item pointer-cursor scroll-reveal"
             data-scroll-reveal-opacity-y
-            data-scroll-reveal-delay="0.4"
+            :data-scroll-reveal-delay="durationEnterDefault + 0.6"
             data-scroll-reveal-duration="0.5"
           >
             <span
@@ -64,7 +64,7 @@
             @click="clickShowTel"
             class="link-item pointer-cursor scroll-reveal"
             data-scroll-reveal-opacity-y
-            data-scroll-reveal-delay="0.5"
+            :data-scroll-reveal-delay="durationEnterDefault + 0.7"
             data-scroll-reveal-duration="0.5"
           >
             <span
@@ -89,7 +89,7 @@ import { onMounted, onUnmounted, ref, nextTick } from "vue";
 import { useDatasStore, S_DATA_CONTACT } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 import gsap from 'gsap';
-import { defaultTransition } from '../transitions/work-transition';
+import { defaultTransition, durationEnterDefault } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
@@ -166,6 +166,7 @@ onMounted(() => {
 onUnmounted(() => {
   clearScrollReveal()
   // clearLogoObserver()
+  storeDatasCurtains.removePlanes()
 })
 </script>
 
