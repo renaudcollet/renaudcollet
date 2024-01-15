@@ -110,6 +110,10 @@ const startAnimation = () => {
   console.log('COVER3D - startAnimation');
 
   reInit()
+        
+  console.log('COVER3D - Start RAF');
+  window.addEventListener('resize', resize)
+  raf = requestAnimationFrame(render)
 
   animationStarted = true
   const { start } = config.camera
@@ -124,7 +128,7 @@ const startAnimation = () => {
       x: rise.x, y: rise.y, z: rise.z, duration: 1,
       ease: 'power2.outIn',
       onUpdate: () => {
-        updateMaterial()
+        // updateMaterial()
       }
     }, '+=0.5')
     .to(camera.position, {
@@ -135,15 +139,12 @@ const startAnimation = () => {
         const lerpX = THREE.MathUtils.lerp(start.lookAt.x, end.lookAt.x, this.progress())
         const lerpZ = THREE.MathUtils.lerp(start.lookAt.z, end.lookAt.z, this.progress())
         camera.lookAt(lerpX, 0, lerpZ)
-        updateMaterial()
+        // updateMaterial()
       },
       onComplete: () => {
         // initControls()
       }
     })
-  
-  window.addEventListener('resize', resize)
-  raf = requestAnimationFrame(render)
 }
 
 const stopAnimation = () => {
@@ -158,7 +159,8 @@ const stopAnimation = () => {
       .to(canvas.value, { autoAlpha: 0, duration: 1, onComplete: () => {
         config.progress = 0
         resetControls()
-        updateMaterial()
+        // updateMaterial()
+        console.log('COVER3D - Stop RAF');
         window.removeEventListener('resize', resize)
         window.cancelAnimationFrame(raf)
       } })
@@ -187,7 +189,7 @@ const initControls = () => {
   controls = new OrbitControls(camera, renderer.domElement);
   controls.addEventListener('change', () => {
     console.log('controls change');
-    updateMaterial()
+    // updateMaterial()
   })
   controls.enabled = true
   controls.update()
@@ -204,15 +206,7 @@ const onScroll = () => {
     // console.log(`cover3d onScroll, scrollY: ${window.scrollY}, zone: ${zoneHeight}`, prc);
     if (prc < 1.1) {
       config.progress = prc
-      updateMaterial()
-
-      // gsap.killTweensOf(config)
-      // gsap.to(config, {
-      //   progress: prc, duration: 0.5, 
-      //   onUpdate: () => {
-      //     updateMaterial()
-      //   }
-      // })
+      // updateMaterial()
     }
 }
 
@@ -241,7 +235,7 @@ const reInit = () => {
   camera2.position.set(config.camera2.start.x, config.camera2.start.y, config.camera2.start.z)
   camera2.lookAt(config.camera2.lookAt)
 
-  updateMaterial()
+  // updateMaterial()
 }
 
 const init = () => {
@@ -357,7 +351,7 @@ const init = () => {
     (gltf) => {
       scene.add(gltf.scene)
       gltf.scene.scale.set(1, 1, 1)
-      updateMaterial()
+      // updateMaterial()
     }
   )
 
@@ -398,15 +392,15 @@ const initPostprocessing = () => {
   if (bDebugGUI) {
     const folder = gui.addFolder('SHADER')
     folder.add(config, "progress", 0, 1, 0.01).onChange((val)=>{
-      updateMaterial()
+      // updateMaterial()
     })
     folder.add(config, 'showPostProcessing').onChange(() => {
-      updateMaterial()
+      // updateMaterial()
     })
     folder.add(config.shader, 'simpleSweep').onChange(() => {
       material.fragmentShader = config.shader.simpleSweep ? sweepFrag : coverFrag
       material.needsUpdate = true
-      updateMaterial()
+      // updateMaterial()
     })
   }
 }
@@ -436,6 +430,9 @@ const updateMaterial = () => {
 
 const render = (t) => {
   // console.log('COVER3D - render');
+
+  updateMaterial()
+
   raf = requestAnimationFrame(render)
 
   if (controls && controls.enabled) {
