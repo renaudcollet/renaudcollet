@@ -25,14 +25,11 @@
     "@vueuse/core": "^10.4.1",
     "curtainsjs": "^8.1.5",
     "gsap": "^3.12.2",
-    "lethargy": "^1.0.9",
     "lil-gui": "^0.17.0",
     "nuxt-gtag": "^0.5.9",
     "pinia": "^2.1.6",
     "screenfull": "^6.0.2",
-    "three": "^0.157.0",
-    "virtual-scroll": "^2.2.1",
-    "vue-curtains": "^1.0.2"
+    "three": "^0.157.0"
   },
   "overrides": {
     "vue": "latest"
