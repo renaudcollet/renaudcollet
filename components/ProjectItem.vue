@@ -81,6 +81,7 @@ import useElementVisibility from '~/compositions/use-element-visibility';
 import gsap from 'gsap'
 import { toRef } from '@vueuse/core';
 import { durationLeaveDefault } from '../transitions/work-transition';
+import { Vec3 } from 'curtainsjs';
 
 const config = useRuntimeConfig()
 const props = defineProps({
@@ -163,6 +164,10 @@ const onClick = () => {
   // This would be eq to the final size of the imagePlane (aka the cover image in page id)
   const rectFinal = imagePlane.value.planeMesh.renderer.canvas.getBoundingClientRect()
   // console.log('final size', elFinalSize.width, elFinalSize.height);
+
+  // Change z position to cover other planes
+  imagePlane.value.planeMesh.uniforms.zPos.value = -0.001; // OK
+  // imagePlane.value.planeMesh.relativeTranslation(new Vec3(0, 0, -1.0))
 
   gsap.killTweensOf(planeHtml)
 

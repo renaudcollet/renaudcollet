@@ -11,7 +11,7 @@ varying float yPos;
 uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
 
-uniform mat4 uTextureMatrix;
+// uniform mat4 uTextureMatrix;
 
 // custom variables
 varying vec3 vVertexPosition;

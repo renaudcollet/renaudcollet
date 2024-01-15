@@ -10,27 +10,22 @@ Intégration:
     ✔ When click filters, go to page works @done(23-10-05 11:01)
     ✔ Kewywords missing, last item doesn't show up on homepage @done(23-10-05 10:28)
     ✔ Manage projects visible on homepage from admin @done(23-10-05 11:01)
-    ☐ Bug header when resize from xl to lg
+    ✔ Bug header when resize from xl to lg @done(24-01-15 11:07)
     ☐ Page projet, add a link to next project
-    ☐ + of the triangle is not centered in x (on homepage)
-    ☐ Titles colors change each load :
+    ✔ + of the triangle is not centered in x (on homepage) @done(24-01-15 11:07)
+    ✘ Titles colors change each load : @cancelled(24-01-15 11:07)
         $font-title-color: #f7eedd;
         $font-color: #fffaf2; // #928282
 
-Optimization:
-    https://medium.com/@khalidoghli7/lets-cover-some-powerful-feature-to-be-vue-jedi-master-2e0134910a0b#de97
-    ☐ Use defineAsyncComponent for footer
-    ☐ Use defineAsyncComponent for filters ?
-
 Page transition:
     // Nuxt page transition with gsap : https://stackblitz.com/edit/nuxt-starter-bthjlg
-    ☐ Home to works page transition
+    ✔ Home to works page transition @done(24-01-15 11:09)
         //TODO: Important: -> See https://codesandbox.io/p/devbox/nuxt3-vue-curtains-transition-between-pages-jh9ky5
-        Add transitions problem and ask the guy behind curtains.js:
+        ✔ Add transitions problem and ask the guy behind curtains.js: @done(24-01-15 11:09)
         https://github.com/martinlaxenaire/vue-curtains/issues/1#issue-2052188725
 
 Bug:
-    ☐ Little black flash when pause the video -> Bug from Brave browser
+    ✘ Little black flash when pause the video -> Bug from Brave browser @cancelled(24-01-15 11:09)
     ✘ Error when go from another page to homepage @cancelled(23-10-10 11:56)
         Might be du to .env file wrong IPs
 
@@ -39,7 +34,7 @@ Menu:
 
 Animation:
     ✔ Titles and Vignettes should appear with a skew mask animation @done(23-09-21 16:56)
-    ☐ Transition on the cover when click homepage project to project page
+    ✔ Transition on the cover when click homepage project to project page @done(24-01-15 11:14)
     ☐ Mouse Cursor - Should be in shader - make a trail of triangles smaller and smaller
     ☐ Mouse hover on project item should apply when scrolling while mouse not moving
         -> https://codepen.io/kleinfreund/pen/XYdBYP
@@ -52,9 +47,13 @@ Webgl:
     ☐ Add effect on vignettes when hovering : https://pixallus.com/creating-webgl-effects-with-curtainsjs/
     ☐ Improve speed with OffscreenCanvas (https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas)
     ☐ Bug on my Android - image plane are stretched horizontally
-    ☐ FIX Scroll jank : https://www.psychoactive.co.nz/content-hub/fixing-scrolling-jank-in-webgl-using-curtain-js-and-virtual-scroll
 
-    Particles : 
+    Priority :
+    ☐ FIX Scroll jank : https://www.psychoactive.co.nz/content-hub/fixing-scrolling-jank-in-webgl-using-curtain-js-and-virtual-scroll
+    ☐ Black frame on cover transition to work id
+    ✔ Page index and work, z index problem when click on a project @done(24-01-15 12:01)
+
+    ✘ Particles : @cancelled(24-01-15 11:13)
         Joshua Davis - https://codepen.io/jshuadvd/pen/ogKeBB
         https://nullprogram.com/webgl-particles/
         (☐ Would be great to only have threejs to do curtains effect (like on lusion.co))
@@ -63,24 +62,24 @@ Webgl:
         https://github.com/kiwipxl/GLSL-shaders/blob/master/glow.glsl
     
     For the cover - List of interesting effects from Threejs examples :
-        - ASCII (https://threejs.org/examples/?q=ASCII#webgl_effects_ascii)
-        - DOF   (https://threejs.org/examples/?q=DOF#webgl_postprocessing_dof)
+        ✘ ASCII (https://threejs.org/examples/?q=ASCII#webgl_effects_ascii) @cancelled(24-01-15 11:14)
+        ✘ DOF   (https://threejs.org/examples/?q=DOF#webgl_postprocessing_dof) @cancelled(24-01-15 11:14)
                 (https://domenicobrz.github.io/webgl/projects/DOF%20lines/)
-        - Lensflare (https://threejs.org/examples/?q=lensfl#webgl_lensflares)
-        - Webcam Morphtarget (Haloween Face) (https://threejs.org/examples/?q=morph#webgl_morphtargets_webcam)
-        - Shadowmap pointlight (https://threejs.org/examples/?q=shadowma#webgl_shadowmap_pointlight)
-        ☐ Postprocessing godrays (https://threejs.org/examples/?q=godr#webgl_postprocessing_godrays)
-        - Skinning points (Webgpu) (https://threejs.org/examples/?q=skin#webgpu_skinning_points)
+        ✘ Lensflare (https://threejs.org/examples/?q=lensfl#webgl_lensflares) @cancelled(24-01-15 11:14)
+        ✘ Webcam Morphtarget (Haloween Face) (https://threejs.org/examples/?q=morph#webgl_morphtargets_webcam) @cancelled(24-01-15 11:14)
+        ✘ Shadowmap pointlight (https://threejs.org/examples/?q=shadowma#webgl_shadowmap_pointlight) @cancelled(24-01-15 11:14)
+        ✘ Postprocessing godrays (https://threejs.org/examples/?q=godr#webgl_postprocessing_godrays) @cancelled(24-01-15 11:09)
+        ✘ Skinning points (Webgpu) (https://threejs.org/examples/?q=skin#webgpu_skinning_points) @cancelled(24-01-15 11:14)
     For transitions between pages :
-        ☐ Postprocessing crossfade (for transitions between pages)
+        ✘ Postprocessing crossfade (for transitions between pages) @cancelled(24-01-15 11:08)
 
 Music:
-    ☐ Add a music player on the homepage (https://developers.soundcloud.com/docs/api/html5-widget#resources)
-    ☐ Add a music player on the project page (https://developers.soundcloud.com/docs/api/html5-widget#resources)
+    ✘ Add a music player on the homepage (https://developers.soundcloud.com/docs/api/html5-widget#resources) @cancelled(24-01-15 11:08)
+    ✘ Add a music player on the project page (https://developers.soundcloud.com/docs/api/html5-widget#resources) @cancelled(24-01-15 11:08)
 
 Curtains: 
-    ☐ Optimize, Pass along a unique Date.getTime() to curtains Plane in ImagePlane
-    ☐ Migrate mixins curtains-shader to composition api use-curtains-shader
+    ✘ Optimize, Pass along a unique Date.getTime() to curtains Plane in ImagePlane @cancelled(24-01-15 11:08)
+    ✔ Migrate mixins curtains-shader to composition api use-curtains-shader @done(24-01-15 11:06)
 
 Data:
     ✘ Improve initial data loading @cancelled(23-10-05 14:49)
@@ -95,3 +94,9 @@ SEO:
 
 Build: 
     ☐ Create a clear console, then add console.log (like lusion.co)
+    
+
+Optimization:
+    https://medium.com/@khalidoghli7/lets-cover-some-powerful-feature-to-be-vue-jedi-master-2e0134910a0b#de97
+    ☐ Use defineAsyncComponent for footer
+    ☐ Use defineAsyncComponent for filters ?
