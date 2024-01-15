@@ -74,7 +74,7 @@ export default {
       }
     },
     onClickItem() {
-      this.closeMenu()
+      // this.closeMenu()
     },
     onClickMenuButton() {
       if (this.isMenuOpened) {
@@ -323,7 +323,7 @@ export default {
         @include media-breakpoint-up(lg) {
           font-size: 14px;
           font-weight: 300;
-          margin-right: 45px;
+          margin-right: 20px;
           position: relative;
           margin-left: 20px;
           padding: 10px;
