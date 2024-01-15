@@ -32,7 +32,7 @@ import Cover3D from '~/components/webgl/Cover3D.vue';
 import { useDatasStore, S_DATA_SEO } from '~/stores/datas';
 // import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 // import { Curtains } from "vue-curtains";
-import ShaderPass from '~/components/curtains/ShaderPass/index.vue';
+// import ShaderPass from '~/components/curtains/ShaderPass/index.vue';
 import Curtains from "~/components/curtains/Curtains/index.vue";
 import Lenis from '@studio-freight/lenis';
 import MouseCursor from '~/components/ui/MouseCursor.vue';
@@ -53,14 +53,14 @@ const shaderPass = ref(null);
 
 const onLockScroll = (isLocked, animate) => {
   // // console.log('---> onLockScroll', isLocked);
-  // // storeDatas.lockScroll = isLocked;
-  // if (!isLocked) {
-  //   lenis.start()
-  //   // lenis.scrollTo(0, {immediate: !animate })
-  // } else {
-  //   storeDatasCurtains.scrollY = window.scrollY
-  //   lenis.stop()
-  // } 
+  // storeDatas.lockScroll = isLocked;
+  if (!isLocked) {
+    lenis.start()
+    // lenis.scrollTo(0, {immediate: !animate })
+  } else {
+    storeDatasCurtains.scrollY = window.scrollY
+    lenis.stop()
+  } 
 }
 
 const onStartCover3d = (value) => {
@@ -83,14 +83,15 @@ useHead({
 })
 
 const { 
-  firstPassProps, 
-  onFirstPassReady, 
-  onFirstPassRender, 
+  // firstPassProps, 
+  // onFirstPassReady, 
+  // onFirstPassRender, 
   onRender, 
   // updateScrollVelocity
 } = useCurtainsShader();
 
-const scrollVelocity = ref(0);
+// const scrollVelocity = ref(0);
+let scrollVelocity = 0;
 
 let lenis;
 let lastScroll = 0;
@@ -150,10 +151,14 @@ watch(() => route.path, (value) => {
 
 })
 
+// let fps = 60
 const update = (time) => {
-  requestAnimationFrame((time) => {
-    update(time)
-  })
+  
+  // setTimeout(function() {
+    requestAnimationFrame((time) => {
+      update(time)
+    })
+  // }, 1000 / fps);
   
   lenis.raf(time)
   onScroll()
@@ -165,12 +170,10 @@ const lerp = (a, b, n) => {
 
 // For shader effect on scroll
 const onScroll = () => {
-  // console.log('onScroll', lenis.scroll, lastScroll, window.scrollY);
-  // scrollVelocity.value = lenis.scroll - lastScroll
-  scrollVelocity.value = lerp(lenis.scroll - lastScroll, 0, 0.2);
+  // scrollVelocity.value = lerp(lenis.scroll - lastScroll, 0, 0.2);
+  scrollVelocity = lerp(lenis.scroll - lastScroll, 0, 0.2);
   lastScroll = lenis.scroll
-  
-  // console.log('default - onScroll', cover3d.value, showCover3d.value);
+
   if (cover3d.value && showCover3d.value) {
     cover3d.value.onScroll()
   }

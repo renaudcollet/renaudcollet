@@ -46,12 +46,16 @@ Webgl:
     ✔ Probleme d'image resolution, sur luna rossa et digital mirror, les coins n'ont pas la même taille @done(23-10-03 17:07)
     ☐ Add effect on vignettes when hovering : https://pixallus.com/creating-webgl-effects-with-curtainsjs/
     ☐ Improve speed with OffscreenCanvas (https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas)
-    ☐ Bug on my Android - image plane are stretched horizontally
-
+    
     Priority :
-    ☐ FIX Scroll jank : https://www.psychoactive.co.nz/content-hub/fixing-scrolling-jank-in-webgl-using-curtain-js-and-virtual-scroll
-    ☐ Black frame on cover transition to work id
-    ✔ Page index and work, z index problem when click on a project @done(24-01-15 12:01)
+        ✔ FIX Scroll jank @done(24-01-15 17:24)
+            ✔ Check Cover3D is stopped when not visible @done(24-01-15 17:23)
+            ✘ https://www.psychoactive.co.nz/content-hub/fixing-scrolling-jank-in-webgl-using-curtain-js-and-virtual-scroll @cancelled(24-01-15 17:23)
+        ☐ FPS is low on home page
+        ☐ Black frame on cover transition to work id
+        ✔ Page index and work, z index problem when click on a project @done(24-01-15 12:01)
+        ☐ iOS, index page : when scroll we have a white page
+        ☐ Bug on my Android - image plane are stretched horizontally
 
     ✘ Particles : @cancelled(24-01-15 11:13)
         Joshua Davis - https://codepen.io/jshuadvd/pen/ogKeBB

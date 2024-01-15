@@ -10,6 +10,7 @@ import GUI from 'lil-gui';
 
 import * as THREE from 'three'
 import { REVISION } from 'three'
+import Stats from 'three/examples/jsm/libs/stats.module'
 
 import gsap from 'gsap';
 
@@ -97,11 +98,16 @@ const config = {
   }
 }
 
+let stats
 let animationStarted = false
 let tlAnimation = gsap.timeline()
 
 // Play start animation
 const startAnimation = () => {
+
+  // HTML Character play
+  
+  console.log('COVER3D - startAnimation');
 
   reInit()
 
@@ -117,7 +123,7 @@ const startAnimation = () => {
     .to(camera.position, {
       x: rise.x, y: rise.y, z: rise.z, duration: 1,
       ease: 'power2.outIn',
-      onUpdate: function() {
+      onUpdate: () => {
         updateMaterial()
       }
     }, '+=0.5')
@@ -132,13 +138,18 @@ const startAnimation = () => {
         updateMaterial()
       },
       onComplete: () => {
-        initControls()
+        // initControls()
       }
     })
+  
+  window.addEventListener('resize', resize)
+  raf = requestAnimationFrame(render)
 }
 
 const stopAnimation = () => {
-  // console.log('stopAnimation', animationStarted);
+
+  console.log('COVER3D - stopAnimation');
+
   if (animationStarted) {
     animationStarted = false
     tlAnimation.kill()
@@ -156,7 +167,7 @@ const stopAnimation = () => {
 
 const showCover = toRef(props, 'showCover')
 watch(showCover, (newVal, oldVal) => {
-  // console.log('WATCH - showCover', newVal);
+  console.log('WATCH - showCover', newVal);
   if (newVal) { 
     startAnimation()     
   } else {
@@ -175,7 +186,7 @@ const resetControls = () => {
 const initControls = () => {
   controls = new OrbitControls(camera, renderer.domElement);
   controls.addEventListener('change', () => {
-    // console.log('controls change');
+    console.log('controls change');
     updateMaterial()
   })
   controls.enabled = true
@@ -212,12 +223,17 @@ defineExpose({
 onMounted(() => {
     init()
 
+    stats = new Stats()
+    document.body.appendChild(stats.dom)
+
     // For hmr reload
     if (showCover.value || props.showCover) { 
+      console.log('COVER3D - showCover.value || props.showCover');
       startAnimation()
     }
 })
 const reInit = () => {
+  console.log('COVER3D - reInit');
   const { start } = config.camera 
   camera.position.set(start.x, start.y, start.z)
   camera.lookAt(start.lookAt) 
@@ -226,16 +242,10 @@ const reInit = () => {
   camera2.lookAt(config.camera2.lookAt)
 
   updateMaterial()
-  
-  window.removeEventListener('resize', resize)
-  raf = requestAnimationFrame(render)
 }
 
 const init = () => {
-  if (scene) {
-    reInit()
-    return
-  }
+  console.log('COVER3D - init');
   
   bDebugGUI = window.location.hash === '#debug'
 
@@ -256,7 +266,7 @@ const init = () => {
 
   // TODO: Probleme de colorspace avec les textures utilisées dans le ShaderMaterial
   // TODO:  Créer un codepen pour reproduire le problème
-  pixelRatio = Math.max(window.devicePixelRatio, 2)
+  pixelRatio = Math.max(window.devicePixelRatio, 1)
   renderer = new THREE.WebGLRenderer({ canvas: canvas.value, antialias: true })
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.toneMapping = THREE.LinearToneMapping // ACESFilmicToneMapping
@@ -280,15 +290,15 @@ const init = () => {
 
   // Env Map
   // https://github.com/mrdoob/three.js/blob/master/examples/webgl_materials_envmaps.html
-  const loader = new THREE.CubeTextureLoader()
-  // loader.setPath( 'assets/textures/' )
-  const backgroundTexture = loader.load( [ px, nx, py, ny, pz, nz ] )
-  // backgroundTexture.encoding = sRGBEncoding
-  scene.background = backgroundTexture
+  // const loader = new THREE.CubeTextureLoader()
+  // // loader.setPath( 'assets/textures/' )
+  // const backgroundTexture = loader.load( [ px, nx, py, ny, pz, nz ] )
+  // // backgroundTexture.encoding = sRGBEncoding
+  // scene.background = backgroundTexture
   scene.background = new THREE.Color(0x000000)
-  const environmentTexture = loader.load( [ px, nx, py, ny, pz, nz ] )
-  // environmentTexture.encoding = THREE.SRGBColorSpace
-  scene.environment = environmentTexture
+  // const environmentTexture = loader.load( [ px, nx, py, ny, pz, nz ] )
+  // // environmentTexture.encoding = THREE.SRGBColorSpace
+  // scene.environment = environmentTexture
 
   // KTX2 Loader
   // this.ktx2Loader = new KTX2Loader()
@@ -297,10 +307,10 @@ const init = () => {
   // this.ktx2Loader.detectSupport(renderer)
 
   // Draco
-  const THREE_PATH = `https://unpkg.com/three@0.${REVISION}.x`
-  dracoLoader = new DRACOLoader( new THREE.LoadingManager() ).setDecoderPath( `${THREE_PATH}/examples/jsm/libs/draco/gltf/` );
+  // const THREE_PATH = `https://unpkg.com/three@0.${REVISION}.x`
+  // dracoLoader = new DRACOLoader( new THREE.LoadingManager() ).setDecoderPath( `${THREE_PATH}/examples/jsm/libs/draco/gltf/` );
   gltfLoader = new GLTFLoader();
-  gltfLoader.setDRACOLoader(dracoLoader);
+  // gltfLoader.setDRACOLoader(dracoLoader);
 
   if (bDebugGUI) {
     gui = new GUI().title('Cover 3D').open()
@@ -353,9 +363,6 @@ const init = () => {
 
   initPostprocessing()
   addLights()
-  
-  window.addEventListener('resize', resize)
-  raf = requestAnimationFrame(render)
 }
 
 let material
@@ -405,23 +412,32 @@ const initPostprocessing = () => {
 }
 
 const updateMaterial = () => {
-  renderer.setRenderTarget(renderTarget1)
-  renderer.render(scene, camera)
+  // Render the first camera if progress is < 1
+  if (config.progress < 1) {
+    renderer.setRenderTarget(renderTarget1)
+    renderer.render(scene, camera)
+    material.uniforms.uTexture1.value = renderTarget1.texture
+  }
 
-  renderer.setRenderTarget(renderTarget2)
-  renderer.render(scene, camera2)
+  // Render the second camera only if progress is > 0
+  if (config.progress > 0) {
+    renderer.setRenderTarget(renderTarget2)
+    renderer.render(scene, camera2)
+    material.uniforms.uTexture2.value = renderTarget2.texture
+  }
 
   renderer.setRenderTarget(null)
 
   renderTarget1.texture.format = THREE.RGBAFormat
   renderTarget2.texture.format = THREE.RGBAFormat
 
-  material.uniforms.uTexture1.value = renderTarget1.texture
-  material.uniforms.uTexture2.value = renderTarget2.texture
   material.uniforms.progress.value = config.progress
 }
 
 const render = (t) => {
+  // console.log('COVER3D - render');
+  raf = requestAnimationFrame(render)
+
   if (controls && controls.enabled) {
     controls.update()
   }
@@ -430,7 +446,7 @@ const render = (t) => {
   else
     renderer.render(scene, camera);
 
-  raf = requestAnimationFrame(render)
+  stats.update()
 }
 
 const addLights = () => {
@@ -551,18 +567,18 @@ const resize = () => {
 }
 
 // NOTE: The component is never unMounted, so this is never called
-onUnmounted(() => {
-  if (renderer) {
-    renderer.dispose()
-  }
+// onUnmounted(() => {
+//   if (renderer) {
+//     renderer.dispose()
+//   }
 
-  if (gui) {
-    gui.destroy()
-  }
+//   if (gui) {
+//     gui.destroy()
+//   }
 
-  window.removeEventListener('resize', resize)
-  window.cancelAnimationFrame(raf)
-})
+//   window.removeEventListener('resize', resize)
+//   window.cancelAnimationFrame(raf)
+// })
 </script>
 
 <style lang="scss">

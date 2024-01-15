@@ -26,9 +26,6 @@ export const useDatasCurtainsStore = defineStore( 'datasCurtains', {
       //   console.log(`Remove all planes (${this.planesToRemove.length - 1}) except currentPlaneCover - remove it later`, this.currentPlaneCover);
       // else
       //   console.log(`Remove all planes (${this.planesToRemove.length})`);
-      
-      let nb = this.planesToRemove.length
-
 
       this.planesToRemove.forEach(plane => {
         if (!this.currentPlaneCover || plane.index !== this.currentPlaneCover.index) {
@@ -49,7 +46,6 @@ export const useDatasCurtainsStore = defineStore( 'datasCurtains', {
                 this.planesToRemove = []
             },
           })
-
         }
 
         // https://www.curtainsjs.com/plane-class.html#reset-plane
