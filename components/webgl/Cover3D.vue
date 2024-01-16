@@ -243,8 +243,8 @@ const init = () => {
   
   bDebugGUI = window.location.hash === '#debug'
 
-  width = canvas.value.offsetWidth;
-  height = canvas.value.offsetHeight;
+  width = window.innerWidth;
+  height = window.innerHeight;
   scene = new THREE.Scene()
 
   camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000)
@@ -260,7 +260,7 @@ const init = () => {
 
   // TODO: Probleme de colorspace avec les textures utilisées dans le ShaderMaterial
   // TODO:  Créer un codepen pour reproduire le problème
-  pixelRatio = Math.max(window.devicePixelRatio, 1)
+  pixelRatio = Math.min(window.devicePixelRatio, 1)
   renderer = new THREE.WebGLRenderer({ canvas: canvas.value, antialias: true })
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.toneMapping = THREE.LinearToneMapping // ACESFilmicToneMapping
@@ -590,8 +590,8 @@ const resize = () => {
     }
 
     #three-canvas {
-        width: 100%;
-        height: 100%;
+        // width: 100%;
+        // height: 100%;
         // mix-blend-mode: screen; // MAYBE ADD THIS BACK IN ?
         opacity: 0;
     }
