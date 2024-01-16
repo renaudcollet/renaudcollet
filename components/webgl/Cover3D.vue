@@ -555,8 +555,8 @@ const isMobile = () => {
 }
 
 const resize = () => {
-  width = canvas.offsetWidth;
-  height = canvas.offsetHeight;
+  width = window.innerWidth;
+  height = window.innerHeight;
   renderer.setSize(width, height);
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
