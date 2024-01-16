@@ -20,7 +20,7 @@
     </div>
 
     <div class="footer__since">
-      Renaud Collet - Web developer since 2004 - ©{{ currentYear }}
+      {{footerSince}} - ©{{ currentYear }}
     </div>
 
   </footer>
@@ -33,9 +33,12 @@ const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
 await fetchDatas(S_DATA_CONTACT);
 const linkedin = storeDatas.contact.data.attributes.linkedin;
+const footerSince = storeDatas.contact.data.attributes.footerSince;
 
 const currentYear = computed(() => {
-  return new Date().getFullYear()
+  // Have to use date field otherwise new Date() returns wrong year server side
+  // return new Date().getFullYear()
+  return storeDatas.contact.data.attributes.currentYear.split('-')[0]
 })
 </script>
 
