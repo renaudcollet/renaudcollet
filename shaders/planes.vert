@@ -1,4 +1,5 @@
-precision highp float;
+// precision highp float;
+precision mediump float;
 
 #define PI 3.14159265
 
@@ -11,7 +12,8 @@ varying float yPos;
 uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
 
-// uniform mat4 uTextureMatrix;
+// uniform mat4 uTextureMatrix0; // texture matrix of my-image-1.jpg
+// uniform mat4 uTextureMatrix1; // texture matrix of my-image-2.jpg
 
 // custom variables
 varying vec3 vVertexPosition;
