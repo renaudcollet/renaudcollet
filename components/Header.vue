@@ -74,7 +74,8 @@ export default {
       }
     },
     onClickItem() {
-      // this.closeMenu()
+      if (this.isDesktop()) return
+      this.closeMenu()
     },
     onClickMenuButton() {
       if (this.isMenuOpened) {
