@@ -260,7 +260,7 @@ const init = () => {
 
   // TODO: Probleme de colorspace avec les textures utilisées dans le ShaderMaterial
   // TODO:  Créer un codepen pour reproduire le problème
-  pixelRatio = Math.min(window.devicePixelRatio, 1)
+  pixelRatio = Math.min(window.devicePixelRatio, 1.5)
   renderer = new THREE.WebGLRenderer({ canvas: canvas.value, antialias: true })
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.toneMapping = THREE.LinearToneMapping // ACESFilmicToneMapping
