@@ -139,7 +139,7 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
     
     storeDatasCurtains.scrollToTopCompleteAfterTransition = false;
     // console.log('emit - onLockScroll', false);
-    emit('onLockScroll', false)
+    // emit('onLockScroll', false)
 
     // Remove planes from previous page
     storeDatasCurtains.removePlanes();
@@ -158,6 +158,7 @@ const onCoverReady = (e) => {
   console.log('---> onCoverReady', e);
   storeDatasCurtains.removeCurrentPlaneCover()
   storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
+  emit('onLockScroll', false)
 }
 
 const config = useRuntimeConfig()
@@ -203,6 +204,7 @@ const skipCoverAnimation = computed(() => {
 
 onMounted(() => {
   console.log('WORK ID PAGE - MOUNTED');
+  emit('onLockScroll', true)
 
   gsap.killTweensOf('#header-logo')
   gsap.to('#header-logo', { autoAlpha: 1 })

@@ -115,8 +115,9 @@ const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 
 const onClickProjectItem = (id, plane) => {
   storeDatasCurtains.setCurrentPlaneCover(plane)
-  storeDatasCurtains.scrollToTopCompleteAfterTransition = false
   console.log('onClickProjectItem', id, plane);
+  console.log('emit onLockScroll', false)
+  emit('onLockScroll', true)
 }
 
 onMounted(() => {

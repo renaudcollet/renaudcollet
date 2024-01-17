@@ -145,7 +145,7 @@ const onClickProjectItem = (id, plane) => {
   storeDatasCurtains.setCurrentPlaneCover(plane)
   console.log('onClickProjectItem', id, plane)
   console.log('emit onLockScroll', false)
-  emit('onLockScroll', false)
+  emit('onLockScroll', true)
 }
 
 onMounted(() => {

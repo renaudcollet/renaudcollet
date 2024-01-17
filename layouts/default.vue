@@ -53,13 +53,14 @@ const curtains = ref(null);
 const storeDatasCurtains = useDatasCurtainsStore();
 
 const onLockScroll = (isLocked, animate) => {
-  // // console.log('---> onLockScroll', isLocked);
   // storeDatas.lockScroll = isLocked;
   if (!isLocked) {
+    console.log('SCROLL ACTIVATED');
     lenis.start()
-    // lenis.scrollTo(0, {immediate: !animate })
+    lenis.scrollTo(0, {immediate: true })
   } else {
     storeDatasCurtains.scrollY = window.scrollY
+    console.log('SCROLL STOPPED');
     lenis.stop()
   } 
 }
