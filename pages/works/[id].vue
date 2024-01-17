@@ -125,7 +125,7 @@ const emit = defineEmits(['onLockScroll'])
 
 const root = ref(null);
 const imagePlane = ref(null);
-// const renderCover = ref(null);
+const renderCover = ref(null);
 
 // Curtains
 const storeDatasCurtains = useDatasCurtainsStore();
@@ -138,7 +138,10 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
     console.log('PAGE ID - transitionState.transitionComplete', storeDatasCurtains.scrollY);
     
     storeDatasCurtains.scrollToTopCompleteAfterTransition = false;
-    // console.log('emit - onLockScroll', false);
+
+    // To keep the same plane from project item
+    // storeDatasCurtains.currentPlaneCover.resetPlane(renderCover.value)
+    // storeDatasCurtains.currentPlaneCover.watchScroll = true
     // emit('onLockScroll', false)
 
     // Remove planes from previous page
@@ -155,10 +158,12 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
 })
 
 const onCoverReady = (e) => {
-  console.log('---> onCoverReady', e);
-  storeDatasCurtains.removeCurrentPlaneCover()
-  storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
-  emit('onLockScroll', false)
+  setTimeout(() => {
+    console.log('---> onCoverReady', e);
+    storeDatasCurtains.removeCurrentPlaneCover()
+    storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
+    emit('onLockScroll', false)
+  }, 250)
 }
 
 const config = useRuntimeConfig()
@@ -176,20 +181,6 @@ const keywords = currentProject.attributes.keywords.data
 
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 const { initZoomableImage, clearZoomableImage } = useZoomableImage();
-// const { 
-//   // firstPassProps, 
-//   // onFirstPassReady, 
-//   // onFirstPassRender, 
-//   // onRender, 
-//   updateScrollVelocity
-// } = useCurtainsShader();
-
-// const scrollVelocity = toRef(props, 'scrollVelocity');
-// watch(scrollVelocity, (newVal, oldVal) => {
-//   // console.log('watch scrollVelocity', newVal, oldVal);
-//   // if (storeDatasCurtains.scrollToTopCompleteAfterTransition)
-//     updateScrollVelocity(newVal)
-// })
 
 const coverSrc = computed(() => {
   return currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
@@ -197,6 +188,8 @@ const coverSrc = computed(() => {
 const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProjectCover.formats.xxlarge.url : currentProjectCover.url;
 const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
 const large = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
+
+console.log('IMAGE COVER URL', xlarge);
 
 const skipCoverAnimation = computed(() => {
   return storeDatas.previousPage !== null
