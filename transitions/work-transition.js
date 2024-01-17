@@ -103,14 +103,18 @@ export const workTransition = {
     const t = {v: 0}
     toggleTransitionComplete(false);
     gsap
-      .timeline({ paused: true, onComplete:() => {
-        console.log('workTransition onLeave complete');
-        done();
-      } })
+      // .timeline({ paused: true, onComplete:() => {
+      //   console.log('workTransition onLeave complete');
+      //   done();
+      // } })
       // .timeline({ paused: true })
-      .to(el, { opacity: 0, delay: 0, duration: durationLeaveWork })
-      // .to(t, { v: 1, delay: 0, duration: durationLeaveWork })
-      .play();
+      // .to(el, { opacity: 0, delay: 0, duration: durationLeaveWork })
+      .to(t, { v: 1, delay: 0, duration: durationLeaveWork,
+        onComplete:() => {
+          console.log('workTransition onLeave complete');
+          done();
+        }})
+      // .play();
     // setTimeout(() => {
     //   console.log('workTransition onLeave complete');
     //   done();
@@ -136,11 +140,18 @@ export const defaultTransition = {
   },
   onLeave: (el, done) => {
     toggleTransitionComplete(false);
+    const t = {v: 0}
     gsap
-      .timeline({ paused: true, onComplete: done })
-      // .timeline({ paused: true })
-      .to(el, { opacity: 0, delay: 0, duration: durationLeaveDefault })
-      .play();
+    //   .timeline({ paused: true, onComplete: done })
+    //   // .timeline({ paused: true })
+    //   .to(el, { opacity: 0, delay: 0, duration: durationLeaveDefault })
+    //   .play();
+    
+    .to(t, { v: 1, delay: 0, duration: durationLeaveDefault,
+      onComplete:() => {
+        console.log('workTransition onLeave complete');
+        done();
+      }})
   },
 };
 
