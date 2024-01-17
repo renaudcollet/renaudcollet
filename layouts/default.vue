@@ -23,7 +23,7 @@
       @onScrollZone="onScrollZone"
     />
   </Curtains>
-  <MouseCursor />
+  <MouseCursor ref="mouseCursor" />
   <span v-if="config" id="config"></span>
 </template>
 
@@ -47,8 +47,9 @@ await fetchDatas(S_DATA_SEO);
 const showCover3d = ref(false)
 const scrollZone = ref(null)
 const cover3d = ref(null);
-const shaderPass = ref(null);
+// const shaderPass = ref(null);
 const curtains = ref(null);
+const mouseCursor = ref(null);
 
 const storeDatasCurtains = useDatasCurtainsStore();
 
@@ -136,6 +137,10 @@ storeDatas.setCurrentPage(route.fullPath)
 watch(() => route.path, (value) => {
   // console.log('➮ DEFAULT LAYOUT - WATCH route fullpath ', value)
   storeDatas.setCurrentPage(value)
+
+  setTimeout(() => {
+    mouseCursor.value.reset()
+  }, 1500)
 
   // if (window.gtag)
   //   window.gtag('page_view', to.name)

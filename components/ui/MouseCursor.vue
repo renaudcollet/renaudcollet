@@ -58,6 +58,11 @@ import { gsap, Power2 } from 'gsap'
 
 export default {
   name: 'MouseCursor',
+  defineExpose() {
+    return {
+      reset: this.reset
+    }
+  },
   data() {
     return {
       mouseContainer: null,
@@ -389,6 +394,28 @@ export default {
     // }
   },
   methods: {
+    reset() {
+      gsap.killTweensOf(this.mouseSVGOutlineBig)
+      gsap.to(
+        this.mouseSVGOutlineBig, 
+        this.oTweenOutlineBigShow
+      )
+
+      gsap.killTweensOf(this.mouseSVGCenterSmall)
+      gsap.to(
+        this.mouseSVGCenterSmall, 
+        this.oTweenCenterSmallShow
+      )
+
+      gsap.killTweensOf(this.mouseSVGZoomIn)
+      gsap.to(
+        this.mouseSVGZoomIn,
+        {
+          display: 'none',
+          opacity: 0,
+        },
+      )
+    },
     onMouseMove(e) {
       // console.log(`onMouseMove`, e)
       // TODO: Draw triangle in the shader
