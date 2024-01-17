@@ -11,7 +11,7 @@ export const durationEnterWork = 0.5;
 export const durationLeaveWork = 0.8;
 
 export const durationEnterWorkId = 0.5;
-export const durationLeaveWorkId = 1;
+export const durationLeaveWorkId = 0.5;
 
 /**
  * Inspired by https://stackblitz.com/edit/nuxt-starter-bthjlg
