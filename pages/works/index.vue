@@ -80,6 +80,7 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
     storeDatasCurtains.scrollToTopCompleteAfterTransition = false;
 
+    emit('onLockScroll', false)
     storeDatasCurtains.removePlanes();
 
     setTimeout(() => {

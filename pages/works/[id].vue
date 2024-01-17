@@ -260,6 +260,7 @@ onUnmounted(() => {
   clearZoomableImage()
   // Note: imageplane disappear animation is in dataCurtains.js
   storeDatasCurtains.removePlanes()
+  emit('onLockScroll', true)
 })
 </script>
   
