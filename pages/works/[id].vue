@@ -90,7 +90,7 @@
 import { useDatasStore, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 import useZoomableImage from '~/compositions/use-zoomable-image';
-import useCurtainsShader from '~/compositions/use-curtains-shader';
+// import useCurtainsShader from '~/compositions/use-curtains-shader';
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
 import gsap from 'gsap';
 import { workIdTransition, durationEnterWorkId } from '../transitions/work-transition';
@@ -203,7 +203,7 @@ const skipCoverAnimation = computed(() => {
 })
 
 onMounted(() => {
-  console.log('WORK ID PAGE - MOUNTED');
+  // console.log('WORK ID PAGE - MOUNTED');
   emit('onLockScroll', true)
 
   gsap.killTweensOf('#header-logo')
@@ -217,7 +217,7 @@ onMounted(() => {
 
   // Create plane cover for curtains
   // https://www.curtainsjs.com/render-target-class.html#basic-usage
-  console.log('imagePlane', imagePlane.value);
+  // console.log('imagePlane', imagePlane.value);
   // create a new render target using our curtains object
   // const renderTarget = new RenderTarget(storeDatasCurtains.curtains)
   // // add our plane to our frame buffer object
