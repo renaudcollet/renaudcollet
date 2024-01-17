@@ -22,18 +22,30 @@
         />
       </div>
     <!-- </ClientOnly> -->
-    <h1 class="project-item__title">
-      <div v-for="(line, index) in paraphToLines" class="line">
+    <div class="project-item__title">
+      <h1>
+        <div v-for="(line, index) in paraphToLines" class="line">
+          <div 
+            class="scroll-reveal"
+            data-scroll-reveal-opacity-y
+            :data-scroll-reveal-delay="1"
+            data-scroll-reveal-duration="0.5"
+          >
+            {{ line.trim() }}
+          </div>
+        </div>
+      </h1>
+      <h2>
         <div 
           class="scroll-reveal"
           data-scroll-reveal-opacity-y
-          :data-scroll-reveal-delay="1"
+          data-scroll-reveal-delay="1.2"
           data-scroll-reveal-duration="0.5"
         >
-          {{ line.trim() }}
+          {{ props.datas.attributes.brand }}
         </div>
-      </div>
-    </h1>
+      </h2>
+    </div>
     <div 
       class="project-item__text scroll-reveal z-index-text"
       data-scroll-reveal-height

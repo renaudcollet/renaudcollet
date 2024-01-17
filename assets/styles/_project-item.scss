@@ -215,6 +215,10 @@
         }
       }
     }
+
+    &__title {
+      position: absolute;
+    }
   
     h1,
     h3 {
@@ -225,7 +229,6 @@
     }
   
     h1 {
-      position: absolute;
       font-size: 28px;
       font-weight: 600;
       margin-bottom: 7px;
@@ -244,17 +247,52 @@
   
       @include media-breakpoint-up(lg) {
         font-size: 62px;
-        margin-bottom: 15px;
+        margin-bottom: 5px;
         margin-top: 20px;
         margin-left: 20px;
       }
   
       @include media-breakpoint-up(xl) {
-        font-size: 70px;
-        margin-bottom: 15px;
+        font-size: 66px;
+        // margin-bottom: 5px;
         margin-top: 28px;
         margin-left: 45px;
         padding-right: 60px;
+      }
+    }
+
+    h2 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 7px;
+      display: flex;
+      align-items: flex-start;
+      align-self: flex-start;
+      filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, 0.80));
+      margin-top: 0;
+      margin-left: 16px;
+      padding-right: 10px;
+  
+      @include media-breakpoint-up(md) {
+        font-size: 2.592593vw;
+        margin-bottom: 1.944444vw;
+      }
+  
+      @include media-breakpoint-up(lg) {
+        font-size: 20px;
+        margin-bottom: 15px;
+        // margin-top: 20px;
+        margin-left: 20px;
+        filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.80));
+      }
+  
+      @include media-breakpoint-up(xl) {
+        font-size: 28px;
+        margin-bottom: 15px;
+        // margin-top: 28px;
+        margin-left: 45px;
+        padding-right: 60px;
+        filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.80));
       }
     }
   
