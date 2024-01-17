@@ -7,8 +7,8 @@ const { toggleTransitionComplete } = useTransitionComposable();
 export const durationEnterDefault = 1;
 export const durationLeaveDefault = 0.5;
 
-export const durationEnterWork = 2;
-export const durationLeaveWork = 1;
+export const durationEnterWork = 0.5;
+export const durationLeaveWork = 0.5;
 
 export const durationEnterWorkId = 0.5;
 export const durationLeaveWorkId = 0.5;
@@ -32,7 +32,7 @@ export const workIdTransition = {
           done();
         },
       })
-      .to(el, { autoAlpha: 1, duration: durationEnterWork })
+      .to(el, { autoAlpha: 1, duration: durationEnterWorkId })
       .play();
   },
   onLeave: (el, done) => {
@@ -44,7 +44,7 @@ export const workIdTransition = {
         done();
       } })
       // .timeline({ paused: true })
-      .to(el, { autoAlpha: 0, delay: 0, duration: durationLeaveWork })
+      .to(el, { autoAlpha: 0, delay: 0, duration: durationLeaveWorkId })
       .play();
   },
 };
@@ -65,7 +65,7 @@ export const workTransition = {
         },
       })
       // .to(el, { autoAlpha: 1, duration: durationEnterWorkId })
-      .to(t, { v: 1, duration: durationEnterWorkId })
+      .to(t, { v: 1, duration: durationEnterWork })
       .play();
   },
   onAfterEnter: (el) => {
@@ -80,7 +80,7 @@ export const workTransition = {
         done();
       } })
       // .timeline({ paused: true })
-      .to(el, { autoAlpha: 0, delay: 0, duration: durationLeaveWorkId })
+      .to(el, { autoAlpha: 0, delay: 0, duration: durationLeaveWork })
       .play();
   },
 };

@@ -20,7 +20,7 @@
         <h1 
           class="cover-top__title__project scroll-reveal"
           data-scroll-reveal-opacity-y
-          data-scroll-reveal-delay="0.6"
+          :data-scroll-reveal-delay="durationEnterWorkId + 0.1"
           data-scroll-reveal-duration="0.7"
         >
           {{ currentProject.attributes.titre }}
@@ -28,7 +28,7 @@
         <div
           class="cover-top__title__brand scroll-reveal"
           data-scroll-reveal-opacity-y
-          data-scroll-reveal-delay="0.9"
+          :data-scroll-reveal-delay="durationEnterWorkId + 0.3"
           data-scroll-reveal-duration="0.3"
         >
           Client : {{ currentProject.attributes.brand }}
@@ -36,7 +36,7 @@
         <div
           class="cover-top__title__brand scroll-reveal"
           data-scroll-reveal-opacity-y
-          data-scroll-reveal-delay="1.2"
+          :data-scroll-reveal-delay="durationEnterWorkId + 0.6"
           data-scroll-reveal-duration="0.3"
         >
           Agency : {{ currentProject.attributes.agency }}
@@ -44,7 +44,7 @@
         <div
           class="cover-top__title__brand scroll-reveal"
           data-scroll-reveal-opacity-y
-          data-scroll-reveal-delay="1.5"
+          :data-scroll-reveal-delay="durationEnterWorkId + 0.9"
           data-scroll-reveal-duration="0.3"
         >
           Filters : 
@@ -93,7 +93,7 @@ import useZoomableImage from '~/compositions/use-zoomable-image';
 import useCurtainsShader from '~/compositions/use-curtains-shader';
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
 import gsap from 'gsap';
-import { workIdTransition } from '../transitions/work-transition';
+import { workIdTransition, durationEnterWorkId } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 // import { RenderTarget, Plane } from 'curtainsjs';
@@ -150,7 +150,7 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
         initScrollReveal(root.value)
         initZoomableImage(root.value)
       }
-    }, 500)
+    }, 100)
   }
 })
 

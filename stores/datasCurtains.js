@@ -16,7 +16,7 @@ export const useDatasCurtainsStore = defineStore( 'datasCurtains', {
   actions: {
 
     setCurtains(curtains) {
-      console.log('setCurtains', curtains);
+      // console.log('setCurtains', curtains);
       this.curtains = curtains
     },
 
@@ -30,18 +30,18 @@ export const useDatasCurtainsStore = defineStore( 'datasCurtains', {
     setCurrentPlaneCover(value) {
       this.currentPlaneCover = value
       this.currentPlaneCover.resetPlane()
-      console.log('setCurrentPlaneCover', value);
-      console.log('--> cover texture', value.textures[0]);
+      // console.log('setCurrentPlaneCover', value);
+      // console.log('--> cover texture', value.textures[0]);
 
       // TODO: Maybe do this to avoid black flash with cover texture
       // Get texture once expanded
       // Copy it to the render target
-      this.currentCoverTexture = value.textures[0]
+      // this.currentCoverTexture = value.textures[0]
 
       // console.log(`Curtains disable drawing`);
       // this.curtains.disableDrawing();
 
-      console.log(`Curtains contains ${this.curtains.planes.length} planes`);
+      // console.log(`Curtains contains ${this.curtains.planes.length} planes`);
     },
 
     // Remove planes from previous page

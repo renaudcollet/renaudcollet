@@ -33,7 +33,7 @@
 <script setup>
 import { useDatasStore, S_DATA_ACCUEIL, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
-import useCurtainsShader from '~/compositions/use-curtains-shader';
+// import useCurtainsShader from '~/compositions/use-curtains-shader';
 import gsap from 'gsap';
 import { workTransition, durationEnterDefault } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
