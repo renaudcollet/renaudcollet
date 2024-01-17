@@ -81,7 +81,7 @@ import useElementVisibility from '~/compositions/use-element-visibility';
 import gsap from 'gsap'
 import { toRef } from '@vueuse/core';
 import { durationLeaveDefault } from '../transitions/work-transition';
-import { Vec3 } from 'curtainsjs';
+// import { Vec3 } from 'curtainsjs';
 
 const config = useRuntimeConfig()
 const props = defineProps({
@@ -103,7 +103,6 @@ const props = defineProps({
     default: false,
   }
 })
-
 const mountPlane = toRef(props, 'mountPlanes')
 
 const emit = defineEmits(['onClick', 'onClickAnimationComplete'])
@@ -144,9 +143,6 @@ const onClick = () => {
 
   isClicked = true;
 
-  imagePlane.value.planeMesh.htmlElement.style.zIndex = 1000;
-  imagePlane.value.resize();
-
   // stop scroll
   emit('onClick', props.id, imagePlane.value.planeMesh)
 
@@ -166,7 +162,8 @@ const onClick = () => {
   // console.log('final size', elFinalSize.width, elFinalSize.height);
 
   // Change z position to cover other planes
-  imagePlane.value.planeMesh.uniforms.zPos.value = -0.001; // OK
+  // Done in datasCurtains.js
+  // imagePlane.value.planeMesh.uniforms.zPos.value = -0.001; // OK
   // imagePlane.value.planeMesh.relativeTranslation(new Vec3(0, 0, -1.0))
 
   gsap.killTweensOf(planeHtml)
@@ -198,6 +195,7 @@ const onClick = () => {
     onComplete: () => {
       imagePlane.value.resize();
       imagePlane.value.planeMesh.watchScroll = false;
+      // imagePlane.value.planeMesh.resetPlane()
       // emit('onClickAnimationComplete', props.id, imagePlane.value.planeMesh) // Never triggered because of vuejs transition already unmounted this component  
     }
   })

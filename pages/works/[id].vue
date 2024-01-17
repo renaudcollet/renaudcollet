@@ -11,7 +11,9 @@
           object-fit="cover" 
           class="project-item__image" 
           ref="imagePlane"
+          @ready="onCoverReady"
         />
+        <!-- <div id="render-cover" ref="renderCover" class="render-cover"></div> -->
       </div>
       <div class="cover-top__title z-index-text">
         <div class="cover-top__title__header-minimize" data-header-scroll-minimize></div>
@@ -94,6 +96,7 @@ import gsap from 'gsap';
 import { workIdTransition } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
+// import { RenderTarget, Plane } from 'curtainsjs';
 
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
@@ -109,6 +112,7 @@ const props = defineProps({
   }
 })
 
+
 /**
  *  page transition
  * https://stackblitz.com/edit/nuxt-starter-bthjlg?file=pages%2Flayers.vue
@@ -121,6 +125,7 @@ const emit = defineEmits(['onLockScroll'])
 
 const root = ref(null);
 const imagePlane = ref(null);
+// const renderCover = ref(null);
 
 // Curtains
 const storeDatasCurtains = useDatasCurtainsStore();
@@ -146,13 +151,14 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
         initZoomableImage(root.value)
       }
     }, 500)
-
-    setTimeout(() => {
-      storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
-      storeDatasCurtains.removeCurrentPlaneCover()
-    }, 750)
   }
 })
+
+const onCoverReady = (e) => {
+  console.log('---> onCoverReady', e);
+  storeDatasCurtains.removeCurrentPlaneCover()
+  storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
+}
 
 const config = useRuntimeConfig()
 const route = useRoute()
@@ -177,12 +183,12 @@ const {
   updateScrollVelocity
 } = useCurtainsShader();
 
-const scrollVelocity = toRef(props, 'scrollVelocity');
-watch(scrollVelocity, (newVal, oldVal) => {
-  // console.log('watch scrollVelocity', newVal, oldVal);
-  // if (storeDatasCurtains.scrollToTopCompleteAfterTransition)
-    updateScrollVelocity(newVal)
-})
+// const scrollVelocity = toRef(props, 'scrollVelocity');
+// watch(scrollVelocity, (newVal, oldVal) => {
+//   // console.log('watch scrollVelocity', newVal, oldVal);
+//   // if (storeDatasCurtains.scrollToTopCompleteAfterTransition)
+//     updateScrollVelocity(newVal)
+// })
 
 const coverSrc = computed(() => {
   return currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
@@ -207,12 +213,44 @@ onMounted(() => {
   // const route = useRoute()
   // useTrackEvent('work-id-page', route.params.id)
 
-  nextTick(() => {
-    // if (skipCoverAnimation.value) {
-    //   initScrollReveal(root.value)
-    //   initZoomableImage(root.value)
-    // }
-  })
+  // Create plane cover for curtains
+  // https://www.curtainsjs.com/render-target-class.html#basic-usage
+  console.log('imagePlane', imagePlane.value);
+  // create a new render target using our curtains object
+  // const renderTarget = new RenderTarget(storeDatasCurtains.curtains)
+  // // add our plane to our frame buffer object
+  // storeDatasCurtains.currentPlaneCover.setRenderTarget(renderTarget)
+
+  // const coverElement = renderCover.value //document.getElementById('render-cover')
+  // console.log('coverElement', coverElement);
+  // const renderPlane = new Plane(storeDatasCurtains.curtains, coverElement, {
+  //   vertexShaderID: 'render-plane-vs',
+  //   fragmentShaderID: 'render-plane-fs',
+  //   widthSegments: 1,
+  //   heightSegments: 1,
+  //   uniforms: {
+  //     uTexture: {
+  //       value: renderTarget.textures[0],
+  //     },
+  //     uAlpha: {
+  //       value: 1,
+  //     },
+  //   },
+  // })
+
+  // renderPlane.onReady(() => {
+  //   const renderTexture = renderPlane.createTexture({
+  //     sampler: 'uTexture',
+  //     fromTextureSource: renderTarget.getTexture(),
+  //   })
+  // })
+
+  // nextTick(() => {
+  //   // if (skipCoverAnimation.value) {
+  //   //   initScrollReveal(root.value)
+  //   //   initZoomableImage(root.value)
+  //   // }
+  // })
 })
 
 onUnmounted(() => {
@@ -227,6 +265,17 @@ onUnmounted(() => {
 /**
 SECTION .cover-top
 **/
+
+.render-cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: red;
+  pointer-events: none;
+}
+
 .cover-top {
 
   position: relative;

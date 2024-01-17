@@ -70,7 +70,7 @@ export default {
         .onError(() => emit("error", plane))
         .onLoading((texture) => emit("loading", plane, texture))
         .onReady(() => {
-          // console.log("ready", plane);
+          // console.log("plane ready "+ plane.index +" "+plane.uuid, plane);
           emit("ready", plane)
         })
         .onAfterResize(() => emit("after-resize", plane))

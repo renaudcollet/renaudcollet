@@ -114,7 +114,7 @@ watch(scrollVelocity, (newVal, oldVal) => {
 })
 
 const onClickProjectItem = (id, plane) => {
-  storeDatasCurtains.currentPlaneCover = plane
+  storeDatasCurtains.setCurrentPlaneCover(plane)
   storeDatasCurtains.scrollToTopCompleteAfterTransition = false
   console.log('onClickProjectItem', id, plane);
 }

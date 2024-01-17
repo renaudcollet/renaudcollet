@@ -28,6 +28,7 @@ Bug:
     ✘ Little black flash when pause the video -> Bug from Brave browser @cancelled(24-01-15 11:09)
     ✘ Error when go from another page to homepage @cancelled(23-10-10 11:56)
         Might be du to .env file wrong IPs
+    ☐ Mouse cursor is visible on ipad when click on a project or a link
 
 Menu: 
     ✔ Rollover triangle @done(23-10-10 10:07)
@@ -35,27 +36,32 @@ Menu:
 Animation:
     ✔ Titles and Vignettes should appear with a skew mask animation @done(23-09-21 16:56)
     ✔ Transition on the cover when click homepage project to project page @done(24-01-15 11:14)
-    ☐ Mouse Cursor - Should be in shader - make a trail of triangles smaller and smaller
     ☐ Mouse hover on project item should apply when scrolling while mouse not moving
-        -> https://codepen.io/kleinfreund/pen/XYdBYP
-
-Webgl:
-    ☐ Use shaderPass.loadCanvas() to load a canvas as a texture (https://www.psychoactive.co.nz/content-hub/fixing-scrolling-jank-in-webgl-using-curtain-js-and-virtual-scroll)
-    ✔ Add a webgl effect for images reveal using curtains.js @done(23-10-03 11:32)
-    ✔ Déclencher l'ouverture quand l'image apparait dans le viewport @done(23-10-03 15:42)
-    ✔ Probleme d'image resolution, sur luna rossa et digital mirror, les coins n'ont pas la même taille @done(23-10-03 17:07)
-    ☐ Add effect on vignettes when hovering : https://pixallus.com/creating-webgl-effects-with-curtainsjs/
-    ☐ Improve speed with OffscreenCanvas (https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas)
+    -> https://codepen.io/kleinfreund/pen/XYdBYP
+    
+    Webgl:
+        ☐ Use shaderPass.loadCanvas() to load a canvas as a texture (https://www.psychoactive.co.nz/content-hub/fixing-scrolling-jank-in-webgl-using-curtain-js-and-virtual-scroll)
+        ✔ Add a webgl effect for images reveal using curtains.js @done(23-10-03 11:32)
+        ✔ Déclencher l'ouverture quand l'image apparait dans le viewport @done(23-10-03 15:42)
+        ✔ Probleme d'image resolution, sur luna rossa et digital mirror, les coins n'ont pas la même taille @done(23-10-03 17:07)
+        ☐ Mouse Cursor - Should be in shader - make a trail of triangles smaller and smaller
+        ☐ Add effect on vignettes when hovering : https://pixallus.com/creating-webgl-effects-with-curtainsjs/
+        ☐ Improve speed with OffscreenCanvas (https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas)
     
     Priority :
         ✔ FIX Scroll jank @done(24-01-15 17:24)
             ✔ Check Cover3D is stopped when not visible @done(24-01-15 17:23)
             ✘ https://www.psychoactive.co.nz/content-hub/fixing-scrolling-jank-in-webgl-using-curtain-js-and-virtual-scroll @cancelled(24-01-15 17:23)
-        ☐ FPS is low on home page
+        ✔ FPS is 'lower' on home page: (it is max fps when I hide cover) @done(24-01-16 11:30)
+            ✔ Problem was device pixel ratio @done(24-01-16 11:30)
+            ☐ Try to render cover in curtains canvas
         ☐ Black frame on cover transition to work id
         ✔ Page index and work, z index problem when click on a project @done(24-01-15 12:01)
-        ☐ iOS, index page : when scroll we have a white page
+        ✔ iOS, index page : when scroll we have a white page @done(24-01-16 11:31)
+        ☐ Scroll when change page, maybe deactivate it and reactivate after transition complete ?
+        ☐ Video player breaks curtains planes
         ☐ Bug on my Android - image plane are stretched horizontally
+
 
     ✘ Particles : @cancelled(24-01-15 11:13)
         Joshua Davis - https://codepen.io/jshuadvd/pen/ogKeBB

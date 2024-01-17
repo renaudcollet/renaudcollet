@@ -17,7 +17,8 @@ export const params = {
   },
   preserveDrawingBuffer: {
     type: Boolean,
-    default: false,
+    default: true,
+    // default: false,
   },
   failIfMajorPerformanceCaveat: {
     type: Boolean,
@@ -33,7 +34,8 @@ export const params = {
   },
   autoResize: {
     type: Boolean,
-    default: true,
+    // default: true,
+    default: false,
   },
   pixelRatio: {
     type: Number,

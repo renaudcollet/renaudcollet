@@ -30,7 +30,7 @@
 <script setup>
 import Cover3D from '~/components/webgl/Cover3D.vue';
 import { useDatasStore, S_DATA_SEO } from '~/stores/datas';
-// import { useDatasCurtainsStore } from "~/stores/datasCurtains";
+import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 // import { Curtains } from "vue-curtains";
 // import ShaderPass from '~/components/curtains/ShaderPass/index.vue';
 import Curtains from "~/components/curtains/Curtains/index.vue";
@@ -48,8 +48,9 @@ const showCover3d = ref(false)
 const scrollZone = ref(null)
 const cover3d = ref(null);
 const shaderPass = ref(null);
+const curtains = ref(null);
 
-// const storeDatasCurtains = useDatasCurtainsStore();
+const storeDatasCurtains = useDatasCurtainsStore();
 
 const onLockScroll = (isLocked, animate) => {
   // // console.log('---> onLockScroll', isLocked);
@@ -110,9 +111,11 @@ const onCurtainsReady = (_curtains) => {
   console.log('onCurtainsReady', _curtains);
   // curtains.disableDrawing();
 
-  console.log('shaderPass', shaderPass.value);
+  storeDatasCurtains.setCurtains(_curtains)
 
-  _curtains.autoResize = false
+  // NOTE: Curtains params changed directly in the custom Curtains component (params.js)
+  // _curtains.autoResize = false
+
   let timeout = false
   window.addEventListener('resize', () => {
     clearTimeout(timeout);
@@ -130,7 +133,7 @@ const onCurtainsReady = (_curtains) => {
 
 storeDatas.setCurrentPage(route.fullPath)
 watch(() => route.path, (value) => {
-  console.log('➮ DEFAULT LAYOUT - WATCH route fullpath ', value)
+  // console.log('➮ DEFAULT LAYOUT - WATCH route fullpath ', value)
   storeDatas.setCurrentPage(value)
 
   // if (window.gtag)
@@ -180,7 +183,7 @@ const onScroll = () => {
 }
 
 onMounted(() => {
-  console.log('DEFAULT LAYOUT - MOUNTED');
+  // console.log('DEFAULT LAYOUT - MOUNTED');
   config = window.location.hash === '#config'
 
   const c1 = 1.70158;
@@ -214,10 +217,10 @@ onMounted(() => {
   requestAnimationFrame(update)
 })
 
-onUnmounted(() => {
-  console.log('DEFAULT LAYOUT - UNMOUNTED');
-  lenis.destroy()
-})
+// onUnmounted(() => {
+//   console.log('DEFAULT LAYOUT - UNMOUNTED');
+//   lenis.destroy()
+// })
 
 onErrorCaptured((err) => {
   // handle the error here

@@ -128,7 +128,6 @@ const isReady = ref(false);
 const isVisible = toRef(props, 'isVisible');
 
 watch(isVisible, (newVal, oldVal) => {
-  // console.log(`${ props.id} isVisible`, newVal);
   if (newVal) {
     appear();
   }
@@ -136,22 +135,28 @@ watch(isVisible, (newVal, oldVal) => {
 
 // Disappear is handled in datasCurtains.js
 const appear = () => {
-  // console.log('/!/ appear', planeMesh.value);
   if(!planeMesh.value) return
 
-  const t = {u: 0, v: 0}
-  gsap.to(t, {
-    v: 0.7,
-    duration: props.skipAnimation ? 0 : 1,
-    delay: props.skipAnimation ? 0 : 0.2,
-    // repeat: -1,
-    onUpdate: () => {
-        planeMesh.value.uniforms.uOpenProgress.value = t.v
-    },
-    onComplete: () => {
-        planeMesh.value.uniforms.uOpenProgress.value = t.v
-    },
-  })
+  if (props.skipAnimation) {
+    // Case where user arrives from home page or work page, with a cover transition
+    planeMesh.value.uniforms.uOpenProgress.value = 0.7
+    console.log('-> PLANE COVER IS STRAIGHT VISIBLE');
+    return
+  } else {
+    // Case where item is shown by scroll or user arrives directly on a project page (cover will appear with a transition)
+    const t = {u: 0, v: 0}
+    gsap.to(t, {
+      v: 0.7,
+      duration: 1,
+      delay: 0.2,
+      onUpdate: () => {
+          planeMesh.value.uniforms.uOpenProgress.value = t.v
+      },
+      onComplete: () => {
+          planeMesh.value.uniforms.uOpenProgress.value = t.v
+      },
+    })
+  }
 }
 
 const disappear = () => {
@@ -183,7 +188,6 @@ const onReady = (plane) => {
       })
 
       isReady.value = true;
-      // console.log(`onReady ${props.src}`, `isVisible ${props.isVisible}`, `isReady ${isReady.value}` );
       if (props.isVisible) {
         appear();
       }
