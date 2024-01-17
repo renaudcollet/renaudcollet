@@ -36,7 +36,7 @@ export const workIdTransition = {
       .to(el, { opacity: 1, duration: durationEnterWorkId,
       // .to(t, { v: 1, duration: durationEnterWorkId,
         onComplete: () => {
-          // console.log('workIdTransition onEnter complete');
+          console.log('workIdTransition onEnter complete');
           toggleTransitionComplete(true);
           done();
         } })
@@ -60,7 +60,7 @@ export const workIdTransition = {
       .to(el, { opacity: 0, delay: 0, duration: durationLeaveWorkId,
       // .to(t, { v: 1, delay: 0, duration: durationLeaveWorkId, 
         onComplete:() => {
-          // console.log('workIdTransition onLeave complete');
+          console.log('workIdTransition onLeave complete');
           done();
         } })
       // .play();
@@ -109,6 +109,9 @@ export const workTransition = {
       // } })
       // .timeline({ paused: true })
       // .to(el, { opacity: 0, delay: 0, duration: durationLeaveWork })
+
+      // No need for opacity 0, because plane covers everything
+      // TODO: But need opacity when not going to work page id !
       .to(t, { v: 1, delay: 0, duration: durationLeaveWork,
         onComplete:() => {
           console.log('workTransition onLeave complete');
@@ -126,11 +129,13 @@ export const defaultTransition = {
   name: 'default-transiton',
   mode: 'out-in',
   onEnter: (el, done) => {
+    console.log('defaultTransition onEnter');
     gsap.set(el, { opacity: 0 });
     gsap
       .timeline({
         paused: true,
         onComplete() {
+          console.log('defaultTransition onEnter complete');
           toggleTransitionComplete(true);
           done();
         },
@@ -139,6 +144,7 @@ export const defaultTransition = {
       .play();
   },
   onLeave: (el, done) => {
+    console.log('defaultTransition onLeave');
     toggleTransitionComplete(false);
     const t = {v: 0}
     gsap
@@ -147,9 +153,12 @@ export const defaultTransition = {
     //   .to(el, { opacity: 0, delay: 0, duration: durationLeaveDefault })
     //   .play();
     
-    .to(t, { v: 1, delay: 0, duration: durationLeaveDefault,
+      // No need for opacity 0, because plane covers everything
+      // TODO: But need opacity when not going to work page id !
+    // .to(t, { v: 1, delay: 0, duration: durationLeaveDefault,
+    .to(el, { opacity: 0, delay: 0, duration: durationLeaveDefault,
       onComplete:() => {
-        console.log('workTransition onLeave complete');
+        console.log('defaultTransition onLeave complete');
         done();
       }})
   },
