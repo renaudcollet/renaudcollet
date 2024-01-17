@@ -99,19 +99,6 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
 
 const root = ref(null);
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
-// const { 
-//   // firstPassProps, 
-//   // onFirstPassReady, 
-//   // onFirstPassRender, 
-//   // onRender, 
-//   updateScrollVelocity
-// } = useCurtainsShader();
-
-// const scrollVelocity = toRef(props, 'scrollVelocity');
-// watch(scrollVelocity, (newVal, oldVal) => {
-//   if (storeDatasCurtains.scrollToTopCompleteAfterTransition)
-//     updateScrollVelocity(newVal)
-// })
 
 // Select filter
 watch(() => storeDatas.projectsFiltered, (newVal, oldVal) => {
