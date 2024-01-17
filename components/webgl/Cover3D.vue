@@ -94,7 +94,7 @@ const config = {
   },
   showPostProcessing: true,
   shader: {
-    simpleSweep: true
+    simpleSweep: false
   }
 }
 
@@ -379,7 +379,7 @@ const initPostprocessing = () => {
     // transparent: true,
     vertexShader: coverVert,
     // fragmentShader: coverFrag,
-    fragmentShader: sweepFrag,
+    fragmentShader: config.shader.simpleSweep ? sweepFrag : coverFrag,
   })
 
   quad = new THREE.Mesh(
