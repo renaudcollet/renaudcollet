@@ -100,7 +100,7 @@ const planeProps = {
         type: "1f",
         value: 0,
     },
-    zPos: {
+    uZPos: {
         name: "uZPos",
         type: "1f",
         // value: isVideo() ? 0. : 0.2,

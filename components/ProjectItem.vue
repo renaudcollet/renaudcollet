@@ -175,7 +175,7 @@ const onClick = () => {
 
   // Change z position to cover other planes
   // Done in datasCurtains.js
-  // imagePlane.value.planeMesh.uniforms.zPos.value = -0.001; // OK
+  imagePlane.value.planeMesh.uniforms.uZPos.value = -0.001; // OK
   // imagePlane.value.planeMesh.relativeTranslation(new Vec3(0, 0, -1.0))
 
   gsap.killTweensOf(planeHtml)

@@ -56,7 +56,7 @@ export const useDatasCurtainsStore = defineStore( 'datasCurtains', {
           // console.log('removePlanes', plane, plane.index);
 
           // Update z of all the planes except the cover
-          plane.uniforms.zPos.value = 0.001
+          // plane.uniforms.uZPos.value = 0.001 // Not working for home page...
 
           const t = {u: 0, v: 0.7}
           gsap.to(t, {
