@@ -132,6 +132,8 @@ const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProje
 const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
 const large = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
 
+// console.log('IMAGE PROJECT ITEM URL', xxlarge);
+
 const paraphToLines = computed(() => {
   return props.datas.attributes.titre.split('<br />');
 })
@@ -196,6 +198,7 @@ const onClick = () => {
     // left: `${-rect.left}px`,
     top: `0px`,
     left: `0px`,
+    // width: rectFinal.width - 100, // debug
     width: rectFinal.width,
     height: rectFinal.height,
     onStart: () => {
@@ -238,8 +241,8 @@ onMounted(() => {
 //   // console.log('Unmounted ProjectItem', props.id, props.datas);
 // })
 
-onBeforeUnmount(() => {
-  // console.log('onBeforeUnmount ProjectItem', props.id, props.datas);
-  // gsap.killTweensOf(planeHtml)
-})
+// onBeforeUnmount(() => {
+//   // console.log('onBeforeUnmount ProjectItem', props.id, props.datas);
+//   // gsap.killTweensOf(planeHtml)
+// })
 </script>

@@ -29,7 +29,7 @@ export const useDatasCurtainsStore = defineStore( 'datasCurtains', {
     
     setCurrentPlaneCover(value) {
       this.currentPlaneCover = value
-      this.currentPlaneCover.resetPlane()
+      // this.currentPlaneCover.resetPlane()
       // console.log('setCurrentPlaneCover', value);
       // console.log('--> cover texture', value.textures[0]);
 
@@ -57,6 +57,8 @@ export const useDatasCurtainsStore = defineStore( 'datasCurtains', {
 
           // Update z of all the planes except the cover
           // plane.uniforms.uZPos.value = 0.001 // Not working for home page...
+
+          // TODO: Need to shorten duration when leaving work id page (to prevent scroll to top)
 
           const t = {u: 0, v: 0.7}
           gsap.to(t, {
@@ -88,6 +90,7 @@ export const useDatasCurtainsStore = defineStore( 'datasCurtains', {
       if (this.currentPlaneCover) {
         console.log(`REMOVE PLANE COVER`);
         // console.log(`Curtains contains ${this.curtains.planes.length} planes before remove cover`);
+        // this.currentPlaneCover.visible = false
         this.currentPlaneCover.remove();
         this.currentPlaneCover = null
       }
