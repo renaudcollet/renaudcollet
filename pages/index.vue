@@ -99,19 +99,19 @@ const scrollSvg = ref(null);
 
 // const { initLogoObserver, clearLogoObserver } = useLogoObserver();
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
-const { 
-  // firstPassProps, 
-  // onFirstPassReady, 
-  // onFirstPassRender, 
-  // onRender, 
-  updateScrollVelocity
-} = useCurtainsShader();
+// const { 
+//   // firstPassProps, 
+//   // onFirstPassReady, 
+//   // onFirstPassRender, 
+//   // onRender, 
+//   updateScrollVelocity
+// } = useCurtainsShader();
 
-const scrollVelocity = toRef(props, 'scrollVelocity');
-watch(scrollVelocity, (newVal, oldVal) => {
-  if (storeDatasCurtains.scrollToTopCompleteAfterTransition)
-    updateScrollVelocity(newVal)
-})
+// const scrollVelocity = toRef(props, 'scrollVelocity');
+// watch(scrollVelocity, (newVal, oldVal) => {
+//   if (storeDatasCurtains.scrollToTopCompleteAfterTransition)
+//     updateScrollVelocity(newVal)
+// })
 
 const onClickProjectItem = (id, plane) => {
   storeDatasCurtains.setCurrentPlaneCover(plane)

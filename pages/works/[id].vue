@@ -146,7 +146,7 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
 
     setTimeout(() => {
       if (root.value) {
-        // Add if condition in case user change page quickly, because where are in a setTimeout
+        // Add if condition in case user change page quickly, because we are in a setTimeout
         initScrollReveal(root.value)
         initZoomableImage(root.value)
       }
@@ -175,13 +175,13 @@ const keywords = currentProject.attributes.keywords.data
 
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 const { initZoomableImage, clearZoomableImage } = useZoomableImage();
-const { 
-  // firstPassProps, 
-  // onFirstPassReady, 
-  // onFirstPassRender, 
-  // onRender, 
-  updateScrollVelocity
-} = useCurtainsShader();
+// const { 
+//   // firstPassProps, 
+//   // onFirstPassReady, 
+//   // onFirstPassRender, 
+//   // onRender, 
+//   updateScrollVelocity
+// } = useCurtainsShader();
 
 // const scrollVelocity = toRef(props, 'scrollVelocity');
 // watch(scrollVelocity, (newVal, oldVal) => {

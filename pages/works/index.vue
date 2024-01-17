@@ -86,24 +86,31 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
       storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
       storeDatasCurtains.removeCurrentPlaneCover()
     }, 100)
+
+    setTimeout(() => {
+      if (root.value) {
+        // Add if condition in case user change page quickly, because we are in a setTimeout
+        initScrollReveal(root.value)
+      }
+    }, 500)
   }
 })
 
 const root = ref(null);
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
-const { 
-  // firstPassProps, 
-  // onFirstPassReady, 
-  // onFirstPassRender, 
-  // onRender, 
-  updateScrollVelocity
-} = useCurtainsShader();
+// const { 
+//   // firstPassProps, 
+//   // onFirstPassReady, 
+//   // onFirstPassRender, 
+//   // onRender, 
+//   updateScrollVelocity
+// } = useCurtainsShader();
 
-const scrollVelocity = toRef(props, 'scrollVelocity');
-watch(scrollVelocity, (newVal, oldVal) => {
-  if (storeDatasCurtains.scrollToTopCompleteAfterTransition)
-    updateScrollVelocity(newVal)
-})
+// const scrollVelocity = toRef(props, 'scrollVelocity');
+// watch(scrollVelocity, (newVal, oldVal) => {
+//   if (storeDatasCurtains.scrollToTopCompleteAfterTransition)
+//     updateScrollVelocity(newVal)
+// })
 
 // Select filter
 watch(() => storeDatas.projectsFiltered, (newVal, oldVal) => {
@@ -144,11 +151,6 @@ const onClickProjectItem = (id, plane) => {
 onMounted(() => {
   gsap.killTweensOf('#header-logo')
   gsap.to('#header-logo', { autoAlpha: 1 })
-
-  nextTick(() => {
-    initScrollReveal(root.value)
-  })
-
 })
 
 onUnmounted(() => {
