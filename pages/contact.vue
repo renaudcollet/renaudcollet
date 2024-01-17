@@ -118,6 +118,8 @@ definePageMeta({
   pageTransition: defaultTransition,
 });
 
+const emit = defineEmits(['onLockScroll'])
+
 // Curtains
 const storeDatasCurtains = useDatasCurtainsStore();
 const bMountPlanes = computed(() => {
@@ -129,6 +131,7 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
     storeDatasCurtains.scrollToTopCompleteAfterTransition = false;
     storeDatasCurtains.removePlanes();
     storeDatasCurtains.removeCurrentPlaneCover();
+    emit('onLockScroll', false)
     setTimeout(() => {
       storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
     }, 1000)
