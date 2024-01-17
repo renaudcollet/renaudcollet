@@ -107,11 +107,11 @@ const startAnimation = () => {
 
   // HTML Character play
   
-  console.log('COVER3D - startAnimation');
+  // console.log('COVER3D - startAnimation');
 
   reInit()
         
-  console.log('COVER3D - Start RAF');
+  // console.log('COVER3D - Start RAF');
   window.addEventListener('resize', resize)
   raf = requestAnimationFrame(render)
 
@@ -149,7 +149,7 @@ const startAnimation = () => {
 
 const stopAnimation = () => {
 
-  console.log('COVER3D - stopAnimation');
+  // console.log('COVER3D - stopAnimation');
 
   if (animationStarted) {
     animationStarted = false
@@ -160,7 +160,7 @@ const stopAnimation = () => {
         config.progress = 0
         resetControls()
         // updateMaterial()
-        console.log('COVER3D - Stop RAF');
+        // console.log('COVER3D - Stop RAF');
         window.removeEventListener('resize', resize)
         window.cancelAnimationFrame(raf)
       } })
@@ -222,12 +222,12 @@ onMounted(() => {
 
     // For hmr reload
     if (showCover.value || props.showCover) { 
-      console.log('COVER3D - showCover.value || props.showCover');
+      // console.log('COVER3D - showCover.value || props.showCover');
       startAnimation()
     }
 })
 const reInit = () => {
-  console.log('COVER3D - reInit');
+  // console.log('COVER3D - reInit');
   const { start } = config.camera 
   camera.position.set(start.x, start.y, start.z)
   camera.lookAt(start.lookAt) 
@@ -239,7 +239,7 @@ const reInit = () => {
 }
 
 const init = () => {
-  console.log('COVER3D - init');
+  // console.log('COVER3D - init');
   
   bDebugGUI = window.location.hash === '#debug'
 
