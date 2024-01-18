@@ -147,9 +147,6 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
     // storeDatasCurtains.currentPlaneCover.watchScroll = true
     // emit('onLockScroll', false)
 
-    // Remove planes from previous page
-    // storeDatasCurtains.removePlanes();
-
     gsap.killTweensOf('#header-logo')
     gsap.to('#header-logo', { autoAlpha: 1 })
 
@@ -189,10 +186,10 @@ const keywords = currentProject.attributes.keywords.data
 //   return currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
 // })
 const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProjectCover.formats.xxlarge.url : currentProjectCover.url;
-const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
-const large = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
+// const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
+// const large = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
 
-console.log('IMAGE COVER URL', xlarge);
+// console.log('IMAGE COVER URL', xlarge);
 
 const skipCoverAnimation = computed(() => {
   return storeDatas.previousPage !== null

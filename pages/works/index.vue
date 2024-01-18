@@ -109,26 +109,55 @@ watch(() => storeDatas.projectsFiltered, (newVal, oldVal) => {
   nextTick(() => {
     clearScrollReveal()
     projectsFilteredDelay.value = null
+    // storeDatasCurtains.removePlanes()
 
-    nextTick(() => {
-      storeDatasCurtains.removePlanes()
+    emit('onLockScroll', false, false)
+    
+    elementsToTransition.elements = root.value.querySelectorAll('.unmount-animation');
+    gsap
+      .to(elementsToTransition.elements ? elementsToTransition.elements : el, { 
+        opacity: 0, delay: 0, /* duration: 0.3, */
+        // y: '-15',
+        stagger: {
+          each: 0.1,
+          ease: 'power2.outIn',
+        },
+        onComplete:() => {
+          console.log('filter onLeave opacity 0 complete');
+          // toggleTransitionLeaveComplete(true); // This is not watched because the component is already unmounted
+          elementsToTransition.elements = null;
 
-      emit('onLockScroll', false, true)
-    })
+          storeDatasCurtains.removePlanes();
+          
+          const t = {v: 0}
+          gsap.to(t, { v: 1, delay: 0.1, duration: durationLeaveWork,
+            onComplete:() => {
+              console.log('filter onLeave complete');
+              projectsFilteredDelay.value = newVal
+              projectsFilteredLabelDelay.value = 
+                storeDatas.keywordsSelected && storeDatas.keywordsSelected.length > 0 
+                ? `${storeDatas.keywordsSelected[0].attributes.key}` 
+                : '';
+
+              nextTick(() => {
+                // Add if condition in case user change page quickly, because we are in a setTimeout
+                initScrollReveal(root.value)
+              })
+            }})
+      }})
+
     
-    setTimeout(() => {
-      projectsFilteredDelay.value = newVal
-      projectsFilteredLabelDelay.value = 
-        storeDatas.keywordsSelected && storeDatas.keywordsSelected.length > 0 
-        ? `${storeDatas.keywordsSelected[0].attributes.key}` 
-        : '';
-    }, 150)
+    // setTimeout(() => {
+    //   projectsFilteredDelay.value = newVal
+    //   projectsFilteredLabelDelay.value = 
+    //     storeDatas.keywordsSelected && storeDatas.keywordsSelected.length > 0 
+    //     ? `${storeDatas.keywordsSelected[0].attributes.key}` 
+    //     : '';
+    // }, 150)
     
-    setTimeout(() => {
-      // nextTick(() => {
-        initScrollReveal(root.value)
-      // })
-    }, 500)
+    // setTimeout(() => {
+    //     initScrollReveal(root.value)
+    // }, 500)
   })
 })
 
