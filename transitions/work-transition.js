@@ -16,7 +16,7 @@ export const durationEnterWork = 0.5;
 export const durationLeaveWork = 0.8;
 
 export const durationEnterWorkId = 0.5;
-export const durationLeaveWorkId = 0.5;
+export const durationLeaveWorkId = 0.8;
 
 /**
  * Inspired by https://stackblitz.com/edit/nuxt-starter-bthjlg
@@ -28,53 +28,48 @@ export const workIdTransition = {
   onEnter: (el, done) => {
     console.log('workIdTransition onEnter');    
     const t = {v: 0}
-    gsap.set(el, { opacity: 0 });
+    // gsap.set(el, { opacity: 0 });
     gsap
-      // .timeline({
-      //   paused: true,
-      //   onComplete: () => {
-      //     // console.log('workIdTransition onEnter complete');
-      //     toggleTransitionComplete(true);
-      //     done();
-      //   },
-      // })
-      .to(el, { opacity: 1, duration: durationEnterWorkId,
-      // .to(t, { v: 1, duration: durationEnterWorkId,
+      // .to(el, { opacity: 1, duration: durationEnterWorkId,
+      .to(t, { v: 1, duration: durationEnterWorkId,
         onComplete: () => {
           console.log('workIdTransition onEnter complete');
           toggleTransitionComplete(true);
           done();
         } })
-    //   // .play();
-    // setTimeout(() => {
-    //   console.log('workIdTransition onEnter complete');
-    //   toggleTransitionComplete(true);
-    //   done();
-    // }, 1000 * durationEnterWorkId);
   },
+  
   onLeave: (el, done) => {
     console.log('workIdTransition onLeave');
+    console.log('workIdTransition onLeave elementsToTransition', elementsToTransition.elements.length);
     const t = {v: 0}
     toggleTransitionComplete(false);
     gsap
-      // .timeline({ paused: true, onComplete:() => {
-      //   // console.log('workIdTransition onLeave complete');
-      //   done();
-      // } })
-      // .timeline({ paused: true })
-      .to(el, { opacity: 0, delay: 0.5, duration: durationLeaveWorkId,
-      // .to(t, { v: 1, delay: 0, duration: durationLeaveWorkId, 
+      .to(elementsToTransition.elements ? elementsToTransition.elements : el, { 
+        opacity: 0, delay: 0, /* duration: 0.3, */
+        y: '-15',
+        stagger: {
+          each: 0.1,
+          ease: 'power2.outIn',
+        },
         onComplete:() => {
-          console.log('workIdTransition onLeave complete');
-          done();
-        } })
-      // .play();
-    // setTimeout(() => {
-    //   console.log('workIdTransition onLeave complete');
-    //   done();
-    // }, 1000 * durationLeaveWorkId);
+          console.log('workIdTransition onLeave opacity 0 complete');
+          elementsToTransition.elements = null;
+
+          if (functionTransitionCallback.function) {
+            functionTransitionCallback.function();
+            functionTransitionCallback.function = null;
+          }
+
+          gsap.to(t, { v: 1, delay: 0.1, duration: durationLeaveWorkId,
+            onComplete:() => {
+              console.log('workIdTransition onLeave complete');
+              done();
+            }})
+      }})
   },
 };
+
 export const workTransition = {
   name: 'work-transiton',
   mode: 'out-in',
@@ -117,7 +112,7 @@ export const workTransition = {
           ease: 'power2.outIn',
         },
         onComplete:() => {
-          console.log('defaultTransition onLeave opacity 0 complete');
+          console.log('workTransition onLeave opacity 0 complete');
           // toggleTransitionLeaveComplete(true); // This is not watched because the component is already unmounted
           elementsToTransition.elements = null;
 

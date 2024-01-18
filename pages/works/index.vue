@@ -145,11 +145,6 @@ const onClickProjectItem = (id, imagePlane) => {
 onMounted(() => {
   gsap.killTweensOf('#header-logo')
   gsap.to('#header-logo', { autoAlpha: 1 })
-  
-  nextTick(() => {
-    // initScrollHeaderMinimize(root.value)
-    elementsToTransition.elements = root.value.querySelectorAll('.unmount-animation');
-  })
 })
 
 const expandCover = (imagePlane) => {
@@ -199,7 +194,7 @@ onBeforeUnmount(() => {
   clearScrollReveal()
 
   // elementsToTransition.elements = [content.value];
-  // elementsToTransition.elements = root.value.querySelectorAll('.unmount-animation');
+  elementsToTransition.elements = root.value.querySelectorAll('.unmount-animation');
 
   const closePanels = () => {
     console.log('WORKS closePanels');

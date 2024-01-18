@@ -155,8 +155,6 @@ onMounted(() => {
     emit('onScrollZone', scrollZone.value)
 
     initScrollReveal(root.value)
-
-    elementsToTransition.elements = root.value.querySelectorAll('.unmount-animation');
   })
 })
 
@@ -207,7 +205,7 @@ onBeforeUnmount(() => {
   clearScrollReveal()
 
   // elementsToTransition.elements = [content.value];
-  // elementsToTransition.elements = root.value.querySelectorAll('.unmount-animation');
+  elementsToTransition.elements = root.value.querySelectorAll('.unmount-animation');
 
   const closePanels = () => {
     console.log('HOME closePanels');

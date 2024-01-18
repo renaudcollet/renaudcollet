@@ -18,7 +18,7 @@
       <div class="cover-top__title z-index-text">
         <div class="cover-top__title__header-minimize" data-header-scroll-minimize></div>
         <h1 
-          class="cover-top__title__project scroll-reveal"
+          class="cover-top__title__project scroll-reveal unmount-animation"
           data-scroll-reveal-opacity-y
           :data-scroll-reveal-delay="durationEnterWorkId"
           data-scroll-reveal-duration="0.7"
@@ -26,7 +26,7 @@
           {{ currentProject.attributes.titre }}
         </h1>
         <div
-          class="cover-top__title__brand scroll-reveal"
+          class="cover-top__title__brand scroll-reveal unmount-animation"
           data-scroll-reveal-opacity-y
           :data-scroll-reveal-delay="durationEnterWorkId + 0.2"
           data-scroll-reveal-duration="0.3"
@@ -34,7 +34,7 @@
           Client : {{ currentProject.attributes.brand }}
         </div>
         <div
-          class="cover-top__title__brand scroll-reveal"
+          class="cover-top__title__brand scroll-reveal unmount-animation"
           data-scroll-reveal-opacity-y
           :data-scroll-reveal-delay="durationEnterWorkId + 0.5"
           data-scroll-reveal-duration="0.3"
@@ -42,7 +42,7 @@
           Agency : {{ currentProject.attributes.agency }}
         </div>
         <div
-          class="cover-top__title__brand scroll-reveal"
+          class="cover-top__title__brand scroll-reveal unmount-animation"
           data-scroll-reveal-opacity-y
           :data-scroll-reveal-delay="durationEnterWorkId + 0.8"
           data-scroll-reveal-duration="0.3"
@@ -54,7 +54,7 @@
         </div>
       </div> 
     </section>
-    <section class="projects">
+    <section class="projects unmount-animation">
       <template v-for="(item, index) in currentProjectBlocs">
         <WorkItemTitleResume
           v-if="item.Image.data === null && item.Video.data === null"
@@ -93,7 +93,7 @@ import useZoomableImage from '~/compositions/use-zoomable-image';
 // import useCurtainsShader from '~/compositions/use-curtains-shader';
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
 import gsap from 'gsap';
-import { workIdTransition, durationEnterWorkId } from '../transitions/work-transition';
+import { workIdTransition, durationEnterWorkId, durationLeaveWorkId } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 // import { RenderTarget, Plane } from 'curtainsjs';
@@ -112,6 +112,9 @@ const props = defineProps({
   }
 })
 
+const { initScrollReveal, clearScrollReveal } = useScrollReveal();
+const { initZoomableImage, clearZoomableImage } = useZoomableImage();
+const { transitionState, elementsToTransition, functionTransitionCallback } = useTransitionComposable();
 
 /**
  *  page transition
@@ -125,14 +128,14 @@ const emit = defineEmits(['onLockScroll'])
 
 const root = ref(null);
 const imagePlane = ref(null);
-const renderCover = ref(null);
+// const renderCover = ref(null);
 
 // Curtains
 const storeDatasCurtains = useDatasCurtainsStore();
 const bMountPlanes = computed(() => {
   return storeDatasCurtains.planesToRemove.length === 0;
 });
-const { transitionState } = useTransitionComposable();
+
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
     console.log('PAGE ID - transitionState.transitionComplete', storeDatasCurtains.scrollY);
@@ -145,7 +148,10 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
     // emit('onLockScroll', false)
 
     // Remove planes from previous page
-    storeDatasCurtains.removePlanes();
+    // storeDatasCurtains.removePlanes();
+
+    gsap.killTweensOf('#header-logo')
+    gsap.to('#header-logo', { autoAlpha: 1 })
 
     setTimeout(() => {
       if (root.value) {
@@ -153,7 +159,7 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
         initScrollReveal(root.value)
         initZoomableImage(root.value)
       }
-    }, 100)
+    }, 250)
   }
 })
 
@@ -179,12 +185,9 @@ const currentProjectCover = currentProject.attributes.cover.data.attributes
 const currentProjectBlocs = currentProject.attributes.bloc
 const keywords = currentProject.attributes.keywords.data
 
-const { initScrollReveal, clearScrollReveal } = useScrollReveal();
-const { initZoomableImage, clearZoomableImage } = useZoomableImage();
-
-const coverSrc = computed(() => {
-  return currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
-})
+// const coverSrc = computed(() => {
+//   return currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
+// })
 const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProjectCover.formats.xxlarge.url : currentProjectCover.url;
 const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
 const large = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
@@ -198,9 +201,6 @@ const skipCoverAnimation = computed(() => {
 onMounted(() => {
   // console.log('WORK ID PAGE - MOUNTED');
   emit('onLockScroll', true)
-
-  gsap.killTweensOf('#header-logo')
-  gsap.to('#header-logo', { autoAlpha: 1 })
 
   // gtag
   // https://developers.google.com/tag-platform/gtagjs/reference/events?hl=fr#page_view -> should I use page_view ?
@@ -240,21 +240,42 @@ onMounted(() => {
   //   })
   // })
 
-  // nextTick(() => {
-  //   // if (skipCoverAnimation.value) {
-  //   //   initScrollReveal(root.value)
-  //   //   initZoomableImage(root.value)
-  //   // }
-  // })
+  nextTick(() => {
+    if (skipCoverAnimation.value) {
+      gsap.killTweensOf('#header-logo')
+      gsap.to('#header-logo', { autoAlpha: 1 })
+      initScrollReveal(root.value)
+      initZoomableImage(root.value)
+    }
+  })
 })
 
-onUnmounted(() => {
+onBeforeUnmount(() => {  
+  console.log('WORK ID onBeforeUnmount');
   clearScrollReveal()
   clearZoomableImage()
-  // Note: imageplane disappear animation is in dataCurtains.js
-  storeDatasCurtains.removePlanes()
+    
+  elementsToTransition.elements = root.value.querySelectorAll('.unmount-animation');
+  console.log('ELEMENTS TO UNMOUNT TRANSITION', elementsToTransition.elements.length);
+
+  const closePanels = () => {
+    console.log('WORK ID closePanels');
+    storeDatasCurtains.removePlanes();
+    storeDatasCurtains.removeCurrentPlaneCover();
+  }
+
+  functionTransitionCallback.function = closePanels;
+
   emit('onLockScroll', true)
 })
+
+// onUnmounted(() => {
+//   clearScrollReveal()
+//   clearZoomableImage()
+//   // Note: imageplane disappear animation is in dataCurtains.js
+//   // storeDatasCurtains.removePlanes()
+//   emit('onLockScroll', true)
+// })
 </script>
   
 <style lang="scss" scoped>
