@@ -3,9 +3,9 @@
     <div class="container">
       <!-- <div class="container__header-minimize" data-header-scroll-minimize></div> -->
       <h1 
-        class="page__title scroll-reveal"
+        class="page__title scroll-reveal unmount-animation"
         data-scroll-reveal-opacity-y
-        :data-scroll-reveal-delay="durationEnterDefault + 0.2"
+        :data-scroll-reveal-delay="durationEnterWork + 0.2"
         data-scroll-reveal-duration="0.5"
       >
         All my <br v-if="projectsFilteredLabelDelay !== ''" /><span class="filtered-label">{{ projectsFilteredLabelDelay }}</span> <br v-if="projectsFilteredLabelDelay !== ''" /> works
@@ -14,7 +14,7 @@
         <!-- <template v-for="(item, index) in storeDatas.projectsFiltered"> -->
         <template v-for="(item, index) in projectsFilteredDelay">
           <ProjectItem 
-            class="projects-home__item"
+            class="projects-home__item unmount-animation"
             :id="index" 
             :to="`/works/${item.attributes.slug}`"
             :datas="item"
@@ -35,7 +35,7 @@ import { useDatasStore, S_DATA_ACCUEIL, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 // import useCurtainsShader from '~/compositions/use-curtains-shader';
 import gsap from 'gsap';
-import { workTransition, durationEnterDefault } from '../transitions/work-transition';
+import { workTransition, durationEnterWork, durationLeaveWork } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 
@@ -53,6 +53,9 @@ const props = defineProps({
     required: true,
   }
 })
+
+const { initScrollReveal, clearScrollReveal } = useScrollReveal();
+const { transitionState, elementsToTransition, functionTransitionCallback } = useTransitionComposable();
 
 const projectsFilteredDelay = ref(null);
 projectsFilteredDelay.value = storeDatas.projectsFiltered;
@@ -75,13 +78,14 @@ const storeDatasCurtains = useDatasCurtainsStore();
 const bMountPlanes = computed(() => {
   return storeDatasCurtains.planesToRemove.length === 0;
 });
-const { transitionState } = useTransitionComposable();
+
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
     storeDatasCurtains.scrollToTopCompleteAfterTransition = false;
+    console.log('WORKS Transition complete');
 
     emit('onLockScroll', false)
-    storeDatasCurtains.removePlanes();
+    // storeDatasCurtains.removePlanes();
 
     setTimeout(() => {
       storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
@@ -98,7 +102,6 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
 })
 
 const root = ref(null);
-const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 
 // Select filter
 watch(() => storeDatas.projectsFiltered, (newVal, oldVal) => {
@@ -122,16 +125,19 @@ watch(() => storeDatas.projectsFiltered, (newVal, oldVal) => {
     }, 150)
     
     setTimeout(() => {
-      nextTick(() => {
+      // nextTick(() => {
         initScrollReveal(root.value)
-      })
+      // })
     }, 500)
   })
 })
 
-const onClickProjectItem = (id, plane) => {
-  storeDatasCurtains.setCurrentPlaneCover(plane)
-  console.log('onClickProjectItem', id, plane)
+let selectedImagePlane = null
+
+const onClickProjectItem = (id, imagePlane) => {
+  selectedImagePlane = imagePlane
+  storeDatasCurtains.setCurrentPlaneCover(imagePlane.planeMesh)
+  console.log('onClickProjectItem', id, imagePlane.planeMesh)
   console.log('emit onLockScroll', false)
   emit('onLockScroll', true)
 }
@@ -139,12 +145,80 @@ const onClickProjectItem = (id, plane) => {
 onMounted(() => {
   gsap.killTweensOf('#header-logo')
   gsap.to('#header-logo', { autoAlpha: 1 })
+  
+  nextTick(() => {
+    // initScrollHeaderMinimize(root.value)
+    elementsToTransition.elements = root.value.querySelectorAll('.unmount-animation');
+  })
 })
 
-onUnmounted(() => {
+const expandCover = (imagePlane) => {
+  // console.log('expandCover', imagePlane, imagePlane.planeMesh.htmlElement);
+
+  let planeHtml = imagePlane.planeMesh.htmlElement;
+
+  // Get the bounding rectangle of the relative element
+  const rect = planeHtml.parentNode.parentNode.getBoundingClientRect()
+  
+  // This would be eq to the final size of the imagePlane (aka the cover image in page id)
+  const rectFinal = imagePlane.planeMesh.renderer.canvas.getBoundingClientRect()
+
+  // Change z position to cover other planes in datasCurtains.js 
+  // Not working for home page... So we do it here for this plane
+  imagePlane.planeMesh.uniforms.uZPos.value = -0.001;
+
+  // gsap.killTweensOf(planeHtml)
+  gsap.set(planeHtml, {
+    position: 'fixed', 
+    top: `${rect.top}px`,
+    left: `${rect.left}px`,
+  })
+
+  gsap.to(planeHtml, {
+    duration: durationLeaveWork,
+    ease: 'power4.out',
+    top: `0px`,
+    left: `0px`,
+    // width: rectFinal.width - 100, // debug
+    width: rectFinal.width,
+    height: rectFinal.height,
+    onUpdate: () => {
+      imagePlane.resize();
+    },
+    onComplete: () => {
+      imagePlane.resize();
+      imagePlane.planeMesh.watchScroll = false;
+      // imagePlane.planeMesh.resetPlane()
+      console.log('expandCover onComplete');
+    }
+  })
+}
+
+onBeforeUnmount(() => {  
+  console.log('WORKS onBeforeUnmount');
   clearScrollReveal()
-  storeDatasCurtains.removePlanes()
+
+  // elementsToTransition.elements = [content.value];
+  // elementsToTransition.elements = root.value.querySelectorAll('.unmount-animation');
+
+  const closePanels = () => {
+    console.log('WORKS closePanels');
+    storeDatasCurtains.removePlanes();
+    // storeDatasCurtains.removeCurrentPlaneCover();
+
+    // if has cover, expand it
+    if (selectedImagePlane) {
+      console.log('WORKS closePanels expandCover');
+      expandCover(selectedImagePlane)
+    }
+  }
+
+  functionTransitionCallback.function = closePanels;
 })
+
+// onUnmounted(() => {
+//   // storeDatasCurtains.removePlanes()
+// })
 </script>
   
 <style lang="scss" scoped>

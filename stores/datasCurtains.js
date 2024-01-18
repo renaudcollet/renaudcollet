@@ -63,7 +63,7 @@ export const useDatasCurtainsStore = defineStore( 'datasCurtains', {
           const t = {u: 0, v: 0.7}
           gsap.to(t, {
             v: 0.0,
-            duration: 1,
+            duration: 0.8,
             delay: 0,
             onUpdateParams: [plane],
             onUpdate: (_plane) => {

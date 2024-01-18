@@ -90,9 +90,9 @@
 <script setup>
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
 import useElementVisibility from '~/compositions/use-element-visibility';
-import gsap from 'gsap'
+// import gsap from 'gsap'
 import { toRef } from '@vueuse/core';
-import { durationLeaveDefault } from '../transitions/work-transition';
+// import { durationLeaveDefault } from '../transitions/work-transition';
 // import { Vec3 } from 'curtainsjs';
 
 const config = useRuntimeConfig()
@@ -117,7 +117,7 @@ const props = defineProps({
 })
 const mountPlane = toRef(props, 'mountPlanes')
 
-const emit = defineEmits(['onClick', 'onClickAnimationComplete'])
+const emit = defineEmits(['onClick'/* , 'onClickAnimationComplete' */])
 
 const keywords = computed(() => {
   return props.datas.attributes.keywords.data;
@@ -125,9 +125,9 @@ const keywords = computed(() => {
 
 const currentProjectCover = props.datas.attributes.cover.data.attributes
 
-const coverSrc = computed(() => {
-  return currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
-})
+// const coverSrc = computed(() => {
+//   return currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
+// })
 const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProjectCover.formats.xxlarge.url : currentProjectCover.url;
 const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
 const large = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
@@ -151,20 +151,20 @@ watch(isVisible, (newVal, oldVal) => {
 })
 
 let isClicked = false;
-let planeHtml = null;
+// let planeHtml = null;
 
 const onClick = () => {
 
   isClicked = true;
 
   // stop scroll
-  emit('onClick', props.id, imagePlane.value.planeMesh)
+  emit('onClick', props.id, imagePlane.value)
 
   // console.log('Selected Plane render order', imagePlane.value.planeMesh.renderOrder);
   // imagePlane.value.planeMesh.setRenderOrder(50)
   // console.log('Selected Plane render order', imagePlane.value.planeMesh.renderOrder);
 
-  // animate imagePlane to full screen, and position it to the center
+  /* // animate imagePlane to full screen, and position it to the center
   planeHtml = imagePlane.value.planeMesh.htmlElement;
   // Get the bounding rectangle of the relative element
   // const coverElement = imagePlane.value.renderer
@@ -211,9 +211,11 @@ const onClick = () => {
       imagePlane.value.resize();
       imagePlane.value.planeMesh.watchScroll = false;
       // imagePlane.value.planeMesh.resetPlane()
-      // emit('onClickAnimationComplete', props.id, imagePlane.value.planeMesh) // Never triggered because of vuejs transition already unmounted this component  
+      
+      // Cant emit because of vuejs transition already unmounted this component  
+      // emit('onClickAnimationComplete', props.id, imagePlane.value.planeMesh) 
     }
-  })
+  }) */
 }
 
 const onMouseover = () => {

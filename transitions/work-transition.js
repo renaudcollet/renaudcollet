@@ -105,28 +105,35 @@ export const workTransition = {
   },
   onLeave: (el, done) => {
     console.log('workTransition onLeave');
+    console.log('workTransition onLeave elementsToTransition', elementsToTransition);
     const t = {v: 0}
     toggleTransitionComplete(false);
     gsap
-      // .timeline({ paused: true, onComplete:() => {
-      //   console.log('workTransition onLeave complete');
-      //   done();
-      // } })
-      // .timeline({ paused: true })
-      // .to(el, { opacity: 0, delay: 0, duration: durationLeaveWork })
-
-      // No need for opacity 0, because plane covers everything
-      // TODO: But need opacity when not going to work page id !
-      .to(t, { v: 1, delay: 0, duration: durationLeaveWork,
+      .to(elementsToTransition.elements ? elementsToTransition.elements : el, { 
+        opacity: 0, delay: 0, /* duration: 0.3, */
+        // y: '-15',
+        stagger: {
+          each: 0.1,
+          ease: 'power2.outIn',
+        },
         onComplete:() => {
-          console.log('workTransition onLeave complete');
-          done();
-        }})
-      // .play();
-    // setTimeout(() => {
-    //   console.log('workTransition onLeave complete');
-    //   done();
-    // }, 1000 * durationLeaveWork);
+          console.log('defaultTransition onLeave opacity 0 complete');
+          // toggleTransitionLeaveComplete(true); // This is not watched because the component is already unmounted
+          elementsToTransition.elements = null;
+
+          if (functionTransitionCallback.function) {
+            functionTransitionCallback.function();
+            functionTransitionCallback.function = null;
+          }
+
+          // No need for opacity 0, because plane covers everything
+          // TODO: But need opacity when not going to work page id !
+          gsap.to(t, { v: 1, delay: 0.1, duration: durationLeaveWork,
+            onComplete:() => {
+              console.log('workTransition onLeave complete');
+              done();
+            }})
+      }})
   },
 };
 
