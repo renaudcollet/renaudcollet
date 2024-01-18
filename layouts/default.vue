@@ -183,6 +183,8 @@ const onScroll = () => {
   scrollVelocity = lerp(lenis.scroll - lastScroll, 0, 0.2);
   lastScroll = lenis.scroll
 
+  // updateScrollVelocity(scrollVelocity)
+
   if (cover3d.value && showCover3d.value) {
     cover3d.value.onScroll()
   }
@@ -193,7 +195,6 @@ onMounted(() => {
   config = window.location.hash === '#config'
 
   const c1 = 1.70158;
-  const c3 = c1 + 1;
   lenis = new Lenis({
     duration: 1,
     easing: (x) => {

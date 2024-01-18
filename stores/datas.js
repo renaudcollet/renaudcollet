@@ -34,7 +34,7 @@ export const useDatasStore = defineStore( 'datas', {
       
       this.previousPage = this.currentPage
       this.currentPage = page
-      // console.log('--- setCurrentPage', this.currentPage, this.previousPage);
+      console.log(`--- setCurrentPage from ${this.previousPage} to ${this.currentPage}`);
     },
 
     setIsScrollLocked(value) {
