@@ -19,8 +19,6 @@ export default function useScrollReveal() {
       const targets = Array.from(el.querySelectorAll('.scroll-reveal'))
       if (targets.length === 0) return
 
-      // console.log('initScrollReveal', targets)
-
       // Intersection Observer to trigger apparition of the logo on scroll
       intersectionObserver = new IntersectionObserver((entries) => {
         for(let i = 0; i < entries.length; i++) {

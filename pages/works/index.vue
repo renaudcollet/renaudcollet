@@ -199,7 +199,6 @@ onBeforeUnmount(() => {
   const closePanels = () => {
     console.log('WORKS closePanels');
     storeDatasCurtains.removePlanes();
-    // storeDatasCurtains.removeCurrentPlaneCover();
 
     // if has cover, expand it
     if (selectedImagePlane) {

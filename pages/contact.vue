@@ -145,9 +145,9 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
 
 const currentProjectCover = datasContact.attributes.cover.data.attributes
 
-const coverSrc = computed(() => {
-  return currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
-})
+// const coverSrc = computed(() => {
+//   return currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
+// })
 const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProjectCover.formats.xxlarge.url : currentProjectCover.url;
 const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
 const large = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
