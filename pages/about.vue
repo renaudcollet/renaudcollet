@@ -26,7 +26,7 @@
         <div
           class="description scroll-reveal"
           data-scroll-reveal-opacity-y
-          :data-scroll-reveal-delay="durationEnterDefault + 0.4"
+          :data-scroll-reveal-delay="durationEnterDefault + 0.5"
           data-scroll-reveal-duration="0.5"
           v-html="datasAbout.attributes.description"
         >
@@ -62,6 +62,7 @@ const config = useRuntimeConfig()
 
 const root = ref(null);
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
+const { transitionState, elementsToTransition, functionTransitionCallback } = useTransitionComposable();
 
 /**
  *  page transition
@@ -78,7 +79,7 @@ const storeDatasCurtains = useDatasCurtainsStore();
 const bMountPlanes = computed(() => {
   return storeDatasCurtains.planesToRemove.length === 0;
 });
-const { transitionState } = useTransitionComposable();
+
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
     storeDatasCurtains.scrollToTopCompleteAfterTransition = false;
@@ -110,9 +111,23 @@ onMounted(() => {
   })
 })
 
+onBeforeUnmount(() => {  
+  console.log('ABOUT onBeforeUnmount');
+  // elementsToTransition.elements = [content.value];
+  elementsToTransition.elements = root.value.querySelectorAll('.scroll-reveal');
+
+  const closePanels = () => {
+    console.log('ABOUT closePanels');
+    storeDatasCurtains.removePlanes();
+    storeDatasCurtains.removeCurrentPlaneCover();
+  }
+
+  functionTransitionCallback.function = closePanels;
+})
+
 onUnmounted(() => {
   clearScrollReveal()
-  storeDatasCurtains.removePlanes()
+  // storeDatasCurtains.removePlanes()
 })
 </script>
 

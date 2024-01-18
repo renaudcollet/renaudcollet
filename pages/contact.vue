@@ -85,11 +85,11 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, ref, nextTick } from "vue";
+import { onMounted, onUnmounted, ref, nextTick, onBeforeUnmount } from "vue";
 import { useDatasStore, S_DATA_CONTACT } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 import gsap from 'gsap';
-import { defaultTransition, durationEnterDefault } from '../transitions/work-transition';
+import { defaultTransition, durationEnterDefault} from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
@@ -111,9 +111,14 @@ const config = useRuntimeConfig()
 const root = ref(null);
 const showTel = ref(false)
 const showEmail = ref(false)
+// const content = ref(null)
 
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
+const { transitionState, elementsToTransition, functionTransitionCallback } = useTransitionComposable();
 
+// this is inited before router updates, so we need to get the current page from the store
+// const bFromWorkIdPage = storeDatas.currentPage.indexOf('/works/') > -1;
+// console.log('PREVIOUS PAGE IS WORK ID ?', bFromWorkIdPage);
 definePageMeta({
   pageTransition: defaultTransition,
 });
@@ -125,13 +130,13 @@ const storeDatasCurtains = useDatasCurtainsStore();
 const bMountPlanes = computed(() => {
   return storeDatasCurtains.planesToRemove.length === 0;
 });
-const { transitionState } = useTransitionComposable();
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
+    console.log('CONTACT Transition complete');
     storeDatasCurtains.scrollToTopCompleteAfterTransition = false;
+    emit('onLockScroll', false)
     storeDatasCurtains.removePlanes();
     storeDatasCurtains.removeCurrentPlaneCover();
-    emit('onLockScroll', false)
     setTimeout(() => {
       storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
     }, 1000)
@@ -166,10 +171,24 @@ onMounted(() => {
   })
 })
 
+onBeforeUnmount(() => {  
+  console.log('CONTACT onBeforeUnmount');
+  // elementsToTransition.elements = [content.value];
+  elementsToTransition.elements = root.value.querySelectorAll('.scroll-reveal');
+
+  const closePanels = () => {
+    console.log('CONTACT closePanels');
+    storeDatasCurtains.removePlanes();
+    storeDatasCurtains.removeCurrentPlaneCover();
+  }
+
+  functionTransitionCallback.function = closePanels;
+})
+
 onUnmounted(() => {
   clearScrollReveal()
   // clearLogoObserver()
-  storeDatasCurtains.removePlanes()
+  // storeDatasCurtains.removePlanes()
 })
 </script>
 

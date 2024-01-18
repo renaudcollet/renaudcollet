@@ -2,7 +2,12 @@ import gsap from 'gsap';
 
 import { useTransitionComposable } from '../compositions/use-transition';
 
-const { toggleTransitionComplete } = useTransitionComposable();
+const { 
+  toggleTransitionComplete, 
+  toggleTransitionEnterComplete, 
+  // toggleTransitionLeaveComplete,
+  elementsToTransition,
+  functionTransitionCallback } = useTransitionComposable();
 
 export const durationEnterDefault = 1;
 export const durationLeaveDefault = 0.5;
@@ -57,7 +62,7 @@ export const workIdTransition = {
       //   done();
       // } })
       // .timeline({ paused: true })
-      .to(el, { opacity: 0, delay: 0, duration: durationLeaveWorkId,
+      .to(el, { opacity: 0, delay: 0.5, duration: durationLeaveWorkId,
       // .to(t, { v: 1, delay: 0, duration: durationLeaveWorkId, 
         onComplete:() => {
           console.log('workIdTransition onLeave complete');
@@ -145,7 +150,9 @@ export const defaultTransition = {
   },
   onLeave: (el, done) => {
     console.log('defaultTransition onLeave');
+    console.log('defaultTransition onLeave elementsToTransition', elementsToTransition);
     toggleTransitionComplete(false);
+    // toggleTransitionLeaveComplete(false);
     const t = {v: 0}
     gsap
     //   .timeline({ paused: true, onComplete: done })
@@ -156,10 +163,29 @@ export const defaultTransition = {
       // No need for opacity 0, because plane covers everything
       // TODO: But need opacity when not going to work page id !
     // .to(t, { v: 1, delay: 0, duration: durationLeaveDefault,
-    .to(el, { opacity: 0, delay: 0, duration: durationLeaveDefault,
+    .to(elementsToTransition.elements ? elementsToTransition.elements : el, { 
+      opacity: 0, delay: 0, /* duration: 0.3, */
+      y: '-15',
+      stagger: {
+        each: 0.1,
+        ease: 'power2.outIn',
+      },
       onComplete:() => {
-        console.log('defaultTransition onLeave complete');
-        done();
+        console.log('defaultTransition onLeave opacity 0 complete');
+        // toggleTransitionLeaveComplete(true); // This is not watched because the component is already unmounted
+        elementsToTransition.elements = null;
+
+        if (functionTransitionCallback.function) {
+          functionTransitionCallback.function();
+          functionTransitionCallback.function = null;
+        }
+
+        // This is to let the plane animation finish
+        // They are the last to disappear
+        gsap.to(t, {v:1, duration: 0 /* durationLeaveDefault */, onComplete: () => {
+          console.log('defaultTransition onLeave complete');
+          done();
+        }})
       }})
   },
 };
