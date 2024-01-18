@@ -59,10 +59,10 @@ Animation:
             -> Seems to be conjugaison of big curtains image + whole page layout repaint
             OR maybe not because the menu and logo are not repainted
             ☐ Or use overlay transition https://codepen.io/martinlaxenaire/pen/JjEVqLo
-        ☐ Transition when select a filter when on another page
         ✔ Page index and work, z index problem when click on a project @done(24-01-15 12:01)
         ✔ iOS, index page : when scroll we have a white page @done(24-01-16 11:31)
         ✔ Scroll when change page, maybe deactivate it and reactivate after transition complete ? @done(24-01-17 22:53)
+        ☐ Transition when select a filter when on another page
         ☐ Video player breaks curtains planes
         ☐ Bug on my Android - image plane are stretched horizontally
         ☐ Finish 3d cover blender

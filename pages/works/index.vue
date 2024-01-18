@@ -8,7 +8,11 @@
         :data-scroll-reveal-delay="durationEnterWork + 0.2"
         data-scroll-reveal-duration="0.5"
       >
-        All my <br v-if="projectsFilteredLabelDelay !== ''" /><span class="filtered-label">{{ projectsFilteredLabelDelay }}</span> <br v-if="projectsFilteredLabelDelay !== ''" /> works
+        Some 
+        <br v-if="projectsFilteredLabelDelay !== ''" />
+        <span class="filtered-label">{{ projectsFilteredLabelDelay }}</span>
+        <br v-if="projectsFilteredLabelDelay !== ''" /> 
+        works
       </h1>
       <section class="projects-work">
         <!-- <template v-for="(item, index) in storeDatas.projectsFiltered"> -->
@@ -86,6 +90,7 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
 
     emit('onLockScroll', false)
     // storeDatasCurtains.removePlanes();
+    updateFilteredLabel()
 
     setTimeout(() => {
       storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
@@ -133,11 +138,7 @@ watch(() => storeDatas.projectsFiltered, (newVal, oldVal) => {
           gsap.to(t, { v: 1, delay: 0.1, duration: durationLeaveWork,
             onComplete:() => {
               console.log('filter onLeave complete');
-              projectsFilteredDelay.value = newVal
-              projectsFilteredLabelDelay.value = 
-                storeDatas.keywordsSelected && storeDatas.keywordsSelected.length > 0 
-                ? `${storeDatas.keywordsSelected[0].attributes.key}` 
-                : '';
+              updateFilteredLabel(newVal)
 
               nextTick(() => {
                 // Add if condition in case user change page quickly, because we are in a setTimeout
@@ -145,21 +146,16 @@ watch(() => storeDatas.projectsFiltered, (newVal, oldVal) => {
               })
             }})
       }})
-
-    
-    // setTimeout(() => {
-    //   projectsFilteredDelay.value = newVal
-    //   projectsFilteredLabelDelay.value = 
-    //     storeDatas.keywordsSelected && storeDatas.keywordsSelected.length > 0 
-    //     ? `${storeDatas.keywordsSelected[0].attributes.key}` 
-    //     : '';
-    // }, 150)
-    
-    // setTimeout(() => {
-    //     initScrollReveal(root.value)
-    // }, 500)
   })
 })
+
+const updateFilteredLabel = (newVal) => {
+  projectsFilteredDelay.value = newVal ? newVal : storeDatas.projectsFiltered
+  projectsFilteredLabelDelay.value = 
+    storeDatas.keywordsSelected && storeDatas.keywordsSelected.length > 0 
+    ? `${storeDatas.keywordsSelected[0].attributes.key}` 
+    : '';
+}
 
 let selectedImagePlane = null
 
