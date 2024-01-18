@@ -58,7 +58,7 @@
           <h3 
             class="project-item__subtitle scroll-reveal" 
             data-scroll-reveal-opacity-y
-            :data-scroll-reveal-delay="0.2 + index * 0.2"
+            :data-scroll-reveal-delay="index * 0.2"
             data-scroll-reveal-duration="0.5"
           >
             {{ item.attributes.key }}
@@ -70,7 +70,7 @@
       class="project-item__button scroll-reveal "
       :data-scroll-index="paraphToLines.length + keywords.length + 4"
       data-scroll-reveal-opacity-y
-      data-scroll-reveal-delay="2"
+      data-scroll-reveal-delay="1.5"
       data-scroll-reveal-duration="1"
     >
       <svg x="0px" y="0px" viewBox="0 0 124 124">
@@ -90,7 +90,7 @@
 <script setup>
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
 import useElementVisibility from '~/compositions/use-element-visibility';
-// import gsap from 'gsap'
+import gsap from 'gsap'
 import { toRef } from '@vueuse/core';
 // import { durationLeaveDefault } from '../transitions/work-transition';
 // import { Vec3 } from 'curtainsjs';
