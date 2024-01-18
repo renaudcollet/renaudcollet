@@ -22,7 +22,7 @@
     <section class="projects-home">
       <template v-for="(item, index) in storeDatas.projectsHomepage" :key="index">
         <ProjectItem 
-          class="projects-home__item" 
+          class="projects-home__item unmount-animation" 
           :id="index"
           :datas="item"
           :to="`/works/${item.attributes.slug}`"
@@ -40,9 +40,9 @@
 // import ShaderPass from '~/components/curtains/ShaderPass/index.vue';
 import { useDatasStore, S_DATA_ACCUEIL } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
-import useCurtainsShader from '~/compositions/use-curtains-shader';
+// import useCurtainsShader from '~/compositions/use-curtains-shader';
 import gsap from 'gsap';
-import { defaultTransition } from '../transitions/work-transition';
+import { workTransition, durationLeaveWork } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 
@@ -60,12 +60,16 @@ const props = defineProps({
   }
 })
 
+// const { initLogoObserver, clearLogoObserver } = useLogoObserver();
+const { initScrollReveal, clearScrollReveal } = useScrollReveal();
+const { transitionState, elementsToTransition, functionTransitionCallback } = useTransitionComposable();
+
 /**
  *  page transition
  * https://stackblitz.com/edit/nuxt-starter-bthjlg?file=pages%2Flayers.vue
  * */
 definePageMeta({
-  pageTransition: defaultTransition,
+  pageTransition: workTransition,
 });
 
 const emit = defineEmits(['onLockScroll', 'onStartCover3d', 'onScrollZone'])
@@ -75,14 +79,14 @@ const storeDatasCurtains = useDatasCurtainsStore();
 const bMountPlanes = computed(() => {
   return storeDatasCurtains.planesToRemove.length === 0;
 });
-const { transitionState } = useTransitionComposable();
+
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
     storeDatasCurtains.scrollToTopCompleteAfterTransition = false;
     // console.log('emit onLockScroll', false);
     emit('onLockScroll', false)
-    storeDatasCurtains.removePlanes();
-    storeDatasCurtains.removeCurrentPlaneCover();
+    // storeDatasCurtains.removePlanes();
+    // storeDatasCurtains.removeCurrentPlaneCover();
     setTimeout(() => {
       storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
     }, 1000)
@@ -97,25 +101,12 @@ const job = ref(null);
 const scrollDown = ref(null);
 const scrollSvg = ref(null);
 
-// const { initLogoObserver, clearLogoObserver } = useLogoObserver();
-const { initScrollReveal, clearScrollReveal } = useScrollReveal();
-// const { 
-//   // firstPassProps, 
-//   // onFirstPassReady, 
-//   // onFirstPassRender, 
-//   // onRender, 
-//   updateScrollVelocity
-// } = useCurtainsShader();
+let selectedImagePlane = null
 
-// const scrollVelocity = toRef(props, 'scrollVelocity');
-// watch(scrollVelocity, (newVal, oldVal) => {
-//   if (storeDatasCurtains.scrollToTopCompleteAfterTransition)
-//     updateScrollVelocity(newVal)
-// })
-
-const onClickProjectItem = (id, plane) => {
-  storeDatasCurtains.setCurrentPlaneCover(plane)
-  console.log('onClickProjectItem', id, plane);
+const onClickProjectItem = (id, imagePlane) => {
+  selectedImagePlane = imagePlane
+  storeDatasCurtains.setCurrentPlaneCover(imagePlane.planeMesh)
+  console.log('onClickProjectItem', id, imagePlane.planeMesh)
   console.log('emit onLockScroll', false)
   emit('onLockScroll', true)
 }
@@ -164,13 +155,79 @@ onMounted(() => {
     emit('onScrollZone', scrollZone.value)
 
     initScrollReveal(root.value)
+
+    elementsToTransition.elements = root.value.querySelectorAll('.unmount-animation');
   })
 })
 
-onUnmounted(() => {
-  // clearLogoObserver()
+const expandCover = (imagePlane) => {
+  // console.log('expandCover', imagePlane, imagePlane.planeMesh.htmlElement);
+
+  let planeHtml = imagePlane.planeMesh.htmlElement;
+
+  // Get the bounding rectangle of the relative element
+  const rect = planeHtml.parentNode.parentNode.getBoundingClientRect()
+  
+  // This would be eq to the final size of the imagePlane (aka the cover image in page id)
+  const rectFinal = imagePlane.planeMesh.renderer.canvas.getBoundingClientRect()
+
+  // Change z position to cover other planes in datasCurtains.js 
+  // Not working for home page... So we do it here for this plane
+  imagePlane.planeMesh.uniforms.uZPos.value = -0.0001;
+
+  // gsap.killTweensOf(planeHtml)
+  gsap.set(planeHtml, {
+    position: 'fixed', 
+    top: `${rect.top}px`,
+    left: `${rect.left}px`,
+  })
+
+  gsap.to(planeHtml, {
+    duration: durationLeaveWork,
+    ease: 'power4.out',
+    top: `0px`,
+    left: `0px`,
+    // width: rectFinal.width - 100, // debug
+    width: rectFinal.width,
+    height: rectFinal.height,
+    onUpdate: () => {
+      imagePlane.resize();
+    },
+    onComplete: () => {
+      imagePlane.resize();
+      imagePlane.planeMesh.watchScroll = false;
+      // imagePlane.planeMesh.resetPlane()
+      console.log('expandCover onComplete');
+    }
+  })
+}
+
+onBeforeUnmount(() => {  
+  console.log('HOME onBeforeUnmount');
   clearScrollReveal()
+
+  // elementsToTransition.elements = [content.value];
+  // elementsToTransition.elements = root.value.querySelectorAll('.unmount-animation');
+
+  const closePanels = () => {
+    console.log('HOME closePanels');
+    storeDatasCurtains.removePlanes();
+    // storeDatasCurtains.removeCurrentPlaneCover();
+
+    // if has cover, expand it
+    if (selectedImagePlane) {
+      console.log('HOME closePanels expandCover');
+      expandCover(selectedImagePlane)
+    }
+  }
+
+  functionTransitionCallback.function = closePanels;
 })
+
+// onUnmounted(() => {
+//   // clearLogoObserver()
+//   clearScrollReveal()
+// })
 </script>
 
 <style lang="scss" scoped>

@@ -89,7 +89,7 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
 
     setTimeout(() => {
       storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
-      storeDatasCurtains.removeCurrentPlaneCover()
+      // storeDatasCurtains.removeCurrentPlaneCover()
     }, 100)
 
     setTimeout(() => {
@@ -165,7 +165,7 @@ const expandCover = (imagePlane) => {
 
   // Change z position to cover other planes in datasCurtains.js 
   // Not working for home page... So we do it here for this plane
-  imagePlane.planeMesh.uniforms.uZPos.value = -0.001;
+  imagePlane.planeMesh.uniforms.uZPos.value = -0.0001;
 
   // gsap.killTweensOf(planeHtml)
   gsap.set(planeHtml, {
