@@ -18,7 +18,7 @@
           alt=""
         />
       </ClientOnly>
-      <VideoComponent
+      <!-- <VideoComponent
           v-if="bPlayVideo"
           class="work-item-big__image__video"
           :src="src" 
@@ -31,7 +31,21 @@
           @videoPaused="onVideoPaused"
           object-fit="contain" 
           alt=""
-      ></VideoComponent>
+      ></VideoComponent> -->
+      <VideoPlane
+          v-if="bPlayVideo"
+          class="work-item-big__image__video"
+          :src="src" 
+          :video-src="videoSrc" 
+          :id="titleAlphaNumeric" 
+          :play="bActivateVideo"
+          :onRender="onRender"
+          @videoEnded="onVideoEnded"
+          @videoOutOfView="onVideoOutOfView"
+          @videoPaused="onVideoPaused"
+          object-fit="contain" 
+          alt=""
+      ></VideoPlane>
     </div>
     <div class="work-item-big__content z-index-text" :class="{'hide': bPlayVideo}" ref="elContent">
       <div class="work-item-big__content__abs">
@@ -78,7 +92,8 @@
 */
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
 import useElementVisibility from '~/compositions/use-element-visibility';
-import VideoComponent from '~/components/video/VideoComponent.vue';
+// import VideoComponent from '~/components/video/VideoComponent.vue';
+import VideoPlane from '~/components/video/VideoPlane.vue';
 import gsap from 'gsap';
 
 const props = defineProps({
@@ -196,7 +211,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-.work-item-big {
+/*.work-item-big {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -380,5 +395,5 @@ onMounted(() => {
     }
   }
 
-}
+}*/
 </style>
