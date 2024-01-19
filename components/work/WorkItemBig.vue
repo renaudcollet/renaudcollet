@@ -163,6 +163,7 @@ const toAlphaNumeric = (str) => {
 
 const onClickPlayVideo = () => {
   bPlayVideo.value = true;
+  console.log('onClickPlayVideo', bPlayVideo.value);
 
   const t = {v: 0}
   // Hide the block, after the css animation is complete
@@ -171,6 +172,7 @@ const onClickPlayVideo = () => {
     v: 1,
     onComplete: () => {
       bActivateVideo.value = true;
+      console.log('bActivateVideo', bActivateVideo.value);
       
       // const el = this.$el.querySelector('.work-item-big__content');
       gsap.to(elContent.value, {
