@@ -18,20 +18,6 @@
           alt=""
         />
       </ClientOnly>
-      <!-- <VideoComponent
-          v-if="bPlayVideo"
-          class="work-item-big__image__video"
-          :src="src" 
-          :video-src="videoSrc" 
-          :id="titleAlphaNumeric" 
-          :play="bActivateVideo"
-          :onRender="onRender"
-          @videoEnded="onVideoEnded"
-          @videoOutOfView="onVideoOutOfView"
-          @videoPaused="onVideoPaused"
-          object-fit="contain" 
-          alt=""
-      ></VideoComponent> -->
       <VideoPlane
           v-if="bPlayVideo"
           class="work-item-big__image__video"
@@ -92,7 +78,6 @@
 */
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
 import useElementVisibility from '~/compositions/use-element-visibility';
-// import VideoComponent from '~/components/video/VideoComponent.vue';
 import VideoPlane from '~/components/video/VideoPlane.vue';
 import gsap from 'gsap';
 
@@ -207,195 +192,9 @@ const onVideoOutOfView = () => {
   })
 }
 
-onMounted(() => {
-  // console.log('mounted ProjectItem', props.id, props.datas);
-})
+// onMounted(() => {
+//   // console.log('mounted ProjectItem', props.id, props.datas);
+// })
 </script>
 
-<style lang="scss">
-/*.work-item-big {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 50px;
-
-  @include media-breakpoint-up(lg) {
-    align-items: start;
-    margin-bottom: 150px;
-  }
-
-  &__image {
-    height: 54vw;
-    width: 100%;
-    position: relative;
-
-    @include media-breakpoint-up(lg) {
-      height: 100vh;
-    }
-
-    @include media-breakpoint-up(xl) {
-      height: 100vh;
-    }
-
-    &__video {
-      height: 54vw;
-      width: 100%;
-      position: absolute;
-      top: 0;
-      z-index: $z-video;
-
-      @include media-breakpoint-up(lg) {
-        height: 100vh;
-      }
-
-      @include media-breakpoint-up(xl) {
-        height: 100vh;
-      }
-    }
-  }
-
-  &__content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    z-index: $z-video-button-play;
-
-    @include media-breakpoint-up(lg) {
-      width: 500px;
-      align-items: flex-start;
-      margin-left: 250px;
-    }
-
-    @include media-breakpoint-up(xl) {
-      width: 750px;
-    }
-
-    &__button {
-      width: 50px;
-      height: 50px;
-      margin-left: -6px;
-      filter: drop-shadow(2px 4px 6px black);
-
-      svg {
-        transform-origin: center;
-        transform: scale(1);
-        transition: transform 0.3s ease;
-      }
-
-      g {
-        transform: translate(-6px, 15px);
-      }
-      
-      .triangle-button {
-        fill: rgba(0, 0, 0, 0.3);
-        transform: scale(1);
-        transform-origin: center;
-        transition: transform 0.3s 0.10s ease, stroke-width 0.6s 0.1s ease;
-      }
-
-      .triangle {
-        transform: scale(1);
-        transform-origin: center;
-        transition: transform 0.3s ease, fill 0.1s 0.3s ease;
-        opacity: 0.9;
-      }
-
-      .hide & {
-
-        svg {
-          transform-origin: center;
-          transform: scale(1.2);
-          transition: transform 0.3s ease;
-        }
-
-        .triangle-button {
-          transform-origin: center;
-          transform: scale(0) !important;
-          transition: transform 0.3s ease, stroke-width 0.6s 0.1s ease;
-          stroke-width: 1;
-        }
-
-        .triangle {
-          transform-origin: center;
-          transform: scale(1.4);
-          transition: transform 0.3s ease, fill 0.1s 0.3s ease;
-          fill: #ffffff;
-          opacity: 1;
-        }
-      }
-
-      @include media-breakpoint-up(lg) {
-        width: 120px;
-        height: 120px;  
-        margin-left: -10px;
-        cursor: pointer;
-        align-self: flex-start;
-
-        .triangle-button {
-          fill: rgba(0, 0, 0, 0.2);
-        }
-
-        &:hover {
-          .triangle-button {
-            transform: scale(1.3);
-            transform-origin: center;
-            transition: transform 0.3s 0.10s ease, stroke-width 0.6s 0.1s ease;
-            stroke-width: 4;
-          }
-          .triangle {
-            transform: scale(1.4);
-            transform-origin: center;
-            transition: transform 0.4s ease, fill 0.1s 0.3s ease;
-          }
-        } 
-      }
-    }
-
-    &__abs {
-      position: absolute;
-      bottom: 65px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.8));
-      
-      @include media-breakpoint-up(lg) {
-        bottom: 110px;
-      }
-    }
-
-    &__title {
-      font-size: 24px;
-      font-weight: 700;
-      margin-top: 11px;
-      margin-bottom: 13px;
-      padding: 0 30px;
-      text-align: center;
-
-      @include media-breakpoint-up(lg) {
-        font-size: 60px;
-        margin-top: 32px;
-        margin-bottom: 24px;
-        padding: 0;
-        text-align: left;
-      }
-    }
-  
-    &__text {
-      @include font-main();
-      font-weight: normal;
-      padding: 0 45px;
-      text-align: center;
-      margin-top: 0;
-
-      @include media-breakpoint-up(lg) {
-        text-align: left;
-        margin-left: 0;
-        padding: 0;
-      }
-    }
-  }
-
-}*/
-</style>
+<style></style>
