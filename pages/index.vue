@@ -202,6 +202,7 @@ const expandCover = (imagePlane) => {
 
 onBeforeUnmount(() => {  
   console.log('HOME onBeforeUnmount');
+  gsap.killTweensOf(scrollSvg.value)
   clearScrollReveal()
 
   // elementsToTransition.elements = [content.value];
