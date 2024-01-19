@@ -21,7 +21,9 @@
 @import 'page';
 @import 'project-item';
 @import 'image-plane';
+@import 'work-item-small';
 @import 'work-item-big';
+@import 'work-item-title-resume';
 
 @import 'scroll-opacity';
 @import 'scroll-reveal';
@@ -60,4 +62,8 @@ body {
 
 .big-underscore {
   font-weight: 300;
+}
+
+[data-mouse-cursor='hover'] > * {
+  pointer-events: none;
 }
