@@ -13,7 +13,7 @@
         >
             <source :src="videoSrc">
         </video>
-        <VideoPlayer 
+        <VideoControls 
             :video="video" 
             :activate="play"
             :supportsCurtains="supportsCurtains" 
@@ -25,13 +25,13 @@
 </template>
 
 <script>
-    import VideoPlayer from '~/components/video/VideoPlayer.vue';
+    import VideoControls from '~/components/video/VideoControls.vue';
     import supportsCurtains from '~~/mixins/utils-device.js';
     import gsap from 'gsap';
 
     export default {
         components: {
-            VideoPlayer,
+            VideoControls,
         },
 
         data() {

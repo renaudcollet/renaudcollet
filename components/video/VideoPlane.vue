@@ -22,7 +22,7 @@
                 <source :src="videoSrc">
             </video>
         </Plane>
-        <VideoPlayer 
+        <VideoControls 
             :video="video" 
             :activate="play"
             :supportsCurtains="true" 
@@ -37,7 +37,7 @@
 import Plane from "~/components/curtains/Plane/index.vue";
 import fragmentShader from "~/shaders/planes.frag";
 import vertexShader from "~/shaders/planes.vert";
-import VideoPlayer from '~/components/video/VideoPlayer.vue';
+import VideoControls from '~/components/video/VideoControls.vue';
 // import supportsCurtains from '~/mixins/utils-device.js';
 import gsap from 'gsap';
 
