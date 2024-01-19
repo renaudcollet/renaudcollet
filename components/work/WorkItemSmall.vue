@@ -17,7 +17,7 @@
           alt=""
         />
       </ClientOnly>
-      <VideoComponent
+      <VideoPlane
           v-if="playVideo"
           class="work-item-small__image__video"
           :src="src" 
@@ -29,7 +29,7 @@
           @videoPaused="onVideoPaused"
           object-fit="contain" 
           alt=""
-      ></VideoComponent>
+      ></VideoPlane>
       <div class="work-item-small__content__button__center">
         <div 
           v-if="isVideo" 
@@ -79,6 +79,7 @@
 */
 
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
+import VideoPlane from '~/components/video/VideoPlane.vue';
 import useElementVisibility from '~/compositions/use-element-visibility';
 // import utilsDevice from '~~/mixins/utils-device.js';
 // import zoomable from '~~/mixins/zoomable-image.js';

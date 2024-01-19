@@ -132,9 +132,9 @@ const imagePlane = ref(null);
 
 // Curtains
 const storeDatasCurtains = useDatasCurtainsStore();
-const bMountPlanes = computed(() => {
+const bMountPlanes = true /* computed(() => {
   return storeDatasCurtains.planesToRemove.length === 0;
-});
+}); */
 
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
