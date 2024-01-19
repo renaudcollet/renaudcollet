@@ -25,26 +25,35 @@ export default function useScrollReveal() {
           const entry = entries[i]
           if (entry.isIntersecting || entry.intersectionRatio > 0) {
 
+            const _duration = entry.target.dataset.scrollRevealDuration
+            const _delay = entry.target.dataset.scrollRevealDelay
             if (entry.target.dataset.scrollRevealOpacityY !== undefined) {
               gsap.set(entry.target, {opacity: 0, y: 40})
               gsap.to(entry.target, {
-                  duration: entry.target.dataset.scrollRevealDuration,
+                  duration: _duration,
                   opacity: 1,
                   y: 0,
-                  delay: entry.target.dataset.scrollRevealDelay,
-                  ease: 'power2.outIn'
+                  delay: _delay,
+                  ease: 'power2.outIn',
+                  // onCompleteParams: [entry.target],
+                  // onComplete: (target) => {
+                  //   setTimeout(() => {
+                  //     delete target.dataset.scrollRevealOpacityY
+                  //     console.log('SCROLL REVEAL target', target);
+                  //   }, 3000)
+                  // }
               })
             } else if (entry.target.dataset.scrollRevealHeight !== undefined) {
               gsap.to(entry.target, {
-                  duration: entry.target.dataset.scrollRevealDelay,
-                  delay: entry.target.dataset.scrollRevealDelay,
+                  duration: _duration,
+                  delay: _delay,
                   height: 'auto'
               })
             } else if (entry.target.dataset.scrollRevealClipPath !== undefined) {
               gsap.to(entry.target, {
                   clipPath: entry.target.dataset.scrollRevealClipPath,
-                  delay: entry.target.dataset.scrollRevealDelay,
-                  duration: entry.target.dataset.scrollRevealDuration,
+                  delay: _delay,
+                  duration: _duration,
                   ease: 'power2.inOut'
               })
             }

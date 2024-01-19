@@ -3,7 +3,7 @@
     <section class="cover-top">
       <div class="cover-top__image">
         <ImagePlane 
-          v-if="bMountPlanes"
+          v-if="storeDatasCurtains.planesToRemove.length === 0"
           :src="config.public.backendUrl + xxlarge"
           :onRender="onRender"
           :isVisible="true"
@@ -321,7 +321,7 @@ SECTION .cover-top
     }
   }
   &__title {
-    display: flex;
+    display: inline-flex;
     position: absolute;
     bottom: 140px;
     // width: 100%;
@@ -331,7 +331,7 @@ SECTION .cover-top
     margin-left: 60px;
 
     @include media-breakpoint-up(md) {
-      width: 100%;
+      // width: 100%;
       margin-left: 18vw;
       position: relative;
       bottom: 10vh;
