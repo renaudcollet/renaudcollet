@@ -37,7 +37,6 @@
 
 html, body {
   text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
   overscroll-behavior: none;
   font-synthesis: none;
 }
@@ -45,6 +44,11 @@ html, body {
 html {
   min-height: 100vh;
   // height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
