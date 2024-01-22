@@ -38,6 +38,11 @@ export default {
     type: {
       type: String,
       required: false,
+    },
+    index: {
+      type: Number,
+      required: false,
+      default: 0,
     }
   }
 }
