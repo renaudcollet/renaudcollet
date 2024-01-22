@@ -111,6 +111,11 @@ const props = defineProps({
   mountPlanes: {
     type: Boolean,
     default: false,
+  },
+  index: {
+    type: Number,
+    required: false,
+    default: 0,
   }
 })
 
@@ -135,7 +140,6 @@ const isVideo = computed(() => {
 const visibilityObserver = useElementVisibility(el);
 const isVisible = visibilityObserver.isVisible;
 watch(isVisible, (newVal, oldVal) => {
-  // console.log(`projectitem ${ props.src} isVisible`, newVal);
   if (newVal) {
     visibilityObserver.observer.stop();
   }
@@ -188,6 +192,14 @@ const onVideoOutOfView = () => {
     ease: 'power2.inOut',
   })
 }
+
+// onMounted(() => {
+//   console.log(`-> workitemsmall (projectitem${ props.index}) mounted`, props.src);
+// })
+
+// onBeforeUnmount(() => {
+//   visibilityObserver.observer.stop();
+// })
 </script>
 
 <style></style>

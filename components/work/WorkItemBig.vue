@@ -113,6 +113,11 @@ const props = defineProps({
   mountPlanes: {
     type: Boolean,
     default: false,
+  },
+  index: {
+    type: Number,
+    required: false,
+    default: 0,
   }
 })
 

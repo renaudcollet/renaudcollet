@@ -120,14 +120,20 @@ const planeProps = {
         name: "uOpenProgress",
         type: "1f",
         value: 0,
-      },
-    }
+    },
+    uCoverProgress: {
+        name: "uCoverProgress",
+        type: "1f",
+        value: 0,
+    },
+  },
 }
 
 const isReady = ref(false);
 const isVisible = toRef(props, 'isVisible');
 
 watch(isVisible, (newVal, oldVal) => {
+  // console.log(`ImagePlane ${props.src} isVisible`, newVal);
   if (newVal) {
     appear();
   }
@@ -135,6 +141,7 @@ watch(isVisible, (newVal, oldVal) => {
 
 // Disappear is handled in datasCurtains.js
 const appear = () => {
+  // console.log('appear', planeMesh.value);
   if(!planeMesh.value) return
 
   if (props.skipAnimation) {
@@ -144,11 +151,12 @@ const appear = () => {
     return
   } else {
     // Case where item is shown by scroll or user arrives directly on a project page (cover will appear with a transition)
-    const t = {u: 0, v: 0}
+    const t = {u: 0, v: 0.0}
     gsap.to(t, {
       v: 0.7,
-      duration: 1,
+      duration: 0.7,
       delay: 0.2,
+      ease: 'power2.out',
       onUpdate: () => {
           planeMesh.value.uniforms.uOpenProgress.value = t.v
       },
@@ -219,7 +227,7 @@ defineExpose({
 })
 
 onMounted(() => {
-  // console.log(`mounted ${props.src}`, `isVisible ${props.isVisible}`);
+  // console.log(`ImagePlane mounted ${props.src}`, `isVisible ${props.isVisible}`);
   window.addEventListener('resize', onResize)
 
   // const t = {v: 0}
@@ -243,45 +251,3 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', onResize)
 })
 </script>
-
-<style scoped lang="scss">
-/* .plane, 
-.not-plane {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-.plane img {
-  opacity: 0;
-}
-
-@include media-breakpoint-up(xl) {
-  .plane img.cover {
-    opacity: 1;
-  }
-}
-
-.plane video {
-opacity: 0;
-}
-
-.not-plane img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1; 
-}
-
-img{
-  width: 100%;
-  height: 100%;
-}
-
-video{
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-} */
-</style>

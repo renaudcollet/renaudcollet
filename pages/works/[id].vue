@@ -58,12 +58,14 @@
       <template v-for="(item, index) in currentProjectBlocs">
         <WorkItemTitleResume
           v-if="item.Image.data === null && item.Video.data === null"
+          :index="index" 
           :title="item.Titre"
           :content="item.Resume"
           :type="item.type"
         />
         <WorkItemBig
           v-else-if="item.type === 'Big'"
+          :index="index" 
           :src="item.Image.data ? config.public.backendUrl + item.Image.data.attributes.formats.large.url : null" 
           :video-src="item.Video.data ? config.public.backendUrl + item.Video.data.attributes.url : null"
           :title="item.Titre"
@@ -132,13 +134,11 @@ const imagePlane = ref(null);
 
 // Curtains
 const storeDatasCurtains = useDatasCurtainsStore();
-const bMountPlanes = true /* computed(() => {
-  return storeDatasCurtains.planesToRemove.length === 0;
-}); */
+const bMountPlanes = ref(false);
 
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
-    console.log('PAGE ID - transitionState.transitionComplete', storeDatasCurtains.scrollY);
+    // console.log('PAGE ID - transitionState.transitionComplete', storeDatasCurtains.scrollY);
     
     storeDatasCurtains.scrollToTopCompleteAfterTransition = false;
 
@@ -156,7 +156,7 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
         initScrollReveal(root.value)
         initZoomableImage(root.value)
       }
-    }, 250)
+    }, 500)
   }
 })
 
@@ -165,6 +165,7 @@ const onCoverReady = (e) => {
     console.log('---> onCoverReady', e);
     storeDatasCurtains.removeCurrentPlaneCover()
     storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
+    bMountPlanes.value = true;
     emit('onLockScroll', false)
   }, 250)
 }
@@ -198,6 +199,8 @@ const skipCoverAnimation = computed(() => {
 onMounted(() => {
   // console.log('WORK ID PAGE - MOUNTED');
   emit('onLockScroll', true)
+  
+  bMountPlanes.value = storeDatasCurtains.planesToRemove.length === 0;
 
   // gtag
   // https://developers.google.com/tag-platform/gtagjs/reference/events?hl=fr#page_view -> should I use page_view ?
