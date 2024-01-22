@@ -6,7 +6,7 @@
     @ready="onReady"
   >
     <img 
-      :src="src  + '?' + new Date().getTime()" 
+      :src="sourceFile" 
       :style="{'object-fit': objectFit}"
       :alt="alt"
       data-sampler="uTexture"
@@ -72,8 +72,8 @@ const planeProps = {
   transparent: true, // This prevents the plane to have a black fash on load/unload
   vertexShader,
   fragmentShader,
-  widthSegments: 10,
-  heightSegments: 10,
+  widthSegments: 5,
+  heightSegments: 5,
   drawCheckMargins: {
     top: 100,
     right: 0,
@@ -132,6 +132,10 @@ const planeProps = {
 
 const isReady = ref(false);
 const isVisible = toRef(props, 'isVisible');
+
+const sourceFile = computed(() => {
+  return `${props.src}?${new Date().getTime()}` ; // Use date to force reload, otherwise we have resize bug or black image....
+})
 
 watch(isVisible, (newVal, oldVal) => {
   // console.log(`ImagePlane ${props.src} isVisible`, newVal);
