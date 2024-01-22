@@ -116,7 +116,7 @@ const props = defineProps({
 
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 const { initZoomableImage, clearZoomableImage } = useZoomableImage();
-const { transitionState, elementsToTransition, functionTransitionCallback } = useTransitionComposable();
+const { transitionState, elementsToTransition, functionTransitionCallback, backgroundForTransition } = useTransitionComposable();
 
 /**
  *  page transition
@@ -130,7 +130,7 @@ const emit = defineEmits(['onLockScroll'])
 
 const root = ref(null);
 const imagePlane = ref(null);
-// const renderCover = ref(null);
+const renderCover = ref(null);
 
 // Curtains
 const storeDatasCurtains = useDatasCurtainsStore();
@@ -166,6 +166,10 @@ const onCoverReady = (e) => {
     storeDatasCurtains.removeCurrentPlaneCover()
     storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
     bMountPlanes.value = true;
+
+    // Remove image background
+    backgroundForTransition.imgData = null
+    backgroundForTransition.element.style.backgroundImage = `none`
     emit('onLockScroll', false)
   }, 250)
 }
@@ -197,9 +201,13 @@ const skipCoverAnimation = computed(() => {
 })
 
 onMounted(() => {
-  // console.log('WORK ID PAGE - MOUNTED');
+  console.log('WORK ID PAGE - MOUNTED');
   emit('onLockScroll', true)
   
+  // storeDatasCurtains.currentPlaneCover.resetPlane(renderCover.value)
+  // if (storeDatasCurtains.curtains)
+  //   storeDatasCurtains.curtains.disableDrawing()
+
   bMountPlanes.value = storeDatasCurtains.planesToRemove.length === 0;
 
   // gtag

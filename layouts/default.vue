@@ -1,5 +1,6 @@
 <template>
   <Header></Header>
+  <div ref="background" class="background"></div>
   <Cover3D ref="cover3d" :showCover="showCover3d" :scrollZone="scrollZone"/>
   <Curtains 
     id="CurtainsCanvas" 
@@ -37,6 +38,7 @@ import Curtains from "~/components/curtains/Curtains/index.vue";
 import Lenis from '@studio-freight/lenis';
 import MouseCursor from '~/components/ui/MouseCursor.vue';
 import useCurtainsShader from '~/compositions/use-curtains-shader';
+import { useTransitionComposable } from '../compositions/use-transition';
 
 const route = useRoute()
 
@@ -50,8 +52,12 @@ const cover3d = ref(null);
 // const shaderPass = ref(null);
 const curtains = ref(null);
 const mouseCursor = ref(null);
+const background = ref(null);
+
+let __curtains = null;
 
 const storeDatasCurtains = useDatasCurtainsStore();
+const { curtainsForTransition, backgroundForTransition } = useTransitionComposable();
 
 const onLockScroll = (isLocked, animate) => {
   // storeDatas.lockScroll = isLocked;
@@ -113,6 +119,9 @@ const onCurtainsReady = (_curtains) => {
   console.log('onCurtainsReady', _curtains);
   // curtains.disableDrawing();
 
+  __curtains = _curtains;
+  curtainsForTransition.curtains = __curtains;
+  backgroundForTransition.element = background.value;
   storeDatasCurtains.setCurtains(_curtains)
 
   // NOTE: Curtains params changed directly in the custom Curtains component (params.js)
@@ -135,8 +144,14 @@ const onCurtainsReady = (_curtains) => {
 
 storeDatas.setCurrentPage(route.fullPath)
 watch(() => route.path, (value) => {
-  // console.log('➮ DEFAULT LAYOUT - WATCH route fullpath ', value)
+  console.log('➮ DEFAULT LAYOUT - WATCH route fullpath ', value)
   storeDatas.setCurrentPage(value)
+
+  if (storeDatas.previousPage === '/works' && backgroundForTransition.imgData !== null) {
+    // Remove image background
+    backgroundForTransition.imgData = null
+    backgroundForTransition.element.style.backgroundImage = `none`    
+  }
 
   setTimeout(() => {
     mouseCursor.value.reset()
@@ -160,6 +175,8 @@ watch(() => route.path, (value) => {
 
 })
 
+let bPause = false
+
 // let fps = 60
 const update = (time) => {
   
@@ -168,6 +185,10 @@ const update = (time) => {
       update(time)
     })
   // }, 1000 / fps);
+
+  // if (__curtains && !bPause) {
+  //   __curtains.render();
+  // }
   
   lenis.raf(time)
   onScroll()
@@ -193,6 +214,26 @@ const onScroll = () => {
 onMounted(() => {
   // console.log('DEFAULT LAYOUT - MOUNTED');
   config = window.location.hash === '#config'
+
+  background.value.style.width = `${window.innerWidth}px`
+  background.value.style.height = `${window.innerHeight}px`  
+
+  window.addEventListener('keydown', (e) => {
+    console.log('keydown', e.key);
+    if (e.key === 'p') {
+      bPause = !bPause
+
+      if (bPause) {
+        __curtains.disableDrawing()
+      } else {
+        __curtains.enableDrawing()
+      }
+    } else if (e.key === 'd') {
+      // Get renderer image and set it as background
+      var imgData = __curtains.canvas.toDataURL();
+      background.value.style.backgroundImage = `url(${imgData})`
+    }
+  })
 
   const c1 = 1.70158;
   lenis = new Lenis({
@@ -241,5 +282,14 @@ onErrorCaptured((err) => {
   top: 0;
   right: 0;
   z-index: 99999999999;
+}
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  // background-color: yellow;
+  pointer-events: none;
 }
 </style>

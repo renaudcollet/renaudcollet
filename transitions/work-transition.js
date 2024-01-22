@@ -4,19 +4,18 @@ import { useTransitionComposable } from '../compositions/use-transition';
 
 const { 
   toggleTransitionComplete, 
-  toggleTransitionEnterComplete, 
-  // toggleTransitionLeaveComplete,
+  // toggleTransitionEnterComplete,  
   elementsToTransition,
   functionTransitionCallback } = useTransitionComposable();
 
-export const durationEnterDefault = 1;
+export const durationEnterDefault = 0.6;
 export const durationLeaveDefault = 0.5;
 
 export const durationEnterWork = 0.5;
-export const durationLeaveWork = 0.8;
+export const durationLeaveWork = 0.6;
 
 export const durationEnterWorkId = 0.5;
-export const durationLeaveWorkId = 0.8;
+export const durationLeaveWorkId = 0.6;
 
 /**
  * Inspired by https://stackblitz.com/edit/nuxt-starter-bthjlg
@@ -26,22 +25,23 @@ export const workIdTransition = {
   name: 'work-id-transiton',
   mode: 'out-in',
   onEnter: (el, done) => {
-    console.log('workIdTransition onEnter');    
+    // console.log('workIdTransition onEnter'); 
+    
     const t = {v: 0}
     // gsap.set(el, { opacity: 0 });
     gsap
       // .to(el, { opacity: 1, duration: durationEnterWorkId,
       .to(t, { v: 1, duration: durationEnterWorkId,
         onComplete: () => {
-          console.log('workIdTransition onEnter complete');
+          // console.log('workIdTransition onEnter complete');
           toggleTransitionComplete(true);
           done();
         } })
   },
   
   onLeave: (el, done) => {
-    console.log('workIdTransition onLeave');
-    console.log('workIdTransition onLeave elementsToTransition', elementsToTransition.elements.length);
+    // console.log('workIdTransition onLeave');
+    // console.log('workIdTransition onLeave elementsToTransition', elementsToTransition.elements.length);
     const t = {v: 0}
     toggleTransitionComplete(false);
     gsap
@@ -53,7 +53,7 @@ export const workIdTransition = {
           ease: 'power2.outIn',
         },
         onComplete:() => {
-          console.log('workIdTransition onLeave opacity 0 complete');
+          // console.log('workIdTransition onLeave opacity 0 complete');
           elementsToTransition.elements = null;
 
           if (functionTransitionCallback.function) {
@@ -63,7 +63,7 @@ export const workIdTransition = {
 
           gsap.to(t, { v: 1, delay: 0.1, duration: durationLeaveWorkId,
             onComplete:() => {
-              console.log('workIdTransition onLeave complete');
+              // console.log('workIdTransition onLeave complete');
               done();
             }})
       }})
@@ -74,14 +74,14 @@ export const workTransition = {
   name: 'work-transiton',
   mode: 'out-in',
   onEnter: (el, done) => {
-    console.log('workTransition onEnter');
+    // console.log('workTransition onEnter');
     const t = {v: 0}
     gsap.set(el, { opacity: 0 });
     gsap
       .timeline({
         paused: true,
         onComplete: () => {
-          console.log('workTransition onEnter complete');
+          // console.log('workTransition onEnter complete');
           toggleTransitionComplete(true);
           done();
         },
@@ -89,18 +89,13 @@ export const workTransition = {
       .to(el, { opacity: 1, duration: durationEnterWorkId })
       // .to(t, { v: 1, duration: durationEnterWork })
       .play();
-    // setTimeout(() => {
-    //   console.log('workTransition onEnter complete');
-    //   toggleTransitionComplete(true);
-    //   done();
-    // }, 1000 * durationEnterWork);
   },
   onAfterEnter: (el) => {
     gsap.to(el, { delay: 1, opacity: 1 });
   },
   onLeave: (el, done) => {
-    console.log('workTransition onLeave');
-    console.log('workTransition onLeave elementsToTransition', elementsToTransition);
+    // console.log('workTransition onLeave');
+    // console.log('workTransition onLeave elementsToTransition', elementsToTransition);
     const t = {v: 0}
     toggleTransitionComplete(false);
     gsap
@@ -112,7 +107,7 @@ export const workTransition = {
           ease: 'power2.outIn',
         },
         onComplete:() => {
-          console.log('workTransition onLeave opacity 0 complete');
+          // console.log('workTransition onLeave opacity 0 complete');
           // toggleTransitionLeaveComplete(true); // This is not watched because the component is already unmounted
           elementsToTransition.elements = null;
 
@@ -120,9 +115,7 @@ export const workTransition = {
             functionTransitionCallback.function();
             functionTransitionCallback.function = null;
           }
-
-          // No need for opacity 0, because plane covers everything
-          // TODO: But need opacity when not going to work page id !
+          
           gsap.to(t, { v: 1, delay: 0.1, duration: durationLeaveWork,
             onComplete:() => {
               console.log('workTransition onLeave complete');

@@ -14,6 +14,15 @@ export const elementsToTransition = {
 export const functionTransitionCallback = {
   function: null, // Function
 };
+export const curtainsForTransition = {
+  curtains: null, // Function
+};
+
+// This is a workaround to avoid black flash when going to work id page
+export const backgroundForTransition = {
+  element: null, // HTMLElement
+  imgData: null, // ImageData
+};
 
 export const useTransitionComposable = () => {
   const toggleTransitionComplete = (value) => {
@@ -31,8 +40,12 @@ export const useTransitionComposable = () => {
     transitionState,
     toggleTransitionComplete,
     toggleTransitionEnterComplete,
-    // toggleTransitionLeaveComplete,
+    // toggleTransitionLeaveComplete, // Not doable with vue transitions, on leave element doesn't exist anymore
+
     elementsToTransition,
     functionTransitionCallback,
+
+    curtainsForTransition,
+    backgroundForTransition,
   };
 };

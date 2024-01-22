@@ -59,7 +59,7 @@ const props = defineProps({
 })
 
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
-const { transitionState, elementsToTransition, functionTransitionCallback } = useTransitionComposable();
+const { transitionState, elementsToTransition, functionTransitionCallback, curtainsForTransition, backgroundForTransition } = useTransitionComposable();
 
 const projectsFilteredDelay = ref(null);
 projectsFilteredDelay.value = storeDatas.projectsFiltered;
@@ -202,32 +202,41 @@ const expandCover = (imagePlane) => {
     // width: rectFinal.width - 100, // debug
     width: rectFinal.width,
     height: rectFinal.height,
+    onStart: () => {
+      imagePlane.planeMesh.watchScroll = false;
+    },
     onUpdate: () => {
       imagePlane.resize();
+      // imagePlane.planeMesh.uniforms.uCoverProgress.value += 0.01;
     },
     onComplete: () => {
       imagePlane.resize();
+
+      backgroundForTransition.imgData = curtainsForTransition.curtains.canvas.toDataURL();
+      backgroundForTransition.element.style.backgroundImage = `url(${backgroundForTransition.imgData})`
+
       imagePlane.planeMesh.watchScroll = false;
-      // imagePlane.planeMesh.resetPlane()
       console.log('expandCover onComplete');
+      
+      // storeDatasCurtains.curtains.disableDrawing();
     }
   })
 }
 
 onBeforeUnmount(() => {  
-  console.log('WORKS onBeforeUnmount');
+  // console.log('WORKS onBeforeUnmount');
   clearScrollReveal()
 
   // elementsToTransition.elements = [content.value];
   elementsToTransition.elements = root.value.querySelectorAll('.unmount-animation');
 
   const closePanels = () => {
-    console.log('WORKS closePanels');
+    // console.log('WORKS closePanels');
     storeDatasCurtains.removePlanes();
 
     // if has cover, expand it
     if (selectedImagePlane) {
-      console.log('WORKS closePanels expandCover');
+      // console.log('WORKS closePanels expandCover');
       expandCover(selectedImagePlane)
     }
   }

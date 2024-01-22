@@ -188,11 +188,18 @@ const expandCover = (imagePlane) => {
     // width: rectFinal.width - 100, // debug
     width: rectFinal.width,
     height: rectFinal.height,
+    onStart: () => {
+      imagePlane.planeMesh.watchScroll = false;
+    },
     onUpdate: () => {
       imagePlane.resize();
     },
     onComplete: () => {
       imagePlane.resize();
+      
+      backgroundForTransition.imgData = curtainsForTransition.curtains.canvas.toDataURL();
+      backgroundForTransition.element.style.backgroundImage = `url(${backgroundForTransition.imgData})`
+      
       imagePlane.planeMesh.watchScroll = false;
       // imagePlane.planeMesh.resetPlane()
       console.log('expandCover onComplete');
