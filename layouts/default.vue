@@ -129,6 +129,11 @@ const onCurtainsReady = (_curtains) => {
 
   let timeout = false
   window.addEventListener('resize', () => {
+
+    const _html = document.querySelector('html')
+    background.value.style.width = `${_html.clientWidth}px`
+    background.value.style.height = `${_html.clientHeight}px`  
+
     clearTimeout(timeout);
     // TODO: replace timeout with raf debounce
     timeout = setTimeout(() => {
@@ -137,7 +142,7 @@ const onCurtainsReady = (_curtains) => {
       // if (this.isPortrait !== isPortrait) {
       //   window.location.reload()
       // }
-      _curtains.resize()
+      _curtains.resize()  
     }, 110);
   })
 }
@@ -215,8 +220,9 @@ onMounted(() => {
   // console.log('DEFAULT LAYOUT - MOUNTED');
   config = window.location.hash === '#config'
 
-  background.value.style.width = `${window.innerWidth}px`
-  background.value.style.height = `${window.innerHeight}px`  
+  const _html = document.querySelector('html')
+  background.value.style.width = `${_html.clientWidth}px`
+  background.value.style.height = `${_html.clientHeight}px`  
 
   window.addEventListener('keydown', (e) => {
     console.log('keydown', e.key);
