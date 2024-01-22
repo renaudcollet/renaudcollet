@@ -28,11 +28,14 @@ export default function useScrollReveal() {
             const _duration = entry.target.dataset.scrollRevealDuration
             const _delay = entry.target.dataset.scrollRevealDelay
             if (entry.target.dataset.scrollRevealOpacityY !== undefined) {
-              gsap.set(entry.target, {opacity: 0, y: 40})
+              gsap.set(entry.target, {opacity: 0, y: 40, x: 0, z: 0})
               gsap.to(entry.target, {
                   duration: _duration,
                   opacity: 1,
                   y: 0,
+                  x: 0,
+                  z: 0,
+                  force3D : true,
                   delay: _delay,
                   ease: 'power2.outIn',
                   // onCompleteParams: [entry.target],
