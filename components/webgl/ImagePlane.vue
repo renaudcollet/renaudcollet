@@ -69,6 +69,7 @@ const props = defineProps({
 });
 
 const planeProps = {
+  transparent: true, // This prevents the plane to have a black fash on load/unload
   vertexShader,
   fragmentShader,
   widthSegments: 10,
