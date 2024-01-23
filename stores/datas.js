@@ -24,6 +24,7 @@ export const useDatasStore = defineStore( 'datas', {
     keywords: null,
     keywordsSelected: null,
     lockScroll: false,
+    scrollY: 0,
     currentPage: null,
     previousPage: null,
   }),

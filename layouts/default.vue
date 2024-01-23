@@ -59,15 +59,15 @@ let __curtains = null;
 const storeDatasCurtains = useDatasCurtainsStore();
 const { curtainsForTransition, backgroundForTransition } = useTransitionComposable();
 
-const onLockScroll = (isLocked, animate) => {
+const onLockScroll = (isLocked, animate, scrollY = 0) => {
   // storeDatas.lockScroll = isLocked;
   if (!isLocked) {
-    // console.log('SCROLL ACTIVATED');
+    console.log(`SCROLL ACTIVATED, scrollY: ${scrollY}, immediate: ${!animate}`);
     lenis.start()
-    lenis.scrollTo(0, {immediate: !animate })
+    lenis.scrollTo(scrollY, {immediate: !animate })
   } else {
     // storeDatasCurtains.scrollY = window.scrollY
-    // console.log('SCROLL STOPPED');
+    console.log(`SCROLL STOPPED, scrollY: ${storeDatas.scrollY}`);
     lenis.stop()
   } 
 }

@@ -94,7 +94,12 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
 
     setTimeout(() => {
       storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
-      // storeDatasCurtains.removeCurrentPlaneCover()
+
+      if (storeDatas.scrollY > 0) {
+        emit('onLockScroll', false, true, storeDatas.scrollY)
+        storeDatas.scrollY = 0
+      } else
+        emit('onLockScroll', false)
     }, 100)
 
     setTimeout(() => {
@@ -162,8 +167,7 @@ let selectedImagePlane = null
 const onClickProjectItem = (id, imagePlane) => {
   selectedImagePlane = imagePlane
   storeDatasCurtains.setCurrentPlaneCover(imagePlane.planeMesh)
-  console.log('onClickProjectItem', id, imagePlane.planeMesh)
-  console.log('emit onLockScroll', false)
+  storeDatas.scrollY = window.scrollY
   emit('onLockScroll', true)
 }
 

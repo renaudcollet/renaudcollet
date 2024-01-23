@@ -1,6 +1,6 @@
 <template>
   <div ref="root" class="page page-work-id">
-    <div class="btn-back" ref="btnBack" @click="onClickBtnBack"></div>
+    <div class="btn-back" ref="btnBack" @click="onBtnBackClick" @mouseover="onBtnBackHover" @mouseout="onBtnBackOut"></div>
     <section class="cover-top">
       <div class="cover-top__image">
         <ImagePlane 
@@ -210,7 +210,14 @@ const showBtnBack = () => {
   gsap.to(btnBack.value, {y: 0, opacity: 1, force3D: true, duration: 0.5, delay: 0.1, ease: 'quad2.inOut'})
 }
 
-const onClickBtnBack = () => {
+const onBtnBackHover = () => {
+  gsap.to(btnBack.value, {scale: 1.1, force3D: true, duration: 0.3, ease: 'quad2.inOut'})
+}
+const onBtnBackOut = () => {
+  gsap.to(btnBack.value, {scale: 1, force3D: true, duration: 0.3, ease: 'quad2.inOut'})
+}
+
+const onBtnBackClick = () => {
   emit('onLockScroll', true)
   if (storeDatas.previousPage === '/') 
     router.push({ name: 'index' })

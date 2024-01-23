@@ -62,7 +62,7 @@ const props = defineProps({
 
 // const { initLogoObserver, clearLogoObserver } = useLogoObserver();
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
-const { transitionState, elementsToTransition, functionTransitionCallback } = useTransitionComposable();
+const { transitionState, elementsToTransition, functionTransitionCallback, curtainsForTransition, backgroundForTransition } = useTransitionComposable();
 
 /**
  *  page transition
@@ -84,12 +84,25 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
     storeDatasCurtains.scrollToTopCompleteAfterTransition = false;
     // console.log('emit onLockScroll', false);
-    emit('onLockScroll', false)
+
     // storeDatasCurtains.removePlanes();
     // storeDatasCurtains.removeCurrentPlaneCover();
     setTimeout(() => {
       storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
-    }, 1000)
+
+      if (storeDatas.scrollY > 0) {
+        emit('onLockScroll', false, true, storeDatas.scrollY)
+        storeDatas.scrollY = 0
+      } else
+        emit('onLockScroll', false)
+    }, 100)
+
+    setTimeout(() => {
+      if (root.value) {
+        // Add if condition in case user change page quickly, because we are in a setTimeout
+        initScrollReveal(root.value)
+      }
+    }, 500)
   }
 })
 
@@ -106,8 +119,7 @@ let selectedImagePlane = null
 const onClickProjectItem = (id, imagePlane) => {
   selectedImagePlane = imagePlane
   storeDatasCurtains.setCurrentPlaneCover(imagePlane.planeMesh)
-  console.log('onClickProjectItem', id, imagePlane.planeMesh)
-  console.log('emit onLockScroll', false)
+  storeDatas.scrollY = window.scrollY
   emit('onLockScroll', true)
 }
 
