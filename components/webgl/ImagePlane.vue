@@ -84,7 +84,7 @@ const planeProps = {
     planeDeformation: {
         name: "uPlaneDeformation",
         type: "1f",
-        value: 0,
+        value: 0.1,
     },
     resolution: {
         name: "uResolution",
@@ -99,7 +99,7 @@ const planeProps = {
     scale: {
         name: "uScale",
         type: "1f",
-        value: 0,
+        value: 1.0,
     },
     uZPos: {
         name: "uZPos",
@@ -162,6 +162,9 @@ const appear = () => {
       duration: 0.7,
       delay: 0.2,
       ease: 'power2.out',
+      // onStart: () => {
+      //     planeMesh.value.resize()
+      // },
       onUpdate: () => {
           planeMesh.value.uniforms.uOpenProgress.value = t.v
       },
@@ -189,6 +192,7 @@ const onReady = (plane) => {
   planeMesh.value = plane; // extends DOMMesh
   nextTick(() => {
       // plane.images[0].style.opacity = 0
+      // plane.resize()
       updateRatioUniforms(plane)
 
       const t = {u: 0, v: 0}

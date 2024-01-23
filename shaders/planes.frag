@@ -12,13 +12,22 @@ uniform vec2 uSize;
 // uniform float hovered;
 // uniform float isText;
 uniform float uScale;
-
-uniform float uOpenProgress;
+uniform float uCoverProgress; // 0 -> 1
+uniform float uOpenProgress; // 0 -> 1
 
 #include "/lygia/math/const.glsl";
 #include "/lygia/draw/rect.glsl";
 #include "/lygia/math/rotate2d.glsl";
-// #include "/lygia/generative/psrdnoise.glsl";
+
+// #include "/lygia/color/blend/luminosity.glsl";
+// #include "/lygia/color/levels/outputRange.glsl";
+// #include "/lygia/color/hueShift.glsl";
+#include "/lygia/color/exposure.glsl";
+
+#include "/lygia/space/scale.glsl";
+
+// Scale from center
+// https://www.shadertoy.com/view/wtKfWt
 
 // Source : https://gist.github.com/raphaelameaume/d1731132ef01efd948e67c0778770981
 vec2 uvCover (vec2 uv, vec2 size, vec2 resolution) {
@@ -37,12 +46,45 @@ vec2 uvCover (vec2 uv, vec2 size, vec2 resolution) {
 }
 
 void main() {
-  vec2 uv = vTextureCoord;
+  vec2 uv = vTextureCoord; // From 0 to 1
+ 
 
   vec2 cover_uv = uvCover(uv, uSize, uResolution);
+  
+  cover_uv = scale(cover_uv, uScale);
+
+  vec4 color = texture2D(uTexture, cover_uv);
+
+  // color = levelsOutputRange(color, 0.5, 0.1);
+  // color = hueShift(color, 0.05);
+  color = exposure(color, -0.5);
+
+  // Deformation / Distortion
+  // Question : https://stackoverflow.com/questions/63651405/fish-eye-warping-about-mouse-position-fragment-shader
+  // Linking to : https://www.geeks3d.com/20140213/glsl-shader-library-fish-eye-and-dome-and-barrel-distortion-post-processing-filters/
+  // float aperture = 178.0;
+  // float apertureHalf = 0.5 * aperture * (PI / 180.0);
+  // float maxFactor = sin(apertureHalf);
+  // vec2 xy = 2.0 * cover_uv.xy - 1.0; // Position par rapport au centre
+  // float d = length(xy); // longueur du vecteur
+  // if (d < (2.0-maxFactor))
+  // {
+  //   d = length(xy * maxFactor);
+  //   float z = sqrt(1.0 - d * d);
+  //   float r = atan(d, z) / PI;
+  //   float phi = atan(xy.y, xy.x);
+    
+  //   uv.x = r * cos(phi) + 0.5;
+  //   uv.y = r * sin(phi) + 0.5;
+  // }
+  // else
+  // {
+  //   uv = cover_uv.xy;
+  // }
+  // // vec4 c = texture2D(tex0, uv);
 
   // Draw texture
-  vec4 color = texture2D(uTexture, cover_uv);
+  // vec4 color = texture2D(uTexture, uv);
 
   // Rotate
   vec2 center_uv = uv - 0.5; // translate
@@ -53,16 +95,12 @@ void main() {
   float rect_mask = rect(rotate_uv, vec2(1.5, 1.5 * uOpenProgress));
   color.rgba *= rect_mask;
 
-  // Noise
-  // const float scale = 50.0;
-  // vec2 v = scale * uv;
-  // const vec2 p = vec2(0.0, 0.0);
-  // float alpha = uOpenProgress * 10.;
-  // vec2 g;
-  // float n = 0.5 + 0.5 * psrdnoise(v, p, alpha, g);
-  // vec4 colorNoise = vec4(n);
-  
-  // Gradient
+  // Prevent black flash just before opening
+  // if (uOpenProgress == 0.0) {
+  //   color.a = 0.0;
+  // }
+
+  // color.r = 1.0;
 
   // gl_FragColor = colorNoise * color;
   gl_FragColor = color;

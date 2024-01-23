@@ -4,6 +4,7 @@
     ref="el"
     @click="onClick()"
     @mouseover="onMouseover"
+    @mouseout="onMouseout"
   >
     <!-- <ClientOnly> -->
       <div 
@@ -128,9 +129,9 @@ const currentProjectCover = props.datas.attributes.cover.data.attributes
 // const coverSrc = computed(() => {
 //   return currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
 // })
-const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProjectCover.formats.xxlarge.url : currentProjectCover.url;
-const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
-const large = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
+// const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProjectCover.formats.xxlarge.url : currentProjectCover.url;
+// const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
+const xxlarge = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
 
 // console.log('IMAGE PROJECT ITEM URL', xxlarge);
 
@@ -152,70 +153,29 @@ watch(isVisible, (newVal, oldVal) => {
 
 let isClicked = false;
 // let planeHtml = null;
+let zoomValue = {u: 1.0};
 
 const onClick = () => {
-
-  isClicked = true;
-
-  // stop scroll
+  isClicked = true;  
   emit('onClick', props.id, imagePlane.value)
+}
 
-  // console.log('Selected Plane render order', imagePlane.value.planeMesh.renderOrder);
-  // imagePlane.value.planeMesh.setRenderOrder(50)
-  // console.log('Selected Plane render order', imagePlane.value.planeMesh.renderOrder);
+const onMouseout = () => {
+  if (isClicked) {
+    return;
+  }
 
-  /* // animate imagePlane to full screen, and position it to the center
-  planeHtml = imagePlane.value.planeMesh.htmlElement;
-  // Get the bounding rectangle of the relative element
-  // const coverElement = imagePlane.value.renderer
-  const rect = planeHtml.parentNode.parentNode.getBoundingClientRect()
-  // const rect = planeHtml.getBoundingClientRect();
-  
-  // This would be eq to the final size of the imagePlane (aka the cover image in page id)
-  const rectFinal = imagePlane.value.planeMesh.renderer.canvas.getBoundingClientRect()
-  // console.log('final size', elFinalSize.width, elFinalSize.height);
-
-  // Change z position to cover other planes
-  // Done in datasCurtains.js
-  imagePlane.value.planeMesh.uniforms.uZPos.value = -0.001; // OK
-  // imagePlane.value.planeMesh.relativeTranslation(new Vec3(0, 0, -1.0))
-
-  gsap.killTweensOf(planeHtml)
-
-  // console.log('planeHtml', planeHtml);
-
-  // console.log('rect', rect);
-  planeHtml.style.position = 'fixed';
-  planeHtml.style.top = `${rect.top}px`;
-  planeHtml.style.left = `${rect.left}px`;
-
-  gsap.to(planeHtml, {
-    // delay: 0.01,
-    duration: durationLeaveDefault,
-    ease: 'power4.out',
-    scale: 1,
-    // top: `${-rect.top}px`,
-    // left: `${-rect.left}px`,
-    top: `0px`,
-    left: `0px`,
-    // width: rectFinal.width - 100, // debug
-    width: rectFinal.width,
-    height: rectFinal.height,
-    onStart: () => {
-      imagePlane.value.resize();
-    },
+  // Dezoom 
+  gsap.killTweensOf(zoomValue)
+  gsap.to(zoomValue, {
+    u: 1.0,
+    duration: 0.5,
+    // delay: 0.2,
+    ease: 'power2.out',
     onUpdate: () => {
-      imagePlane.value.resize();
+      imagePlane.value.planeMesh.uniforms.scale.value = zoomValue.u
     },
-    onComplete: () => {
-      imagePlane.value.resize();
-      imagePlane.value.planeMesh.watchScroll = false;
-      // imagePlane.value.planeMesh.resetPlane()
-      
-      // Cant emit because of vuejs transition already unmounted this component  
-      // emit('onClickAnimationComplete', props.id, imagePlane.value.planeMesh) 
-    }
-  }) */
+  })
 }
 
 const onMouseover = () => {
@@ -223,10 +183,17 @@ const onMouseover = () => {
     return;
   }
 
-  // gsap.to(imagePlane.value.planeMesh.scale, {
-  //   x: 1.5,
-  //   y: 1.5,
-  // })
+  // Zoom 
+  gsap.killTweensOf(zoomValue)
+  gsap.to(zoomValue, {
+    u: 0.9,
+    duration: 0.5,
+    // delay: 0.2,
+    ease: 'power2.inOut',
+    onUpdate: () => {
+      imagePlane.value.planeMesh.uniforms.scale.value = zoomValue.u
+    },
+  })
 }
 
 onMounted(() => {
