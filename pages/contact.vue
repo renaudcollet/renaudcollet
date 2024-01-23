@@ -135,11 +135,11 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
     console.log('CONTACT Transition complete');
     storeDatasCurtains.scrollToTopCompleteAfterTransition = false;
     emit('onLockScroll', false)
-    storeDatasCurtains.removePlanes();
-    storeDatasCurtains.removeCurrentPlaneCover();
+    // storeDatasCurtains.removePlanes();
+    // storeDatasCurtains.removeCurrentPlaneCover();
     setTimeout(() => {
       storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
-    }, 1000)
+    }, 100)
   }
 })
 

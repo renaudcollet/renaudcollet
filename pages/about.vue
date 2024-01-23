@@ -83,12 +83,12 @@ const bMountPlanes = computed(() => {
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
     storeDatasCurtains.scrollToTopCompleteAfterTransition = false;
-    storeDatasCurtains.removePlanes();
-    storeDatasCurtains.removeCurrentPlaneCover();
+    // storeDatasCurtains.removePlanes();
+    // storeDatasCurtains.removeCurrentPlaneCover();
     emit('onLockScroll', false)
     setTimeout(() => {
       storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
-    }, 1000)
+    }, 100)
   }
 })
 
