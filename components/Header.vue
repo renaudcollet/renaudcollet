@@ -13,17 +13,7 @@
         v-on:click="onClickMenuButton"
         data-mouse-cursor="hover"
       >
-        <div class="header__menu__button__arrow">
-          <svg width="14px" height="27px" viewBox="0 0 14 27">
-            <path fill-rule="evenodd" fill="rgb(255, 255, 255)"
-            d="M14.006,26.063 L13.063,26.994 L-0.000,14.095 L0.605,13.497 L-0.000,12.899 L13.063,-0.000 L14.006,0.931 L1.280,13.497 L14.006,26.063 Z"/>
-          </svg>
-          <svg class="header__menu__button__arrow__right" width="14px" height="27px" viewBox="0 0 14 27">
-            <path fill-rule="evenodd" fill="rgb(255, 255, 255)"
-             d="M0,0.9L0.9,0L14,12.9l-0.6,0.6l0.6,0.6L0.9,27L0,26.1l12.7-12.6L0,0.9z"/>
-          </svg>
-        </div>
-        <div class="header__menu__button__label">Ξ</div>
+        <div class="header__menu__button__label"></div>
       </div>
       <div class="header__menu__content">
         <NuxtLink class="menu-item" to="/works" v-on:click="onClickItem">Works</NuxtLink>
@@ -57,7 +47,6 @@ export default {
     gsap.set('.header__menu', { visibility: 'visible' })
     gsap.set('.header__menu__content', { height: 0 })
     gsap.set('.header__menu__zone', { autoAlpha: 0 })
-    gsap.set('.header__menu__button__arrow__right', { autoAlpha: 0, transform: 'scale(0)' })
 
     if (this.isDesktop())
       this.openMenu()
@@ -95,9 +84,9 @@ export default {
       gsap.fromTo('.header__menu__content .menu-item', {
         autoAlpha: 0,
       }, {
-        delay: 0.3,
+        delay: this.isDesktop() ? 0.2 : 0.3,
         duration: 0.5,
-        stagger: 0.1,
+        stagger: -0.1,
         autoAlpha: 1
       })
       gsap.to('.header__menu__content', {
@@ -105,12 +94,6 @@ export default {
         height: this.isDesktop() ? 'auto' : window.innerHeight,
         ease: 'power4.out',
         top: 0
-      })
-      gsap.to('.header__menu__button__arrow__right', {
-        duration: 0.5,
-        autoAlpha: 1,
-        // transform: 'translateX(-100%) rotate(180deg) scale(1)',
-        transform: 'scale(1)',
       })
     },
     closeMenu() {
@@ -124,7 +107,7 @@ export default {
         duration: 0.4,
         stagger: {
           each: 0.1,
-          from: 'end'
+          // from: 'end'
         },
         autoAlpha: 0
       })
@@ -134,13 +117,6 @@ export default {
         height: 0,
         top: this.isDesktop() ? '-300px' : 0,
         ease: 'power4.out'
-      })
-      gsap.to('.header__menu__button__arrow__right', {
-        delay: 0.6,
-        duration: 0.5,
-        autoAlpha: 0,
-        // transform: 'translateX(-100%) rotate(180deg) scale(0)',
-        transform: 'scale(0)',
       })
     },
     // onScroll(e) {
@@ -213,14 +189,14 @@ export default {
       z-index: $z-menu-button;
       display: flex;    
       align-items: center;
-      right: 5px;
-      top: 3px;
+      right: 14px;
+      top: 11px;
       padding: 10px;
       transform-origin: right bottom;
       cursor: pointer;
 
       @include media-breakpoint-up(md) {
-        right: 10px;
+        right: 14px;
         top: 10px;
       }
 
@@ -234,51 +210,21 @@ export default {
 
       @include media-breakpoint-up(xl) {
         top: 25px;
-        right: 105px;
+        right: 106px;
       }
 
       &__label {
         display: flex;
-        font-size: 20px;
-        font-weight: 300;
-        color: #fff;
-        font-family: sans-serif;
-        transform: scaleX(1.5);
+        transform: scaleX(1.3);
         pointer-events: none;
-
-        @include media-breakpoint-up(md) {
-          font-size: 11px;
-        }
+        width: 10px;
+        height: 10px;
+        background-image: url('~/assets/svg/btn-menu.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
 
         @include media-breakpoint-up(lg) {
-          font-size: 14px;
-          font-weight: 400;
           order: 1;
-        }
-      }
-
-      &__arrow {
-        display: flex;
-        margin-right: 10px;
-        position: relative;
-        display: none;
-
-        @include media-breakpoint-up(lg) {
-          order: 2;
-          // transform: rotate(-90deg);
-          // margin-top: 10px;
-          margin-right: 10px;
-        }
-
-        svg {
-          width: 4.666667px;
-          height: 9px;
-        }
-
-        &__right {
-          position: absolute;
-          left: -5px;
-          transform-origin: right center;
         }
       }
     }
@@ -322,12 +268,12 @@ export default {
         justify-content: center;
 
         @include media-breakpoint-up(lg) {
-          font-size: 14px;
-          font-weight: 300;
-          margin-right: 20px;
+          font-size: 16px;
+          font-weight: 500;
+          margin-right: 13px;
           position: relative;
-          margin-left: 20px;
-          padding: 10px;
+          margin-left: 13px;
+          padding: 7px 10px 10px;
           pointer-events: all;
 
           &:hover,

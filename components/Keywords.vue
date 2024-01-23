@@ -37,7 +37,8 @@
             class="menu-item selected" 
             v-on:click="onClickRemoveItem(item)"
           >
-            {{ item.attributes.key }}
+            <span class="btn-close"></span>
+            <span class="label">{{ item.attributes.key }}</span>
           </button>
         </template>
       </div>
@@ -119,7 +120,7 @@ const closeMenu = () => {
     delay: 0.5,
     duration: 0.5,
     height: 0,
-    top: 45,
+    top: 60,
     ease: 'power4.out'
   })
   gsap.to('.keywords__menu__button__arrow__right', {
@@ -149,7 +150,7 @@ const openMenu = () => {
     duration: 0.5,
     height: 'auto',
     ease: 'power4.out',
-    top: 45
+    top: 60
   })
   gsap.to('.keywords__menu__button__arrow__right', {
     duration: 0.5,
@@ -176,6 +177,7 @@ onMounted(() => {
   cursor: pointer;
   width: 100px;
   font-size: 12px;
+  font-weight: 500;
   border: 0;
   padding: 3px 2px;
   color: rgb(0, 0, 0);
@@ -183,19 +185,50 @@ onMounted(() => {
   transition: background-color 0.8s ease-in-out, color 0.8s ease-in-out;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.5);
-    color: rgb(255, 255, 255);
+    background-color: rgba(19, 19, 19, 0.5);
+    color: rgb(250, 250, 250);
     transition: background-color 0.0s ease-in-out, color 0.0s ease-in-out;
+  }
+
+  @include media-breakpoint-up(xl) {
+    font-size: 13px;
+    padding: 4px 2px;
   }
 
   &.selected {
     // text-decoration: underline;
     position: relative;
-    &::before {
-      content: 'x';
-      position: absolute;
-      left: -15px;
-      color: #fff;
+    font-size: 10px;
+    display: flex;
+    // justify-content: space-around;
+    align-items: center;
+    width: auto;
+    padding-left: 5px;
+    padding-right: 10px;
+    .label {
+      font-weight: 800;
+      font-size: 10px;
+    }
+    .btn-close {
+      width: 10px;
+      height: 10px;
+      background-image: url('~/assets/svg/btn-close-black.svg');
+      background-size: contain;
+      background-repeat: no-repeat;
+      margin-right: 6px;
+      font-weight: 500;
+    }
+
+    @include media-breakpoint-up(xl) {
+      width: 100px;
+
+      .label {
+        font-weight: 500;
+        font-size: 12px;
+      }
+      .btn-close {
+
+      }
     }
   }
 
@@ -207,7 +240,7 @@ onMounted(() => {
 
 .keywords {  
   position: fixed;
-  top: 45px;
+  top: 40px;
   right: 0;
   width: 100%;
   z-index: $z-header;
@@ -248,18 +281,20 @@ onMounted(() => {
       right: 0;
 
       @include media-breakpoint-up(xl) {
-        right: 97px;
+        right: 90px;
       }
 
       &__label {
         display: flex;
-        font-size: 8px;
-        font-weight: 300;
+        font-size: 10px;
+        font-weight: 500;
         color: #fff;
         pointer-events: none;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
 
         @include media-breakpoint-up(xl) {
-          font-size: 10px;
+          font-size: 11px;
         }
       }
 
@@ -290,7 +325,7 @@ onMounted(() => {
       flex-direction: column;
       justify-content: right;
       width: 100px;
-      background-color: #000000;
+      background-color: rgba(19, 19, 19, 1.0);
       overflow: hidden;
       position: absolute;
       right: 0;
@@ -306,7 +341,7 @@ onMounted(() => {
       flex-direction: column;
       justify-content: center;
       align-items: flex-end;
-      width: 120px;
+      width: auto;
       background-color: #000000;
       overflow: hidden;
       position: absolute;

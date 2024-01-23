@@ -1,6 +1,6 @@
 <svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
 	<style>
-		.s0 { fill: #ffffff } 
+		.s0 { fill: #000000 } 
 	</style>
 	<g id="Layer 1">
 		<path id="Forme 1" fill-rule="evenodd" class="s0" d="m16.5 42.5l26.5-26.5 141.5 141.5-26.5 26.5z"/>

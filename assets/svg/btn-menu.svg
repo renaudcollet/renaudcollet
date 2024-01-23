@@ -1,0 +1,11 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+	<title>Nouveau projet</title>
+	<style>
+		.s0 { fill: #ffffff } 
+	</style>
+	<g id="Layer 1">
+		<path id="Forme 1" fill-rule="evenodd" class="s0" d="m0.5 118.8v-37.6h200v37.5z"/>
+		<path id="Forme 1 copy" fill-rule="evenodd" class="s0" d="m200.5 13.3v37.5l-200-0.1v-37.5z"/>
+		<path id="Forme 1 copy 2" fill-rule="evenodd" class="s0" d="m200.5 149.3v37.5l-200-0.1v-37.5z"/>
+	</g>
+</svg>

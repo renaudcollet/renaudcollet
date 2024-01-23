@@ -45,12 +45,15 @@ export const useDatasStore = defineStore( 'datas', {
       console.log('--- Filter projects', datasKeywordsSelected);
       this.keywordsSelected = datasKeywordsSelected
       let tmp = []
+      // // TODO: Multiple keywords not supported yet, need to exclude items that don't have all keywords
+      // Actual behavior: if one keyword is present, all projects with this keyword are returned
+      // The filters are additional, not exclusive
       datasKeywordsSelected.forEach(item => {
         item.attributes.projets.data.forEach(project => {
           tmp.push(this.projectsById[project.id])
         })
       })
-      // console.log('--- Filtered projectsFiltered', tmp);
+      console.log('--- Filtered projectsFiltered', tmp);
 
       // Remove duplicates
       const seen = new Set();
