@@ -1,5 +1,5 @@
 import GUI from 'lil-gui';
-import { firstPassFs } from "../shaders/post-fx";
+import firstPassFs from "../shaders/post-fx.frag";
 
 export default function useCurtainsShader() {
 
@@ -19,7 +19,7 @@ export default function useCurtainsShader() {
       rgbShift: {
         name: "rgbShift",
         type: "1f",
-        value: 0.1,
+        value: 0.5,
       },
       stretch: {
         name: "stretch",
@@ -41,8 +41,11 @@ export default function useCurtainsShader() {
 
   let scrollVelocity = 0;
   let gui = null;
+  let _shaderPass = null;
 
+  // This is called for each plane on each frame
   const onRender = (plane) => {
+    // console.log('onRender', scrollVelocity);
     // let planeDeformation = plane.uniforms.planeDeformation.value;
     // plane.uniforms.planeDeformation.value = lerp(planeDeformation, scrollVelocity * 0.01, 0.2);
   }
@@ -58,9 +61,9 @@ export default function useCurtainsShader() {
   }
 
   const onFirstPassRender = (shaderPass) => {
-    // let displacement = shaderPass.uniforms.displacement.value
-    // shaderPass.uniforms.displacement.value = lerp(displacement, scrollVelocity * 0.01, 0.2);
     // console.log('onFirstPassRender', scrollVelocity);
+    let displacement = shaderPass.uniforms.displacement.value
+    shaderPass.uniforms.displacement.value = lerp(displacement, scrollVelocity * 0.01, 0.2);
   }
 
   const onFirstPassReady = (shaderPass) => {

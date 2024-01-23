@@ -8,12 +8,12 @@
     @success="onCurtainsReady" 
     @onContextLost="onContextLost"
   >
-    <!-- <ShaderPass 
+    <ShaderPass 
       :params="firstPassProps"
       @render="onFirstPassRender"
       @ready="onFirstPassReady"
       ref="shaderPass"
-    /> -->
+    />
     <NuxtPage 
       :scrollVelocity="scrollVelocity"
       :class="[currentPage.value]"
@@ -33,7 +33,7 @@ import Cover3D from '~/components/webgl/Cover3D.vue';
 import { useDatasStore, S_DATA_SEO } from '~/stores/datas';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 // import { Curtains } from "vue-curtains";
-// import ShaderPass from '~/components/curtains/ShaderPass/index.vue';
+import ShaderPass from '~/components/curtains/ShaderPass/index.vue';
 import Curtains from "~/components/curtains/Curtains/index.vue";
 import Lenis from '@studio-freight/lenis';
 import MouseCursor from '~/components/ui/MouseCursor.vue';
@@ -62,12 +62,12 @@ const { curtainsForTransition, backgroundForTransition } = useTransitionComposab
 const onLockScroll = (isLocked, animate, scrollY = 0) => {
   // storeDatas.lockScroll = isLocked;
   if (!isLocked) {
-    console.log(`SCROLL ACTIVATED, scrollY: ${scrollY}, immediate: ${!animate}`);
+    // console.log(`SCROLL ACTIVATED, scrollY: ${scrollY}, immediate: ${!animate}`);
     lenis.start()
     lenis.scrollTo(scrollY, {immediate: !animate })
   } else {
     // storeDatasCurtains.scrollY = window.scrollY
-    console.log(`SCROLL STOPPED, scrollY: ${storeDatas.scrollY}`);
+    // console.log(`SCROLL STOPPED, scrollY: ${storeDatas.scrollY}`);
     lenis.stop()
   } 
 }
@@ -92,11 +92,11 @@ useHead({
 })
 
 const { 
-  // firstPassProps, 
-  // onFirstPassReady, 
-  // onFirstPassRender, 
+  firstPassProps, 
+  onFirstPassReady, 
+  onFirstPassRender, 
   onRender, 
-  // updateScrollVelocity
+  updateScrollVelocity
 } = useCurtainsShader();
 
 // const scrollVelocity = ref(0);
@@ -209,7 +209,7 @@ const onScroll = () => {
   scrollVelocity = lerp(lenis.scroll - lastScroll, 0, 0.2);
   lastScroll = lenis.scroll
 
-  // updateScrollVelocity(scrollVelocity)
+  updateScrollVelocity(scrollVelocity)
 
   if (cover3d.value && showCover3d.value) {
     cover3d.value.onScroll()
@@ -224,22 +224,22 @@ onMounted(() => {
   background.value.style.width = `${_html.clientWidth}px`
   background.value.style.height = `${_html.clientHeight}px`  
 
-  window.addEventListener('keydown', (e) => {
-    console.log('keydown', e.key);
-    if (e.key === 'p') {
-      bPause = !bPause
+  // window.addEventListener('keydown', (e) => {
+  //   console.log('keydown', e.key);
+  //   if (e.key === 'p') {
+  //     bPause = !bPause
 
-      if (bPause) {
-        __curtains.disableDrawing()
-      } else {
-        __curtains.enableDrawing()
-      }
-    } else if (e.key === 'd') {
-      // Get renderer image and set it as background
-      var imgData = __curtains.canvas.toDataURL();
-      background.value.style.backgroundImage = `url(${imgData})`
-    }
-  })
+  //     if (bPause) {
+  //       __curtains.disableDrawing()
+  //     } else {
+  //       __curtains.enableDrawing()
+  //     }
+  //   } else if (e.key === 'd') {
+  //     // Get renderer image and set it as background
+  //     var imgData = __curtains.canvas.toDataURL();
+  //     background.value.style.backgroundImage = `url(${imgData})`
+  //   }
+  // })
 
   const c1 = 1.70158;
   lenis = new Lenis({

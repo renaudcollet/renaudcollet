@@ -128,7 +128,7 @@ onMounted(() => {
   // and then mounted again, 
   // root.value is not null, but I can't access its offsetHeight nor getBoundingClientRect()
   // in console.log, it's not null, but I can't right click on it to inspect it
-  console.log('INDEX PAGE - MOUNTED', root.value);
+  // console.log('INDEX PAGE - MOUNTED', root.value);
 
   gsap.set(indexLogo.value, { top: '50%', left: '50%', translateX: '-50%', translateY: '-50%', opacity: 0 })
   gsap.set(job.value, { top: '50%', left: '50%', translateX: '-50%', translateY: '-50%', opacity: 0 })

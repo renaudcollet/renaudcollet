@@ -26,18 +26,21 @@ uniform float uZPos;
 
 void main() {
   vec3 vertexPosition = aVertexPosition;
+
   // cool effect on scroll
   // vertexPosition.y += cos(vertexPosition.x*PI/2.) * uPlaneDeformation * 0.08;
 
-  vertexPosition.x *= 1. - abs(uPlaneDeformation) * 0.15;
-  vertexPosition.y *= 1. + abs(uPlaneDeformation) * 0.15;
+  // vertexPosition.x *= 1. + abs(uPlaneDeformation) * 0.15;
+  // vertexPosition.y *= 1. + abs(uPlaneDeformation) * 0.5;
 
   // parallax effect
   vertexPosition.z -= uZPos;
 
   vec4 finalPos = uPMatrix * uMVMatrix * vec4(vertexPosition, 1.0);
+
   // finalPos.y += sin(finalPos.y);
   gl_Position = finalPos;
+
   // varyings
   vVertexPosition = vertexPosition;
   vTextureCoord = aTextureCoord;
