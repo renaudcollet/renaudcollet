@@ -96,7 +96,7 @@ const planeProps = {
         type: "2f",
         value: [0, 0],
     },
-    scale: {
+    uScale: {
         name: "uScale",
         type: "1f",
         value: 1.0,
@@ -152,6 +152,7 @@ const appear = () => {
   if (props.skipAnimation) {
     // Case where user arrives from home page or work page, with a cover transition
     planeMesh.value.uniforms.uOpenProgress.value = 0.7
+    planeMesh.value.uniforms.uCoverProgress.value = 1.0
     console.log('-> PLANE COVER IS STRAIGHT VISIBLE');
     return
   } else {

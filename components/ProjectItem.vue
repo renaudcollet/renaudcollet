@@ -173,7 +173,7 @@ const onMouseout = () => {
     // delay: 0.2,
     ease: 'power2.out',
     onUpdate: () => {
-      imagePlane.value.planeMesh.uniforms.scale.value = zoomValue.u
+      imagePlane.value.planeMesh.uniforms.uScale.value = zoomValue.u
     },
   })
 }
@@ -191,7 +191,7 @@ const onMouseover = () => {
     // delay: 0.2,
     ease: 'power2.inOut',
     onUpdate: () => {
-      imagePlane.value.planeMesh.uniforms.scale.value = zoomValue.u
+      imagePlane.value.planeMesh.uniforms.uScale.value = zoomValue.u
     },
   })
 }
