@@ -20,9 +20,12 @@ varying vec3 vVertexPosition;
 varying vec2 vTextureCoord;
 
 uniform float uPlaneDeformation;
+uniform float uCoverProgress;
 // uniform float hovered;
 uniform float uZPos;
 // uniform float isText;
+
+// #include "/lygia/math/lerp.glsl";
 
 void main() {
   vec3 vertexPosition = aVertexPosition;
@@ -35,6 +38,7 @@ void main() {
 
   // parallax effect
   vertexPosition.z -= uZPos;
+  // vertexPosition.z = lerp(0., .5, uCoverProgress);
 
   vec4 finalPos = uPMatrix * uMVMatrix * vec4(vertexPosition, 1.0);
 

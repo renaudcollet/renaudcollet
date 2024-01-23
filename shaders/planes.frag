@@ -16,6 +16,7 @@ uniform float uCoverProgress; // 0 -> 1
 uniform float uOpenProgress; // 0 -> 1
 
 #include "/lygia/math/const.glsl";
+#include "/lygia/math/lerp.glsl";
 #include "/lygia/draw/rect.glsl";
 #include "/lygia/math/rotate2d.glsl";
 
@@ -46,18 +47,19 @@ vec2 uvCover (vec2 uv, vec2 size, vec2 resolution) {
 }
 
 void main() {
-  vec2 uv = vTextureCoord; // From 0 to 1
- 
+  vec2 uv = vTextureCoord; // From 0 to 1 
 
   vec2 cover_uv = uvCover(uv, uSize, uResolution);
-  
-  cover_uv = scale(cover_uv, uScale);
+
+  float _scale = lerp(uScale, 1.0, uCoverProgress);
+  cover_uv = scale(cover_uv, _scale);
 
   vec4 color = texture2D(uTexture, cover_uv);
 
   // color = levelsOutputRange(color, 0.5, 0.1);
   // color = hueShift(color, 0.05);
-  color = exposure(color, -0.5);
+  // float _exposureFactor = lerp(-0.5, 0.0, _scale);
+  color = exposure(color, 0.5);
 
   // Deformation / Distortion
   // Question : https://stackoverflow.com/questions/63651405/fish-eye-warping-about-mouse-position-fragment-shader
