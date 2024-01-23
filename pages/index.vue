@@ -97,12 +97,12 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
         emit('onLockScroll', false)
     }, 100)
 
-    setTimeout(() => {
-      if (root.value) {
-        // Add if condition in case user change page quickly, because we are in a setTimeout
-        initScrollReveal(root.value)
-      }
-    }, 500)
+    // setTimeout(() => {
+    //   if (root.value) {
+    //     // Add if condition in case user change page quickly, because we are in a setTimeout
+    //     initScrollReveal(root.value)
+    //   }
+    // }, 500)
   }
 })
 
@@ -192,7 +192,7 @@ const expandCover = (imagePlane) => {
     left: `${rect.left}px`,
   })
 
-  gsap.to(planeHtml, {
+  const tl = gsap.to(planeHtml, {
     duration: durationLeaveWork,
     ease: 'power4.out',
     top: `0px`,
@@ -205,6 +205,7 @@ const expandCover = (imagePlane) => {
     },
     onUpdate: () => {
       imagePlane.resize();
+      imagePlane.planeMesh.uniforms.uCoverProgress.value = tl.progress();
     },
     onComplete: () => {
       imagePlane.resize();

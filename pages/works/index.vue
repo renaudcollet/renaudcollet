@@ -198,7 +198,7 @@ const expandCover = (imagePlane) => {
     left: `${rect.left}px`,
   })
 
-  gsap.to(planeHtml, {
+  const tl = gsap.to(planeHtml, {
     duration: durationLeaveWork,
     ease: 'power4.out',
     top: `0px`,
@@ -211,7 +211,8 @@ const expandCover = (imagePlane) => {
     },
     onUpdate: () => {
       imagePlane.resize();
-      // imagePlane.planeMesh.uniforms.uCoverProgress.value += 0.01;
+      imagePlane.planeMesh.uniforms.uCoverProgress.value = tl.progress();
+      // console.log('expandCover onUpdate', tl.progress());
     },
     onComplete: () => {
       imagePlane.resize();
