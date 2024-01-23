@@ -1,0 +1,180 @@
+.page-work-id {
+
+    .btn-back {
+        position: fixed;
+        top: 50px;
+        right: 50px;
+        width: 30px;
+        height: 30px;
+        background-image: url('~/assets/svg/btn-close.svg');
+        background-repeat: no-repeat;
+        background-size: contain;
+        z-index: $z-btn-back;
+        opacity: 0;
+
+        @include media-breakpoint-up(lg) {
+            top: 70px;
+            right: 170px;
+            width: 50px;
+            height: 50px;
+        }
+    }
+
+    .render-cover {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: red;
+        pointer-events: none;
+    }
+    
+    .cover-top {
+    
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        user-select: none;
+        overflow: hidden;
+    
+        @include media-breakpoint-up(md) {
+            display: flex;
+            align-items: flex-end;
+        }
+    
+        &__image {
+            width: 100%;
+            height: calc(100vh);
+            font-size: 0;
+            position: absolute;
+    
+            img {
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                object-fit: cover;
+            }
+    
+            @include media-breakpoint-up(md) {
+                height: 100vh;
+            }
+        }
+    
+        &__title {
+            display: inline-flex;
+            position: absolute;
+            bottom: 140px;
+            // width: 100%;
+            flex-direction: column;
+            align-items: flex-start;
+            font-family: $font-main;
+            margin-left: 60px;
+    
+            @include media-breakpoint-up(md) {
+                // width: 100%;
+                margin-left: 18vw;
+                position: relative;
+                bottom: 10vh;
+            }
+    
+            @include media-breakpoint-up(xl) {
+                margin-left: 300px;
+                bottom: 12vh;
+            }
+    
+            &__header-minimize {
+                position: absolute;
+                top: -30px;
+            }
+    
+            &__project {
+                font-weight: 700;
+                font-size: 30px;
+                text-align: left;
+                line-height: 1;
+                margin-bottom: 15px;
+                padding-right: 30px;
+                filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.7));
+    
+                @include media-breakpoint-up(md) {
+                    font-size: 40px;
+                    line-height: 1;
+                }
+    
+                @include media-breakpoint-up(lg) {
+                    font-size: 60px;
+                    margin-bottom: 30px;
+                }
+    
+                @include media-breakpoint-up(xl) {
+                    font-size: 80px;
+                }
+            }
+    
+            &__brand {
+                font-size: 12px;
+                line-height: 1;
+                font-weight: 500;
+                margin-bottom: 5px;
+                filter: drop-shadow(0px 0px 8px rgba(0, 0, 0, 0.5));
+    
+                @include media-breakpoint-up(md) {
+                    font-size: 18px;
+                    line-height: 1;
+                    letter-spacing: normal;
+                    margin-bottom: 10px;
+                    margin-left: 10px;
+                }
+    
+                @include media-breakpoint-up(xl) {
+                    font-size: 26px;
+                    margin-left: 10px;
+                }
+            }
+        }
+    }
+    
+    .scroll-arrow {
+        position: fixed;
+        width: 50px;
+        height: 50px;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%) rotate(180deg);
+        z-index: 1000;
+        pointer-events: none;
+        transition: opacity 0.3s ease-in-out;
+        opacity: 0;
+    
+        &.active {
+            opacity: 1;
+        }
+    }
+    
+    .projects {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        user-select: none;
+        padding-top: 50px;
+    
+        @include media-breakpoint-up(lg) {
+            padding-top: 100px;
+            max-width: 1920px;
+            margin: 0 auto;
+        }
+    }
+    
+    .workitem3-container {
+        margin-top: 72px;
+    
+        @include media-breakpoint-up(lg) {
+            margin-top: 210px;
+        }
+    
+        @include media-breakpoint-up(xl) {
+            margin-top: 210px; // 210px
+        }
+    }
+}
