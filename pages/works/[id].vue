@@ -24,7 +24,8 @@
           :data-scroll-reveal-delay="durationEnterWorkId"
           data-scroll-reveal-duration="0.7"
         >
-          {{ currentProject.attributes.titre }}
+          <span class="front" :style="{'color': titleColor}">{{ currentProject.attributes.titre }}</span>
+          <span class="back" :style="{'color': titleColorBack}">{{ currentProject.attributes.titre }}</span>
         </h1>
         <div
           class="cover-top__title__brand scroll-reveal unmount-animation"
@@ -32,7 +33,8 @@
           :data-scroll-reveal-delay="durationEnterWorkId + 0.2"
           data-scroll-reveal-duration="0.3"
         >
-          Client : {{ currentProject.attributes.brand }}
+          <span class="front" :style="{'color': titleColor}">Client : {{ currentProject.attributes.brand }}</span>
+          <span class="back" :style="{'color': titleColorBack}">Client : {{ currentProject.attributes.brand }}</span>
         </div>
         <div
           class="cover-top__title__brand scroll-reveal unmount-animation"
@@ -40,13 +42,15 @@
           :data-scroll-reveal-delay="durationEnterWorkId + 0.5"
           data-scroll-reveal-duration="0.3"
         >
-          Agency : {{ currentProject.attributes.agency }}
+          <span class="front" :style="{'color': titleColor}">Agency : {{ currentProject.attributes.agency }}</span>
+          <span class="back" :style="{'color': titleColorBack}">Agency : {{ currentProject.attributes.agency }}</span>
         </div>
         <div
-          class="cover-top__title__brand scroll-reveal unmount-animation"
+          class="cover-top__title__filters scroll-reveal unmount-animation"
           data-scroll-reveal-opacity-y
           :data-scroll-reveal-delay="durationEnterWorkId + 0.8"
           data-scroll-reveal-duration="0.3"
+          :style="{'color': titleColor}"
         >
           Filters : 
           <span v-for="(item, index) in keywords">
@@ -202,6 +206,14 @@ const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProje
 
 const skipCoverAnimation = computed(() => {
   return storeDatas.previousPage !== null
+})
+
+const titleColor = computed(() => {
+  return currentProject.attributes.titleColor;
+})
+
+const titleColorBack = computed(() => {
+  return currentProject.attributes.titleColorBack;
 })
 
 const showBtnBack = () => {
