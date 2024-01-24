@@ -12,7 +12,6 @@
       :params="firstPassProps"
       @render="onFirstPassRender"
       @ready="onFirstPassReady"
-      ref="shaderPass"
     />
     <NuxtPage 
       :scrollVelocity="scrollVelocity"
@@ -33,11 +32,13 @@ import Cover3D from '~/components/webgl/Cover3D.vue';
 import { useDatasStore, S_DATA_SEO } from '~/stores/datas';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 // import { Curtains } from "vue-curtains";
+import GUI from 'lil-gui';
+import firstPassFs from "../shaders/post-fx.frag";
 import ShaderPass from '~/components/curtains/ShaderPass/index.vue';
 import Curtains from "~/components/curtains/Curtains/index.vue";
 import Lenis from '@studio-freight/lenis';
 import MouseCursor from '~/components/ui/MouseCursor.vue';
-import useCurtainsShader from '~/compositions/use-curtains-shader';
+// import useCurtainsShader from '~/compositions/use-curtains-shader';
 import { useTransitionComposable } from '../compositions/use-transition';
 
 const route = useRoute()
@@ -91,16 +92,115 @@ useHead({
   }
 })
 
-const { 
-  firstPassProps, 
-  onFirstPassReady, 
-  onFirstPassRender, 
-  onRender, 
-  updateScrollVelocity
-} = useCurtainsShader();
+/**
+ * Curtains 
+ */
+
+
+ const firstPassProps = {
+  fragmentShader: firstPassFs,
+  uniforms: {
+    timer: {
+      name: "uTimer",
+      type: "1f",
+      value: 0,
+    },
+    displacement: {
+      name: "uDisplacement",
+      type: "1f",
+      value: 0.,
+    },
+    rgbShift: {
+      name: "rgbShift",
+      type: "1f",
+      value: 0.5,
+    },
+    stretch: {
+      name: "stretch",
+      type: "1f",
+      value: 0.0, // 0.06
+    },
+    squish: {
+      name: "squish",
+      type: "1f",
+      value: 0.0, // 0.06
+    },
+    noiseFreq: {
+      name: "noiseFreq",
+      type: "1f",
+      value: 0.0, // 2
+    },
+  },
+}
+
+let scrollVelocity = 0;
+let gui = null;
+
+// This is called for each plane on each frame
+const onRender = (plane) => {
+  // console.log('onRender', scrollVelocity);
+  // let planeDeformation = plane.uniforms.planeDeformation.value;
+  // plane.uniforms.planeDeformation.value = lerp(planeDeformation, scrollVelocity * 0.01, 0.2);
+}
+
+const regularLerp = (a, b, n) => {
+  return (1 - n) * a + n * b;
+}
+
+const lerp = (source, target, rate, frameDelta = 1 / 60, targetFps = 60) => {
+  const relativeDelta = frameDelta / (1 / targetFps)
+  const smoothing = 1 - rate
+  return regularLerp(source, target, 1 - Math.pow(smoothing, relativeDelta));
+}
+
+const onFirstPassRender = (shaderPass) => {
+  console.log('onFirstPassRender', scrollVelocity);
+  // let displacement = shaderPass.uniforms.displacement.value
+  // shaderPass.uniforms.displacement.value = lerp(displacement, scrollVelocity * 0.01, 0.2);
+  // shaderPass.uniforms.displacement.value = lerp(displacement, scrollVelocity * 0.01, 0.2);
+}
+
+const onFirstPassReady = (shaderPass) => {
+  // console.log('onFirstPassReady', shaderPass);
+  let displacement = shaderPass.uniforms.displacement.value
+  shaderPass.uniforms.displacement.value = lerp(displacement, scrollVelocity * 0.01, 0.2);
+
+  if (window.location.hash == '#config') {
+    setTimeout(() => {
+      gui = new GUI({ container: document.querySelector('#config') }).title('Curtains').close()
+
+      gui.add(shaderPass.uniforms.rgbShift, 'value').name('RGB Shift')
+        .min(0.01)
+        .max(1)
+      gui.add(shaderPass.uniforms.stretch, 'value').name('Stretch')
+        .min(0.01)
+        .max(3)
+      gui.add(shaderPass.uniforms.squish, 'value').name('Squish')
+        .min(0.01)
+        .max(3)
+      gui.add(shaderPass.uniforms.noiseFreq, 'value').name('Noise Frequency')
+        .min(0.01)
+        .max(50)
+
+    }, 1000);
+  }
+}
+
+// const updateScrollVelocity = (velocity) => {
+//   scrollVelocity = velocity;
+// }
+
+
+// const { 
+//   firstPassProps, 
+//   onFirstPassReady, 
+//   onFirstPassRender, 
+//   onRender, 
+//   updateScrollVelocity
+// } = useCurtainsShader();
 
 // const scrollVelocity = ref(0);
-let scrollVelocity = 0;
+// let scrollVelocity = 0;
 
 let lenis;
 let lastScroll = 0;
@@ -180,7 +280,7 @@ watch(() => route.path, (value) => {
 
 })
 
-let bPause = false
+// let bPause = false
 
 // let fps = 60
 const update = (time) => {
@@ -199,17 +299,18 @@ const update = (time) => {
   onScroll()
 }
 
-const lerp = (a, b, n) => {
-  return (1 - n) * a + n * b;
-}
+// const lerp = (a, b, n) => {
+//   return (1 - n) * a + n * b;
+// }
 
 // For shader effect on scroll
 const onScroll = () => {
   // scrollVelocity.value = lerp(lenis.scroll - lastScroll, 0, 0.2);
   scrollVelocity = lerp(lenis.scroll - lastScroll, 0, 0.2);
+  // scrollVelocity = regularLerp(lenis.scroll - lastScroll, 0, 0.2);
   lastScroll = lenis.scroll
 
-  updateScrollVelocity(scrollVelocity)
+  // updateScrollVelocity(scrollVelocity)
 
   if (cover3d.value && showCover3d.value) {
     cover3d.value.onScroll()

@@ -93,7 +93,6 @@
 import { useDatasStore, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 import useZoomableImage from '~/compositions/use-zoomable-image';
-// import useCurtainsShader from '~/compositions/use-curtains-shader';
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
 import gsap from 'gsap';
 import { workIdTransition, durationEnterWorkId, durationLeaveWorkId } from '../transitions/work-transition';

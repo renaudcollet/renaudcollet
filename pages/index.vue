@@ -40,7 +40,6 @@
 // import ShaderPass from '~/components/curtains/ShaderPass/index.vue';
 import { useDatasStore, S_DATA_ACCUEIL } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
-// import useCurtainsShader from '~/compositions/use-curtains-shader';
 import gsap from 'gsap';
 import { workTransition, durationLeaveWork } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
