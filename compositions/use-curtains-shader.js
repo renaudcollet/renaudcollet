@@ -41,7 +41,6 @@ export default function useCurtainsShader() {
 
   let scrollVelocity = 0;
   let gui = null;
-  let _shaderPass = null;
 
   // This is called for each plane on each frame
   const onRender = (plane) => {
@@ -68,27 +67,28 @@ export default function useCurtainsShader() {
 
   const onFirstPassReady = (shaderPass) => {
     // console.log('onFirstPassReady', shaderPass);
+    let displacement = shaderPass.uniforms.displacement.value
+    shaderPass.uniforms.displacement.value = lerp(displacement, scrollVelocity * 0.01, 0.2);
 
-  if(window.location.hash == '#config'){
-    setTimeout(() => {
-      gui = new GUI({container: document.querySelector('#config')}).title('Curtains').close()
-    
-      gui.add( shaderPass.uniforms.rgbShift, 'value').name('RGB Shift')
-      .min(0.01)
-      .max(1)
-
-      gui.add( shaderPass.uniforms.stretch, 'value').name('Stretch')
-      .min(0.01)
-      .max(3)
-      gui.add( shaderPass.uniforms.squish, 'value').name('Squish')
-      .min(0.01)
-      .max(3)
-      gui.add( shaderPass.uniforms.noiseFreq, 'value').name('Noise Frequency')
-      .min(0.01)
-      .max(50)
-    
-    }, 1000);
-  }
+    if(window.location.hash == '#config'){
+      setTimeout(() => {
+        gui = new GUI({container: document.querySelector('#config')}).title('Curtains').close()
+      
+        gui.add( shaderPass.uniforms.rgbShift, 'value').name('RGB Shift')
+        .min(0.01)
+        .max(1)
+        gui.add( shaderPass.uniforms.stretch, 'value').name('Stretch')
+        .min(0.01)
+        .max(3)
+        gui.add( shaderPass.uniforms.squish, 'value').name('Squish')
+        .min(0.01)
+        .max(3)
+        gui.add( shaderPass.uniforms.noiseFreq, 'value').name('Noise Frequency')
+        .min(0.01)
+        .max(50)
+      
+      }, 1000);
+    }
   }
 
   const updateScrollVelocity = (velocity) => {
