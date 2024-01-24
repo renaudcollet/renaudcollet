@@ -25,25 +25,27 @@
     <!-- </ClientOnly> -->
     <div class="project-item__title">
       <h1>
-        <div v-for="(line, index) in paraphToLines" class="line">
+        <template v-for="(line, index) in paraphToLines">
           <div 
-            class="scroll-reveal"
+            class="line scroll-reveal"
             data-scroll-reveal-opacity-y
             :data-scroll-reveal-delay="1"
             data-scroll-reveal-duration="0.5"
           >
-            {{ line.trim() }}
+            <span class="front" :style="{'color': titleColor}">{{ line.trim() }}</span>
+            <span class="back" :style="{'color': titleColorBack}">{{ line.trim() }}</span>
           </div>
-        </div>
+        </template>
       </h1>
-      <h2>
+      <h2 :style="{'color': titleColorBack}">
         <div 
-          class="scroll-reveal"
+          class="line scroll-reveal"
           data-scroll-reveal-opacity-y
           data-scroll-reveal-delay="1.2"
           data-scroll-reveal-duration="0.5"
         >
-          {{ props.datas.attributes.brand }}
+          <span class="front" :style="{'color': titleColorBack}">{{ props.datas.attributes.brand }}</span>
+          <span class="back" :style="{'color': titleColor}">{{ props.datas.attributes.brand }}</span>
         </div>
       </h2>
     </div>
@@ -137,6 +139,14 @@ const xxlarge = currentProjectCover.formats.large !== undefined ? currentProject
 
 const paraphToLines = computed(() => {
   return props.datas.attributes.titre.split('<br />');
+})
+
+const titleColor = computed(() => {
+  return props.datas.attributes.titleColor;
+})
+
+const titleColorBack = computed(() => {
+  return props.datas.attributes.titleColorBack;
 })
 
 const el = ref(null);
