@@ -14,7 +14,6 @@
       @ready="onFirstPassReady"
     />
     <NuxtPage 
-      :class="[currentPage.value]"
       :onRender="onRender"
       class="page"
       @onLockScroll="onLockScroll"
@@ -132,7 +131,8 @@ useHead({
   },
 }
 
-let scrollVelocityMinimum = 20;
+const SCROLL_VELOCITY_MINIMUM = 25;
+let scrollVelocityMinimum = SCROLL_VELOCITY_MINIMUM;
 let scrollVelocity = scrollVelocityMinimum; // Set to scrollVelocityMinimum to deform the page right away
 let gui = null;
 
@@ -191,10 +191,6 @@ let lenis;
 let lastScroll = 0;
 let config = false;
 
-const currentPage = computed(() => {
-  return `page-${route.name}`
-})
-
 //TODO: Handle curtains onError
 // Line 49 : // https://github.com/martinlaxenaire/curtainsjs/blob/master/examples/post-processing-scroll-effect/js/post.processing.parallax.setup.js
 // document.body.classList.add("no-curtains", "planes-loaded");
@@ -245,6 +241,13 @@ watch(() => route.path, (value) => {
     // Remove image background
     backgroundForTransition.imgData = null
     backgroundForTransition.element.style.backgroundImage = `none`    
+  }
+
+  // Enter page work id
+  if (storeDatas.currentPage.indexOf('/works/') > -1) {
+    scrollVelocityMinimum = 0;
+  } else {
+    scrollVelocityMinimum = SCROLL_VELOCITY_MINIMUM;
   }
 
   setTimeout(() => {

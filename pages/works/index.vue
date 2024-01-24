@@ -87,26 +87,24 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
     storeDatasCurtains.scrollToTopCompleteAfterTransition = false;
     console.log('WORKS Transition complete');
 
-    emit('onLockScroll', false)
-    // storeDatasCurtains.removePlanes();
+    if (storeDatas.scrollY > 0) {
+      emit('onLockScroll', false, true, storeDatas.scrollY)
+      storeDatas.scrollY = 0
+    } else
+      emit('onLockScroll', false)
+      
     updateFilteredLabel()
 
     setTimeout(() => {
       storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
-
-      if (storeDatas.scrollY > 0) {
-        emit('onLockScroll', false, true, storeDatas.scrollY)
-        storeDatas.scrollY = 0
-      } else
-        emit('onLockScroll', false)
     }, 100)
 
-    setTimeout(() => {
-      if (root.value) {
-        // Add if condition in case user change page quickly, because we are in a setTimeout
-        initScrollReveal(root.value)
-      }
-    }, 500)
+    // setTimeout(() => {
+    //   if (root.value) {
+    //     // Add if condition in case user change page quickly, because we are in a setTimeout
+    //     initScrollReveal(root.value)
+    //   }
+    // }, 500)
   }
 })
 
@@ -173,6 +171,10 @@ const onClickProjectItem = (id, imagePlane) => {
 onMounted(() => {
   gsap.killTweensOf('#header-logo')
   gsap.to('#header-logo', { autoAlpha: 1 })
+
+  nextTick(() => {
+    initScrollReveal(root.value)
+  })
 })
 
 const expandCover = (imagePlane) => {
