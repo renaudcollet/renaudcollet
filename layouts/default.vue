@@ -14,7 +14,6 @@
       @ready="onFirstPassReady"
     />
     <NuxtPage 
-      :scrollVelocity="scrollVelocity"
       :class="[currentPage.value]"
       :onRender="onRender"
       class="page"
@@ -105,7 +104,7 @@ useHead({
       type: "1f",
       value: 0,
     },
-    displacement: {
+    uDisplacement: {
       name: "uDisplacement",
       type: "1f",
       value: 0.,
@@ -133,7 +132,8 @@ useHead({
   },
 }
 
-let scrollVelocity = 0;
+let scrollVelocityMinimum = 20;
+let scrollVelocity = scrollVelocityMinimum; // Set to scrollVelocityMinimum to deform the page right away
 let gui = null;
 
 // This is called for each plane on each frame
@@ -144,7 +144,8 @@ const onRender = (plane) => {
 }
 
 const regularLerp = (a, b, n) => {
-  return (1 - n) * a + n * b;
+  // return (1 - n) * a + n * b;
+  return a + ( b - a ) * n; // From threejs  https://github.com/mrdoob/three.js/blob/dev/src/math/Vector3.js
 }
 
 const lerp = (source, target, rate, frameDelta = 1 / 60, targetFps = 60) => {
@@ -154,16 +155,16 @@ const lerp = (source, target, rate, frameDelta = 1 / 60, targetFps = 60) => {
 }
 
 const onFirstPassRender = (shaderPass) => {
-  console.log('onFirstPassRender', scrollVelocity);
-  // let displacement = shaderPass.uniforms.displacement.value
-  // shaderPass.uniforms.displacement.value = lerp(displacement, scrollVelocity * 0.01, 0.2);
-  // shaderPass.uniforms.displacement.value = lerp(displacement, scrollVelocity * 0.01, 0.2);
+  // console.log('onFirstPassRender', scrollVelocity);
+  // let uDisplacement = shaderPass.uniforms.uDisplacement.value
+  // shaderPass.uniforms.uDisplacement.value = lerp(uDisplacement, scrollVelocity * 0.01, 0.2);
+
+  // increase/decrease effect
+  shaderPass.uniforms.uDisplacement.value = scrollVelocity //lerp(scrollVelocity, 0, 0.5);
 }
 
 const onFirstPassReady = (shaderPass) => {
   // console.log('onFirstPassReady', shaderPass);
-  let displacement = shaderPass.uniforms.displacement.value
-  shaderPass.uniforms.displacement.value = lerp(displacement, scrollVelocity * 0.01, 0.2);
 
   if (window.location.hash == '#config') {
     setTimeout(() => {
@@ -186,22 +187,6 @@ const onFirstPassReady = (shaderPass) => {
   }
 }
 
-// const updateScrollVelocity = (velocity) => {
-//   scrollVelocity = velocity;
-// }
-
-
-// const { 
-//   firstPassProps, 
-//   onFirstPassReady, 
-//   onFirstPassRender, 
-//   onRender, 
-//   updateScrollVelocity
-// } = useCurtainsShader();
-
-// const scrollVelocity = ref(0);
-// let scrollVelocity = 0;
-
 let lenis;
 let lastScroll = 0;
 let config = false;
@@ -210,9 +195,13 @@ const currentPage = computed(() => {
   return `page-${route.name}`
 })
 
+//TODO: Handle curtains onError
+// Line 49 : // https://github.com/martinlaxenaire/curtainsjs/blob/master/examples/post-processing-scroll-effect/js/post.processing.parallax.setup.js
+// document.body.classList.add("no-curtains", "planes-loaded");
+
 const onContextLost = () => {
   console.log('onContextLost');
-  // curtains.disableDrawing();
+  curtains.value.restoreContext()
 }
 
 const onCurtainsReady = (_curtains) => {
@@ -296,7 +285,40 @@ const update = (time) => {
   // }
   
   lenis.raf(time)
-  onScroll()
+  // onScroll()
+
+  
+
+  let delta = lenis.scroll - lastScroll;
+
+  // // invert value for the effect
+  // delta = -delta;
+  delta = delta < 0 ? -delta : delta; // Make delta absolute
+
+  // // threshold
+  if(delta > 60) {
+      delta = 60;
+  }
+  // else if(delta < -60) {
+  //     delta = -60;
+  // }
+
+  // if(Math.abs(delta) > Math.abs(scrollVelocity)) {
+  if(delta > scrollVelocity) {
+    scrollVelocity = lerp(scrollVelocity, delta, 0.1);
+    // scrollVelocity = regularLerp(scrollVelocity, 25, 0.5);
+  } else {
+    scrollVelocity = lerp(scrollVelocity, scrollVelocityMinimum, 0.01);
+  }
+
+  lastScroll = lenis.scroll
+
+  // console.log('scrollVelocity', scrollVelocity);
+
+  if (cover3d.value && showCover3d.value) {
+    cover3d.value.onScroll()
+  }
+
 }
 
 // const lerp = (a, b, n) => {
@@ -304,18 +326,18 @@ const update = (time) => {
 // }
 
 // For shader effect on scroll
-const onScroll = () => {
-  // scrollVelocity.value = lerp(lenis.scroll - lastScroll, 0, 0.2);
-  scrollVelocity = lerp(lenis.scroll - lastScroll, 0, 0.2);
-  // scrollVelocity = regularLerp(lenis.scroll - lastScroll, 0, 0.2);
-  lastScroll = lenis.scroll
+// const onScroll = () => {
+//   // scrollVelocity.value = lerp(lenis.scroll - lastScroll, 0, 0.2);
+//   scrollVelocity = lerp(lenis.scroll - lastScroll, 0, 0.2);
+//   // scrollVelocity = regularLerp(lenis.scroll - lastScroll, 0, 0.2);
+//   lastScroll = lenis.scroll
 
-  // updateScrollVelocity(scrollVelocity)
+//   // updateScrollVelocity(scrollVelocity)
 
-  if (cover3d.value && showCover3d.value) {
-    cover3d.value.onScroll()
-  }
-}
+//   if (cover3d.value && showCover3d.value) {
+//     cover3d.value.onScroll()
+//   }
+// }
 
 onMounted(() => {
   // console.log('DEFAULT LAYOUT - MOUNTED');
@@ -378,7 +400,7 @@ onMounted(() => {
 // })
 
 onErrorCaptured((err) => {
-  // handle the error here
+  // TODO: handle the error here
   console.error('default layer error captured : ' , err)
 })
 </script>

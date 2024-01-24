@@ -55,11 +55,16 @@ mat2 rotation2d(float angle) {
 void main( void ) {
     vec4 color = vec4(0.);
     vec2 textureCoords = vTextureCoord;
-    textureCoords -= 0.5;
-    textureCoords.x *= 1. + textureCoords.y * uDisplacement* squish;
-    textureCoords.y *= 1. - abs(uDisplacement)* stretch;
-    textureCoords += 0.5;
+    // textureCoords -= 0.5;
+    // textureCoords.x *= 1. + textureCoords.y * uDisplacement * squish;
+    // textureCoords.y *= 1. - abs(uDisplacement) * stretch;
+    // textureCoords += 0.5;
 
+    // distort around scene center
+    // https://github.com/martinlaxenaire/curtainsjs/blob/master/examples/post-processing-scroll-effect/js/post.processing.parallax.setup.js
+    vec2 texCenter = vec2(0.5, 0.5);
+    textureCoords += vec2(texCenter - textureCoords).xy * sin(distance(texCenter, textureCoords)) * uDisplacement / 175.0;
+    color = texture2D(uRenderTexture, textureCoords);
 
     float a = 0.;
     float n = 0.;
@@ -67,34 +72,34 @@ void main( void ) {
 
 
     //RGB SHIFT
-    st = textureCoords;
-    st -= 0.5;
-    n = noise(vec3(st * noiseFreq * uDisplacement, 0.))-0.5;
-    st *= rotation2d(n*uDisplacement*rgbShift);
-    st += 0.5;
-    vec2 ra = texture2D(uRenderTexture, st).ra;
-    color.r = ra.r;
-    a = max(a, ra.g);
+    // st = textureCoords;
+    // st -= 0.5;
+    // n = noise(vec3(st * noiseFreq * uDisplacement, 0.))-0.5;
+    // st *= rotation2d(n*uDisplacement*rgbShift);
+    // st += 0.5;
+    // vec2 ra = texture2D(uRenderTexture, st).ra;
+    // color.r = ra.r;
+    // a = max(a, ra.g);
 
-    st = textureCoords;
-    st -= 0.5;
-    n = noise(vec3(st * noiseFreq * uDisplacement, .5))-0.5;
-    st *= rotation2d(n*uDisplacement*rgbShift);
-    st += 0.5;
-    vec2 ga = texture2D(uRenderTexture, st).ga;
-    color.g = ga.r;
-    a = max(a, ga.g);
+    // st = textureCoords;
+    // st -= 0.5;
+    // n = noise(vec3(st * noiseFreq * uDisplacement, .5))-0.5;
+    // st *= rotation2d(n*uDisplacement*rgbShift);
+    // st += 0.5;
+    // vec2 ga = texture2D(uRenderTexture, st).ga;
+    // color.g = ga.r;
+    // a = max(a, ga.g);
 
-    st = textureCoords;
-    st -= 0.5;
-    n = noise(vec3(st * noiseFreq * uDisplacement, 1.))-0.5;
-    st *= rotation2d(n*uDisplacement*rgbShift);
-    st += 0.5;
-    vec2 ba = texture2D(uRenderTexture, st).ba;
-    color.b = ba.r;
-    a = max(a, ba.g);
+    // st = textureCoords;
+    // st -= 0.5;
+    // n = noise(vec3(st * noiseFreq * uDisplacement, 1.))-0.5;
+    // st *= rotation2d(n*uDisplacement*rgbShift);
+    // st += 0.5;
+    // vec2 ba = texture2D(uRenderTexture, st).ba;
+    // color.b = ba.r;
+    // a = max(a, ba.g);
 
-    color.a = a;
+    // color.a = a;
 
     // st = textureCoords;
     // st -= 0.5;
@@ -102,6 +107,7 @@ void main( void ) {
     // st *= rotation2d(n*uDisplacement*rgbShift);
     // st += 0.5;
     // color = texture2D(uRenderTexture, st);
+
 
     gl_FragColor = color;
 }
