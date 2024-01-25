@@ -64,8 +64,10 @@ const onLockScroll = (isLocked, animate, scrollY = 0) => {
   if (!isLocked) {
     // console.log(`SCROLL ACTIVATED, scrollY: ${scrollY}, immediate: ${!animate}`);
     lenis.start()
-    lastScroll = scrollY // To prevent having a bump when scroll sudenly change between pages
+    lastScroll = 0 // To prevent having a bump when scroll sudenly change between pages
     lenis.scrollTo(scrollY, {immediate: !animate })
+    lastScroll = 0 // To prevent having a bump when scroll sudenly change between pages
+    console.log(`UNLOCK SCROLL - scrollY: ${scrollY} lastScroll: ${lastScroll}`);
   } else {
     // console.log(`SCROLL STOPPED, scrollY: ${storeDatas.scrollY}`);
     lenis.stop()
@@ -391,7 +393,7 @@ onErrorCaptured((err) => {
 })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 #config{
   position: fixed;
   top: 0;
@@ -406,6 +408,6 @@ onErrorCaptured((err) => {
   height: 100%;
   // background-color: yellow;
   pointer-events: none;
-  // opacity: 0;
+  opacity: 1;
 }
 </style>
