@@ -39,11 +39,12 @@ import MouseCursor from '~/components/ui/MouseCursor.vue';
 // import useCurtainsShader from '~/compositions/use-curtains-shader';
 import { useTransitionComposable } from '../compositions/use-transition';
 
-const route = useRoute()
-
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
 await fetchDatas(S_DATA_SEO);
+
+const route = useRoute()
+storeDatas.setCurrentPage(route.fullPath)
 
 const showCover3d = ref(false)
 const scrollZone = ref(null)
@@ -131,9 +132,20 @@ useHead({
   },
 }
 
+const setScrollVelocityMinimum = () => {
+  // Enter page work id
+  if (storeDatas.currentPage.indexOf('/works/') > -1) {
+    scrollVelocityMinimum = 0;
+  } else {
+    scrollVelocityMinimum = SCROLL_VELOCITY_MINIMUM;
+  }
+}
+
 const SCROLL_VELOCITY_MINIMUM = 25;
 let scrollVelocityMinimum = SCROLL_VELOCITY_MINIMUM;
+setScrollVelocityMinimum()
 let scrollVelocity = scrollVelocityMinimum; // Set to scrollVelocityMinimum to deform the page right away
+
 let gui = null;
 
 // This is called for each plane on each frame
@@ -232,7 +244,6 @@ const onCurtainsReady = (_curtains) => {
   })
 }
 
-storeDatas.setCurrentPage(route.fullPath)
 watch(() => route.path, (value) => {
   console.log('➮ DEFAULT LAYOUT - WATCH route fullpath ', value)
   storeDatas.setCurrentPage(value)
@@ -243,12 +254,7 @@ watch(() => route.path, (value) => {
     backgroundForTransition.element.style.backgroundImage = `none`    
   }
 
-  // Enter page work id
-  if (storeDatas.currentPage.indexOf('/works/') > -1) {
-    scrollVelocityMinimum = 0;
-  } else {
-    scrollVelocityMinimum = SCROLL_VELOCITY_MINIMUM;
-  }
+  setScrollVelocityMinimum()
 
   setTimeout(() => {
     mouseCursor.value.reset()
@@ -423,5 +429,6 @@ onErrorCaptured((err) => {
   height: 100%;
   // background-color: yellow;
   pointer-events: none;
+  // opacity: 0;
 }
 </style>
