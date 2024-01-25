@@ -59,7 +59,7 @@ void main() {
   // color = levelsOutputRange(color, 0.5, 0.1);
   // color = hueShift(color, 0.05);
   // float _exposureFactor = lerp(-0.5, 0.0, _scale);
-  color = exposure(color, 0.5);
+  // color = exposure(color, 0.5);
 
   // Deformation / Distortion
   // Question : https://stackoverflow.com/questions/63651405/fish-eye-warping-about-mouse-position-fragment-shader
