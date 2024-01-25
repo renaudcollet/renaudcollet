@@ -64,9 +64,9 @@ const onLockScroll = (isLocked, animate, scrollY = 0) => {
   if (!isLocked) {
     // console.log(`SCROLL ACTIVATED, scrollY: ${scrollY}, immediate: ${!animate}`);
     lenis.start()
+    lastScroll = scrollY // To prevent having a bump when scroll sudenly change between pages
     lenis.scrollTo(scrollY, {immediate: !animate })
   } else {
-    // storeDatasCurtains.scrollY = window.scrollY
     // console.log(`SCROLL STOPPED, scrollY: ${storeDatas.scrollY}`);
     lenis.stop()
   } 
@@ -296,14 +296,10 @@ const update = (time) => {
   lenis.raf(time)
   // onScroll()
 
-  
-
   let delta = lenis.scroll - lastScroll;
-
   // // invert value for the effect
   // delta = -delta;
   delta = delta < 0 ? -delta : delta; // Make delta absolute
-
   // // threshold
   if(delta > 60) {
       delta = 60;
@@ -327,26 +323,7 @@ const update = (time) => {
   if (cover3d.value && showCover3d.value) {
     cover3d.value.onScroll()
   }
-
 }
-
-// const lerp = (a, b, n) => {
-//   return (1 - n) * a + n * b;
-// }
-
-// For shader effect on scroll
-// const onScroll = () => {
-//   // scrollVelocity.value = lerp(lenis.scroll - lastScroll, 0, 0.2);
-//   scrollVelocity = lerp(lenis.scroll - lastScroll, 0, 0.2);
-//   // scrollVelocity = regularLerp(lenis.scroll - lastScroll, 0, 0.2);
-//   lastScroll = lenis.scroll
-
-//   // updateScrollVelocity(scrollVelocity)
-
-//   if (cover3d.value && showCover3d.value) {
-//     cover3d.value.onScroll()
-//   }
-// }
 
 onMounted(() => {
   // console.log('DEFAULT LAYOUT - MOUNTED');
