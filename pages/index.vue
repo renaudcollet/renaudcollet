@@ -50,9 +50,6 @@ const { fetchDatas } = storeDatas;
 await fetchDatas(S_DATA_ACCUEIL);
 
 const props = defineProps({
-  scrollVelocity: {
-    type: Number
-  },
   onRender: {
     type: Function,
     required: true,
@@ -220,7 +217,7 @@ const expandCover = (imagePlane) => {
 }
 
 onBeforeUnmount(() => {  
-  console.log('HOME onBeforeUnmount');
+  // console.log('HOME onBeforeUnmount');
   gsap.killTweensOf(scrollDown.value)
   clearScrollReveal()
 
@@ -228,13 +225,13 @@ onBeforeUnmount(() => {
   elementsToTransition.elements = root.value.querySelectorAll('.unmount-animation');
 
   const closePanels = () => {
-    console.log('HOME closePanels');
+    // console.log('HOME closePanels');
     storeDatasCurtains.removePlanes();
     // storeDatasCurtains.removeCurrentPlaneCover();
 
     // if has cover, expand it
     if (selectedImagePlane) {
-      console.log('HOME closePanels expandCover');
+      // console.log('HOME closePanels expandCover');
       expandCover(selectedImagePlane)
     }
   }

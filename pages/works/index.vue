@@ -48,9 +48,6 @@ await fetchDatas(S_DATA_ACCUEIL);
 await fetchDatas(S_DATA_PROJECTS);
 
 const props = defineProps({
-  scrollVelocity: {
-    type: Number
-  },
   onRender: {
     type: Function,
     required: true,
@@ -85,26 +82,19 @@ const bMountPlanes = computed(() => {
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
     storeDatasCurtains.scrollToTopCompleteAfterTransition = false;
-    console.log('WORKS Transition complete');
-
-    if (storeDatas.scrollY > 0) {
-      emit('onLockScroll', false, true, storeDatas.scrollY)
-      storeDatas.scrollY = 0
-    } else
-      emit('onLockScroll', false)
+    // console.log('WORKS Transition complete');
       
     updateFilteredLabel()
 
     setTimeout(() => {
       storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
-    }, 100)
 
-    // setTimeout(() => {
-    //   if (root.value) {
-    //     // Add if condition in case user change page quickly, because we are in a setTimeout
-    //     initScrollReveal(root.value)
-    //   }
-    // }, 500)
+      if (storeDatas.scrollY > 0) {
+        emit('onLockScroll', false, true, storeDatas.scrollY)
+        storeDatas.scrollY = 0
+      } else
+        emit('onLockScroll', false)
+    }, 100)
   }
 })
 
