@@ -52,8 +52,9 @@ mat2 rotation2d(float angle) {
     );
 }
       
+vec4 color = vec4(0.);
+vec2 texCenter = vec2(0.5, 0.5);
 void main( void ) {
-    vec4 color = vec4(0.);
     vec2 textureCoords = vTextureCoord;
     // textureCoords -= 0.5;
     // textureCoords.x *= 1. + textureCoords.y * uDisplacement * squish;
@@ -62,7 +63,7 @@ void main( void ) {
 
     // distort around scene center
     // https://github.com/martinlaxenaire/curtainsjs/blob/master/examples/post-processing-scroll-effect/js/post.processing.parallax.setup.js
-    vec2 texCenter = vec2(0.5, 0.5);
+    
     textureCoords += vec2(texCenter - textureCoords).xy * sin(distance(texCenter, textureCoords)) * uDisplacement / 175.0;
     color = texture2D(uRenderTexture, textureCoords);
 
