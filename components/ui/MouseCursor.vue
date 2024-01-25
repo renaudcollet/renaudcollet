@@ -452,6 +452,11 @@ export default {
 </script>
 
 <style lang="scss">
+
+[data-mouse-cursor='hover'] > * {
+  pointer-events: none;
+}
+
 @include media-breakpoint-up(md) {
   body,
   a,
