@@ -180,6 +180,15 @@ const expandCover = (imagePlane) => {
   // Change z position to cover other planes in datasCurtains.js 
   // Not working for home page... So we do it here for this plane
   imagePlane.planeMesh.uniforms.uZPos.value = -0.0001;
+  imagePlane.planeMesh.setRenderOrder(1); // This should work too
+
+  const lerp = (v0, v1, t) => {
+    return v0 + t * (v1 - v0);
+  }
+
+  imagePlane.planeMesh.watchScroll = false;
+
+  let scale = imagePlane.planeMesh.uniforms.uScale.value;
 
   // gsap.killTweensOf(planeHtml)
   gsap.set(planeHtml, {
@@ -196,12 +205,10 @@ const expandCover = (imagePlane) => {
     // width: rectFinal.width - 100, // debug
     width: rectFinal.width,
     height: rectFinal.height,
-    onStart: () => {
-      imagePlane.planeMesh.watchScroll = false;
-    },
     onUpdate: () => {
       imagePlane.resize();
       imagePlane.planeMesh.uniforms.uCoverProgress.value = tl.progress();
+      imagePlane.planeMesh.uniforms.uScale.value = lerp(scale, 1, tl.progress())
     },
     onComplete: () => {
       imagePlane.resize();
@@ -209,9 +216,9 @@ const expandCover = (imagePlane) => {
       backgroundForTransition.imgData = curtainsForTransition.curtains.canvas.toDataURL();
       backgroundForTransition.element.style.backgroundImage = `url(${backgroundForTransition.imgData})`
       
-      imagePlane.planeMesh.watchScroll = false;
+      // imagePlane.planeMesh.watchScroll = false;
       // imagePlane.planeMesh.resetPlane()
-      console.log('expandCover onComplete');
+      // console.log('expandCover onComplete');
     }
   })
 }
@@ -227,7 +234,6 @@ onBeforeUnmount(() => {
   const closePanels = () => {
     // console.log('HOME closePanels');
     storeDatasCurtains.removePlanes();
-    // storeDatasCurtains.removeCurrentPlaneCover();
 
     // if has cover, expand it
     if (selectedImagePlane) {
@@ -238,15 +244,9 @@ onBeforeUnmount(() => {
 
   functionTransitionCallback.function = closePanels;
 })
-
-// onUnmounted(() => {
-//   // clearLogoObserver()
-//   clearScrollReveal()
-// })
 </script>
 
 <style lang="scss" scoped>
-
 .scroll-zone {
   height: 200vh;
 }
