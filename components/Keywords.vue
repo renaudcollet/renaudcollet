@@ -226,9 +226,6 @@ onMounted(() => {
         font-weight: 500;
         font-size: 12px;
       }
-      .btn-close {
-
-      }
     }
   }
 
