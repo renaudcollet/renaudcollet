@@ -71,7 +71,7 @@
         <WorkItemBig
           v-else-if="item.type === 'Big'"
           :index="index" 
-          :src="item.Image.data ? config.public.backendUrl + item.Image.data.attributes.formats.xxlarge.url : null" 
+          :src="item.Image.data ? getImageUrl(item.Image.data.attributes.formats) : null" 
           :video-src="item.Video.data ? config.public.backendUrl + item.Video.data.attributes.url : null"
           :title="item.Titre || ''"
           :content="item.Resume || ''"
@@ -81,7 +81,7 @@
         <WorkItemSmall
           v-else-if="item.type === 'Small'"
           :index="index" 
-          :src="item.Image.data ? config.public.backendUrl + item.Image.data.attributes.formats.xlarge.url : null" 
+          :src="item.Image.data ? getImageUrl(item.Image.data.attributes.formats) : null" 
           :video-src="item.Video.data ? config.public.backendUrl + item.Video.data.attributes.url : null"
           :content="{title: item.Titre, content: item.Resume}" 
           :class="{'right': index%4 === 0, 'left': index%4 === 2}"
@@ -122,6 +122,13 @@ const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 const { initZoomableImage, clearZoomableImage } = useZoomableImage();
 const { transitionState, elementsToTransition, functionTransitionCallback, backgroundForTransition } = useTransitionComposable();
 
+const getImageUrl = (formats) => {
+  if (formats.xxlarge !== undefined) return config.public.backendUrl + formats.xxlarge.url;
+  else if (formats.xlarge !== undefined) return config.public.backendUrl + formats.xlarge.url;
+  else if (formats.large !== undefined) return config.public.backendUrl + formats.large.url;
+  else return config.public.backendUrl + formats.url;
+}
+
 /**
  *  page transition
  * https://stackblitz.com/edit/nuxt-starter-bthjlg?file=pages%2Flayers.vue
@@ -158,7 +165,7 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
     setTimeout(() => {
       if (root.value) {
         // Add if condition in case user change page quickly, because we are in a setTimeout
-        initScrollReveal(root.value)
+        // initScrollReveal(root.value)
         initZoomableImage(root.value)
       }
     }, 500)
@@ -284,9 +291,9 @@ onMounted(() => {
     if (skipCoverAnimation.value) {
       gsap.killTweensOf('#header-logo')
       gsap.to('#header-logo', { autoAlpha: 1 })
-      initScrollReveal(root.value)
       initZoomableImage(root.value)
     }
+    initScrollReveal(root.value)
   })
 })
 
