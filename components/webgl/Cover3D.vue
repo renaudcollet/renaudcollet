@@ -22,12 +22,13 @@ import sweepFrag from '~/shaders/sweep.frag'
 import coverFrag from '~/shaders/cover.frag'
 import coverVert from '~/shaders/cover.vert'
 
-import px from '~/assets/textures/px.png'
-import nx from '~/assets/textures/nx.png'
-import py from '~/assets/textures/py.png'
-import ny from '~/assets/textures/ny.png'
-import pz from '~/assets/textures/pz.png'
-import nz from '~/assets/textures/nz.png'
+import bg from '~/assets/textures/background.jpg'
+// import px from '~/assets/textures/px.png'
+// import nx from '~/assets/textures/nx.png'
+// import py from '~/assets/textures/py.png'
+// import ny from '~/assets/textures/ny.png'
+// import pz from '~/assets/textures/pz.png'
+// import nz from '~/assets/textures/nz.png'
 
 import modelNature from '~/assets/3d/nature-scene.glb'
 // import lethargy from 'lethargy'
@@ -83,7 +84,7 @@ const config = {
     far: 500,
     start: { x: 0, y: 16, z: 35, lookAt: new THREE.Vector3(0, 2, 35) },
     rise: { x: 0, y: 70, z: 35, lookAt: new THREE.Vector3(0, 2, 35) },
-    end: { x: -5, y: 10, z: 50, lookAt: new THREE.Vector3(0, 3, 0) },
+    end: { x: -5, y: 15, z: 50, lookAt: new THREE.Vector3(0, 6, 0) },
   },
   camera2: {
     fov: 45,
@@ -138,7 +139,7 @@ const startAnimation = () => {
       onUpdate: function() {
         const lerpX = THREE.MathUtils.lerp(start.lookAt.x, end.lookAt.x, this.progress())
         const lerpZ = THREE.MathUtils.lerp(start.lookAt.z, end.lookAt.z, this.progress())
-        camera.lookAt(lerpX, 0, lerpZ)
+        camera.lookAt(lerpX, end.lookAt.y, lerpZ)
         // updateMaterial()
       },
       // onComplete: () => {
@@ -201,7 +202,7 @@ const onMouseMove = (e) => {
   if (animationStarted) {
     gsap.to(scene.rotation, {
       y: -THREE.MathUtils.degToRad(e.clientX / width * 80 - 40),
-      x: THREE.MathUtils.degToRad(e.clientY / height * 10 - 3),
+      x: THREE.MathUtils.degToRad(e.clientY / height * 5 - 3),
       duration: 1,
       // ease: 'power2.outIn',
     })
@@ -320,17 +321,17 @@ const init = () => {
     colorSpace: THREE.SRGBColorSpace
   })
 
-  // Env Map
-  // https://github.com/mrdoob/three.js/blob/master/examples/webgl_materials_envmaps.html
   // const loader = new THREE.CubeTextureLoader()
-  // // loader.setPath( 'assets/textures/' )
   // const backgroundTexture = loader.load( [ px, nx, py, ny, pz, nz ] )
-  // // backgroundTexture.encoding = sRGBEncoding
+  // // // backgroundTexture.encoding = sRGBEncoding
   // scene.background = backgroundTexture
-  scene.background = new THREE.Color(0x000000)
-  // const environmentTexture = loader.load( [ px, nx, py, ny, pz, nz ] )
-  // // environmentTexture.encoding = THREE.SRGBColorSpace
-  // scene.environment = environmentTexture
+  
+  const bgTex = new THREE.TextureLoader().load(bg)
+  // bgTex.wrapS = THREE.RepeatWrapping;
+  // bgTex.wrapT = THREE.RepeatWrapping;
+  scene.background = bgTex
+  // scene.backgroundBlurriness = 0.5
+  scene.fog = new THREE.Fog(0xfdf0bc, 40, 200)
 
   // KTX2 Loader
   // this.ktx2Loader = new KTX2Loader()
