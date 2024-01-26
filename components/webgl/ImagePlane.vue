@@ -28,7 +28,6 @@
 import Plane from "~/components/curtains/Plane/index.vue";
 import fragmentShader from "~/shaders/planes.frag";
 import vertexShader from "~/shaders/planes.vert";
-// import supportsCurtains from '~~/mixins/utils-device.js';
 import gsap from 'gsap';
 
 const planeMesh = ref(null);
@@ -123,10 +122,15 @@ const planeProps = {
         value: 0,
     },
     uCoverProgress: {
-        name: "uCoverProgress",
+        name: "uTransition",
         type: "1f",
         value: 0,
     },
+    mousePosition: {
+        name: "uMousePosition",
+        type: "2f",
+        value: [0, 0], // center of the plane
+    }
   },
 }
 
@@ -234,6 +238,7 @@ const onResize = () => {
 defineExpose({
   planeMesh,
   resize: onResize,
+  updateRatioUniforms: updateRatioUniforms,
 })
 
 onMounted(() => {
