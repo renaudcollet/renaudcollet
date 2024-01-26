@@ -384,9 +384,22 @@ onMounted(() => {
   // lenis.on('scroll', onScroll)
 
   document.addEventListener('mousemove', onMouseMove)
+  document.addEventListener('touchstart', onTouchStart)
 
   requestAnimationFrame(update)
 })
+
+const onTouchStart = (e) => {
+  mouseCursor.value.deactivate()
+  document.removeEventListener('mousemove', onMouseMove)
+  document.removeEventListener('touchstart', onTouchStart)
+  document.addEventListener('touchmove', onTouchMove)
+}
+
+const onTouchMove = (e) => {
+  if (lenis.scroll < scrollZoneHeight)
+    cover3d.value.onTouchMove(e)
+}
 
 const onMouseMove = (e) => {
   mouseCursor.value.onMouseMove(e)

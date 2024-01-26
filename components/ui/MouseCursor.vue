@@ -60,6 +60,7 @@ export default {
   name: 'MouseCursor',
   defineExpose() {
     return {
+      deactivate: this.deactivate,
       reset: this.reset,
       onMouseMove: this.onMouseMove,
     }
@@ -110,8 +111,6 @@ export default {
         repeat: -1
       },
       oTweenOutlineBigHide: {},
-      
-      
       oTweenCenterSmallShowFrom: {
         rotation: 0,
         scale: 1,
@@ -197,204 +196,21 @@ export default {
         transformOrigin: '50% 50%'
       })
 
-      document.addEventListener('mousedown', (e) => {
-        // console.log(`GET GLOBAL MOUSE DOWN`, e)
-        if (
-          e.target.tagName === 'A' ||
-          e.target.tagName === 'BUTTON' ||
-          e.target.dataset.mouseCursor === 'hover'
-        ) {
-          gsap.killTweensOf(this.mouseSVGOutlineBig)
-          gsap.to(this.mouseSVGOutlineBig, {
-            duration: 0.3,
-            scale: .8,
-          })
-        }
-      })
-
-      document.addEventListener('mouseup', (e) => {
-        // console.log(`GET GLOBAL MOUSE UP`, e)
-        if (
-          e.target.tagName === 'A' ||
-          e.target.tagName === 'BUTTON' ||
-          e.target.dataset.mouseCursor === 'hover'
-        ) {
-          gsap.killTweensOf(this.mouseSVGOutlineBig)
-          gsap.to(this.mouseSVGOutlineBig, {
-            duration: 0.3,
-            delay: 0.2,
-            scale: 1.2,
-          })
-        }
-      })
-
-      document.addEventListener('mouseover', (e) => {
-        // console.log(`GET GLOBAL MOUSE OVER`, e.target.tagName)
-        if (
-          e.target.tagName === 'A' ||
-          e.target.tagName === 'BUTTON' ||
-          e.target.dataset.mouseCursor === 'hover'
-        ) {
-          gsap.killTweensOf(this.mouseSVGOutlineBig)
-          gsap.fromTo (
-            this.mouseSVGOutlineBig,
-            this.oTweenOutlineBigHoverFrom,
-            this.oTweenOutlineBigHover
-          )
-
-          gsap.killTweensOf(this.mouseSVGCenterSmall)
-          gsap.fromTo(
-            this.mouseSVGCenterSmall,
-            this.oTweenCenterSmallShowFrom,
-            this.oTweenCenterSmallHover
-          )
-        } else if (
-          e.target.dataset.mouseCursor === 'hide'
-        ) {
-          gsap.killTweensOf(this.mouseSVGOutlineBig)
-          gsap.to(
-            this.mouseSVGOutlineBig,
-            {
-              opacity: 0,
-            },
-          )
-
-          gsap.killTweensOf(this.mouseSVGCenterSmall)
-          gsap.to(
-            this.mouseSVGCenterSmall,
-            {
-              opacity: 0,
-            },
-          )
-        } else if (
-          e.target.dataset.mouseCursor === 'zoom'
-        ) {
-          // console.log('MOUSE OVER ZOOM IN');
-          gsap.killTweensOf(this.mouseSVGOutlineBig)
-          gsap.to(
-            this.mouseSVGOutlineBig,
-            {
-              opacity: 0,
-            },
-          )
-
-          gsap.killTweensOf(this.mouseSVGCenterSmall)
-          gsap.to(
-            this.mouseSVGCenterSmall,
-            {
-              opacity: 0,
-            },
-          )
-
-          gsap.killTweensOf(this.mouseSVGZoomIn)
-          gsap.fromTo(
-            this.mouseSVGZoomIn,
-            {
-              opacity: 1,
-              scale: 1,
-            },
-            {
-              display: 'block',
-              opacity: 1,
-              scale: 1.2,
-              repeat: -1,
-              yoyo: true,
-            },
-          )
-        } else if (
-          e.target.dataset.mouseCursor === 'zoom-out'
-        ) {
-          // console.log('MOUSE OVER ZOOM OUT');
-          gsap.killTweensOf(this.mouseSVGOutlineBig)
-          gsap.to(
-            this.mouseSVGOutlineBig,
-            {
-              opacity: 0,
-            },
-          )
-
-          gsap.killTweensOf(this.mouseSVGCenterSmall)
-          gsap.to(
-            this.mouseSVGCenterSmall,
-            {
-              opacity: 0,
-            },
-          )
-
-          gsap.killTweensOf(this.mouseSVGZoomIn)
-          gsap.to(
-            this.mouseSVGZoomIn,
-            {
-              display: 'none',
-              opacity: 0,
-            },
-          )
-        } else {
-          // Reset to mouseout state
-          gsap.killTweensOf(this.mouseSVGOutlineBig)
-          gsap.to(
-            this.mouseSVGOutlineBig, 
-            this.oTweenOutlineBigShow
-          )
-
-          gsap.killTweensOf(this.mouseSVGCenterSmall)
-          gsap.to(
-            this.mouseSVGCenterSmall, 
-            this.oTweenCenterSmallShow
-          )
-        }
-      })
-
-      document.addEventListener('mouseout', (e) => {
-        // console.log(`GET GLOBAL MOUSE OVER`, e)
-        if (
-          e.target.tagName === 'A' ||
-          e.target.tagName === 'BUTTON' ||
-          e.target.dataset.mouseCursor === 'hover' ||
-          e.target.dataset.mouseCursor === 'hide'
-        ) {
-          gsap.killTweensOf(this.mouseSVGOutlineBig)
-          gsap.to(
-            this.mouseSVGOutlineBig, 
-            this.oTweenOutlineBigShow
-          )
-
-          gsap.killTweensOf(this.mouseSVGCenterSmall)
-          gsap.to(
-            this.mouseSVGCenterSmall, 
-            this.oTweenCenterSmallShow
-          )
-        } else if (
-          e.target.dataset.mouseCursor === 'zoom'
-        ) {
-          // console.log('MOUSE OUT ZOOM');
-          
-          gsap.killTweensOf(this.mouseSVGOutlineBig)
-          gsap.to (
-            this.mouseSVGOutlineBig,
-            this.oTweenOutlineBigShow
-          )
-
-          gsap.killTweensOf(this.mouseSVGCenterSmall)
-          gsap.to(
-            this.mouseSVGCenterSmall,
-            this.oTweenCenterSmallShow
-          )
-
-          gsap.killTweensOf(this.mouseSVGZoomIn)
-          gsap.to(
-            this.mouseSVGZoomIn,
-            {
-              display: 'none',
-              opacity: 0,
-            },
-          )
-        }
-      })
+      document.addEventListener('mousedown', this.onMouseDown)
+      document.addEventListener('mouseup', this.onMouseUp)
+      document.addEventListener('mouseover', this.onMouseOver)
+      document.addEventListener('mouseout', this.onMouseOut)
       // document.addEventListener('mousemove', this.onMouseMove)
     // }
   },
   methods: {
+    deactivate() {
+      document.removeEventListener('mousedown', this.onMouseDown)
+      document.removeEventListener('mouseup', this.onMouseUp)
+      document.removeEventListener('mouseover', this.onMouseOver)
+      document.removeEventListener('mouseout', this.onMouseOut)
+      this.mouseContainer.style.display = 'none'
+    },
     reset() {
       gsap.killTweensOf(this.mouseSVGOutlineBig)
       gsap.to(
@@ -416,6 +232,197 @@ export default {
           opacity: 0,
         },
       )
+    },
+    onMouseDown(e) {
+      // console.log(`GET GLOBAL MOUSE DOWN`, e)
+      if (
+        e.target.tagName === 'A' ||
+        e.target.tagName === 'BUTTON' ||
+        e.target.dataset.mouseCursor === 'hover'
+      ) {
+        gsap.killTweensOf(this.mouseSVGOutlineBig)
+        gsap.to(this.mouseSVGOutlineBig, {
+          duration: 0.3,
+          scale: .8,
+        })
+      }
+    },
+    onMouseUp(e) {
+      // console.log(`GET GLOBAL MOUSE UP`, e)
+      if (
+        e.target.tagName === 'A' ||
+        e.target.tagName === 'BUTTON' ||
+        e.target.dataset.mouseCursor === 'hover'
+      ) {
+        gsap.killTweensOf(this.mouseSVGOutlineBig)
+        gsap.to(this.mouseSVGOutlineBig, {
+          duration: 0.3,
+          delay: 0.2,
+          scale: 1.2,
+        })
+      }
+    },
+    onMouseOver(e) {
+      // console.log(`GET GLOBAL MOUSE OVER`, e.target.tagName)
+      if (
+        e.target.tagName === 'A' ||
+        e.target.tagName === 'BUTTON' ||
+        e.target.dataset.mouseCursor === 'hover'
+      ) {
+        gsap.killTweensOf(this.mouseSVGOutlineBig)
+        gsap.fromTo (
+          this.mouseSVGOutlineBig,
+          this.oTweenOutlineBigHoverFrom,
+          this.oTweenOutlineBigHover
+        )
+
+        gsap.killTweensOf(this.mouseSVGCenterSmall)
+        gsap.fromTo(
+          this.mouseSVGCenterSmall,
+          this.oTweenCenterSmallShowFrom,
+          this.oTweenCenterSmallHover
+        )
+      } else if (
+        e.target.dataset.mouseCursor === 'hide'
+      ) {
+        gsap.killTweensOf(this.mouseSVGOutlineBig)
+        gsap.to(
+          this.mouseSVGOutlineBig,
+          {
+            opacity: 0,
+          },
+        )
+
+        gsap.killTweensOf(this.mouseSVGCenterSmall)
+        gsap.to(
+          this.mouseSVGCenterSmall,
+          {
+            opacity: 0,
+          },
+        )
+      } else if (
+        e.target.dataset.mouseCursor === 'zoom'
+      ) {
+        // console.log('MOUSE OVER ZOOM IN');
+        gsap.killTweensOf(this.mouseSVGOutlineBig)
+        gsap.to(
+          this.mouseSVGOutlineBig,
+          {
+            opacity: 0,
+          },
+        )
+
+        gsap.killTweensOf(this.mouseSVGCenterSmall)
+        gsap.to(
+          this.mouseSVGCenterSmall,
+          {
+            opacity: 0,
+          },
+        )
+
+        gsap.killTweensOf(this.mouseSVGZoomIn)
+        gsap.fromTo(
+          this.mouseSVGZoomIn,
+          {
+            opacity: 1,
+            scale: 1,
+          },
+          {
+            display: 'block',
+            opacity: 1,
+            scale: 1.2,
+            repeat: -1,
+            yoyo: true,
+          },
+        )
+      } else if (
+        e.target.dataset.mouseCursor === 'zoom-out'
+      ) {
+        // console.log('MOUSE OVER ZOOM OUT');
+        gsap.killTweensOf(this.mouseSVGOutlineBig)
+        gsap.to(
+          this.mouseSVGOutlineBig,
+          {
+            opacity: 0,
+          },
+        )
+
+        gsap.killTweensOf(this.mouseSVGCenterSmall)
+        gsap.to(
+          this.mouseSVGCenterSmall,
+          {
+            opacity: 0,
+          },
+        )
+
+        gsap.killTweensOf(this.mouseSVGZoomIn)
+        gsap.to(
+          this.mouseSVGZoomIn,
+          {
+            display: 'none',
+            opacity: 0,
+          },
+        )
+      } else {
+        // Reset to mouseout state
+        gsap.killTweensOf(this.mouseSVGOutlineBig)
+        gsap.to(
+          this.mouseSVGOutlineBig, 
+          this.oTweenOutlineBigShow
+        )
+
+        gsap.killTweensOf(this.mouseSVGCenterSmall)
+        gsap.to(
+          this.mouseSVGCenterSmall, 
+          this.oTweenCenterSmallShow
+        )
+      }
+    },
+    onMouseOut(e) {
+      // console.log(`GET GLOBAL MOUSE OVER`, e)
+      if (
+        e.target.tagName === 'A' ||
+        e.target.tagName === 'BUTTON' ||
+        e.target.dataset.mouseCursor === 'hover' ||
+        e.target.dataset.mouseCursor === 'hide'
+      ) {
+        gsap.killTweensOf(this.mouseSVGOutlineBig)
+        gsap.to(
+          this.mouseSVGOutlineBig, 
+          this.oTweenOutlineBigShow
+        )
+
+        gsap.killTweensOf(this.mouseSVGCenterSmall)
+        gsap.to(
+          this.mouseSVGCenterSmall, 
+          this.oTweenCenterSmallShow
+        )
+      } else if (
+        e.target.dataset.mouseCursor === 'zoom'
+      ) {
+        // console.log('MOUSE OUT ZOOM');
+        
+        gsap.killTweensOf(this.mouseSVGOutlineBig)
+        gsap.to (
+          this.mouseSVGOutlineBig,
+          this.oTweenOutlineBigShow
+        )
+
+        gsap.killTweensOf(this.mouseSVGCenterSmall)
+        gsap.to(
+          this.mouseSVGCenterSmall,
+          this.oTweenCenterSmallShow
+        )
+
+        gsap.killTweensOf(this.mouseSVGZoomIn)
+        gsap.to(
+          this.mouseSVGZoomIn,
+          {
+            display: 'none',
+            opacity: 0,
+          },
+        )
+      }
     },
     onMouseMove(e) {
       // console.log(`onMouseMove`, e)

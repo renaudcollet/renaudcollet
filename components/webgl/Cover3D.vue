@@ -208,6 +208,29 @@ const onMouseMove = (e) => {
   }
 }
 
+const onTouchMove = (e) => {
+  // console.log('COVER3D - onTouchMove', e);
+
+  if (animationStarted) {
+    gsap.killTweensOf(scene.rotation)
+    gsap.to(scene.rotation, {
+      y: -THREE.MathUtils.degToRad(e.touches[0].clientX / width * 100 - 50),
+      // x: THREE.MathUtils.degToRad(e.touches[0].clientY / height * 10 - 3),
+      duration: 1,
+      // ease: 'power2.outIn',
+      onComplete: () => {
+        gsap.to(scene.rotation, {
+          y: 0,
+          // x: 0,
+          delay: 0.5,
+          duration: 2,
+          ease: 'power2.outIn',
+        })
+      }
+    })
+  }
+}
+
 let zoneHeight = 0
 let prc = 0
 
@@ -225,7 +248,8 @@ const onScroll = () => {
 
 defineExpose({
   onScroll,
-  onMouseMove
+  onMouseMove,
+  onTouchMove,
 })
 
 onMounted(() => {
@@ -261,12 +285,12 @@ const init = () => {
   height = window.innerHeight;
   scene = new THREE.Scene()
 
-  camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000)
+  camera = new THREE.PerspectiveCamera(window.innerWidth < 1024 ? 60 : 45, width / height, 0.1, 1000)
   const { start } = config.camera
   camera.position.set(start.x, start.y, start.z)
   camera.lookAt(start.lookAt) 
 
-  camera2 = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000)
+  camera2 = new THREE.PerspectiveCamera(window.innerWidth < 1024 ? 60 : 45, width / height, 0.1, 1000)
   camera2.position.set(config.camera2.start.x, config.camera2.start.y, config.camera2.start.z)
   camera2.lookAt(config.camera2.lookAt)
 
