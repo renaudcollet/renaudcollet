@@ -84,7 +84,8 @@ import gsap from 'gsap';
 const props = defineProps({
   title: {
     type: String,
-    required: true,
+    required: false,
+    default: ''
   },
   content: {
     type: String,

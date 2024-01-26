@@ -34,6 +34,7 @@ export default {
     content: {
       type: String,
       required: false,
+      default: '',
     },
     type: {
       type: String,
