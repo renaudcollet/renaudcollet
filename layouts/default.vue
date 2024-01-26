@@ -67,7 +67,7 @@ const onLockScroll = (isLocked, animate, scrollY = 0) => {
     lastScroll = 0 // To prevent having a bump when scroll sudenly change between pages
     lenis.scrollTo(scrollY, {immediate: !animate })
     lastScroll = 0 // To prevent having a bump when scroll sudenly change between pages
-    console.log(`UNLOCK SCROLL - scrollY: ${scrollY} lastScroll: ${lastScroll}`);
+    // console.log(`UNLOCK SCROLL - scrollY: ${scrollY} lastScroll: ${lastScroll}`);
   } else {
     // console.log(`SCROLL STOPPED, scrollY: ${storeDatas.scrollY}`);
     lenis.stop()
@@ -158,7 +158,7 @@ const onRender = (plane) => {
 }
 
 const regularLerp = (a, b, n) => {
-  // return (1 - n) * a + n * b;
+  // return (1 - n) * a + n * b; // https://en.wikipedia.org/wiki/Linear_interpolation
   return a + ( b - a ) * n; // From threejs  https://github.com/mrdoob/three.js/blob/dev/src/math/Vector3.js
 }
 
@@ -382,13 +382,7 @@ onMounted(() => {
   requestAnimationFrame(update)
 })
 
-// onUnmounted(() => {
-//   console.log('DEFAULT LAYOUT - UNMOUNTED');
-//   lenis.destroy()
-// })
-
 onErrorCaptured((err) => {
-  // TODO: handle the error here
   console.error('default layer error captured : ' , err)
 })
 </script>

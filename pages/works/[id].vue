@@ -64,24 +64,24 @@
         <WorkItemTitleResume
           v-if="item.Image.data === null && item.Video.data === null"
           :index="index" 
-          :title="item.Titre"
-          :content="item.Resume"
+          :title="item.Titre || ''"
+          :content="item.Resume || ''"
           :type="item.type"
         />
         <WorkItemBig
           v-else-if="item.type === 'Big'"
           :index="index" 
-          :src="item.Image.data ? config.public.backendUrl + item.Image.data.attributes.formats.large.url : null" 
+          :src="item.Image.data ? config.public.backendUrl + item.Image.data.attributes.formats.xxlarge.url : null" 
           :video-src="item.Video.data ? config.public.backendUrl + item.Video.data.attributes.url : null"
-          :title="item.Titre"
-          :content="item.Resume"
+          :title="item.Titre || ''"
+          :content="item.Resume || ''"
           :onRender="onRender"
           :mountPlanes="bMountPlanes"
         />
         <WorkItemSmall
           v-else-if="item.type === 'Small'"
           :index="index" 
-          :src="item.Image.data ? config.public.backendUrl + item.Image.data.attributes.formats.large.url : null" 
+          :src="item.Image.data ? config.public.backendUrl + item.Image.data.attributes.formats.xlarge.url : null" 
           :video-src="item.Video.data ? config.public.backendUrl + item.Video.data.attributes.url : null"
           :content="{title: item.Titre, content: item.Resume}" 
           :class="{'right': index%4 === 0, 'left': index%4 === 2}"
@@ -202,7 +202,7 @@ const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProje
 // const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
 // const large = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
 
-// console.log('IMAGE COVER URL', xlarge);
+console.log('IMAGE COVER URL', xxlarge);
 
 const skipCoverAnimation = computed(() => {
   return storeDatas.previousPage !== null
