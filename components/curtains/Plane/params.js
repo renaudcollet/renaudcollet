@@ -41,7 +41,8 @@ export const params = {
   },
   alwaysDraw: {
     type: Boolean,
-    default: false,
+    // default: false,
+    default: true,
   },
   visible: {
     type: Boolean,
