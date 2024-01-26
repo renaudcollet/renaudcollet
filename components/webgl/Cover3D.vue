@@ -83,7 +83,7 @@ const config = {
     far: 500,
     start: { x: 0, y: 16, z: 35, lookAt: new THREE.Vector3(0, 2, 35) },
     rise: { x: 0, y: 70, z: 35, lookAt: new THREE.Vector3(0, 2, 35) },
-    end: { x: -5, y: 9, z: 50, lookAt: new THREE.Vector3(0, 3, 0) },
+    end: { x: -5, y: 10, z: 50, lookAt: new THREE.Vector3(0, 3, 0) },
   },
   camera2: {
     fov: 45,
@@ -299,7 +299,7 @@ const init = () => {
   // TODO: Probleme de colorspace avec les textures utilisées dans le ShaderMaterial
   // TODO:  Créer un codepen pour reproduire le problème
   pixelRatio = Math.min(window.devicePixelRatio, 1.5)
-  renderer = new THREE.WebGLRenderer({ canvas: canvas.value, antialias: true })
+  renderer = new THREE.WebGLRenderer({ canvas: canvas.value, antialias: true, alpha: false, preserveDrawingBuffer: true})
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.toneMapping = THREE.LinearToneMapping // ACESFilmicToneMapping
   renderer.setSize(width, height)
