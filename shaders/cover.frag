@@ -6,7 +6,7 @@
 	From Yuri Artiukh - https://www.youtube.com/watch?v=EcEFrA_6kzM
 
 	This fragment shader is used to transition between two textures. 
-	It is not a cover/contain shader :)
+	It is not a cover/contain shader (because of the name cover.frag) :)
 **/
 
 
@@ -62,7 +62,8 @@ void main()	{
 	vec4 rgba2 = texture2D(uTexture2,mirrored(uv2));
 
 	vec4 rgba = mix(rgba1,rgba2,delayValue);
-	gl_FragColor = rgba;
+	
+	gl_FragColor = sRGBTransferOETF( rgba );
 
 
 }
