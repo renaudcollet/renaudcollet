@@ -15,7 +15,7 @@ import Stats from 'three/examples/jsm/libs/stats.module'
 import gsap from 'gsap';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+// import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 
 import sweepFrag from '~/shaders/sweep.frag'
@@ -83,7 +83,7 @@ const config = {
     far: 500,
     start: { x: 0, y: 16, z: 35, lookAt: new THREE.Vector3(0, 2, 35) },
     rise: { x: 0, y: 70, z: 35, lookAt: new THREE.Vector3(0, 2, 35) },
-    end: { x: -5, y: 9, z: 50, lookAt: new THREE.Vector3(0, 2, 0) },
+    end: { x: -5, y: 9, z: 50, lookAt: new THREE.Vector3(0, 3, 0) },
   },
   camera2: {
     fov: 45,
@@ -127,9 +127,9 @@ const startAnimation = () => {
     .to(camera.position, {
       x: rise.x, y: rise.y, z: rise.z, duration: 1,
       ease: 'power2.outIn',
-      onUpdate: () => {
-        // updateMaterial()
-      }
+      // onUpdate: () => {
+      //   // updateMaterial()
+      // }
     }, '+=0.5')
     .to(camera.position, {
       x: end.x, y: end.y, z: end.z, 
@@ -141,9 +141,9 @@ const startAnimation = () => {
         camera.lookAt(lerpX, 0, lerpZ)
         // updateMaterial()
       },
-      onComplete: () => {
-        // initControls()
-      }
+      // onComplete: () => {
+      //   // initControls()
+      // }
     })
 }
 
@@ -169,7 +169,7 @@ const stopAnimation = () => {
 
 const showCover = toRef(props, 'showCover')
 watch(showCover, (newVal, oldVal) => {
-  console.log('WATCH - showCover', newVal);
+  // console.log('WATCH - showCover', newVal);
   if (newVal) { 
     startAnimation()     
   } else {
@@ -185,7 +185,7 @@ const resetControls = () => {
   }
 }
 
-const initControls = () => {
+/* const initControls = () => {
   controls = new OrbitControls(camera, renderer.domElement);
   controls.addEventListener('change', () => {
     console.log('controls change');
@@ -193,6 +193,19 @@ const initControls = () => {
   })
   controls.enabled = true
   controls.update()
+} */
+
+const onMouseMove = (e) => {
+  // console.log('COVER3D - onMouseMove', e);
+
+  if (animationStarted) {
+    gsap.to(scene.rotation, {
+      y: -THREE.MathUtils.degToRad(e.clientX / width * 80 - 40),
+      x: THREE.MathUtils.degToRad(e.clientY / height * 10 - 3),
+      duration: 1,
+      // ease: 'power2.outIn',
+    })
+  }
 }
 
 let zoneHeight = 0
@@ -211,7 +224,8 @@ const onScroll = () => {
 }
 
 defineExpose({
-  onScroll
+  onScroll,
+  onMouseMove
 })
 
 onMounted(() => {

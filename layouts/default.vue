@@ -54,6 +54,8 @@ const curtains = ref(null);
 const mouseCursor = ref(null);
 const background = ref(null);
 
+let scrollZoneHeight = 0;
+
 let __curtains = null;
 
 const storeDatasCurtains = useDatasCurtainsStore();
@@ -80,8 +82,8 @@ const onStartCover3d = (value) => {
 }
 
 const onScrollZone = (value) => {
-  // console.log('default - onScrollZone', value);
   scrollZone.value = value
+  scrollZoneHeight = value.clientHeight
 }
 
 // const datasSEO = storeDatas.seo.data.attributes;
@@ -215,7 +217,7 @@ const onContextLost = () => {
 }
 
 const onCurtainsReady = (_curtains) => {
-  console.log('onCurtainsReady', _curtains);
+  // console.log('onCurtainsReady', _curtains);
   // curtains.disableDrawing();
 
   __curtains = _curtains;
@@ -233,6 +235,8 @@ const onCurtainsReady = (_curtains) => {
     background.value.style.width = `${_html.clientWidth}px`
     background.value.style.height = `${_html.clientHeight}px`  
 
+    scrollZoneHeight = scrollZone.value.clientHeight
+
     clearTimeout(timeout);
     // TODO: replace timeout with raf debounce
     timeout = setTimeout(() => {
@@ -247,7 +251,7 @@ const onCurtainsReady = (_curtains) => {
 }
 
 watch(() => route.path, (value) => {
-  console.log('➮ DEFAULT LAYOUT - WATCH route fullpath ', value)
+  // console.log('➮ DEFAULT LAYOUT - WATCH route fullpath ', value)
   storeDatas.setCurrentPage(value)
 
   if (storeDatas.previousPage === '/works' && backgroundForTransition.imgData !== null) {
@@ -322,7 +326,7 @@ const update = (time) => {
 
   // console.log('scrollVelocity', scrollVelocity);
 
-  if (cover3d.value && showCover3d.value) {
+  if (/* cover3d.value &&  */showCover3d.value) {
     cover3d.value.onScroll()
   }
 }
@@ -379,8 +383,17 @@ onMounted(() => {
   // window.addEventListener('scroll', onScroll)
   // lenis.on('scroll', onScroll)
 
+  document.addEventListener('mousemove', onMouseMove)
+
   requestAnimationFrame(update)
 })
+
+const onMouseMove = (e) => {
+  mouseCursor.value.onMouseMove(e)
+  
+  if (lenis.scroll < scrollZoneHeight)
+    cover3d.value.onMouseMove(e)
+}
 
 onErrorCaptured((err) => {
   console.error('default layer error captured : ' , err)

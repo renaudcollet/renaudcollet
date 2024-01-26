@@ -36,7 +36,7 @@ Menu:
 Animation:
     ✔ Titles and Vignettes should appear with a skew mask animation @done(23-09-21 16:56)
     ✔ Transition on the cover when click homepage project to project page @done(24-01-15 11:14)
-    ☐ Mouse hover on project item should apply when scrolling while mouse not moving
+    ☐ Mouse hover on project item should be triggered when scrolling while mouse not moving
     -> https://codepen.io/kleinfreund/pen/XYdBYP
     
     Webgl:
@@ -45,8 +45,11 @@ Animation:
         ✔ Déclencher l'ouverture quand l'image apparait dans le viewport @done(23-10-03 15:42)
         ✔ Probleme d'image resolution, sur luna rossa et digital mirror, les coins n'ont pas la même taille @done(23-10-03 17:07)
         ☐ Mouse Cursor - Should be in shader - make a trail of triangles smaller and smaller
-        ☐ Add effect on vignettes when hovering : https://pixallus.com/creating-webgl-effects-with-curtainsjs/
+        ✔ Add effect on vignettes when hovering @done(24-01-25 11:10)
+            -> or hue / or saturation : https://github.com/patriciogonzalezvivo/lygia/pull/109
         ☐ Improve speed with OffscreenCanvas (https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas)
+        ✔ Shader distortion on hover and on click @done(24-01-25 11:10)
+            -> https://www.geeks3d.com/20140213/glsl-shader-library-fish-eye-and-dome-and-barrel-distortion-post-processing-filters/
     
     Priority :
         ✔ FIX Scroll jank @done(24-01-15 17:24)
@@ -55,22 +58,29 @@ Animation:
         ✔ FPS is 'lower' on home page: (it is max fps when I hide cover) @done(24-01-16 11:30)
             ✔ Problem was device pixel ratio @done(24-01-16 11:30)
             ☐ Try to render cover in curtains canvas
-        ☐ Black frame on cover transition to work id
-            -> Seems to be conjugaison of big curtains image + whole page layout repaint
-            OR maybe not because the menu and logo are not repainted
-            ☐ Or use overlay transition https://codepen.io/martinlaxenaire/pen/JjEVqLo
+        ✔ Black frame on cover transition to work id @done(24-01-22 14:11)
+            -> Fixed by setting transparent to true !
+            ✔ NO This is not fixed ! @done(24-01-22 19:14)
+                -> By addin the image in a background via css
+            ✘ Or use overlay transition https://codepen.io/martinlaxenaire/pen/JjEVqLo @cancelled(24-01-22 14:12)
         ✔ Page index and work, z index problem when click on a project @done(24-01-15 12:01)
         ✔ iOS, index page : when scroll we have a white page @done(24-01-16 11:31)
         ✔ Scroll when change page, maybe deactivate it and reactivate after transition complete ? @done(24-01-17 22:53)
         ✔ Transition when select a filter when on another page @done(24-01-18 23:59)
-        ☐ Video player breaks curtains planes @started(24-01-19 00:50)
+        ✔ Video player breaks curtains planes @started(24-01-19 00:50) @done(24-01-19 15:15) @lasted(14h25m26s)
         ☐ Bug on my Android - image plane are stretched horizontally
+        ✔ Cover 3d add controls to rotate @done(24-01-26 18:23)
         ☐ Finish 3d cover blender
             ☐ Add shadows
             ☐ Add speakers
             ☐ Better lighting
             ☐ Better background
-        ☐ Use Devtool > Rendering > Scrolling performance issues to see zones to improve
+        ☐ Sheep animation on homepage, make them jump (and fall on the back ?) with mouse over
+        ✔ Use Devtool > Rendering > Scrolling performance issues to see zones to improve @done(24-01-19 15:15)
+        ✔ Page work id, mettre fleche retours aux projets @done(24-01-23 15:47)
+        ✔ Accélerer les transitions entre pages @done(24-01-24 16:12)
+        ✔ Retour du problem de Z ! When click on project item @done(24-01-26 18:23)
+        ☐ project item last keyword not visible on mobile
 
 
     ✘ Particles : @cancelled(24-01-15 11:13)

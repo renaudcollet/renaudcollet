@@ -60,7 +60,8 @@ export default {
   name: 'MouseCursor',
   defineExpose() {
     return {
-      reset: this.reset
+      reset: this.reset,
+      onMouseMove: this.onMouseMove,
     }
   },
   data() {
@@ -390,7 +391,7 @@ export default {
           )
         }
       })
-      document.addEventListener('mousemove', this.onMouseMove)
+      // document.addEventListener('mousemove', this.onMouseMove)
     // }
   },
   methods: {
