@@ -241,7 +241,8 @@ const onCurtainsReady = (_curtains) => {
     background.value.style.width = `${_html.clientWidth}px`
     background.value.style.height = `${_html.clientHeight}px`  
 
-    scrollZoneHeight = scrollZone.value.clientHeight
+    if (scrollZone.value !== null)
+      scrollZoneHeight = scrollZone.value.clientHeight
 
     clearTimeout(timeout);
     // TODO: replace timeout with raf debounce
