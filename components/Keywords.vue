@@ -356,6 +356,7 @@ onMounted(() => {
       width: 100%;
       height: 100vh;
       z-index: $z-menu-zone;
+      top: 0;
 
       @include media-breakpoint-up(lg) {
         display: none;
