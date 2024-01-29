@@ -22,6 +22,10 @@ export default defineNuxtConfig({
         },
       },
     },
+    esbuild: {
+      drop: ["console"],
+    },
+
     plugins: [
       glsl({
         warnDuplicatedImports: false,
@@ -41,14 +45,14 @@ export default defineNuxtConfig({
   // Global page headers: https://go.nuxtjs.dev/config-head
   app: {
     head: {
-      title: 'Renaud COLLET - Frontend development',
+      title: 'Freelance Créative Développeur',
       htmlAttrs: {
         lang: 'fr',
       },
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        // { hid: 'description', name: 'description', content: "Groupie Paris est un studio de création et de production de contenus" }, // Set with code
+        { hid: 'description', name: 'description', content: "Freelance Créative développeur frontend qui programme et anime des sites internets ou des DOOH en utilisant nuxtjs, vuejs, threejs, gsap, phaserjs et laravel pour le backend et l'api" }, // Set with code
         { name: 'theme-color', content: '#000000' },
         { name: 'robots', content: process.env.NUXT_PREPROD_APP ? 'none' : 'all' },
         // { name: 'msapplication-TileColor', content: '#da532c' },
@@ -56,9 +60,10 @@ export default defineNuxtConfig({
         { name: 'apple-mobile-web-app-capable', content: 'yes' },
         { property: 'og:url', content: 'https://renaudcollet.com' },
         { property: 'og:type', content: 'website' },
-        { property: 'og:title', content: 'Renaud COLLET - Développeur Frontend' },
-        // { property: 'og:description', content: "Groupie Paris est un studio de création et de production de contenus." }, // Set with code
-        // { property: 'og:image', content: "https://groupieparis.com/opengraph.jpg" }, // Set with code
+        { property: 'og:title', content: 'Développeur Frontend Freelance' },
+        // { property: 'og:description', content: "Frontend Creative developer programing and animating websites or DOOH using nuxtjs, vuejs, threejs, gsap, phaserjs and laravel for your backend and api" }, // Set with code
+        { property: 'og:description', content: "Freelance Créative développeur frontend qui programme et anime des sites internets ou des DOOH en utilisant nuxtjs, vuejs, threejs, gsap, phaserjs et laravel pour le backend et l'api" }, // Set with code
+        { property: 'og:image', content: "https://renaudcollet.com/opengraph.png" }, // Set with code
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -103,6 +108,6 @@ export default defineNuxtConfig({
           grid: true
         }
       }
-    }
+    },
   }
 });
