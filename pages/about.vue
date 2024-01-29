@@ -141,18 +141,28 @@ onUnmounted(() => {
 }
 
 .page__header {
-  width: 700px;
+  width: 100%;
   height: 360px;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  @include media-breakpoint-up(lg) {
+    width: 700px;
+    height: 360px;
+  }
 }
 
 .cover__image {
-  width: 700px;
+  width: 100%;
   height: 360px;
   position: absolute;
+
+  @include media-breakpoint-up(lg) {
+    width: 700px;
+    height: 360px;
+  }
 }
 
 .page__title {
