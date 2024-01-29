@@ -7,6 +7,7 @@
     ref="curtains" 
     @success="onCurtainsReady" 
     @onContextLost="onContextLost"
+    @error="onCurtainsError"
   >
     <ShaderPass 
       :params="firstPassProps"
@@ -55,7 +56,6 @@ const mouseCursor = ref(null);
 const background = ref(null);
 
 let scrollZoneHeight = 0;
-
 let __curtains = null;
 
 const storeDatasCurtains = useDatasCurtainsStore();
@@ -214,6 +214,12 @@ let config = false;
 const onContextLost = () => {
   console.log('onContextLost');
   curtains.value.restoreContext()
+}
+
+const onCurtainsError = (error) => {
+  console.log('onCurtainsError', error);
+  // we will add a class to the document body to display original images
+  document.body.classList.add("no-curtains");
 }
 
 const onCurtainsReady = (_curtains) => {
