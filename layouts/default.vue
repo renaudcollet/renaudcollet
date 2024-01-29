@@ -118,21 +118,21 @@ useHead({
       type: "1f",
       value: 0.5,
     },
-    stretch: {
-      name: "stretch",
-      type: "1f",
-      value: 0.0, // 0.06
-    },
-    squish: {
-      name: "squish",
-      type: "1f",
-      value: 0.0, // 0.06
-    },
-    noiseFreq: {
-      name: "noiseFreq",
-      type: "1f",
-      value: 0.0, // 2
-    },
+    // stretch: {
+    //   name: "stretch",
+    //   type: "1f",
+    //   value: 0.0, // 0.06
+    // },
+    // squish: {
+    //   name: "squish",
+    //   type: "1f",
+    //   value: 0.0, // 0.06
+    // },
+    // noiseFreq: {
+    //   name: "noiseFreq",
+    //   type: "1f",
+    //   value: 0.0, // 2
+    // },
   },
 }
 
@@ -145,7 +145,7 @@ const setScrollVelocityMinimum = () => {
   }
 }
 
-const SCROLL_VELOCITY_MINIMUM = 25;
+const SCROLL_VELOCITY_MINIMUM = 30;
 let scrollVelocityMinimum = SCROLL_VELOCITY_MINIMUM;
 setScrollVelocityMinimum()
 let scrollVelocity = scrollVelocityMinimum; // Set to scrollVelocityMinimum to deform the page right away
@@ -309,7 +309,7 @@ const update = (time) => {
   lenis.raf(time)
   // onScroll()
 
-  let delta = lenis.scroll - lastScroll;
+  let delta = (lenis.scroll - lastScroll);
   // // invert value for the effect
   // delta = -delta;
   delta = delta < 0 ? -delta : delta; // Make delta absolute
@@ -317,21 +317,18 @@ const update = (time) => {
   if(delta > 60) {
       delta = 60;
   }
-  // else if(delta < -60) {
-  //     delta = -60;
-  // }
 
   // if(Math.abs(delta) > Math.abs(scrollVelocity)) {
-  if(delta > scrollVelocity) {
-    scrollVelocity = lerp(scrollVelocity, delta, 0.1);
+  if(delta * 3> scrollVelocity) {
+    scrollVelocity = lerp(scrollVelocity, delta * 3., 0.1);
     // scrollVelocity = regularLerp(scrollVelocity, 25, 0.5);
   } else {
     scrollVelocity = lerp(scrollVelocity, scrollVelocityMinimum, 0.01);
   }
 
-  lastScroll = lenis.scroll
+  // console.log(`scrollVelocity: ${scrollVelocity}, delta: ${delta}`);
 
-  // console.log('scrollVelocity', scrollVelocity);
+  lastScroll = lenis.scroll
 
   if (/* cover3d.value &&  */showCover3d.value) {
     cover3d.value.onScroll()
