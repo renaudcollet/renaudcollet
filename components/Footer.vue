@@ -224,7 +224,7 @@ export default {
       margin-bottom: 48px;
     }
 
-    &__logo {
+    /* &__logo {
       background-image: url('/assets/svg/logo_groupie.svg');
       background-size: contain;
       background-repeat: no-repeat;
@@ -243,7 +243,7 @@ export default {
         height: 49px;
         margin-left: 65px;
       }
-    }
+    } */
 
     &__more {
       color: #fff;
