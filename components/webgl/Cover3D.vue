@@ -10,13 +10,13 @@ import GUI from 'lil-gui';
 
 import * as THREE from 'three'
 import { REVISION } from 'three'
-import Stats from 'three/examples/jsm/libs/stats.module'
+// import Stats from 'three/examples/jsm/libs/stats.module'
 
 import gsap from 'gsap';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 // import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
+// import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 
 import sweepFrag from '~/shaders/sweep.frag'
 import coverFrag from '~/shaders/cover.frag'
@@ -101,7 +101,7 @@ const config = {
 
 let stats
 let animationStarted = false
-let tlAnimation = gsap.timeline()
+let tlAnimation
 
 // Play start animation
 const startAnimation = () => {
@@ -254,10 +254,11 @@ defineExpose({
 })
 
 onMounted(() => {
+    tlAnimation = gsap.timeline()
     init()
 
-    stats = new Stats()
-    document.body.appendChild(stats.dom)
+    // stats = new Stats()
+    // document.body.appendChild(stats.dom)
 
     // For hmr reload
     if (showCover.value || props.showCover) { 
@@ -482,7 +483,7 @@ const render = (t) => {
   else
     renderer.render(scene, camera);
 
-  stats.update()
+  // stats.update()
 }
 
 const addLights = () => {
