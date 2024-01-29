@@ -92,7 +92,8 @@
           :mountPlanes="bMountPlanes"
         />
       </template>
-    </section>      
+    </section>     
+    <FooterSimple /> 
   </div>
 </template>
   
