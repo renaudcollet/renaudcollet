@@ -6,6 +6,7 @@
         <ImagePlane 
           v-if="storeDatasCurtains.planesToRemove.length === 0"
           :src="config.public.backendUrl + xxlarge"
+          :srcPortrait="config.public.backendUrl + xlarge"
           :onRender="onRender"
           :isVisible="true"
           :skip-animation="skipCoverAnimation"
@@ -72,6 +73,7 @@
           v-else-if="item.type === 'Big'"
           :index="index" 
           :src="item.Image.data ? getImageUrl(item.Image.data.attributes.formats) : null" 
+          :srcPortrait="item.Image.data ? getImageUrlPortrait(item.Image.data.attributes.formats) : null"
           :video-src="item.Video.data ? config.public.backendUrl + item.Video.data.attributes.url : null"
           :title="item.Titre || ''"
           :content="item.Resume || ''"
@@ -82,6 +84,7 @@
           v-else-if="item.type === 'Small'"
           :index="index" 
           :src="item.Image.data ? getImageUrl(item.Image.data.attributes.formats) : null" 
+          :srcPortrait="item.Image.data ? getImageUrlPortrait(item.Image.data.attributes.formats) : null"
           :video-src="item.Video.data ? config.public.backendUrl + item.Video.data.attributes.url : null"
           :content="{title: item.Titre, content: item.Resume}" 
           :class="{'right': index%4 === 0, 'left': index%4 === 2}"
@@ -125,6 +128,12 @@ const { transitionState, elementsToTransition, functionTransitionCallback, backg
 const getImageUrl = (formats) => {
   if (formats.xxlarge !== undefined) return config.public.backendUrl + formats.xxlarge.url;
   else if (formats.xlarge !== undefined) return config.public.backendUrl + formats.xlarge.url;
+  else if (formats.large !== undefined) return config.public.backendUrl + formats.large.url;
+  else return config.public.backendUrl + formats.url;
+}
+
+const getImageUrlPortrait = (formats) => {
+  if (formats.xlarge !== undefined) return config.public.backendUrl + formats.xlarge.url;
   else if (formats.large !== undefined) return config.public.backendUrl + formats.large.url;
   else return config.public.backendUrl + formats.url;
 }
@@ -206,7 +215,7 @@ const keywords = currentProject.attributes.keywords.data
 //   return currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
 // })
 const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProjectCover.formats.xxlarge.url : currentProjectCover.url;
-// const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
+const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
 // const large = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
 
 console.log('IMAGE COVER URL', xxlarge);

@@ -5,6 +5,7 @@
         <ImagePlane 
           v-if="mountPlane && !playVideo"
           :src="src" 
+          :srcPortrait="srcPortrait"
           :data-zoomable-url="src"
           :onRender="onRender"
           :isVisible="isVisible"
@@ -89,6 +90,11 @@ const props = defineProps({
   src: {
     type: String,
     required: true,
+  },
+  srcPortrait: {
+    type: String,
+    required: false,
+    default: null
   },
   videoSrc: {
     type: String,

@@ -15,6 +15,7 @@
         <ImagePlane 
           v-if="mountPlane"
           :src="config.public.backendUrl + xxlarge"
+          :srcPortrait="config.public.backendUrl + xlarge"
           :onRender="onRender"
           :isVisible="isVisible"
           object-fit="cover" 
@@ -132,8 +133,8 @@ const currentProjectCover = props.datas.attributes.cover.data.attributes
 //   return currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
 // })
 const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProjectCover.formats.xxlarge.url : currentProjectCover.url;
-// const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
-// const xxlarge = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
+const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
+const large = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
 
 // console.log('IMAGE PROJECT ITEM URL', xxlarge);
 

@@ -11,6 +11,7 @@
         <ImagePlane 
           v-if="mountPlane && !bPlayVideo"
           :src="src"
+          :srcPortrait="srcPortrait"
           :video-src="videoSrc" 
           :onRender="onRender"
           :isVisible="isVisible"
@@ -93,6 +94,11 @@ const props = defineProps({
     default: '',
   },
   src: {
+    type: String,
+    required: false,
+    default: null
+  },
+  srcPortrait: {
     type: String,
     required: false,
     default: null

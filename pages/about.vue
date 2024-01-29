@@ -8,6 +8,7 @@
           <ImagePlane 
             v-if="bMountPlanes"
             :src="config.public.backendUrl + xxlarge"
+            :srcPortrait="config.public.backendUrl + xlarge"
             :onRender="onRender"
             :isVisible="true"
             object-fit="cover" 
@@ -99,7 +100,7 @@ const currentProjectCover = datasAbout.attributes.cover.data.attributes
 // })
 const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProjectCover.formats.xxlarge.url : currentProjectCover.url;
 const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
-const large = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
+// const large = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
 
 
 onMounted(() => {

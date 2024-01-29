@@ -5,13 +5,23 @@
     @render="onRender"
     @ready="onReady"
   >
-    <img 
+    <!-- <img 
       :src="sourceFile" 
       :style="{'object-fit': objectFit}"
       :alt="alt"
       data-sampler="uTexture"
       crossorigin="anonymous"
-    >
+    > -->
+    <picture>
+      <source :srcset="sourceFilePortrait" media="(orientation: portrait)" />
+      <img 
+        :src="sourceFile" 
+        :style="{'object-fit': objectFit}"
+        :alt="alt"
+        data-sampler="uTexture"
+        crossorigin="anonymous"
+      />
+    </picture>
   </Plane>   
   <!-- <div v-else class="not-plane">
       <img 
@@ -39,6 +49,11 @@ const props = defineProps({
     default: "contain"
   },
   src: {
+    type: String,
+    required: false,
+    default: null
+  },
+  srcPortrait: { // Used for mobile
     type: String,
     required: false,
     default: null
@@ -139,6 +154,10 @@ const isVisible = toRef(props, 'isVisible');
 
 const sourceFile = computed(() => {
   return `${props.src}?${new Date().getTime()}` ; // Use date to force reload, otherwise we have resize bug or black image....
+})
+
+const sourceFilePortrait = computed(() => {
+  return `${props.srcPortrait}?${new Date().getTime()}` ; // Use date to force reload, otherwise we have resize bug or black image....
 })
 
 watch(isVisible, (newVal, oldVal) => {

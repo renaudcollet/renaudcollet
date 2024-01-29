@@ -68,8 +68,8 @@ Animation:
         ✔ Scroll when change page, maybe deactivate it and reactivate after transition complete ? @done(24-01-17 22:53)
         ✔ Transition when select a filter when on another page @done(24-01-18 23:59)
         ✔ Video player breaks curtains planes @started(24-01-19 00:50) @done(24-01-19 15:15) @lasted(14h25m26s)
-        ☐ Bug on my Android - image plane are stretched horizontally
         ✔ Cover 3d add controls to rotate @done(24-01-26 18:23)
+        ☐ Bug on my Android - image plane are stretched horizontally
         ☐ Finish 3d cover blender
             ☐ Add shadows
             ☐ Add speakers

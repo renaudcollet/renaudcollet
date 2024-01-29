@@ -4,6 +4,7 @@
       <ImagePlane 
         v-if="bMountPlanes"
         :src="config.public.backendUrl + xxlarge"
+        :srcPortrait="config.public.backendUrl + xxlarge"
         :onRender="onRender"
         :isVisible="true"
         object-fit="cover" 
@@ -149,8 +150,8 @@ const currentProjectCover = datasContact.attributes.cover.data.attributes
 //   return currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
 // })
 const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProjectCover.formats.xxlarge.url : currentProjectCover.url;
-const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
-const large = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
+// const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
+// const large = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
 
 
 const clickShowEmail = () => {
