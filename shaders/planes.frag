@@ -1,6 +1,14 @@
 #ifdef GL_ES
-precision mediump float;
+#ifdef GL_FRAGMENT_PRECISION_MEDIUM
+  precision mediump float;
+#else
+  precision highp float;
 #endif
+#endif
+
+// https://webglfundamentals.org/webgl/lessons/webgl-precision-issues.html
+
+// Need highp otherwise image is completely stretched on android
 
 varying vec3 vVertexPosition;
 varying vec2 vTextureCoord;
