@@ -279,10 +279,15 @@ onBeforeUnmount(() => {
   position: relative;
 }
   
-.logo{
+.logo {
   position: absolute;
   width: 170px;
-  opacity: 0;
+  height: 170px;
+
+  @media only screen and (min-width: 768px) {
+    width: 250px;
+    height: 250px;
+  }
 }
 
 .job {
@@ -292,11 +297,5 @@ onBeforeUnmount(() => {
   font-weight: 300;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-}
-
-@media only screen and (min-width: 768px) {
-  .logo{
-    width: 250px;
-  }
 }
 </style>
