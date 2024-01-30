@@ -6,9 +6,6 @@
         right: 55px;
         width: 30px;
         height: 30px;
-        background-image: url('~/assets/svg/btn-close.svg');
-        background-repeat: no-repeat;
-        background-size: contain;
         z-index: $z-btn-back;
         opacity: 0;
 
@@ -17,6 +14,27 @@
             right: 174px;
             width: 50px;
             height: 50px;
+        }
+
+        .front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url('~/assets/svg/btn-close.svg');
+            background-repeat: no-repeat;
+            background-size: contain;
+            z-index: 1;
+        }
+
+        .back {
+            position: absolute;            
+            width: 100%;
+            height: 100%;
+            background-image: url('~/assets/svg/btn-close-black.svg');
+            background-repeat: no-repeat;
+            background-size: contain;
+            top: 2px;
+            left: 2px;
         }
     }
 

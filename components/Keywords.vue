@@ -6,15 +6,22 @@
         v-on:click="onClickMenuButton"
         data-mouse-cursor="hover"
       >
-        <div class="keywords__menu__button__label">Filtres</div>
+        <div class="keywords__menu__button__label">
+          <div class="front">Filtres</div>
+          <div class="back">Filtres</div>
+        </div>
         <div class="keywords__menu__button__arrow">
-          <svg width="14px" height="27px" viewBox="0 0 14 27">
+          <svg width="16px" height="29px" viewBox="0 0 16 29">
+            <path class="arrow__back" fill-rule="evenodd" fill="rgb(0, 0, 0)"
+            d="m 15.064334,27.121334 -0.943,0.931 -13.0630007,-12.899 0.6050001,-0.598 -0.6050001,-0.598 13.0630007,-12.8990007 0.943,0.9310001 L 2.3383334,14.555334 Z"/>
             <path fill-rule="evenodd" fill="rgb(255, 255, 255)"
-            d="M14.006,26.063 L13.063,26.994 L-0.000,14.095 L0.605,13.497 L-0.000,12.899 L13.063,-0.000 L14.006,0.931 L1.280,13.497 L14.006,26.063 Z"/>
+            d="m 15.006,26.004666 -0.943,0.931 L 1,14.036666 1.6050001,13.438666 1,12.840666 14.063,-0.05833334 15.006,0.87266663 2.28,13.438666 Z"/>
           </svg>
-          <svg class="keywords__menu__button__arrow__right" width="14px" height="27px" viewBox="0 0 14 27">
+          <svg class="keywords__menu__button__arrow__right" width="16px" height="29px" viewBox="0 0 16 29">
+            <path class="arrow__back" fill-rule="evenodd" fill="rgb(0, 0, 0)"
+            d="m 1.5291667,27.121334 0.943,0.931 13.0630013,-12.899 -0.605,-0.598 0.605,-0.598 L 2.4721667,1.0583333 1.5291667,1.9893334 14.255168,14.555334 Z"/>
             <path fill-rule="evenodd" fill="rgb(255, 255, 255)"
-             d="M0,0.9L0.9,0L14,12.9l-0.6,0.6l0.6,0.6L0.9,27L0,26.1l12.7-12.6L0,0.9z"/>
+            d="m 1.5875007,26.004666 0.943,0.931 13.0630003,-12.899 -0.605,-0.598 0.605,-0.598 L 2.5305007,-0.05833334 1.5875007,0.87266663 14.313501,13.438666 Z"/>
           </svg>
         </div>
       </div>
@@ -289,7 +296,8 @@ onMounted(() => {
         pointer-events: none;
         letter-spacing: 0.03em;
         text-transform: uppercase;
-
+        position: relative;
+        
         @include media-breakpoint-up(xl) {
           font-size: 11px;
         }
@@ -364,4 +372,19 @@ onMounted(() => {
     }
   }
 }
+
+.front {
+  position: relative;
+  color: #ffffff;
+  z-index: 1;
+}
+
+.back {
+  position: absolute;
+  color: #242525;
+  top: 1px;
+  left: 1px;
+  // margin: 7px 10px 10px;
+}
+
 </style>

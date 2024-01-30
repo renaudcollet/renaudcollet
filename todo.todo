@@ -69,7 +69,8 @@ Animation:
         ✔ Transition when select a filter when on another page @done(24-01-18 23:59)
         ✔ Video player breaks curtains planes @started(24-01-19 00:50) @done(24-01-19 15:15) @lasted(14h25m26s)
         ✔ Cover 3d add controls to rotate @done(24-01-26 18:23)
-        ☐ Bug on my Android - image plane are stretched horizontally
+        ✔ Bug on my Android - image plane are stretched horizontally @done(24-01-30 09:54)
+            ✔ with precision highp float; in shaders @done(24-01-30 09:55)
         ☐ Finish 3d cover blender
             ☐ Add shadows
             ☐ Add speakers
@@ -80,7 +81,13 @@ Animation:
         ✔ Page work id, mettre fleche retours aux projets @done(24-01-23 15:47)
         ✔ Accélerer les transitions entre pages @done(24-01-24 16:12)
         ✔ Retour du problem de Z ! When click on project item @done(24-01-26 18:23)
+        ☐ RGB shift
         ☐ project item last keyword not visible on mobile
+        ☐ Add scroll reveal in about page on description text
+        ☐ Add website powered by Nuxt / Curtains / Threejs / Gsap in footer, Cover created in Blender
+        ☐ When going from index to page work id, then to page work, the scroll value is not good
+        ☐ Menu should add a shadow
+        ☐ 3D shadows ! Baking ?
 
 
     ✘ Particles : @cancelled(24-01-15 11:13)

@@ -1,6 +1,9 @@
 <template>
   <div ref="root" class="page page-work-id">
-    <div class="btn-back" ref="btnBack" @click="onBtnBackClick" @mouseover="onBtnBackHover" @mouseout="onBtnBackOut"></div>
+    <div class="btn-back" ref="btnBack" @click="onBtnBackClick" @mouseover="onBtnBackHover" @mouseout="onBtnBackOut">
+      <div class="front"></div>
+      <div class="back"></div>
+    </div>
     <section class="cover-top">
       <div class="cover-top__image">
         <ImagePlane 

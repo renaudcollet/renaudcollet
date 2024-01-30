@@ -1,10 +1,6 @@
 <template>
   <div class="header">
     <NuxtLink id="header-logo" class="header__logo" to="/">
-      <!-- <svg height="50" width="50">
-        <polygon points="0,50 25,0 50,50" fill="none" stroke="#fff" stroke-width="1" />
-      </svg>
-      <span>Renaud COLLET</span> -->
       <Logo />
     </NuxtLink>
     <div class="header__menu">
@@ -16,10 +12,19 @@
         <div class="header__menu__button__label"></div>
       </div>
       <div class="header__menu__content">
-        <NuxtLink class="menu-item" to="/works" v-on:click="onClickItem">Works</NuxtLink>
-        <NuxtLink class="menu-item" to="/about" v-on:click="onClickItem">About</NuxtLink>
-        <NuxtLink class="menu-item" to="/contact" v-on:click="onClickItem">Contact</NuxtLink>
-        <div class="header__menu__content__logo menu-item">
+        <NuxtLink class="js-menu-item" to="/works" v-on:click="onClickItem">
+          <div class="front">Works</div>
+          <div class="back">Works</div>
+        </NuxtLink>
+        <NuxtLink class="js-menu-item" to="/about" v-on:click="onClickItem">
+          <div class="front">About</div>
+          <div class="back">About</div>
+        </NuxtLink>
+        <NuxtLink class="js-menu-item" to="/contact" v-on:click="onClickItem">
+          <div class="front">Contact</div>
+          <div class="back">Contact</div>
+        </NuxtLink>
+        <div class="header__menu__content__logo js-menu-item">
           <NuxtLink class="logo" to="/" v-on:click="onClickItem">
             <Logo />
           </NuxtLink>
@@ -81,7 +86,7 @@ export default {
         duration: 0.2,
         autoAlpha: 1
       })
-      gsap.fromTo('.header__menu__content .menu-item', {
+      gsap.fromTo('.header__menu__content .js-menu-item', {
         autoAlpha: 0,
       }, {
         delay: this.isDesktop() ? 0.2 : 0.3,
@@ -103,7 +108,7 @@ export default {
         duration: 0.5,
         autoAlpha: 0
       })
-      gsap.to('.header__menu__content .menu-item', {
+      gsap.to('.header__menu__content .js-menu-item', {
         duration: 0.4,
         stagger: {
           each: 0.1,
@@ -219,7 +224,7 @@ export default {
         pointer-events: none;
         width: 10px;
         height: 10px;
-        background-image: url('~/assets/svg/btn-menu.svg');
+        background-image: url('~/assets/svg/btn-menu-shadow.svg');
         background-size: contain;
         background-repeat: no-repeat;
 
@@ -266,6 +271,7 @@ export default {
         text-decoration: none;
         margin-bottom: 15px;
         justify-content: center;
+        position: relative;
 
         @include media-breakpoint-up(lg) {
           font-size: 16px;
@@ -343,6 +349,27 @@ export default {
       @include media-breakpoint-up(lg) {
         display: none;
       }
+    }
+  }
+
+  .front {
+    @include media-breakpoint-up(lg) {
+      position: relative;
+      color: #ffffff;
+      z-index: 1;
+    }
+  }
+
+  .back {
+    display: none;
+
+    @include media-breakpoint-up(lg) {
+      display: block;
+      position: absolute;
+      color: #242525;
+      top: 1px;
+      left: 1px;
+      margin: 7px 10px 10px;
     }
   }
 }
