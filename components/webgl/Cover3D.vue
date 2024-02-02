@@ -84,7 +84,7 @@ const config = {
     far: 500,
     start: { x: 0, y: 16, z: 35, lookAt: new THREE.Vector3(0, 2, 35) },
     rise: { x: 0, y: 70, z: 35, lookAt: new THREE.Vector3(0, 2, 35) },
-    end: { x: -5, y: 15, z: 50, lookAt: new THREE.Vector3(0, 6, 0) },
+    end: { x: -5, y: 15, z: 50, position: new THREE.Vector3(-5, 15, 50), lookAt: new THREE.Vector3(0, 6, 0) },
   },
   camera2: {
     fov: 45,
@@ -196,16 +196,95 @@ const resetControls = () => {
   controls.update()
 } */
 
+const offset = new THREE.Vector3();
+const offset2 = new THREE.Vector3();
+const distance = 5;
+
+
+const rotateAroundPoint = (point, objectPosition, axis, angle) => {
+    // Translate the object to the origin
+    const translatedObject = new THREE.Vector3().subVectors(objectPosition, point);
+
+    // Compute the sine and cosine of the angle
+    const c = Math.cos(angle);
+    const s = Math.sin(angle);
+
+    // Compute the components of the rotation matrix
+    const [ux, uy, uz] = axis;
+    const rotationMatrix = [
+        [c + ux * ux * (1 - c), ux * uy * (1 - c) - uz * s, ux * uz * (1 - c) + uy * s],
+        [uy * ux * (1 - c) + uz * s, c + uy * uy * (1 - c), uy * uz * (1 - c) - ux * s],
+        [uz * ux * (1 - c) - uy * s, uz * uy * (1 - c) + ux * s, c + uz * uz * (1 - c)]
+    ];
+
+    // Apply rotation to the translated object
+    const rotatedObject = new THREE.Vector3(
+        rotationMatrix[0][0] * translatedObject.x + rotationMatrix[0][1] * translatedObject.y + rotationMatrix[0][2] * translatedObject.z,
+        rotationMatrix[1][0] * translatedObject.x + rotationMatrix[1][1] * translatedObject.y + rotationMatrix[1][2] * translatedObject.z,
+        rotationMatrix[2][0] * translatedObject.x + rotationMatrix[2][1] * translatedObject.y + rotationMatrix[2][2] * translatedObject.z
+    );
+
+    // Translate the object back to its original position
+    const newObjectPosition = new THREE.Vector3().addVectors(rotatedObject, point);
+
+    return newObjectPosition;
+}
+
+// Example usage:
+// const point = new THREE.Vector3(1, 1, 1); // Point around which to rotate
+// const objectPosition = new THREE.Vector3(2, 2, 2); // Initial position of the object
+const axis = new THREE.Vector3(0, 1, 0); // Rotation axis (for example, rotating around the y-axis)
+// const angle = Math.PI / 2; // Angle in radians
+
+// const newObjectPosition = rotateAroundPoint(point, objectPosition, axis, angle);
+// console.log("New object position after rotation:", newObjectPosition);
+
+
 const onMouseMove = (e) => {
   // console.log('COVER3D - onMouseMove', e);
 
   if (animationStarted) {
-    gsap.to(scene.rotation, {
-      y: -THREE.MathUtils.degToRad(e.clientX / width * 80 - 40),
-      x: THREE.MathUtils.degToRad(e.clientY / height * 5 - 3),
-      duration: 1,
-      // ease: 'power2.outIn',
+    // gsap.to(scene.rotation, {
+    //   y: -THREE.MathUtils.degToRad(e.clientX / width * 80 - 40),
+    //   x: THREE.MathUtils.degToRad(e.clientY / height * 5 - 3),
+    //   duration: 1,
+    //   // ease: 'power2.outIn',
+    // })
+
+
+    const radX = THREE.MathUtils.degToRad(e.clientX / width * 80 - 40)
+    const radY = THREE.MathUtils.degToRad(e.clientY / height * 5 - 3)
+
+    offset.x = distance * Math.cos( radX );
+    offset.y = distance * Math.sin( radY );
+    offset.z = distance * Math.sin( radY );
+
+    const newObjectPosition = rotateAroundPoint(config.camera.end.lookAt, config.camera.end.position, axis, radX);
+
+    gsap.to(camera.position, {
+      x: newObjectPosition.x, 
+      y: newObjectPosition.y, 
+      z: newObjectPosition.z,
+      duration: 1, 
+      ease: 'power2.outIn',
+      onUpdate: () => {
+        camera.lookAt(0, 0, 0)
+      }
     })
+
+    const newObjectPosition2 = rotateAroundPoint(config.camera2.lookAt, config.camera2.start, axis, radX);
+
+    gsap.to(camera2.position, {
+      x: newObjectPosition2.x, 
+      y: newObjectPosition2.y, 
+      z: newObjectPosition2.z,
+      duration: 1, 
+      ease: 'power2.outIn',
+      onUpdate: () => {
+        camera2.lookAt(25, 0, 0)
+      }
+    })
+    
   }
 }
 
