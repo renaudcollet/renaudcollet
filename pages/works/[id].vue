@@ -49,6 +49,19 @@
           <span class="front" :style="{'color': titleColor}">Agency : {{ currentProject.attributes.agency }}</span>
           <span class="back" :style="{'color': titleColorBack}">Agency : {{ currentProject.attributes.agency }}</span>
         </div>
+        <a
+          v-if="currentProject.attributes.website_url !== ''"
+          target="_blank"
+          :href="currentProject.attributes.website_url"
+          class="cover-top__title__brand cover-top__title__brand--anchor scroll-reveal unmount-animation"
+          data-mouse-cursor="hover"
+          data-scroll-reveal-opacity-y
+          :data-scroll-reveal-delay="durationEnterWorkId + 0.5"
+          data-scroll-reveal-duration="0.3"
+        >
+          <span class="front" :style="{'color': titleColor}">Voir le projet ></span>
+          <span class="back" :style="{'color': titleColorBack}">Voir le projet ></span>
+        </a>
         <div
           class="cover-top__title__filters scroll-reveal unmount-animation"
           data-scroll-reveal-opacity-y
