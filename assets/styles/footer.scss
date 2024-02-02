@@ -1,0 +1,114 @@
+
+.footer {
+    background-color: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 40px;
+    padding-bottom: 51px;
+  
+    @include media-breakpoint-up(md) {
+      padding-top: 60px;
+      padding-bottom: 70px;
+    }
+  
+    @include media-breakpoint-up(lg) {
+      flex-direction: row;    
+      justify-content: space-between;
+      padding-left: 50px;
+      padding-right: 50px;
+    }
+  
+    @include media-breakpoint-up(xl) {
+      padding-top: 48px;
+      padding-bottom: 76px;
+      padding-left: 10vw;
+      padding-right: 10vw;
+    }
+  
+    &__top {
+      display: flex;
+      width: 296px;
+      margin-bottom: 26px;
+      justify-content: center;
+  
+      @include media-breakpoint-up(md) {
+        width: 82.22vw;
+        margin-bottom: 3.62vw;
+      }
+  
+      @include media-breakpoint-up(lg) {
+        margin-bottom: 0;
+        width: auto;
+      }
+    }
+  
+    &__mobile {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 296px;
+  
+      @include media-breakpoint-up(md) {
+        width: 82vw;
+      }
+  
+      @include media-breakpoint-up(xl) {
+        display: none;
+      }
+  
+      &__row {
+        display: flex;
+      }
+    }
+  
+    &__desktop {
+      display: none;
+  
+      @include media-breakpoint-up(xl) {
+        width: 1146px;
+        display: flex;
+        flex-direction: column;
+        // margin-top: 69px;
+  
+        &__row {
+          display: flex;
+        }
+  
+        &__col {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+    }
+    &__social__icon {
+        width: 24px;
+    }
+    
+    &__made-with {
+        font-size: 12px;
+        a {
+            color: $font-color;
+        }
+    }
+  
+    &__since {
+      color: $font-color;
+      text-decoration: none;
+      font-size: 12px;
+      display: flex;
+      margin-top: 40px;
+  
+      @include media-breakpoint-up(md) {
+        margin-top: 40px;
+      }
+  
+      @include media-breakpoint-up(lg) {
+        margin-top: 0;
+        order: 2;
+        width: 380px;
+      }
+    }
+  }
