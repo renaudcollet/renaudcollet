@@ -24,14 +24,24 @@
             {{ datasAbout.attributes.titre }}
           </h1>
         </div>
-        <div
+        <template v-for="(line, index) in splitText(datasAbout.attributes.description)">
+          <div 
+            class="description scroll-reveal"
+            data-scroll-reveal-opacity-y
+            :data-scroll-reveal-delay="durationEnterDefault + index * 0.01"
+            data-scroll-reveal-duration="0.5"
+            v-html="line === '' ? '&nbsp;' : line"
+          ></div>
+        </template>
+        <NuxtLink 
+          to="/contact" 
           class="description scroll-reveal"
+          data-mouse-cursor="hover"
           data-scroll-reveal-opacity-y
-          :data-scroll-reveal-delay="durationEnterDefault + 0.5"
-          data-scroll-reveal-duration="0.5"
-          v-html="datasAbout.attributes.description"
-        >
-        </div>
+          :data-scroll-reveal-delay="durationEnterDefault"
+          data-scroll-reveal-duration="0.5">
+          {{ datasAbout.attributes.contact }}
+        </NuxtLink>
       </div>
     </section>
     <FooterSimple />
@@ -64,6 +74,13 @@ const config = useRuntimeConfig()
 const root = ref(null);
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 const { transitionState, elementsToTransition, functionTransitionCallback } = useTransitionComposable();
+
+// Split text line by line
+const splitText = (text) => {
+  return text.split('<br>');
+}
+
+console.log('ABOUT PAGE - setup', splitText(datasAbout.attributes.description));
 
 /**
  *  page transition
@@ -147,10 +164,12 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-bottom: 20px;
 
   @include media-breakpoint-up(lg) {
     width: 700px;
     height: 360px;
+    margin-bottom: 40px;
   }
 }
 
@@ -192,7 +211,7 @@ onUnmounted(() => {
     position: relative;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     flex-direction: column;
 
     @include media-breakpoint-up(lg) {

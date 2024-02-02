@@ -85,11 +85,11 @@ Animation:
         ✔ Menu should add a shadow @done(24-01-30 11:31)
         ✔ Homepage mettre DERNIERS PROJETS (2 projets max), et tout en bas mettre VOIR TOUS LES PROJETS @done(24-02-02 16:01)
         ✔ Page work id, mettre bouton "Voir le projet" @done(24-02-02 16:12)
+        ✔ Add website powered by Nuxt / Curtains / Threejs / Gsap in footer, Cover created in Blender @done(24-02-02 17:09)
+        ✔ Page about, mise en page, bloc pour les titres, Add scroll reveal @done(24-02-02 18:12)
         ☐ Page work premiere visite, dérouler le menu filtres
         ☐ RGB shift
         ☐ project item last keyword not visible on mobile
-        ☐ Page about, mise en page, bloc pour les titres, Add scroll reveal
-        ☐ Add website powered by Nuxt / Curtains / Threejs / Gsap in footer, Cover created in Blender
         ☐ When going from index to page work id, then to page work, the scroll value is not good
         ☐ 3D shadows ! Baking ?
         ☐ GTAG
