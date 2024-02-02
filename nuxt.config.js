@@ -76,9 +76,9 @@ export default defineNuxtConfig({
     },
   },
 
-  // gtag: {
-  //   id: 'G-8P490KJ1F9' // can alos be set in .env https://github.com/johannschopplich/nuxt-gtag#runtime-config
-  // },
+  gtag: {
+    id: 'G-LFWB36DTSQ' // can alos be set in .env https://github.com/johannschopplich/nuxt-gtag#runtime-config
+  },
 
   // css
   css: [/* '~/assets/styles/vendor.scss',  */'~/assets/styles/main.scss'],
