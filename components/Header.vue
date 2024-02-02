@@ -1,6 +1,7 @@
 <template>
   <div class="header">
-    <NuxtLink id="header-logo" class="header__logo" to="/">
+    <NuxtLink id="header-logo" class="header__logo" to="/"
+        data-mouse-cursor="hover">
       <Logo />
     </NuxtLink>
     <div class="header__menu">
@@ -12,15 +13,18 @@
         <div class="header__menu__button__label"></div>
       </div>
       <div class="header__menu__content">
-        <NuxtLink class="js-menu-item" to="/works" v-on:click="onClickItem">
+        <NuxtLink class="js-menu-item" to="/works" v-on:click="onClickItem"
+        data-mouse-cursor="hover">
           <div class="front">Works</div>
           <div class="back">Works</div>
         </NuxtLink>
-        <NuxtLink class="js-menu-item" to="/about" v-on:click="onClickItem">
+        <NuxtLink class="js-menu-item" to="/about" v-on:click="onClickItem"
+        data-mouse-cursor="hover">
           <div class="front">About</div>
           <div class="back">About</div>
         </NuxtLink>
-        <NuxtLink class="js-menu-item" to="/contact" v-on:click="onClickItem">
+        <NuxtLink class="js-menu-item" to="/contact" v-on:click="onClickItem"
+        data-mouse-cursor="hover">
           <div class="front">Contact</div>
           <div class="back">Contact</div>
         </NuxtLink>
@@ -180,8 +184,8 @@ export default {
     @include media-breakpoint-up(lg) {
       margin-top: 30px;
       margin-left: 130px;
-      width: 90px;
-      height: 20px;
+      width: fit-content;
+      height: fit-content;
     }
   }
 
