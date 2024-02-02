@@ -14,6 +14,15 @@
     </div>
     <div ref="scrollZone" class="scroll-zone"></div>
     <section class="projects-home">
+      <h1 
+        class="projects-home__title scroll-reveal unmount-animation"
+        data-scroll-reveal-opacity-y
+        data-scroll-reveal-delay="0.5"
+        data-scroll-reveal-duration="0.5"
+      >
+        <span class="front">{{storeDatas.accueil.data.attributes.Titre}}</span>
+        <span class="back">{{storeDatas.accueil.data.attributes.Titre}}</span>
+      </h1>
       <template v-for="(item, index) in storeDatas.projectsHomepage" :key="index">
         <ProjectItem 
           class="projects-home__item unmount-animation" 
@@ -25,6 +34,18 @@
           @onClick="onClickProjectItem"
         />
       </template>
+
+      <NuxtLink  
+        to="/works" 
+        class="projects-home__button unmount-animation" 
+        data-mouse-cursor="hover"
+        data-scroll-reveal-opacity-y
+        data-scroll-reveal-delay="0.5"
+        data-scroll-reveal-duration="0.5"
+      >
+        <span class="front">Voir tous les projets</span>
+        <span class="back">Voir tous les projets</span>
+      </NuxtLink>
     </section>
     <FooterSimple />
   </div>  
@@ -41,6 +62,8 @@ import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
 await fetchDatas(S_DATA_ACCUEIL);
+
+console.log('INDEX PAGE - setup', storeDatas.accueil);
 
 const props = defineProps({
   onRender: {

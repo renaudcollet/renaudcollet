@@ -77,17 +77,22 @@ Animation:
             ☐ Better lighting
             ☐ Better background
         ☐ Sheep animation on homepage, make them jump (and fall on the back ?) with mouse over
+        ☐ Cover3d, 2e scene changer le centre de rotation
         ✔ Use Devtool > Rendering > Scrolling performance issues to see zones to improve @done(24-01-19 15:15)
         ✔ Page work id, mettre fleche retours aux projets @done(24-01-23 15:47)
         ✔ Accélerer les transitions entre pages @done(24-01-24 16:12)
         ✔ Retour du problem de Z ! When click on project item @done(24-01-26 18:23)
+        ✔ Menu should add a shadow @done(24-01-30 11:31)
+        ☐ Homepage mettre DERNIERS PROJETS (2 projets max), et tout en bas mettre VOIR TOUS LES PROJETS
+        ☐ Page work premiere visite, dérouler le menu filtres
+        ☐ Page work id, mettre bouton "Voir le projet"
         ☐ RGB shift
         ☐ project item last keyword not visible on mobile
-        ☐ Add scroll reveal in about page on description text
+        ☐ Page about, mise en page, bloc pour les titres, Add scroll reveal
         ☐ Add website powered by Nuxt / Curtains / Threejs / Gsap in footer, Cover created in Blender
         ☐ When going from index to page work id, then to page work, the scroll value is not good
-        ☐ Menu should add a shadow
         ☐ 3D shadows ! Baking ?
+        ☐ GTAG
 
 
     ✘ Particles : @cancelled(24-01-15 11:13)
