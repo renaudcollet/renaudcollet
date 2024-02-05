@@ -75,7 +75,7 @@ Animation:
             ☐ Add shadows
             ☐ Add speakers
             ☐ Better lighting
-            ☐ Better background
+            ✔ Better background @done(24-02-02 18:30)
         ☐ Sheep animation on homepage, make them jump (and fall on the back ?) with mouse over
         ✔ Cover3d, 2e scene changer le centre de rotation @done(24-02-02 16:01)
         ✔ Use Devtool > Rendering > Scrolling performance issues to see zones to improve @done(24-01-19 15:15)

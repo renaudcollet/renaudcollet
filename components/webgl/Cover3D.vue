@@ -101,6 +101,7 @@ const config = {
 
 let stats
 let animationStarted = false
+let introAnimationComplete = false
 let tlAnimation
 
 // Play start animation
@@ -142,9 +143,9 @@ const startAnimation = () => {
         camera.lookAt(lerpX, end.lookAt.y, lerpZ)
         // updateMaterial()
       },
-      // onComplete: () => {
-      //   // initControls()
-      // }
+      onComplete: () => {
+        introAnimationComplete = true
+      }
     })
 }
 
@@ -239,11 +240,21 @@ const axis = new THREE.Vector3(0, 1, 0); // Rotation axis (for example, rotating
 // const newObjectPosition = rotateAroundPoint(point, objectPosition, axis, angle);
 // console.log("New object position after rotation:", newObjectPosition);
 
+const raycaster = new THREE.Raycaster()
+const mouse = new THREE.Vector2()
+
+const updateRaycaster = () => {
+  // console.log('COVER3D - checkRaycaster');
+  raycaster.setFromCamera(mouse, camera)
+  if (raycaster.intersectObjects(scene.children).length > 0) {
+    // console.log('COVER3D - intersectObjects');
+  }
+}
 
 const onMouseMove = (e) => {
   // console.log('COVER3D - onMouseMove', e);
 
-  if (animationStarted) {
+  if (animationStarted && introAnimationComplete) {
     // gsap.to(scene.rotation, {
     //   y: -THREE.MathUtils.degToRad(e.clientX / width * 80 - 40),
     //   x: THREE.MathUtils.degToRad(e.clientY / height * 5 - 3),
@@ -251,10 +262,14 @@ const onMouseMove = (e) => {
     //   // ease: 'power2.outIn',
     // })
 
+    mouse.x = (e.clientX / width) * 2 - 1
+    mouse.y = -(e.clientY / height) * 2 + 1
 
-    const radX = THREE.MathUtils.degToRad(e.clientX / width * 80 - 40)
-    const radY = THREE.MathUtils.degToRad(e.clientY / height * 5 - 3)
+    // const radX = THREE.MathUtils.degToRad(e.clientX / width * 80 - 40)
+    const radX = THREE.MathUtils.degToRad(mouse.x * 35)
+    const radY = THREE.MathUtils.degToRad(mouse.y * 3)
 
+    // TODO: Move this in render function for optimization
     offset.x = distance * Math.cos( radX );
     offset.y = distance * Math.sin( radY );
     offset.z = distance * Math.sin( radY );
@@ -268,7 +283,7 @@ const onMouseMove = (e) => {
       duration: 1, 
       ease: 'power2.outIn',
       onUpdate: () => {
-        camera.lookAt(0, 0, 0)
+        camera.lookAt(config.camera.end.lookAt)
       }
     })
 
@@ -281,7 +296,7 @@ const onMouseMove = (e) => {
       duration: 1, 
       ease: 'power2.outIn',
       onUpdate: () => {
-        camera2.lookAt(25, 0, 0)
+        camera2.lookAt(config.camera2.lookAt)
       }
     })
     
@@ -320,7 +335,7 @@ const onScroll = () => {
 
     prc = window.scrollY / zoneHeight
     // console.log(`cover3d onScroll, scrollY: ${window.scrollY}, zone: ${zoneHeight}`, prc);
-    if (prc < 1.1) {
+    if (prc < 1.01) {
       config.progress = prc
       // updateMaterial()
     }
@@ -550,17 +565,20 @@ const updateMaterial = () => {
 const render = (t) => {
   // console.log('COVER3D - render');
 
-  updateMaterial()
-
   raf = requestAnimationFrame(render)
 
-  if (controls && controls.enabled) {
-    controls.update()
-  }
-  if (config.showPostProcessing)
+  updateMaterial()
+
+  // if (controls && controls.enabled) {
+  //   controls.update()
+  // }
+
+  updateRaycaster()
+
+  // if (config.showPostProcessing)
     renderer.render(postScene, postCamera);
-  else
-    renderer.render(scene, camera);
+  // else
+  //   renderer.render(scene, camera);
 
   // stats.update()
 }
