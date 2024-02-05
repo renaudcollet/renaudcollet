@@ -264,7 +264,11 @@ const onMouseMove = (e) => {
 
     mouse.x = (e.clientX / width) * 2 - 1
     mouse.y = -(e.clientY / height) * 2 + 1
+    
+  }
+}
 
+const updateCameraPosition = () => {  
     // const radX = THREE.MathUtils.degToRad(e.clientX / width * 80 - 40)
     const radX = THREE.MathUtils.degToRad(mouse.x * 35)
     const radY = THREE.MathUtils.degToRad(mouse.y * 3)
@@ -299,8 +303,6 @@ const onMouseMove = (e) => {
         camera2.lookAt(config.camera2.lookAt)
       }
     })
-    
-  }
 }
 
 const onTouchMove = (e) => {
@@ -573,7 +575,10 @@ const render = (t) => {
   //   controls.update()
   // }
 
-  updateRaycaster()
+  if (animationStarted && introAnimationComplete) {
+    updateCameraPosition()
+    updateRaycaster()
+  }
 
   // if (config.showPostProcessing)
     renderer.render(postScene, postCamera);
