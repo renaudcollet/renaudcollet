@@ -313,11 +313,19 @@ const updateRaycaster = () => {
           else if (type === TYPE_LOTUS) {
             hitMesh.userData.isMoving = false
             gsap.killTweensOf(object3d.rotation)
+            gsap.killTweensOf(object3d.position)
+            const delta = Math.random()
             gsap.to(object3d.rotation, {
-              y: `+=${Math.PI * Math.random() - Math.PI / 2}`,
+              y: `+=${Math.PI * delta}`,
               duration: 0.5,
               ease: 'power2.outIn'
             }) 
+            gsap.to(object3d.position, {
+              x: hitMesh.userData.initX + 1.3 * (delta - 0.5),
+              z: hitMesh.userData.initZ + 1.3 * (delta - 0.5),
+              duration: 0.5,
+              ease: 'power2.outIn'
+            })
           }
 
           else if (type === TYPE_SKATE) {
@@ -370,7 +378,7 @@ const updateRaycaster = () => {
               })
               .to(object3d.children[0].rotation, { // Skate à plat
                 x: 0,
-                delay: 0.1,
+                delay: 0.3,
                 duration: 0.1,
                 ease: 'power2.outIn',
                 onCompleteParams: [hitMesh, object3d],
@@ -665,6 +673,9 @@ const init = () => {
           const box = child.geometry.boundingBox // Because child is one mesh
           const hitMesh = new THREE.Mesh(new THREE.BoxGeometry(box.max.x - box.min.x, box.max.y - box.min.y, box.max.z - box.min.z), matHitZone)
           hitMesh.userData.type = TYPE_LOTUS
+          hitMesh.userData.initX = child.position.x
+          hitMesh.userData.initY = child.position.y
+          hitMesh.userData.initZ = child.position.z
           aHitMesh.push(hitMesh)
           aSheeps.push(child)
         }
