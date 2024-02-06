@@ -7,7 +7,7 @@
 <script setup>
 import GUI from 'lil-gui';
 // import { useDatasStore } from '~/stores/datas';
-import * as debug from '~/js/debug';
+import * as debug from '~/js/debug.ts';
 import config3d from '~/js/config3d.js'
 
 import * as THREE from 'three'
@@ -17,7 +17,8 @@ import * as THREE from 'three'
 import gsap from 'gsap';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+// import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { OrbitControls } from '~/js/three/OrbitControls.js';
 // import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 
 import sweepFrag from '~/shaders/sweep.frag'
@@ -122,15 +123,12 @@ const startAnimation = () => {
       },
       onComplete: () => {
         introAnimationComplete = true
-        initControls()
+        initOrbitControls()
       }
     })
 }
 
 const stopAnimation = () => {
-
-  console.log('COVER3D - stopAnimation');
-
   if (animationStarted) {
     animationStarted = false
     tlAnimation.kill()
@@ -159,6 +157,7 @@ watch(showCover, (newVal, oldVal) => {
 
 const resetControls = () => {
   if (controls) {
+    console.log('COVER3D - resetControls');
     controls.enabled = false
     controls.dispose()
     controls = null
@@ -166,12 +165,13 @@ const resetControls = () => {
 }
 
 // For debug purpose
-const initControls = () => {
+const initOrbitControls = () => {
   if (bDebugGUI) {
-    console.log('COVER3D - initControls');
+    console.log('COVER3D - initOrbitControls');
     controls = new OrbitControls(camera, renderer.domElement);
+    renderer.domElement.parentElement.style.zIndex = 1000
     controls.addEventListener('change', () => {
-      console.log('controls change');
+      // console.log('controls change');
       updateRendererAndShaderMaterial()
     })
     controls.enabled = true
@@ -518,13 +518,16 @@ const init = () => {
 
   // TODO: Probleme de colorspace avec les textures utilisées dans le ShaderMaterial
   // TODO:  Créer un codepen pour reproduire le problème
-  pixelRatio = Math.min(window.devicePixelRatio, 1.5)
+  // TODO: SMAA PASS to smooth render
+  pixelRatio = Math.min(window.devicePixelRatio, debug.DEVICE_PIXEL_RATIO_MAX)
   renderer = new THREE.WebGLRenderer({ canvas: canvas.value, antialias: true, alpha: false, preserveDrawingBuffer: true})
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.toneMapping = THREE.LinearToneMapping // ACESFilmicToneMapping
   renderer.setSize(width, height)
   renderer.setPixelRatio(pixelRatio)
   renderer.setClearColor(0xeeeeee, 1)
+  renderer.shadowMap.enabled = true
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
   // Render Targets
   renderTarget1 = new THREE.WebGLRenderTarget(width * pixelRatio, height * pixelRatio, {
@@ -567,10 +570,13 @@ const init = () => {
   if (bDebugGUI) {
 
     gui = new GUI().title('Cover 3D').open()
-    const guiDebugObject = {}
-    guiDebugObject.envMapIntensity = 1
-    // gui = gui.addFolder('Cover 3D') // redefine gui to add folder
-    gui.add(guiDebugObject, 'envMapIntensity', 0, 10, 0.001).onChange(updateAllMaterials.bind(this))
+    
+    const updateLenis = () => config3d.lenis ? window.lenis.start() : window.lenis.stop()
+    setTimeout(() => {
+      updateLenis()
+    }, 500)
+    gui.add(config3d, 'lenis', false).onChange(updateLenis)
+    gui.add(config3d, 'envMapIntensity', 0, 10, 0.001).onChange(updateAllMaterials.bind(this))
 
     gui
       .add(renderer, 'toneMapping', {
@@ -618,7 +624,11 @@ const init = () => {
         // if (child instanceof THREE.Mesh) {
           // console.log('COVER3D - child '+ child.name, child);
         // }
-
+        if (child.isMesh) {
+          // console.log('castShadow', child.name);
+          child.castShadow = true
+          // child.receiveShadow = true
+        }
         // if (child.name.indexOf('SheepItem') > -1 && !child.isGroup) {
         if (child.name.indexOf('SheepItemRef') > -1) {
           const box = new THREE.Box3().setFromObject(child) // Because child is a group or has several mesh children
@@ -787,13 +797,11 @@ const render = (t) => {
   updateRendererAndShaderMaterial()
 
   if (bDebugGUI && controls && controls.enabled) {
-    console.log('update controls')
     controls.update()
     lightCameraHelper.update()
   }
 
   if (!bDebugGUI && animationStarted && introAnimationComplete) {
-    console.log('updateCmaeraPosition')
     updateCameraPosition()
     updateRaycaster()
   }
@@ -814,11 +822,11 @@ const addLights = () => {
 
   // Directional Light
   // https://stackoverflow.com/questions/65655433/why-is-three-js-cast-shadow-not-working-on-a-3d-model
-  const { position, shadow, color, intensity } = config3d.light.directional
+  const { position, target, shadow, color, intensity } = config3d.light.directional
   
   const directionalLight = new THREE.DirectionalLight(color, intensity)
   directionalLight.position.set(position.x, position.y, position.z)  // default
-  directionalLight.target.position.set(77, 0, 0)
+  directionalLight.target.position.set(target.x, target.y, target.z)  // default
   directionalLight.castShadow = true
 
   directionalLight.name = 'light-direction'
@@ -901,9 +909,9 @@ const addLights = () => {
       renderer.shadowMap.needsUpdate = true;
     })
 
-    directionalFolder.add(directionalLight.position, 'x', -50, 50, 1.0).onChange(() => { onDirectionalLightChange() })
-    directionalFolder.add(directionalLight.position, 'y', -50, 50, 1.0).onChange(() => { onDirectionalLightChange() })
-    directionalFolder.add(directionalLight.position, 'z', -50, 50, 1.0).onChange(() => { onDirectionalLightChange() })
+    directionalFolder.add(directionalLight.position, 'x', -200, 200, 1.0).onChange(() => { onDirectionalLightChange() })
+    directionalFolder.add(directionalLight.position, 'y', -200, 200, 1.0).onChange(() => { onDirectionalLightChange() })
+    directionalFolder.add(directionalLight.position, 'z', -200, 200, 1.0).onChange(() => { onDirectionalLightChange() })
     
     directionalFolder.add(directionalLight.target.position, "x", -200, 200, 0.01).name('target x').onChange(() => { onDirectionalLightChange() })
     directionalFolder.add(directionalLight.target.position, "y", -200, 200, 0.01).name('target y').onChange(() => { onDirectionalLightChange() })
@@ -940,11 +948,11 @@ const addLights = () => {
     lightShadowFolder.add(shadow, "width", [256, 512, 1024, 2048, 4096, 8192]).onChange(() => updateShadowMapSize())
     lightShadowFolder.add(shadow, "height", [256, 512, 1024, 2048, 4096, 8192]).onChange(() => updateShadowMapSize())
     lightShadowFolder.add(shadow, 'near', 0, 10, 0.1).onChange(() => { onDirectionalLightChange() })
-    lightShadowFolder.add(shadow, 'far', 0, 50, 0.1).onChange(() => { onDirectionalLightChange() })
-    lightShadowFolder.add(shadow, 'top', 0, 10, 0.1).onChange(() => { onDirectionalLightChange() })
-    lightShadowFolder.add(shadow, 'right', 0, 10, 0.1).onChange(() => { onDirectionalLightChange() })
-    lightShadowFolder.add(shadow, 'bottom', -50, 0, 0.1).onChange(() => { onDirectionalLightChange() })
-    lightShadowFolder.add(shadow, 'left', -50, 0, 0.1).onChange(() => { onDirectionalLightChange() })
+    lightShadowFolder.add(shadow, 'far', 0, 150, 0.1).onChange(() => { onDirectionalLightChange() })
+    lightShadowFolder.add(shadow, 'top', 0, 100, 0.1).onChange(() => { onDirectionalLightChange() })
+    lightShadowFolder.add(shadow, 'right', 0, 100, 0.1).onChange(() => { onDirectionalLightChange() })
+    lightShadowFolder.add(shadow, 'bottom', -100, 0, 0.1).onChange(() => { onDirectionalLightChange() })
+    lightShadowFolder.add(shadow, 'left', -100, 0, 0.1).onChange(() => { onDirectionalLightChange() })
     lightShadowFolder.add(shadow, 'bias', -0.008, 0.008, 0.0001).onChange(() => { onDirectionalLightChange() })
     lightShadowFolder.add(shadow, 'blurSamples', 1, 25, 1).onChange(() => { onDirectionalLightChange() })
 
@@ -968,7 +976,7 @@ const addLights = () => {
 const updateAllMaterials = () => {
   scene.traverse((child) => {
     if (child instanceof THREE.Mesh && child.material instanceof THREE.MeshStandardMaterial) {
-      child.material.envMapIntensity = guiDebugObject.envMapIntensity
+      child.material.envMapIntensity = config3d.envMapIntensity
       child.material.needsUpdate = true
       child.castShadow = true
       child.receiveShadow = true
