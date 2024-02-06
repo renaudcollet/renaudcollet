@@ -7,9 +7,10 @@
 <script setup>
 import GUI from 'lil-gui';
 // import { useDatasStore } from '~/stores/datas';
+import * as debug from '~/js/debug';
 
 import * as THREE from 'three'
-import { REVISION } from 'three'
+// import { REVISION } from 'three'
 // import Stats from 'three/examples/jsm/libs/stats.module'
 
 import gsap from 'gsap';
@@ -105,11 +106,7 @@ let introAnimationComplete = false
 let tlAnimation
 
 // Play start animation
-const startAnimation = () => {
-
-  // HTML Character play
-  
-  // console.log('COVER3D - startAnimation');
+const startAnimation = () => {  
 
   reInit()
         
@@ -123,7 +120,8 @@ const startAnimation = () => {
   const { end } = config.camera
 
   tlAnimation.kill()
-  tlAnimation = gsap.timeline()  
+  tlAnimation = gsap.timeline()
+  if (debug.SKIP_INTRO) tlAnimation.timeScale(5)
   tlAnimation
     .to(canvas.value, { delay: 0.5, autoAlpha: 1, duration: 1 })
     .to(camera.position, {
@@ -203,6 +201,8 @@ const distance = 5;
 
 
 const rotateAroundPoint = (point, objectPosition, axis, angle) => {
+
+    // TODO: Optimize vector creation
     // Translate the object to the origin
     const translatedObject = new THREE.Vector3().subVectors(objectPosition, point);
 
@@ -218,6 +218,7 @@ const rotateAroundPoint = (point, objectPosition, axis, angle) => {
         [uz * ux * (1 - c) - uy * s, uz * uy * (1 - c) + ux * s, c + uz * uz * (1 - c)]
     ];
 
+    // TODO: Optimize vector creation
     // Apply rotation to the translated object
     const rotatedObject = new THREE.Vector3(
         rotationMatrix[0][0] * translatedObject.x + rotationMatrix[0][1] * translatedObject.y + rotationMatrix[0][2] * translatedObject.z,
@@ -225,6 +226,7 @@ const rotateAroundPoint = (point, objectPosition, axis, angle) => {
         rotationMatrix[2][0] * translatedObject.x + rotationMatrix[2][1] * translatedObject.y + rotationMatrix[2][2] * translatedObject.z
     );
 
+    // TODO: Optimize vector creation
     // Translate the object back to its original position
     const newObjectPosition = new THREE.Vector3().addVectors(rotatedObject, point);
 
@@ -242,30 +244,155 @@ const axis = new THREE.Vector3(0, 1, 0); // Rotation axis (for example, rotating
 
 const raycaster = new THREE.Raycaster()
 const mouse = new THREE.Vector2()
+let sItemRollOvered = null
+let sItemRollOveredPrevious = null
+
+const tlSkate = gsap.timeline()
 
 const updateRaycaster = () => {
-  // console.log('COVER3D - checkRaycaster');
   raycaster.setFromCamera(mouse, camera)
-  if (raycaster.intersectObjects(scene.children).length > 0) {
-    // console.log('COVER3D - intersectObjects');
+  // const intersects = raycaster.intersectObjects(scene.children, true)
+  const intersects = raycaster.intersectObjects(aHitMesh, true)
+  if (intersects.length > 0) {
+    // console.log('COVER3D - intersectObjects', intersects.length, intersects);
+    for ( let i = 0; i < intersects.length; i ++ ) {
+
+      // intersects[ i ].object.material.color.set( 0xff0000 );
+      const hitMesh = intersects[ i ].object
+
+      sItemRollOvered = hitMesh.userData.name
+
+      if (sItemRollOvered !== sItemRollOveredPrevious) {
+        if (!hitMesh.userData.isMoving) {
+
+          const type = hitMesh.userData.type
+          const object3d = hitMesh.userData.instance
+          hitMesh.userData.isMoving = true
+
+          if (type === TYPE_SHEEP) {
+            // Sheep
+            gsap.to(object3d.position, {
+              y: object3d.position.y + 0.5,
+              duration: 0.2,
+              ease: 'back.out',
+              onCompleteParams: [hitMesh, object3d],
+              onComplete: (_hitMesh, _object3d) => {
+                gsap.to(_object3d.position, {
+                  y: _object3d.position.y - 0.5,
+                  duration: 0.1,
+                  ease: 'back.out',
+                  onCompleteParams: [_hitMesh],
+                  onComplete: (__hitMesh) => {
+                    __hitMesh.userData.isMoving = false
+                  }
+                })
+              }
+            })
+          } 
+
+          else if (type === TYPE_THUMB) {
+            gsap.to(object3d.rotation, {
+              z: Math.PI / 8,
+              duration: 0.2,
+              ease: 'power2.outIn',
+              onCompleteParams: [hitMesh, object3d],
+              onComplete: (_hitMesh, _object3d) => {
+                gsap.to(_object3d.rotation, {
+                  z: 0,
+                  duration: 0.1,
+                  ease: 'power2.outIn',
+                  onCompleteParams: [_hitMesh],
+                  onComplete: (__hitMesh) => {
+                    __hitMesh.userData.isMoving = false
+                  }
+                })
+              }
+            }) 
+          }
+
+          else if (type === TYPE_LOTUS) {
+            hitMesh.userData.isMoving = false
+            gsap.killTweensOf(object3d.rotation)
+            gsap.to(object3d.rotation, {
+              y: `+=${Math.PI * Math.random() - Math.PI / 2}`,
+              duration: 0.5,
+              ease: 'power2.outIn'
+            }) 
+          }
+
+          else if (type === TYPE_SKATE) {
+            tlSkate
+              .to(object3d.children[0].rotation, { // Skate à plat
+                x: Math.PI / 2,
+                duration: 0.2,
+                ease: 'power2.outIn'
+              })
+              .to(object3d.position, {
+                y: 2,
+                delay: 0.1,
+                duration: 0.2,
+                ease: 'bounce.outIn'
+              })
+              // .to(object3d.rotation, {
+              //   z: Math.PI / 6,
+              //   duration: 0.2,
+              //   ease: 'bounce.outIn'
+              // }, '-=0.2')
+              // .to(object3d.rotation, {
+              //   z: 0,
+              //   duration: 0.2,
+              //   ease: 'linear'
+              // })
+              .to(object3d.children[0].rotation, {
+                x: `+=${Math.PI * 2}`,
+                duration: 1,
+                // ease: 'power2.outIn',
+                onCompleteParams: [hitMesh, object3d],
+                onComplete: (_hitMesh, _object3d) => {
+                  // Needed to reset the rotation
+                  _object3d.children[0].rotation.x = Math.PI / 2
+                }
+              }, '-=0.2')
+              .to(object3d.rotation, {
+                y: `+=${Math.PI * 2}`,
+                duration: 1,
+                // ease: 'power2.outIn',
+                onCompleteParams: [hitMesh, object3d],
+                onComplete: (_hitMesh, _object3d) => {
+                  // Needed to reset the rotation
+                  // _object3d.rotation.y = 0
+                }
+              }, '-=1')
+              .to(object3d.position, {
+                y: hitMesh.userData.initY,
+                duration: 0.2,
+                ease: 'power2.outIn',
+              })
+              .to(object3d.children[0].rotation, { // Skate à plat
+                x: 0,
+                delay: 0.1,
+                duration: 0.1,
+                ease: 'power2.outIn',
+                onCompleteParams: [hitMesh, object3d],
+                onComplete: (_hitMesh, _object3d) => {
+                  _hitMesh.userData.isMoving = false
+                }
+              })
+          }
+          //
+        }
+      }
+      sItemRollOveredPrevious = sItemRollOvered
+    }
+  } else {
+    sItemRollOveredPrevious = sItemRollOvered
+    sItemRollOvered = null
   }
 }
 
 const onMouseMove = (e) => {
-  // console.log('COVER3D - onMouseMove', e);
-
-  if (animationStarted && introAnimationComplete) {
-    // gsap.to(scene.rotation, {
-    //   y: -THREE.MathUtils.degToRad(e.clientX / width * 80 - 40),
-    //   x: THREE.MathUtils.degToRad(e.clientY / height * 5 - 3),
-    //   duration: 1,
-    //   // ease: 'power2.outIn',
-    // })
-
-    mouse.x = (e.clientX / width) * 2 - 1
-    mouse.y = -(e.clientY / height) * 2 + 1
-    
-  }
+  mouse.x = (e.clientX / width) * 2 - 1
+  mouse.y = -(e.clientY / height) * 2 + 1   
 }
 
 const updateCameraPosition = () => {  
@@ -273,7 +400,6 @@ const updateCameraPosition = () => {
     const radX = THREE.MathUtils.degToRad(mouse.x * 35)
     const radY = THREE.MathUtils.degToRad(mouse.y * 3)
 
-    // TODO: Move this in render function for optimization
     offset.x = distance * Math.cos( radX );
     offset.y = distance * Math.sin( radY );
     offset.z = distance * Math.sin( radY );
@@ -373,6 +499,12 @@ const reInit = () => {
 
   // updateMaterial()
 }
+
+
+const TYPE_SHEEP = 'sheep'
+const TYPE_SKATE = 'skate'
+const TYPE_THUMB = 'thumb'
+const TYPE_LOTUS = 'lotus'
 
 const init = () => {
   // console.log('COVER3D - init');
@@ -481,6 +613,8 @@ const init = () => {
     folder.add(config.camera.end.lookAt, "y", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
     folder.add(config.camera.end.lookAt, "z", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
   }
+  
+  const matHitZone = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.0 })
 
   gltfLoader.load(
     modelNature,
@@ -488,6 +622,91 @@ const init = () => {
       scene.add(gltf.scene)
       gltf.scene.scale.set(1, 1, 1)
       // updateMaterial()
+
+      gltf.scene.traverse((child) => {
+        // if (child instanceof THREE.Mesh) {
+          // console.log('COVER3D - child '+ child.name, child);
+        // }
+
+        // if (child.name.indexOf('SheepItem') > -1 && !child.isGroup) {
+        if (child.name.indexOf('SheepItemRef') > -1) {
+          const box = new THREE.Box3().setFromObject(child) // Because child is a group or has several mesh children
+          const hitMesh = new THREE.Mesh(new THREE.BoxGeometry(box.max.x - box.min.x, box.max.y - box.min.y, box.max.z - box.min.z), matHitZone)
+          // hitMesh.position.copy(child.position) // Because of collection instance, the positions are complicated to find
+          // hitMesh.position.x += 22.956
+          // hitMesh.position.z += -1.37
+          // Let's ad hitmesh inside the sheep, but in a later loop to avoid changing the order of the children in the scene
+          hitMesh.userData.type = TYPE_SHEEP
+          aHitMesh.push(hitMesh)
+          aSheeps.push(child)
+        }
+        
+        if (child.name.indexOf('Skate') > -1 && child.isGroup) {
+          console.log('Skate', child);
+          const box = new THREE.Box3().setFromObject(child) // Because child is a group or has several mesh children
+          const hitMesh = new THREE.Mesh(new THREE.BoxGeometry(box.max.x - box.min.x, box.max.y - box.min.y, box.max.z - box.min.z), matHitZone)
+          hitMesh.userData.type = TYPE_SKATE
+          hitMesh.userData.initY = child.position.y
+          aHitMesh.push(hitMesh)
+          aSheeps.push(child)
+        }
+
+        if (child.name.indexOf('Thumb') > -1) {
+          const box = child.geometry.boundingBox
+          const hitMesh = new THREE.Mesh(new THREE.BoxGeometry(box.max.x - box.min.x, box.max.y - box.min.y, box.max.z - box.min.z), matHitZone)
+          hitMesh.position.x = 1
+          hitMesh.position.y = 0.3
+          hitMesh.userData.type = TYPE_THUMB
+          aHitMesh.push(hitMesh)
+          aSheeps.push(child)
+        }
+
+        if (child.name.indexOf('Lotus') > -1) {
+          const box = child.geometry.boundingBox // Because child is one mesh
+          const hitMesh = new THREE.Mesh(new THREE.BoxGeometry(box.max.x - box.min.x, box.max.y - box.min.y, box.max.z - box.min.z), matHitZone)
+          hitMesh.userData.type = TYPE_LOTUS
+          aHitMesh.push(hitMesh)
+          aSheeps.push(child)
+        }
+
+        if (child.name.indexOf('Ground') > -1 && child instanceof THREE.Mesh) {
+          console.log('GROUND SHOULD RECEIVE SHADOW');
+          child.receiveShadow = true
+        }
+
+        if (child.name.indexOf('Tree') > -1 && child instanceof THREE.Mesh) {
+          child.castShadow = true
+        }
+
+        if (child instanceof THREE.Mesh) {
+          // console.log('COVER3D - child '+ child.name, child);
+          child.castShadow = true
+          // child.receiveShadow = true
+        }
+      })
+
+      // Modify scene after the traverse
+      aHitMesh.forEach((hitMesh, index) => {
+        const object3d = aSheeps[index]
+        object3d.add(hitMesh)
+        hitMesh.userData = { ...hitMesh.userData, name: object3d.name, instance: object3d }
+
+        if (hitMesh.userData.type === TYPE_SKATE) {
+          // Move skate into a group which is easier for rotations for 360 flip
+          const group = new THREE.Group()
+          group.add(object3d)
+          group.add(new THREE.AxesHelper(1))
+          group.position.copy(object3d.position)
+          // group.rotation.copy(object3d.rotation)
+          group.rotation.set(0, 0, 0)
+          object3d.position.set(0, 0, 0)
+          object3d.rotation.set(0, 0, 0)
+          aSheeps[index] = group
+          scene.add(group)
+          hitMesh.userData.instance = group
+
+        }
+      })
     }
   )
 
@@ -497,6 +716,9 @@ const init = () => {
 
 let material
 let quad
+  
+let aSheeps = []
+let aHitMesh = []
 
 const initPostprocessing = () => {
   postScene = new THREE.Scene()

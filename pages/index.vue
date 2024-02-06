@@ -58,6 +58,7 @@ import gsap from 'gsap';
 import { workTransition, durationLeaveWork } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
+import * as debug from '~/js/debug';
 
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
@@ -146,6 +147,7 @@ onMounted(() => {
   gsap.set(job.value, { top: '50%', left: '50%', translateX: '-50%', translateY: '-50%', opacity: 0 })
 
   const tl = gsap.timeline()
+  if (debug.SKIP_INTRO) tl.timeScale(5)
   tl
     .to(job.value, { delay: 0.5, opacity: 1 })
     .to(job.value, { opacity: 0 }, '+=1')
