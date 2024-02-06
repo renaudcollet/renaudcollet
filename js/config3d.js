@@ -48,7 +48,7 @@ export default {
     },
     directional: {
       color: 0xffffff,
-      intensity: 2.5,
+      intensity: 2,
       position: {
         x: 6,
         y: 59,

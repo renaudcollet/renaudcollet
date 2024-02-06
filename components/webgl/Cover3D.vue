@@ -699,7 +699,7 @@ const init = () => {
           // Move skate into a group which is easier for rotations for 360 flip
           const group = new THREE.Group()
           group.add(object3d)
-          group.add(new THREE.AxesHelper(1))
+          // group.add(new THREE.AxesHelper(1))
           group.position.copy(object3d.position)
           // group.rotation.copy(object3d.rotation)
           group.rotation.set(0, 0, 0)
