@@ -8,6 +8,7 @@
 import GUI from 'lil-gui';
 // import { useDatasStore } from '~/stores/datas';
 import * as debug from '~/js/debug';
+import config3d from '~/js/config3d.js'
 
 import * as THREE from 'three'
 // import { REVISION } from 'three'
@@ -16,7 +17,7 @@ import * as THREE from 'three'
 import gsap from 'gsap';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-// import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 // import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 
 import sweepFrag from '~/shaders/sweep.frag'
@@ -41,6 +42,7 @@ let width
 let height
 let scene, postScene
 let renderer
+let lightCameraHelper
 let camera, camera2, postCamera
 let pixelRatio
 let renderTarget1, renderTarget2
@@ -77,29 +79,6 @@ watch(scrollZone, (newVal, oldVal) => {
 let bDebugGUI = false
 let gui
 
-const config = {
-  progress: 0,
-  camera: {
-    fov: 45,
-    near: 0.1,
-    far: 500,
-    start: { x: 0, y: 16, z: 35, lookAt: new THREE.Vector3(0, 2, 35) },
-    rise: { x: 0, y: 70, z: 35, lookAt: new THREE.Vector3(0, 2, 35) },
-    end: { x: -5, y: 15, z: 50, position: new THREE.Vector3(-5, 15, 50), lookAt: new THREE.Vector3(0, 6, 0) },
-  },
-  camera2: {
-    fov: 45,
-    near: 0.1,
-    far: 500,
-    start: { x: 10, y: 24, z: 35, },
-    lookAt: new THREE.Vector3(25, 0, 0),
-  },
-  showPostProcessing: true,
-  shader: {
-    simpleSweep: false
-  }
-}
-
 let stats
 let animationStarted = false
 let introAnimationComplete = false
@@ -115,9 +94,9 @@ const startAnimation = () => {
   raf = requestAnimationFrame(render)
 
   animationStarted = true
-  const { start } = config.camera
-  const { rise } = config.camera
-  const { end } = config.camera
+  const { start } = config3d.camera
+  const { rise } = config3d.camera
+  const { end } = config3d.camera
 
   tlAnimation.kill()
   tlAnimation = gsap.timeline()
@@ -128,7 +107,7 @@ const startAnimation = () => {
       x: rise.x, y: rise.y, z: rise.z, duration: 1,
       ease: 'power2.outIn',
       // onUpdate: () => {
-      //   // updateMaterial()
+      //   // updateRendererAndShaderMaterial()
       // }
     }, '+=0.5')
     .to(camera.position, {
@@ -139,17 +118,18 @@ const startAnimation = () => {
         const lerpX = THREE.MathUtils.lerp(start.lookAt.x, end.lookAt.x, this.progress())
         const lerpZ = THREE.MathUtils.lerp(start.lookAt.z, end.lookAt.z, this.progress())
         camera.lookAt(lerpX, end.lookAt.y, lerpZ)
-        // updateMaterial()
+        // updateRendererAndShaderMaterial()
       },
       onComplete: () => {
         introAnimationComplete = true
+        initControls()
       }
     })
 }
 
 const stopAnimation = () => {
 
-  // console.log('COVER3D - stopAnimation');
+  console.log('COVER3D - stopAnimation');
 
   if (animationStarted) {
     animationStarted = false
@@ -157,9 +137,9 @@ const stopAnimation = () => {
     tlAnimation = gsap.timeline()
     tlAnimation
       .to(canvas.value, { autoAlpha: 0, duration: 1, onComplete: () => {
-        config.progress = 0
+        config3d.progress = 0
         resetControls()
-        // updateMaterial()
+        // updateRendererAndShaderMaterial()
         // console.log('COVER3D - Stop RAF');
         window.removeEventListener('resize', resize)
         window.cancelAnimationFrame(raf)
@@ -185,20 +165,22 @@ const resetControls = () => {
   }
 }
 
-/* const initControls = () => {
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.addEventListener('change', () => {
-    console.log('controls change');
-    // updateMaterial()
-  })
-  controls.enabled = true
-  controls.update()
-} */
+// For debug purpose
+const initControls = () => {
+  if (bDebugGUI) {
+    console.log('COVER3D - initControls');
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.addEventListener('change', () => {
+      console.log('controls change');
+      updateRendererAndShaderMaterial()
+    })
+    controls.enabled = true
+    controls.update()
+  }
+}
 
 const offset = new THREE.Vector3();
-const offset2 = new THREE.Vector3();
 const distance = 5;
-
 
 const rotateAroundPoint = (point, objectPosition, axis, angle) => {
 
@@ -412,7 +394,7 @@ const updateCameraPosition = () => {
     offset.y = distance * Math.sin( radY );
     offset.z = distance * Math.sin( radY );
 
-    const newObjectPosition = rotateAroundPoint(config.camera.end.lookAt, config.camera.end.position, axis, radX);
+    const newObjectPosition = rotateAroundPoint(config3d.camera.end.lookAt, config3d.camera.end.position, axis, radX);
 
     gsap.to(camera.position, {
       x: newObjectPosition.x, 
@@ -421,11 +403,11 @@ const updateCameraPosition = () => {
       duration: 1, 
       ease: 'power2.outIn',
       onUpdate: () => {
-        camera.lookAt(config.camera.end.lookAt)
+        camera.lookAt(config3d.camera.end.lookAt)
       }
     })
 
-    const newObjectPosition2 = rotateAroundPoint(config.camera2.lookAt, config.camera2.start, axis, radX);
+    const newObjectPosition2 = rotateAroundPoint(config3d.camera2.lookAt, config3d.camera2.start, axis, radX);
 
     gsap.to(camera2.position, {
       x: newObjectPosition2.x, 
@@ -434,7 +416,7 @@ const updateCameraPosition = () => {
       duration: 1, 
       ease: 'power2.outIn',
       onUpdate: () => {
-        camera2.lookAt(config.camera2.lookAt)
+        camera2.lookAt(config3d.camera2.lookAt)
       }
     })
 }
@@ -472,8 +454,8 @@ const onScroll = () => {
     prc = window.scrollY / zoneHeight
     // console.log(`cover3d onScroll, scrollY: ${window.scrollY}, zone: ${zoneHeight}`, prc);
     if (prc < 1.01) {
-      config.progress = prc
-      // updateMaterial()
+      config3d.progress = prc
+      // updateRendererAndShaderMaterial()
     }
 }
 
@@ -498,14 +480,14 @@ onMounted(() => {
 })
 const reInit = () => {
   // console.log('COVER3D - reInit');
-  const { start } = config.camera 
+  const { start } = config3d.camera 
   camera.position.set(start.x, start.y, start.z)
   camera.lookAt(start.lookAt) 
   
-  camera2.position.set(config.camera2.start.x, config.camera2.start.y, config.camera2.start.z)
-  camera2.lookAt(config.camera2.lookAt)
+  camera2.position.set(config3d.camera2.start.x, config3d.camera2.start.y, config3d.camera2.start.z)
+  camera2.lookAt(config3d.camera2.lookAt)
 
-  // updateMaterial()
+  // updateRendererAndShaderMaterial()
 }
 
 
@@ -524,13 +506,13 @@ const init = () => {
   scene = new THREE.Scene()
 
   camera = new THREE.PerspectiveCamera(window.innerWidth < 1024 ? 60 : 45, width / height, 0.1, 1000)
-  const { start } = config.camera
+  const { start } = config3d.camera
   camera.position.set(start.x, start.y, start.z)
   camera.lookAt(start.lookAt) 
 
   camera2 = new THREE.PerspectiveCamera(window.innerWidth < 1024 ? 60 : 45, width / height, 0.1, 1000)
-  camera2.position.set(config.camera2.start.x, config.camera2.start.y, config.camera2.start.z)
-  camera2.lookAt(config.camera2.lookAt)
+  camera2.position.set(config3d.camera2.start.x, config3d.camera2.start.y, config3d.camera2.start.z)
+  camera2.lookAt(config3d.camera2.lookAt)
 
   // THREE.ColorManagement.enabled = false
 
@@ -583,6 +565,7 @@ const init = () => {
   // gltfLoader.setDRACOLoader(dracoLoader);
 
   if (bDebugGUI) {
+
     gui = new GUI().title('Cover 3D').open()
     const guiDebugObject = {}
     guiDebugObject.envMapIntensity = 1
@@ -612,14 +595,14 @@ const init = () => {
     folder = gui.addFolder('CAMERA TARGET')
     const onCameraLookAtChange = () => {
       controls.enabled = false
-      controls.target.copy(config.camera.end.lookAt)
+      controls.target.copy(config3d.camera.end.lookAt)
       controls.update()
       controls.enabled = true
-      // camera.lookAt(config.camera.end.lookAt)
+      // camera.lookAt(config3d.camera.end.lookAt)
     }
-    folder.add(config.camera.end.lookAt, "x", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
-    folder.add(config.camera.end.lookAt, "y", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
-    folder.add(config.camera.end.lookAt, "z", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
+    folder.add(config3d.camera.end.lookAt, "x", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
+    folder.add(config3d.camera.end.lookAt, "y", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
+    folder.add(config3d.camera.end.lookAt, "z", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
   }
   
   const matHitZone = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.0 })
@@ -629,7 +612,7 @@ const init = () => {
     (gltf) => {
       scene.add(gltf.scene)
       gltf.scene.scale.set(1, 1, 1)
-      // updateMaterial()
+      // updateRendererAndShaderMaterial()
 
       gltf.scene.traverse((child) => {
         // if (child instanceof THREE.Mesh) {
@@ -715,7 +698,6 @@ const init = () => {
           aSheeps[index] = group
           scene.add(group)
           hitMesh.userData.instance = group
-
         }
       })
     }
@@ -748,7 +730,7 @@ const initPostprocessing = () => {
     // transparent: true,
     vertexShader: coverVert,
     // fragmentShader: coverFrag,
-    fragmentShader: config.shader.simpleSweep ? sweepFrag : coverFrag,
+    fragmentShader: config3d.shader.simpleSweep ? sweepFrag : coverFrag,
   })
 
   quad = new THREE.Mesh(
@@ -760,30 +742,30 @@ const initPostprocessing = () => {
 
   if (bDebugGUI) {
     const folder = gui.addFolder('SHADER')
-    folder.add(config, "progress", 0, 1, 0.01).onChange((val)=>{
-      // updateMaterial()
+    folder.add(config3d, "progress", 0, 1, 0.01).onChange((val)=>{
+      // updateRendererAndShaderMaterial()
     })
-    folder.add(config, 'showPostProcessing').onChange(() => {
-      // updateMaterial()
+    folder.add(config3d, 'showPostProcessing').onChange(() => {
+      // updateRendererAndShaderMaterial()
     })
-    folder.add(config.shader, 'simpleSweep').onChange(() => {
-      material.fragmentShader = config.shader.simpleSweep ? sweepFrag : coverFrag
+    folder.add(config3d.shader, 'simpleSweep').onChange(() => {
+      material.fragmentShader = config3d.shader.simpleSweep ? sweepFrag : coverFrag
       material.needsUpdate = true
-      // updateMaterial()
+      // updateRendererAndShaderMaterial()
     })
   }
 }
 
-const updateMaterial = () => {
+const updateRendererAndShaderMaterial = () => {
   // Render the first camera if progress is < 1
-  if (config.progress < 1) {
+  if (config3d.progress < 1) {
     renderer.setRenderTarget(renderTarget1)
     renderer.render(scene, camera)
     material.uniforms.uTexture1.value = renderTarget1.texture
   }
 
   // Render the second camera only if progress is > 0
-  if (config.progress > 0) {
+  if (config3d.progress > 0) {
     renderer.setRenderTarget(renderTarget2)
     renderer.render(scene, camera2)
     material.uniforms.uTexture2.value = renderTarget2.texture
@@ -794,7 +776,7 @@ const updateMaterial = () => {
   renderTarget1.texture.format = THREE.RGBAFormat
   renderTarget2.texture.format = THREE.RGBAFormat
 
-  material.uniforms.progress.value = config.progress
+  material.uniforms.progress.value = config3d.progress
 }
 
 const render = (t) => {
@@ -802,18 +784,21 @@ const render = (t) => {
 
   raf = requestAnimationFrame(render)
 
-  updateMaterial()
+  updateRendererAndShaderMaterial()
 
-  // if (controls && controls.enabled) {
-  //   controls.update()
-  // }
+  if (bDebugGUI && controls && controls.enabled) {
+    console.log('update controls')
+    controls.update()
+    lightCameraHelper.update()
+  }
 
-  if (animationStarted && introAnimationComplete) {
+  if (!bDebugGUI && animationStarted && introAnimationComplete) {
+    console.log('updateCmaeraPosition')
     updateCameraPosition()
     updateRaycaster()
   }
 
-  // if (config.showPostProcessing)
+  // if (config3d.showPostProcessing)
     renderer.render(postScene, postCamera);
   // else
   //   renderer.render(scene, camera);
@@ -822,38 +807,31 @@ const render = (t) => {
 }
 
 const addLights = () => {
-  // const hemisphereLight = new THREE.HemisphereLight(0xf9fcc3, 0xa2a2a2) // Cast no shadows
-  // hemisphereLight.position.set(0, 10, 0)
-  // hemisphereLight.name = 'light-hemisphere'
-  // scene.add( hemisphereLight )
 
-  // Hemisphere Light Helper
-  // const helper = new HemisphereLightHelper( hemisphereLight, 5 )
-  // scene.add( helper )
-
-  const ambientLight = new THREE.AmbientLight(0xffffff, 2)
+  const { ambient } = config3d.light
+  const ambientLight = new THREE.AmbientLight(ambient.color, ambient.intensity)
   scene.add(ambientLight)
 
   // Directional Light
-  // See this https://stackoverflow.com/questions/65655433/why-is-three-js-cast-shadow-not-working-on-a-3d-model
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 5)
-  directionalLight.position.set(101, 35, 9)
-  directionalLight.target.position.set(0, 0, 0)
+  // https://stackoverflow.com/questions/65655433/why-is-three-js-cast-shadow-not-working-on-a-3d-model
+  const { position, shadow, color, intensity } = config3d.light.directional
+  
+  const directionalLight = new THREE.DirectionalLight(color, intensity)
+  directionalLight.position.set(position.x, position.y, position.z)  // default
+  directionalLight.target.position.set(77, 0, 0)
   directionalLight.castShadow = true
-  // directionalLight.visible = false
 
-  // directionalLight.shadow.radius = 2// Not working with PCFSoftShadowMap
-  directionalLight.shadow.camera.left = -120;
-  directionalLight.shadow.camera.right = 175;
-  directionalLight.shadow.camera.top = 50;
-  directionalLight.shadow.camera.bottom = - 30;
-  directionalLight.shadow.camera.near = 0.1
-  directionalLight.shadow.camera.far = 160
-  directionalLight.shadow.mapSize.set(512, 512)
   directionalLight.name = 'light-direction'
-  // // directionalLight.shadow.bias = 0.007
-  // directionalLight.shadow.normalBias = 1
-
+  directionalLight.shadow.mapSize.width = shadow.width  // default
+  directionalLight.shadow.mapSize.height = shadow.height  // default
+  directionalLight.shadow.camera.near = shadow.near  // default
+  directionalLight.shadow.camera.far = shadow.far  // default
+  directionalLight.shadow.camera.top = shadow.top  // default
+  directionalLight.shadow.camera.bottom = shadow.bottom  // default
+  directionalLight.shadow.camera.left = shadow.left  // default
+  directionalLight.shadow.camera.right = shadow.right  // default
+  directionalLight.shadow.bias = shadow.bias
+  directionalLight.shadow.blurSamples = shadow.blurSamples
   scene.add(directionalLight)
   scene.add(directionalLight.target)
 
@@ -865,6 +843,15 @@ const addLights = () => {
   // const lightHelper = new DirectionalLightHelper(directionalLight, 5, 0xffff00)
   // scene.add( lightHelper )
 
+  // const hemisphereLight = new THREE.HemisphereLight(0xf9fcc3, 0xa2a2a2) // Cast no shadows
+  // hemisphereLight.position.set(0, 10, 0)
+  // hemisphereLight.name = 'light-hemisphere'
+  // scene.add( hemisphereLight )
+
+  // Hemisphere Light Helper
+  // const helper = new HemisphereLightHelper( hemisphereLight, 5 )
+  // scene.add( helper )
+
   // Point Light
   // const light_point:PointLight = new PointLight(0xffffff, 8, 100, 1)
   // light_point.position.set(200, 78, 186)
@@ -874,33 +861,97 @@ const addLights = () => {
   // scene.add(light_point)
 
   if (bDebugGUI) {
+
+    // Light Helpers
+    const lightHelper = new THREE.DirectionalLightHelper(directionalLight, 5, 0xff0000);
+    lightHelper.visible = config3d.light.helpers
+    scene.add(lightHelper)
+
+    lightCameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
+    lightCameraHelper.visible = config3d.light.helpers
+    scene.add(lightCameraHelper)
+
+    const lightFolder = gui.addFolder('LIGHTS').close()
+
+    // Show Helpers
+    lightFolder.add(config3d.light, 'helpers').onChange(() => {
+      lightHelper.visible = config3d.light.helpers
+      lightCameraHelper.visible = config3d.light.helpers
+    })
+
+    // Ambient Light
+    const ambientLightFolder = lightFolder.addFolder('AMBIENT').close()
+    ambientLightFolder.add(ambientLight, 'visible')
+    ambientLightFolder.addColor(ambient, 'color').onChange(() => {
+      ambientLight.color = new THREE.Color(ambient.color)
+    })
+    ambientLightFolder.add(ambient, 'intensity', 0, 10, 0.0001).onChange(() => {
+      ambientLight.intensity = ambient.intensity
+    })
+
+    // Directional Light
+    const directionalFolder = lightFolder.addFolder('DIRECTIONAL').close()
+    directionalFolder.add(directionalLight, 'visible')
+    directionalFolder.addColor(config3d.light.directional, 'color').onChange(() => {
+      directionalLight.color = new THREE.Color(config3d.light.directional.color)
+      renderer.shadowMap.needsUpdate = true;
+    })
+    directionalFolder.add(config3d.light.directional, 'intensity', 0, 10, 0.1).onChange(() => {
+      directionalLight.intensity = config3d.light.directional.intensity
+      renderer.shadowMap.needsUpdate = true;
+    })
+
+    directionalFolder.add(directionalLight.position, 'x', -50, 50, 1.0).onChange(() => { onDirectionalLightChange() })
+    directionalFolder.add(directionalLight.position, 'y', -50, 50, 1.0).onChange(() => { onDirectionalLightChange() })
+    directionalFolder.add(directionalLight.position, 'z', -50, 50, 1.0).onChange(() => { onDirectionalLightChange() })
+    
+    directionalFolder.add(directionalLight.target.position, "x", -200, 200, 0.01).name('target x').onChange(() => { onDirectionalLightChange() })
+    directionalFolder.add(directionalLight.target.position, "y", -200, 200, 0.01).name('target y').onChange(() => { onDirectionalLightChange() })
+    directionalFolder.add(directionalLight.target.position, "z", -200, 200, 0.01).name('target z').onChange(() => { onDirectionalLightChange() })
+
+    const lightShadowFolder = gui.addFolder('SHADOW').close()
+    const onDirectionalLightChange = () => {
+      directionalLight.shadow.camera.near = shadow.near
+      directionalLight.shadow.camera.far = shadow.far
+      directionalLight.shadow.camera.top = shadow.top
+      directionalLight.shadow.camera.bottom = shadow.bottom
+      directionalLight.shadow.camera.left = shadow.left
+      directionalLight.shadow.camera.right = shadow.right
+      directionalLight.shadow.bias = shadow.bias
+      directionalLight.shadow.blurSamples = shadow.blurSamples
+      
+      directionalLight.shadow.camera.updateProjectionMatrix()
+      lightCameraHelper.update()
+      
+      renderer.shadowMap.needsUpdate = true;
+    }
+
+    const lightTargetFolder = lightFolder.addFolder("LIGHT DIR. TARGET")
+    lightTargetFolder.add(directionalLight.target.position, "x", -200, 200, 0.01).onChange(() => onDirectionalLightChange)
+    lightTargetFolder.add(directionalLight.target.position, "y", -200, 200, 0.01).onChange(() => onDirectionalLightChange)
+    lightTargetFolder.add(directionalLight.target.position, "z", -200, 200, 0.01).onChange(() => onDirectionalLightChange)
+
+    const updateShadowMapSize = () => {
+      directionalLight.shadow.mapSize.width = shadow.width
+      directionalLight.shadow.mapSize.height = shadow.height
+      directionalLight.shadow.map = null;
+      renderer.shadowMap.needsUpdate = true;
+    }
+    lightShadowFolder.add(shadow, "width", [256, 512, 1024, 2048, 4096, 8192]).onChange(() => updateShadowMapSize())
+    lightShadowFolder.add(shadow, "height", [256, 512, 1024, 2048, 4096, 8192]).onChange(() => updateShadowMapSize())
+    lightShadowFolder.add(shadow, 'near', 0, 10, 0.1).onChange(() => { onDirectionalLightChange() })
+    lightShadowFolder.add(shadow, 'far', 0, 50, 0.1).onChange(() => { onDirectionalLightChange() })
+    lightShadowFolder.add(shadow, 'top', 0, 10, 0.1).onChange(() => { onDirectionalLightChange() })
+    lightShadowFolder.add(shadow, 'right', 0, 10, 0.1).onChange(() => { onDirectionalLightChange() })
+    lightShadowFolder.add(shadow, 'bottom', -50, 0, 0.1).onChange(() => { onDirectionalLightChange() })
+    lightShadowFolder.add(shadow, 'left', -50, 0, 0.1).onChange(() => { onDirectionalLightChange() })
+    lightShadowFolder.add(shadow, 'bias', -0.008, 0.008, 0.0001).onChange(() => { onDirectionalLightChange() })
+    lightShadowFolder.add(shadow, 'blurSamples', 1, 25, 1).onChange(() => { onDirectionalLightChange() })
+
+
     // const hemisphereLightFolder = gui.addFolder("Light Hemisphere")
     // hemisphereLightFolder.add(hemisphereLight, "visible", false)
     // hemisphereLightFolder.add(hemisphereLight, "intensity", 0, 10, 0.0001)
-
-    // Ambient Light
-    const ambientLightFolder = gui.addFolder("LIGHT AMBIENT")
-    ambientLightFolder.add(directionalLight, "visible", false)
-    ambientLightFolder.add(directionalLight, "intensity", 0, 10, 0.0001)
-
-    // Directional Light
-    const onDirectionalLightChange = () => {
-      directionalLight.target.updateMatrixWorld()
-      // lightHelper.update()
-    }
-
-    // light1Folder.open()
-    const light2Folder = gui.addFolder("LIGHT DIRECTIONAL")
-    light2Folder.add(directionalLight, "visible", false)
-    light2Folder.add(directionalLight.position, "x", -200, 200, 0.01).onChange(() => onDirectionalLightChange)
-    light2Folder.add(directionalLight.position, "y", -200, 200, 0.01).onChange(() => onDirectionalLightChange)
-    light2Folder.add(directionalLight.position, "z", -200, 200, 0.01).onChange(() => onDirectionalLightChange)
-    light2Folder.add(directionalLight, "intensity", 0, 10, 0.0001)
-
-    const light3Folder = gui.addFolder("LIGHT DIR. TARGET")
-    light3Folder.add(directionalLight.target.position, "x", -200, 200, 0.01).onChange(() => onDirectionalLightChange)
-    light3Folder.add(directionalLight.target.position, "y", -200, 200, 0.01).onChange(() => onDirectionalLightChange)
-    light3Folder.add(directionalLight.target.position, "z", -200, 200, 0.01).onChange(() => onDirectionalLightChange)
 
     // Point Light
     // const lightPointFolder = gui.addFolder("light point")
