@@ -69,7 +69,7 @@ export default function useScrollReveal() {
       targets.forEach(target => {
         intersectionObserver.observe(target, {
           // threshold: 1,
-          rootMargin: '-200px 0px -100px 0px',
+          rootMargin: '-200px 0px 0px 0px',
           // root: document.body
         })
       })

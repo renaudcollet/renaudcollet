@@ -111,7 +111,7 @@
     &__alt {
       display: flex;
       flex-direction: column;
-      padding: 13px 12px 13px;
+      padding: 11px 12px 11px;
       // border: 0;
       // border-bottom: 0;
       min-width: 10vw;
@@ -309,23 +309,28 @@
     h3 {
       font-size: 11px;
       font-weight: 500;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
+      &:last-child {
+        margin-bottom: 0;
+      }
   
       @include media-breakpoint-up(md) {
         font-size: 13px;
         margin-bottom: 9px;
+        &:last-child {
+          margin-bottom: 0;
+        }
       }
   
       @include media-breakpoint-up(lg) {
-        margin-bottom: 9px;
         line-height: 0.6;
       }
   
       @include media-breakpoint-up(xl) {
         font-size: 18px;
-        margin-bottom: 9px;
         line-height: 1;
       }
+
     }
 
     .line {

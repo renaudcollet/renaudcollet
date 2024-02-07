@@ -51,20 +51,28 @@
       </h2>
     </div>
     <div 
+      ref="keywordsContainer"
+      class="project-item__text scroll-reveal z-index-text"
+    >
+    <!-- <div 
       class="project-item__text scroll-reveal z-index-text"
       data-scroll-reveal-height
       data-scroll-reveal-delay="1"
       data-scroll-reveal-duration="0.4"
       :data-scroll-index="2"
-    >
+    > -->
       <div class="project-item__alt">
         <template v-for="(item, index) in keywords">
           <h3 
+            ref="keywordItem"
+            class="project-item__subtitle scroll-reveal" 
+          >
+          <!-- <h3 
             class="project-item__subtitle scroll-reveal" 
             data-scroll-reveal-opacity-y
             :data-scroll-reveal-delay="index * 0.2"
             data-scroll-reveal-duration="0.5"
-          >
+          > -->
             {{ item.attributes.key }}
           </h3>
         </template>
@@ -120,6 +128,8 @@ const props = defineProps({
   }
 })
 const mountPlane = toRef(props, 'mountPlanes')
+const keywordsContainer = ref(null);
+const keywordItem = ref(null);
 
 const emit = defineEmits(['onClick'/* , 'onClickAnimationComplete' */])
 
@@ -213,6 +223,7 @@ const onMouseover = () => {
   })
 }
 
+let ioKeywords = null;
 onMounted(() => {
   // console.log('mounted ProjectItem', props.id, props.datas);
 
@@ -221,11 +232,47 @@ onMounted(() => {
     onClick();
     return imagePlane.value.planeMesh.htmlElement;
   }
+
+  //  Create observer for keywords
+  gsap.set(keywordsContainer.value, { height: 0, overflow: 'hidden'})
+  gsap.set(keywordItem.value, { opacity: 0, y: 40, x: 0, z: 0 })
+
+  ioKeywords = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        gsap.to(entry.target, {
+            duration: 0.6,
+            delay: 0,
+            height: 'auto'
+        })
+        gsap.to(keywordItem.value, {
+          duration: 0.5,
+          opacity: 1,
+          stagger: 0.1,
+          y: 0,
+          x: 0,
+          z: 0,
+          force3D : true,
+          delay: 0.4,
+          ease: 'power2.outIn',
+        })
+        observer.unobserve(entry.target);
+      }
+    })
+  }, {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.5,
+  })
+
+  ioKeywords.observe(keywordsContainer.value);
+
 })
 
-// onUnmounted(() => {
-//   // console.log('Unmounted ProjectItem', props.id, props.datas);
-// })
+onUnmounted(() => {
+  // console.log('Unmounted ProjectItem', props.id, props.datas);
+  ioKeywords.disconnect();
+})
 
 // onBeforeUnmount(() => {
 //   // console.log('onBeforeUnmount ProjectItem', props.id, props.datas);
