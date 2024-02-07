@@ -368,11 +368,13 @@ const axis = new THREE.Vector3(0, 1, 0); // Rotation axis (for example, rotating
 // const angle = Math.PI / 2; // Angle in radians
 // const newObjectPosition = rotateAroundPoint(point, objectPosition, axis, angle);
 
+let translatedObject = new THREE.Vector3()
+let rotatedObject = new THREE.Vector3()
+let newObjectPosition = new THREE.Vector3()
 const rotateAroundPoint = (point, objectPosition, axis, angle) => {
 
-    // TODO: Optimize vector creation
     // Translate the object to the origin
-    const translatedObject = new THREE.Vector3().subVectors(objectPosition, point);
+    translatedObject.set(0, 0, 0).subVectors(objectPosition, point);
 
     // Compute the sine and cosine of the angle
     const c = Math.cos(angle);
@@ -386,23 +388,18 @@ const rotateAroundPoint = (point, objectPosition, axis, angle) => {
         [uz * ux * (1 - c) - uy * s, uz * uy * (1 - c) + ux * s, c + uz * uz * (1 - c)]
     ];
 
-    // TODO: Optimize vector creation
     // Apply rotation to the translated object
-    const rotatedObject = new THREE.Vector3(
+    rotatedObject.set(
         rotationMatrix[0][0] * translatedObject.x + rotationMatrix[0][1] * translatedObject.y + rotationMatrix[0][2] * translatedObject.z,
         rotationMatrix[1][0] * translatedObject.x + rotationMatrix[1][1] * translatedObject.y + rotationMatrix[1][2] * translatedObject.z,
         rotationMatrix[2][0] * translatedObject.x + rotationMatrix[2][1] * translatedObject.y + rotationMatrix[2][2] * translatedObject.z
     );
 
-    // TODO: Optimize vector creation
     // Translate the object back to its original position
-    const newObjectPosition = new THREE.Vector3().addVectors(rotatedObject, point);
-
-    return newObjectPosition;
+    return newObjectPosition.set(0, 0, 0).addVectors(rotatedObject, point);
 }
 
 const updateCameraPosition = () => {  
-    console.log('COVER3D - updateCameraPosition');
     // const radX = THREE.MathUtils.degToRad(e.clientX / width * 80 - 40)
     const radX = THREE.MathUtils.degToRad(mouse.x * 35)
     const radY = THREE.MathUtils.degToRad(mouse.y * 3)
