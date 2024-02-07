@@ -649,6 +649,10 @@ const init = () => {
           aSheeps.push(child)
         }
 
+        else if (child.name.indexOf('Skate') > -1) {
+          child.castShadow = true
+        }
+
         else if (child.name.indexOf('Thumb') > -1) {
           child.castShadow = true
           const box = child.geometry.boundingBox
@@ -685,6 +689,14 @@ const init = () => {
         }
 
         else if (child.name.indexOf('Rock') > -1) {
+          child.castShadow = true
+        }
+
+        else if (child.name.indexOf('Transat') > -1) {
+          child.castShadow = true
+        }
+
+        else if (child.name.indexOf('Surf') > -1) {
           child.castShadow = true
         }
       })
