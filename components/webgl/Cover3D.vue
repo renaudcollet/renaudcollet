@@ -179,50 +179,11 @@ const initOrbitControls = () => {
   }
 }
 
-const offset = new THREE.Vector3();
-const distance = 5;
-
-const rotateAroundPoint = (point, objectPosition, axis, angle) => {
-
-    // TODO: Optimize vector creation
-    // Translate the object to the origin
-    const translatedObject = new THREE.Vector3().subVectors(objectPosition, point);
-
-    // Compute the sine and cosine of the angle
-    const c = Math.cos(angle);
-    const s = Math.sin(angle);
-
-    // Compute the components of the rotation matrix
-    const [ux, uy, uz] = axis;
-    const rotationMatrix = [
-        [c + ux * ux * (1 - c), ux * uy * (1 - c) - uz * s, ux * uz * (1 - c) + uy * s],
-        [uy * ux * (1 - c) + uz * s, c + uy * uy * (1 - c), uy * uz * (1 - c) - ux * s],
-        [uz * ux * (1 - c) - uy * s, uz * uy * (1 - c) + ux * s, c + uz * uz * (1 - c)]
-    ];
-
-    // TODO: Optimize vector creation
-    // Apply rotation to the translated object
-    const rotatedObject = new THREE.Vector3(
-        rotationMatrix[0][0] * translatedObject.x + rotationMatrix[0][1] * translatedObject.y + rotationMatrix[0][2] * translatedObject.z,
-        rotationMatrix[1][0] * translatedObject.x + rotationMatrix[1][1] * translatedObject.y + rotationMatrix[1][2] * translatedObject.z,
-        rotationMatrix[2][0] * translatedObject.x + rotationMatrix[2][1] * translatedObject.y + rotationMatrix[2][2] * translatedObject.z
-    );
-
-    // TODO: Optimize vector creation
-    // Translate the object back to its original position
-    const newObjectPosition = new THREE.Vector3().addVectors(rotatedObject, point);
-
-    return newObjectPosition;
-}
-
-// Example usage:
-// const point = new THREE.Vector3(1, 1, 1); // Point around which to rotate
-// const objectPosition = new THREE.Vector3(2, 2, 2); // Initial position of the object
-const axis = new THREE.Vector3(0, 1, 0); // Rotation axis (for example, rotating around the y-axis)
-// const angle = Math.PI / 2; // Angle in radians
-
-// const newObjectPosition = rotateAroundPoint(point, objectPosition, axis, angle);
-// console.log("New object position after rotation:", newObjectPosition);
+/**
+ * 
+ * RAYCASTER
+ * 
+ */
 
 const raycaster = new THREE.Raycaster()
 const mouse = new THREE.Vector2()
@@ -380,9 +341,59 @@ const updateRaycaster = () => {
   }
 }
 
+
+/**
+ * 
+ * MOUSE MOVE
+ * 
+ */
+
 const onMouseMove = (e) => {
   mouse.x = (e.clientX / width) * 2 - 1
   mouse.y = -(e.clientY / height) * 2 + 1   
+}
+
+const offset = new THREE.Vector3();
+const distance = 5;
+
+// rotateAroundPoint - Example usage:
+// const point = new THREE.Vector3(1, 1, 1); // Point around which to rotate
+// const objectPosition = new THREE.Vector3(2, 2, 2); // Initial position of the object
+const axis = new THREE.Vector3(0, 1, 0); // Rotation axis (for example, rotating around the y-axis)
+// const angle = Math.PI / 2; // Angle in radians
+// const newObjectPosition = rotateAroundPoint(point, objectPosition, axis, angle);
+
+const rotateAroundPoint = (point, objectPosition, axis, angle) => {
+
+    // TODO: Optimize vector creation
+    // Translate the object to the origin
+    const translatedObject = new THREE.Vector3().subVectors(objectPosition, point);
+
+    // Compute the sine and cosine of the angle
+    const c = Math.cos(angle);
+    const s = Math.sin(angle);
+
+    // Compute the components of the rotation matrix
+    const [ux, uy, uz] = axis;
+    const rotationMatrix = [
+        [c + ux * ux * (1 - c), ux * uy * (1 - c) - uz * s, ux * uz * (1 - c) + uy * s],
+        [uy * ux * (1 - c) + uz * s, c + uy * uy * (1 - c), uy * uz * (1 - c) - ux * s],
+        [uz * ux * (1 - c) - uy * s, uz * uy * (1 - c) + ux * s, c + uz * uz * (1 - c)]
+    ];
+
+    // TODO: Optimize vector creation
+    // Apply rotation to the translated object
+    const rotatedObject = new THREE.Vector3(
+        rotationMatrix[0][0] * translatedObject.x + rotationMatrix[0][1] * translatedObject.y + rotationMatrix[0][2] * translatedObject.z,
+        rotationMatrix[1][0] * translatedObject.x + rotationMatrix[1][1] * translatedObject.y + rotationMatrix[1][2] * translatedObject.z,
+        rotationMatrix[2][0] * translatedObject.x + rotationMatrix[2][1] * translatedObject.y + rotationMatrix[2][2] * translatedObject.z
+    );
+
+    // TODO: Optimize vector creation
+    // Translate the object back to its original position
+    const newObjectPosition = new THREE.Vector3().addVectors(rotatedObject, point);
+
+    return newObjectPosition;
 }
 
 const updateCameraPosition = () => {  
@@ -422,26 +433,8 @@ const updateCameraPosition = () => {
 }
 
 const onTouchMove = (e) => {
-  // console.log('COVER3D - onTouchMove', e);
-
-  if (animationStarted) {
-    gsap.killTweensOf(scene.rotation)
-    gsap.to(scene.rotation, {
-      y: -THREE.MathUtils.degToRad(e.touches[0].clientX / width * 100 - 50),
-      // x: THREE.MathUtils.degToRad(e.touches[0].clientY / height * 10 - 3),
-      duration: 1,
-      // ease: 'power2.outIn',
-      onComplete: () => {
-        gsap.to(scene.rotation, {
-          y: 0,
-          // x: 0,
-          delay: 0.5,
-          duration: 2,
-          ease: 'power2.outIn',
-        })
-      }
-    })
-  }
+  mouse.x = (e.touches[0].clientX / width) * 2 - 1
+  mouse.y = -(e.touches[0].clientY / height) * 2 + 1 
 }
 
 let zoneHeight = 0
@@ -478,6 +471,7 @@ onMounted(() => {
       startAnimation()
     }
 })
+
 const reInit = () => {
   // console.log('COVER3D - reInit');
   const { start } = config3d.camera 
@@ -497,8 +491,6 @@ const TYPE_THUMB = 'thumb'
 const TYPE_LOTUS = 'lotus'
 
 const init = () => {
-  // console.log('COVER3D - init');
-  
   bDebugGUI = window.location.hash === '#debug'
 
   width = window.innerWidth;

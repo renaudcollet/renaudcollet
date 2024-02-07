@@ -396,8 +396,11 @@ onMounted(() => {
 const onTouchStart = (e) => {
   mouseCursor.value.deactivate()
   document.removeEventListener('mousemove', onMouseMove)
-  document.removeEventListener('touchstart', onTouchStart)
+  // document.removeEventListener('touchstart', onTouchStart)
   document.addEventListener('touchmove', onTouchMove)
+  
+  if (lenis.scroll < scrollZoneHeight)
+    cover3d.value.onTouchMove(e)
 }
 
 const onTouchMove = (e) => {
