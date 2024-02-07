@@ -174,8 +174,8 @@ export default {
     z-index: $z-logo;
     margin-top: 7px;
     margin-left: 10px;
-    width: 60px;
-    height: 17px;
+    width: fit-content;
+    height: fit-content;
     opacity: 0;
     font-family: $font-main;
     text-decoration: none;
@@ -184,8 +184,6 @@ export default {
     @include media-breakpoint-up(lg) {
       margin-top: 30px;
       margin-left: 130px;
-      width: fit-content;
-      height: fit-content;
     }
   }
 
