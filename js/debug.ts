@@ -16,7 +16,7 @@ export const USE_KTX_LOADER = false
 export const VOLUME_MUSIC = 0.25
 export const VOLUME_SFX = 1
 
-export const DEVICE_PIXEL_RATIO_MAX = 2
+export const DEVICE_PIXEL_RATIO_MAX = 1.5 //2
 
 
 

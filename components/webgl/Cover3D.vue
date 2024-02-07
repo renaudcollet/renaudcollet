@@ -621,29 +621,26 @@ const init = () => {
       // updateRendererAndShaderMaterial()
 
       gltf.scene.traverse((child) => {
-        // if (child instanceof THREE.Mesh) {
-          // console.log('COVER3D - child '+ child.name, child);
+        // if (child.isMesh) {
+        //   child.castShadow = true
+        //   // child.receiveShadow = true
         // }
-        if (child.isMesh) {
-          // console.log('castShadow', child.name);
-          child.castShadow = true
-          // child.receiveShadow = true
-        }
-        // if (child.name.indexOf('SheepItem') > -1 && !child.isGroup) {
+        
         if (child.name.indexOf('SheepItemRef') > -1) {
           const box = new THREE.Box3().setFromObject(child) // Because child is a group or has several mesh children
           const hitMesh = new THREE.Mesh(new THREE.BoxGeometry(box.max.x - box.min.x, box.max.y - box.min.y, box.max.z - box.min.z), matHitZone)
-          // hitMesh.position.copy(child.position) // Because of collection instance, the positions are complicated to find
-          // hitMesh.position.x += 22.956
-          // hitMesh.position.z += -1.37
           // Let's ad hitmesh inside the sheep, but in a later loop to avoid changing the order of the children in the scene
           hitMesh.userData.type = TYPE_SHEEP
           aHitMesh.push(hitMesh)
           aSheeps.push(child)
         }
+
+        else if (child.name.indexOf('Sheep') > -1) {
+          child.castShadow = true
+        }
         
-        if (child.name.indexOf('Skate') > -1 && child.isGroup) {
-          console.log('Skate', child);
+        else if (child.name.indexOf('Skate') > -1 && child.isGroup) {
+          child.castShadow = true
           const box = new THREE.Box3().setFromObject(child) // Because child is a group or has several mesh children
           const hitMesh = new THREE.Mesh(new THREE.BoxGeometry(box.max.x - box.min.x, box.max.y - box.min.y, box.max.z - box.min.z), matHitZone)
           hitMesh.userData.type = TYPE_SKATE
@@ -652,7 +649,8 @@ const init = () => {
           aSheeps.push(child)
         }
 
-        if (child.name.indexOf('Thumb') > -1) {
+        else if (child.name.indexOf('Thumb') > -1) {
+          child.castShadow = true
           const box = child.geometry.boundingBox
           const hitMesh = new THREE.Mesh(new THREE.BoxGeometry(box.max.x - box.min.x, box.max.y - box.min.y, box.max.z - box.min.z), matHitZone)
           hitMesh.position.x = 1
@@ -662,7 +660,7 @@ const init = () => {
           aSheeps.push(child)
         }
 
-        if (child.name.indexOf('Lotus') > -1) {
+        else if (child.name.indexOf('Lotus') > -1) {
           const box = child.geometry.boundingBox // Because child is one mesh
           const hitMesh = new THREE.Mesh(new THREE.BoxGeometry(box.max.x - box.min.x, box.max.y - box.min.y, box.max.z - box.min.z), matHitZone)
           hitMesh.userData.type = TYPE_LOTUS
@@ -672,20 +670,22 @@ const init = () => {
           aHitMesh.push(hitMesh)
           aSheeps.push(child)
         }
-
-        if (child.name.indexOf('Ground') > -1 && child instanceof THREE.Mesh) {
-          console.log('GROUND SHOULD RECEIVE SHADOW');
+        
+        else if (child.name.indexOf('Deer') > -1) {
+          child.castShadow = true
           child.receiveShadow = true
         }
 
-        if (child.name.indexOf('Tree') > -1 && child instanceof THREE.Mesh) {
+        else if (child.name.indexOf('Ground') > -1) {
+          child.receiveShadow = true
+        }
+
+        else if (child.name.indexOf('Tree') > -1) {
           child.castShadow = true
         }
 
-        if (child instanceof THREE.Mesh) {
-          // console.log('COVER3D - child '+ child.name, child);
+        else if (child.name.indexOf('Rock') > -1) {
           child.castShadow = true
-          // child.receiveShadow = true
         }
       })
 
