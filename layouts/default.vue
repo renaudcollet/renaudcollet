@@ -271,7 +271,7 @@ watch(() => route.path, (value) => {
 
   setTimeout(() => {
     mouseCursor.value.reset()
-  }, 1500)
+  }, 1000)
 
   // if (window.gtag)
   //   window.gtag('page_view', to.name)
@@ -284,10 +284,14 @@ watch(() => route.path, (value) => {
 
   // hide cover 3d, show is emitted by index page
   if (value !== '/') {
+    // deactivateMouseEvents()
     setTimeout(() => {
       showCover3d.value = false
     }, 500)
   }
+  // else {
+  //   activateMouseEvents()
+  // }
 
 })
 
@@ -365,9 +369,6 @@ onMounted(() => {
     duration: 1,
     easing: (x) => {
       // https://easings.net/
-      // return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
-      // return 1 + c3 * (x - 1) * (x - 1) * (x - 1) + c1 * (x - 1) * (x - 1);
-      // return 1 - Math.pow(1 - x, 3);
       return 1 - (1 - x) * (1 - x) * (1 - x);
     },
     direction: 'vertical',
@@ -387,8 +388,9 @@ onMounted(() => {
   // window.addEventListener('scroll', onScroll)
   // lenis.on('scroll', onScroll)
 
-  document.addEventListener('mousemove', onMouseMove)
-  document.addEventListener('touchstart', onTouchStart)
+  // if (route.path === '/') {
+    activateMouseEvents()
+  // }
 
   requestAnimationFrame(update)
 })
@@ -413,6 +415,17 @@ const onMouseMove = (e) => {
   
   if (lenis.scroll < scrollZoneHeight)
     cover3d.value.onMouseMove(e)
+}
+
+const activateMouseEvents = () => {
+  document.addEventListener('mousemove', onMouseMove)
+  document.addEventListener('touchstart', onTouchStart)
+}
+
+const deactivateMouseEvents = () => {
+  document.removeEventListener('mousemove', onMouseMove)
+  document.removeEventListener('touchstart', onTouchStart)
+  document.removeEventListener('touchmove', onTouchMove)
 }
 
 onErrorCaptured((err) => {

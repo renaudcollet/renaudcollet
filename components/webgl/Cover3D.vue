@@ -157,7 +157,6 @@ watch(showCover, (newVal, oldVal) => {
 
 const resetControls = () => {
   if (controls) {
-    console.log('COVER3D - resetControls');
     controls.enabled = false
     controls.dispose()
     controls = null
@@ -167,7 +166,6 @@ const resetControls = () => {
 // For debug purpose
 const initOrbitControls = () => {
   if (bDebugGUI) {
-    console.log('COVER3D - initOrbitControls');
     controls = new OrbitControls(camera, renderer.domElement);
     renderer.domElement.parentElement.style.zIndex = 1000
     controls.addEventListener('change', () => {
@@ -344,13 +342,20 @@ const updateRaycaster = () => {
 
 /**
  * 
- * MOUSE MOVE
+ * MOUSE MOVE / TOUCH MOVE
  * 
  */
 
 const onMouseMove = (e) => {
+  // console.log('COVER3D - onMouseMove');
   mouse.x = (e.clientX / width) * 2 - 1
   mouse.y = -(e.clientY / height) * 2 + 1   
+}
+
+const onTouchMove = (e) => {
+  // console.log('COVER3D - onTouchMove');
+  mouse.x = (e.touches[0].clientX / width) * 2 - 1
+  mouse.y = -(e.touches[0].clientY / height) * 2 + 1 
 }
 
 const offset = new THREE.Vector3();
@@ -397,6 +402,7 @@ const rotateAroundPoint = (point, objectPosition, axis, angle) => {
 }
 
 const updateCameraPosition = () => {  
+    console.log('COVER3D - updateCameraPosition');
     // const radX = THREE.MathUtils.degToRad(e.clientX / width * 80 - 40)
     const radX = THREE.MathUtils.degToRad(mouse.x * 35)
     const radY = THREE.MathUtils.degToRad(mouse.y * 3)
@@ -430,11 +436,6 @@ const updateCameraPosition = () => {
         camera2.lookAt(config3d.camera2.lookAt)
       }
     })
-}
-
-const onTouchMove = (e) => {
-  mouse.x = (e.touches[0].clientX / width) * 2 - 1
-  mouse.y = -(e.touches[0].clientY / height) * 2 + 1 
 }
 
 let zoneHeight = 0
