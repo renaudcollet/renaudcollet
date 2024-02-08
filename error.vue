@@ -8,9 +8,12 @@ const handleError = () => clearError({ redirect: '/' })
 
 <template>
   <div class="error" @click="handleError">
-    <h1>Oops ! There was an error...</h1>
-    <h2>{{ error.statusCode }}</h2>
-    <button @click="handleError">Return to homepage ></button>
+    <div class="container">
+        <h1>{{ error.statusCode }}</h1>
+        <h2 v-if="error.statusCode == '404'">La page que vous cherchez n'existe pas.</h2>
+        <h2 v-else>Une erreur s'est produite.</h2>
+        <div class="retour">Retour à l'accueil</div>
+    </div>
   </div>
 </template>
 
@@ -53,32 +56,33 @@ body .error {
     }
 }
 
+.container {
+    max-width: 600px;
+}
+
 h1 {
     font-size: 40px;
+    font-weight: 800;
     margin-bottom: 0px;
 
     @include media-breakpoint-up(lg) {
-        background-size: cover;
-        font-size: 60px;
+        font-size: 100px;
     }
 }
 
 h2 {
-    font-size: 20vw;
-    font-weight: 800;
+    font-size: 30px;
     margin-top: 10px;
 
     @include media-breakpoint-up(lg) {
-        background-size: cover;
         font-size: 60px;
     }
 }
 
-button {
-    background: transparent;
-    border: 0;
+.retour {
     color: #fff;
     font-weight: 600;
+    text-decoration: underline;
     font-size: 20px;
 }
 </style>
