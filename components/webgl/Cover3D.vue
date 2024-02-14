@@ -84,6 +84,7 @@ let stats
 let animationStarted = false
 let introAnimationComplete = false
 let tlAnimation
+let tlSkate
 
 // Play start animation
 const startAnimation = () => {  
@@ -187,8 +188,6 @@ const raycaster = new THREE.Raycaster()
 const mouse = new THREE.Vector2()
 let sItemRollOvered = null
 let sItemRollOveredPrevious = null
-
-const tlSkate = gsap.timeline()
 
 const updateRaycaster = () => {
   raycaster.setFromCamera(mouse, camera)
@@ -458,6 +457,7 @@ defineExpose({
 
 onMounted(() => {
     tlAnimation = gsap.timeline()
+    tlSkate = gsap.timeline()
     init()
 
     // stats = new Stats()
