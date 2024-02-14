@@ -59,8 +59,8 @@
           :data-scroll-reveal-delay="durationEnterWorkId + 0.5"
           data-scroll-reveal-duration="0.3"
         >
-          <span class="front" :style="{'color': titleColor}">Voir le projet ></span>
-          <span class="back" :style="{'color': titleColorBack}">Voir le projet ></span>
+          <span class="front" :style="{'color': titleColor}">Voir le projet</span>
+          <span class="back" :style="{'color': titleColorBack}">Voir le projet</span>
         </a>
         <div
           class="cover-top__title__filters scroll-reveal unmount-animation"
