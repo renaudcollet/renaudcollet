@@ -1,8 +1,8 @@
 <template>
   <div ref="root">
     <div class="cover">
-      <div id="index-logo" ref="indexLogo" class="logo" data-header-scroll-minimize>
-        <Logo />
+      <div id="index-logo" ref="indexLogo" class="index-logo" data-header-scroll-minimize>
+        <Logo class="index-logo__logo" />
       </div>
       <div id="job" ref="job" class="job">
         Freelance Web Developer
@@ -304,14 +304,25 @@ onBeforeUnmount(() => {
   position: relative;
 }
   
-.logo {
+.index-logo {
   position: absolute;
   width: 170px;
   height: 170px;
+  opacity: 0;
 
   @media only screen and (min-width: 768px) {
     width: 250px;
     height: 250px;
+  }
+
+  &__logo {
+    width: 170px;
+    height: 170px;
+
+    @media only screen and (min-width: 768px) {
+      width: 250px;
+      height: 250px;
+    }
   }
 }
 

@@ -2,7 +2,7 @@
   <div class="header">
     <NuxtLink id="header-logo" class="header__logo" to="/"
         data-mouse-cursor="hover">
-      <Logo />
+      <Logo class="header__logo__logo" />
     </NuxtLink>
     <div class="header__menu">
       <div 
@@ -184,6 +184,16 @@ export default {
     @include media-breakpoint-up(lg) {
       margin-top: 30px;
       margin-left: 130px;
+    }
+
+    &__logo {
+      width: 60px;
+      height: 60px;
+      
+      @include media-breakpoint-up(lg) {
+          width: 100px;
+          height: 100px;
+      }
     }
   }
 
