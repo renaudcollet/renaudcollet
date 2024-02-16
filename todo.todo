@@ -72,11 +72,11 @@ Animation:
         ✔ Bug on my Android - image plane are stretched horizontally @done(24-01-30 09:54)
             ✔ with precision highp float; in shaders @done(24-01-30 09:55)
         ☐ Finish 3d cover blender
-            ☐ Add shadows
+            ✔ Add shadows @done(24-02-14 15:47)
             ☐ Add speakers
-            ☐ Better lighting
+            ✔ Better lighting @done(24-02-14 15:47)
             ✔ Better background @done(24-02-02 18:30)
-        ☐ Sheep animation on homepage, make them jump (and fall on the back ?) with mouse over
+        ✔ Sheep animation on homepage, make them jump (and fall on the back ?) with mouse over @done(24-02-14 15:47)
         ✔ Cover3d, 2e scene changer le centre de rotation @done(24-02-02 16:01)
         ✔ Use Devtool > Rendering > Scrolling performance issues to see zones to improve @done(24-01-19 15:15)
         ✔ Page work id, mettre fleche retours aux projets @done(24-01-23 15:47)
@@ -93,7 +93,10 @@ Animation:
         ☐ When going from index to page work id, then to page work, the scroll value is not good
         ☐ 3D shadows ! Baking ?
         ☐ GTAG
+
+        Admin:
         ☐ Activate email of retrieval of password in admin
+        ☐ Media Library not showing images
 
 
     ✘ Particles : @cancelled(24-01-15 11:13)
