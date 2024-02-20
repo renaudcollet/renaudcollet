@@ -24,6 +24,9 @@ import { OrbitControls } from '~/js/three/OrbitControls.js';
 import sweepFrag from '~/shaders/sweep.frag'
 import coverFrag from '~/shaders/cover.frag'
 import coverVert from '~/shaders/cover.vert'
+import coverLacVert from '~/shaders/cover-lac.vert'
+import coverLacFrag from '~/shaders/cover-lac.frag'
+import { palettes, sinPalettes } from "~/js/palettes.js";
 
 import bg from '~/assets/textures/background.jpg'
 // import px from '~/assets/textures/px.png'
@@ -483,6 +486,70 @@ const reInit = () => {
 }
 
 
+/********
+ * LAC
+ */
+let matLac
+let instancedGeoLac
+let meshLac
+let uTime = { value: 0 }
+let uMouse = { value: [0, 0] }
+let paletteKey = "blue"
+let palette = palettes[paletteKey]
+let sinPalette = sinPalettes[paletteKey]
+const initLac = () => {
+  let radius = 2/5 //2/3
+  let grid = 30
+  let cellSize = 1.0
+  let totalGridSize = grid * cellSize
+
+  let geoLac = new THREE.CylinderGeometry(radius, radius, 1, 5, 2)
+  let instancedGeoLac = (new THREE.InstancedBufferGeometry()).copy(geoLac)
+  let instanceCount = grid * grid
+  instancedGeoLac.instanceCount = instanceCount
+
+  let pos = new Float32Array(instanceCount * 2) // * 2 because we only need x, y
+  let i = 0
+  for (let x = 0; x < grid; x++) {
+    for (let y = 0; y < grid; y++) {
+      pos[i++] = x * cellSize - totalGridSize / 2 + cellSize / 2
+      pos[i++] = y * cellSize - totalGridSize / 2 + cellSize / 2
+    }
+  }
+
+  instancedGeoLac.setAttribute('aPos', new THREE.InstancedBufferAttribute(pos, 2, false))
+
+
+  matLac = new THREE.ShaderMaterial({
+    vertexShader: coverLacVert,
+    fragmentShader: coverLacFrag,
+    uniforms: {
+      uTime: uTime,
+      uBackground:    { value: palette.BG },
+      uPalette0:      { value: sinPalette.c0},
+      uPalette1:      { value: sinPalette.c1},
+      uPalette2:      { value: sinPalette.c2},
+      uPalette3:      { value: sinPalette.c3},
+      uPaletteOffset: { value: sinPalette.offset},
+    },
+    // side: THREE.FrontSide,
+    // transparent: true,
+    // depthTest: false,
+    // depthWrite: false,
+    // blending: THREE.AdditiveBlending,
+  })
+
+  meshLac = new THREE.Mesh(instancedGeoLac, matLac);
+  // mesh.scale.y = 10
+  // mesh.rotation.z = -Math.PI / 2
+  meshLac.position.x = 0 // -totalGridSize /2
+  meshLac.position.y = -0.4 // -totalGridSize /2
+  // scene.add(mesh)
+}
+
+
+
+
 const TYPE_SHEEP = 'sheep'
 const TYPE_SKATE = 'skate'
 const TYPE_THUMB = 'thumb'
@@ -498,7 +565,7 @@ const init = () => {
   camera = new THREE.PerspectiveCamera(window.innerWidth < 1024 ? 60 : 45, width / height, 0.1, 1000)
   const { start } = config3d.camera
   camera.position.set(start.x, start.y, start.z)
-  camera.lookAt(start.lookAt) 
+  camera.lookAt(start.lookAt)
 
   camera2 = new THREE.PerspectiveCamera(window.innerWidth < 1024 ? 60 : 45, width / height, 0.1, 1000)
   camera2.position.set(config3d.camera2.start.x, config3d.camera2.start.y, config3d.camera2.start.z)
@@ -600,6 +667,8 @@ const init = () => {
     folder.add(config3d.camera.end.lookAt, "y", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
     folder.add(config3d.camera.end.lookAt, "z", -200, 200, 0.01).onChange(() => onCameraLookAtChange)
   }
+
+  initLac()
   
   const matHitZone = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.0 })
 
@@ -641,6 +710,15 @@ const init = () => {
 
         else if (child.name.indexOf('Skate') > -1) {
           child.castShadow = true
+        }
+
+        else if (child.name.indexOf('Lac') > -1) {
+          console.log('COVER3D - Lac', child);
+          child.material.transparent = true
+          child.material.opacity = 0.5
+          child.material.visible = false
+          child.add(meshLac)
+
         }
 
         else if (child.name.indexOf('Thumb') > -1) {
@@ -796,6 +874,10 @@ const render = (t) => {
 
   raf = requestAnimationFrame(render)
 
+  // console.log('COVER3D - render', t, uTime.value);
+  uTime.value = t / 100
+  uMouse.value = [mouse.x, mouse.y]
+  // console.log('COVER3D - render', t, uTime.value, uMouse.value);
   updateRendererAndShaderMaterial()
 
   if (bDebugGUI && controls && controls.enabled) {
