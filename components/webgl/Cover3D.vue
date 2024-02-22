@@ -442,7 +442,10 @@ const rotateAroundPoint = (point, objectPosition, axis, angle) => {
 
 const updateCameraPosition = () => {  
     // const radX = THREE.MathUtils.degToRad(e.clientX / width * 80 - 40)
-    const radX = THREE.MathUtils.degToRad(mouse.x * 35)
+    let deg = mouse.x * 35
+    if (deg < -20) deg = -20
+    else if (deg > 20) deg = 20
+    const radX = THREE.MathUtils.degToRad(deg)
     const radY = THREE.MathUtils.degToRad(mouse.y * 3)
 
     offset.x = distance * Math.cos( radX );
