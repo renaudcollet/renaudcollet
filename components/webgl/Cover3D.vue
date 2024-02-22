@@ -191,6 +191,7 @@ const raycaster = new THREE.Raycaster()
 const mouse = new THREE.Vector2()
 let sItemRollOvered = null
 let sItemRollOveredPrevious = null
+let aDeerMaterialColors = [0xfdf0bc, 0xFF0000, 0x00FF00, 0x11444b, 0x0000FF, 0xFFFF00, 0xc37e1d, 0xFF00FF, 0x00FFFF, 0xb1432f]
 
 const updateRaycaster = () => {
   raycaster.setFromCamera(mouse, camera)
@@ -275,6 +276,20 @@ const updateRaycaster = () => {
                 })
               }
             }) 
+          }
+
+          else if (type === TYPE_DEER) {
+            console.log('DEER', hitMesh);
+            const color = new THREE.Color(aDeerMaterialColors[Math.floor(Math.random() * (aDeerMaterialColors.length - 1))])
+            gsap.to(hitMesh.material.color, {
+              r: color.r, // Math.random(),
+              g: color.g, // Math.random(),
+              b: color.b, //Math.random(),
+              duration: 1,
+              onComplete: () => {
+                hitMesh.userData.isMoving = false
+              }
+            })
           }
 
           else if (type === TYPE_LOTUS) {
@@ -580,6 +595,7 @@ const TYPE_SKATE = 'skate'
 const TYPE_THUMB = 'thumb'
 const TYPE_LOTUS = 'lotus'
 const TYPE_LAC = 'lac'
+const TYPE_DEER = 'deer'
 
 const init = () => {
   bDebugGUI = window.location.hash === '#debug'
@@ -795,12 +811,13 @@ const init = () => {
           aHitObjects.push(child)
         }
         
-        // else if (child.name.indexOf('Deer') > -1) {
-        //   child.castShadow = true
-        //   child.receiveShadow = true
-        //   aHitMesh.push(child)
-        //   aHitObjects.push(child)
-        // }
+        else if (child.name.indexOf('Deer') > -1) {
+          child.castShadow = true
+          child.receiveShadow = true
+          child.userData.type = TYPE_DEER
+          aHitMesh.push(child)
+          aHitObjects.push(child)
+        }
 
         else if (child.name.indexOf('Ground') > -1) {
           child.receiveShadow = true
@@ -827,7 +844,8 @@ const init = () => {
       aHitMesh.forEach((hitMesh, index) => {
         const object3d = aHitObjects[index]
 
-        if (hitMesh.userData.type !== TYPE_LAC) {
+        if (hitMesh.userData.type !== TYPE_LAC 
+            && hitMesh.userData.type !== TYPE_DEER) {
           object3d.add(hitMesh)
           hitMesh.userData = { ...hitMesh.userData, name: object3d.name, instance: object3d }
         }
