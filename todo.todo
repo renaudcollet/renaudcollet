@@ -50,6 +50,7 @@ Animation:
         ☐ Improve speed with OffscreenCanvas (https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas)
         ✔ Shader distortion on hover and on click @done(24-01-25 11:10)
             -> https://www.geeks3d.com/20140213/glsl-shader-library-fish-eye-and-dome-and-barrel-distortion-post-processing-filters/
+        ☐ Cover3d Make background move with mouse - will be possible in r162
     
     Priority :
         ✔ FIX Scroll jank @done(24-01-15 17:24)
@@ -96,7 +97,8 @@ Animation:
 
         Admin:
         ☐ Activate email of retrieval of password in admin
-        ☐ Media Library not showing images
+        ✔ Media Library not showing images -> because of security on the server @done(24-02-22 12:47)
+        (verify that Web App Firewall -> Switch off security rules : 211760)
 
 
     ✘ Particles : @cancelled(24-01-15 11:13)
