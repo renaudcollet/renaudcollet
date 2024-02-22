@@ -494,13 +494,13 @@ let instancedGeoLac
 let meshLac
 let uTime = { value: 0 }
 let uMouse = { value: [0, 0] }
-let paletteKey = "blue"
+let paletteKey = "lac"
 let palette = palettes[paletteKey]
 let sinPalette = sinPalettes[paletteKey]
 const initLac = () => {
-  let radius = 2/5 //2/3
-  let grid = 30
-  let cellSize = 1.0
+  let radius = 1/5 //2/3
+  let grid = 66 // 30
+  let cellSize = .5 // 1.0
   let totalGridSize = grid * cellSize
 
   let geoLac = new THREE.CylinderGeometry(radius, radius, 1, 5, 2)

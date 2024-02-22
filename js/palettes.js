@@ -93,6 +93,17 @@ export const palettes = {
     "text":           new Color("#ff7657"),
     "highlightHover": new Color("#fd6e4e"),
     "inactive":       new Color("#ebaf92")
+  },
+  lac: {
+    "index": 8,
+    "accentPalette": "black",
+    "id": "lac",
+    "BG":             new Color("#40D2E7"),
+    "BGLight":        new Color("#f1d7c0"),
+    "highlight":      new Color("#f04924"),
+    "text":           new Color("#ff7657"),
+    "highlightHover": new Color("#fd6e4e"),
+    "inactive":       new Color("#ebaf92")
   }
 }
 
@@ -153,6 +164,13 @@ export const sinPalettes = {
     c2: new Color(0.4, 0.25, 0.30000000000000004),
     c3: new Color(0.6000000000000001, 0.8, 0),
     offset: 0.9
+  },
+  lac: {
+    c0: new Color(0.05, 0.6, 0.7), // Base color
+    c1: new Color(0.2, 0.2, 0.2), // amplitude
+    c2: new Color(2.0, 1.0, 1.0), // frequency
+    c3: new Color(0.0, 0.25, 0.5), // offset
+    offset: .0
   },
 };
 
