@@ -202,13 +202,37 @@ const updateRaycaster = () => {
 
       // intersects[ i ].object.material.color.set( 0xff0000 );
       const hitMesh = intersects[ i ].object
+      const type = hitMesh.userData.type
 
-      sItemRollOvered = hitMesh.userData.name
+      // console.log('COVER3D - intersectObjects', hitMesh.userData.name, hitMesh.userData.type, hitMesh.userData.isMoving);
 
+      if (type === TYPE_LAC) {
+          const uv = intersects[i].uv
+          // uLacMouse.value.set(uv.x, uv.y)
+          gsap.killTweensOf(uLacMouse.value)
+          gsap.to(uLacMouse.value, {
+            x: uv.x,
+            y: uv.y,
+            delay: 0.0,
+            duration: 0.5,
+            onComplete: () => {
+              gsap.to(uLacMouse.value, {
+                x: 0.5,
+                y: 0.5,
+                duration: 2,
+                delay: 1,
+                ease: 'power2.outIn'
+              })
+            }
+          })
+      } else {
+        sItemRollOvered = hitMesh.userData.name
+      }
+
+      // Here are all the hit we don't want to repet in a loop
       if (sItemRollOvered !== sItemRollOveredPrevious) {
         if (!hitMesh.userData.isMoving) {
 
-          const type = hitMesh.userData.type
           const object3d = hitMesh.userData.instance
           hitMesh.userData.isMoving = true
 
@@ -490,19 +514,18 @@ const reInit = () => {
  * LAC
  */
 let matLac
-let instancedGeoLac
 let meshLac
+let radius = 1/5 //2/3
+let grid = 66 // 30
+let cellSize = .5 // 1.0
+let totalGridSize = grid * cellSize
 let uTime = { value: 0 }
-let uMouse = { value: [0, 0] }
+let uLacMouse = { value: new THREE.Vector2(0.5, 0.5) }
+let uLacGrid = { value: grid / 2 }
 let paletteKey = "lac"
 let palette = palettes[paletteKey]
 let sinPalette = sinPalettes[paletteKey]
 const initLac = () => {
-  let radius = 1/5 //2/3
-  let grid = 66 // 30
-  let cellSize = .5 // 1.0
-  let totalGridSize = grid * cellSize
-
   let geoLac = new THREE.CylinderGeometry(radius, radius, 1, 5, 2)
   let instancedGeoLac = (new THREE.InstancedBufferGeometry()).copy(geoLac)
   let instanceCount = grid * grid
@@ -525,6 +548,8 @@ const initLac = () => {
     fragmentShader: coverLacFrag,
     uniforms: {
       uTime: uTime,
+      uLacMouse: uLacMouse,
+      uLacGrid: uLacGrid,
       uBackground:    { value: palette.BG },
       uPalette0:      { value: sinPalette.c0},
       uPalette1:      { value: sinPalette.c1},
@@ -554,6 +579,7 @@ const TYPE_SHEEP = 'sheep'
 const TYPE_SKATE = 'skate'
 const TYPE_THUMB = 'thumb'
 const TYPE_LOTUS = 'lotus'
+const TYPE_LAC = 'lac'
 
 const init = () => {
   bDebugGUI = window.location.hash === '#debug'
@@ -691,7 +717,7 @@ const init = () => {
           // Let's ad hitmesh inside the sheep, but in a later loop to avoid changing the order of the children in the scene
           hitMesh.userData.type = TYPE_SHEEP
           aHitMesh.push(hitMesh)
-          aSheeps.push(child)
+          aHitObjects.push(child)
         }
 
         else if (child.name.indexOf('Sheep') > -1) {
@@ -705,7 +731,7 @@ const init = () => {
           hitMesh.userData.type = TYPE_SKATE
           hitMesh.userData.initY = child.position.y
           aHitMesh.push(hitMesh)
-          aSheeps.push(child)
+          aHitObjects.push(child)
         }
 
         else if (child.name.indexOf('Skate') > -1) {
@@ -716,9 +742,11 @@ const init = () => {
           console.log('COVER3D - Lac', child);
           child.material.transparent = true
           child.material.opacity = 0.5
-          child.material.visible = false
+          // child.material.visible = false
           child.add(meshLac)
-
+          child.userData.type = TYPE_LAC
+          aHitMesh.push(child)
+          aHitObjects.push(child)
         }
 
         else if (child.name.indexOf('Thumb') > -1) {
@@ -729,7 +757,7 @@ const init = () => {
           hitMesh.position.y = 0.3
           hitMesh.userData.type = TYPE_THUMB
           aHitMesh.push(hitMesh)
-          aSheeps.push(child)
+          aHitObjects.push(child)
         }
 
         else if (child.name.indexOf('Lotus') > -1) {
@@ -740,7 +768,7 @@ const init = () => {
           hitMesh.userData.initY = child.position.y
           hitMesh.userData.initZ = child.position.z
           aHitMesh.push(hitMesh)
-          aSheeps.push(child)
+          aHitObjects.push(child)
         }
         
         else if (child.name.indexOf('Deer') > -1) {
@@ -771,9 +799,12 @@ const init = () => {
 
       // Modify scene after the traverse
       aHitMesh.forEach((hitMesh, index) => {
-        const object3d = aSheeps[index]
-        object3d.add(hitMesh)
-        hitMesh.userData = { ...hitMesh.userData, name: object3d.name, instance: object3d }
+        const object3d = aHitObjects[index]
+
+        if (hitMesh.userData.type !== TYPE_LAC) {
+          object3d.add(hitMesh)
+          hitMesh.userData = { ...hitMesh.userData, name: object3d.name, instance: object3d }
+        }
 
         if (hitMesh.userData.type === TYPE_SKATE) {
           // Move skate into a group which is easier for rotations for 360 flip
@@ -785,7 +816,7 @@ const init = () => {
           group.rotation.set(0, 0, 0)
           object3d.position.set(0, 0, 0)
           object3d.rotation.set(0, 0, 0)
-          aSheeps[index] = group
+          aHitObjects[index] = group
           scene.add(group)
           hitMesh.userData.instance = group
         }
@@ -800,7 +831,7 @@ const init = () => {
 let material
 let quad
   
-let aSheeps = []
+let aHitObjects = []
 let aHitMesh = []
 
 const initPostprocessing = () => {
@@ -870,14 +901,10 @@ const updateRendererAndShaderMaterial = () => {
 }
 
 const render = (t) => {
-  // console.log('COVER3D - render');
-
   raf = requestAnimationFrame(render)
 
-  // console.log('COVER3D - render', t, uTime.value);
   uTime.value = t / 100
-  uMouse.value = [mouse.x, mouse.y]
-  // console.log('COVER3D - render', t, uTime.value, uMouse.value);
+  // uLacMouse.value.set(mouse.x, mouse.y)
   updateRendererAndShaderMaterial()
 
   if (bDebugGUI && controls && controls.enabled) {
