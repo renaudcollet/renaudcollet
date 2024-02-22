@@ -36,9 +36,15 @@ export default {
     simpleSweep: false
   },
   fog: {
-    enabled: true,
+    enable: true,
+    enableFog2: false,
     fogExp2: 0.8,
-    fogColor: 0x21307d,
+    // fogColor: 0xfdf0bc, // creme
+    // fogColor: 0xb1432f, // reddish warm
+    // fogColor: 0xc37e1d, // golden warm
+    fogColor: 0x11444b, // blueish
+    fogNear: 48,
+    fogFar: 140,
   },
   light: {
     helpers: true,

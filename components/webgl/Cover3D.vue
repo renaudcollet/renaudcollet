@@ -631,12 +631,28 @@ const init = () => {
   // // // backgroundTexture.encoding = sRGBEncoding
   // scene.background = backgroundTexture
   
-  const bgTex = new THREE.TextureLoader().load(bg)
-  // bgTex.wrapS = THREE.RepeatWrapping;
-  // bgTex.wrapT = THREE.RepeatWrapping;
-  scene.background = bgTex
-  // scene.backgroundBlurriness = 0.5
-  scene.fog = new THREE.Fog(0xfdf0bc, 40, 200)
+  // Background
+  // const bgTex = new THREE.TextureLoader().load(bg)
+  // // bgTex.wrapS = THREE.RepeatWrapping;
+  // // bgTex.wrapT = THREE.RepeatWrapping;
+  // scene.background = bgTex
+  // // scene.backgroundBlurriness = 0.5
+
+  const updateFog = () => {
+    if (config3d.fog.enable) {
+      const {fogColor, fogNear, fogFar} = config3d.fog
+      if (config3d.fog.enableFog2) {
+        scene.fog = new THREE.FogExp2(fogColor, config3d.fog.fogExp2)
+      } else {
+        scene.fog = new THREE.Fog(fogColor, fogNear, fogFar)
+      }
+      scene.background = new THREE.Color(fogColor)
+    } else {
+      scene.fog = null
+    }
+  }
+
+  updateFog()
 
   // KTX2 Loader
   // this.ktx2Loader = new KTX2Loader()
@@ -675,6 +691,15 @@ const init = () => {
       })
 
     gui.add(renderer, 'toneMappingExposure', 0, 10, 0.001)
+
+    
+    let controlsGUI = gui.addFolder('FOG').close()
+    controlsGUI.add(config3d.fog, 'enable').onChange(() => { updateFog() })
+    controlsGUI.add(config3d.fog, 'fogNear', 0, 100, 1).name('Near').onChange(() => { updateFog() })
+    controlsGUI.add(config3d.fog, 'fogFar', 0, 250, 1).name('Far').onChange(() => { updateFog() })
+    controlsGUI.addColor(config3d.fog, 'fogColor').name('fog color').onChange(() => { updateFog() })
+    controlsGUI.add(config3d.fog, 'enableFog2').onChange(() => { updateFog() })
+    controlsGUI.add(config3d.fog, 'fogExp2', 0, 1, 0.01).name('fog density').onChange(() => { updateFog() })
 
     let folder = gui.addFolder('CAMERA')
     folder.add(camera.position, 'x', -100, 100, 0.001)
@@ -739,7 +764,6 @@ const init = () => {
         }
 
         else if (child.name.indexOf('Lac') > -1) {
-          console.log('COVER3D - Lac', child);
           child.material.transparent = true
           child.material.opacity = 0.5
           // child.material.visible = false
@@ -771,10 +795,12 @@ const init = () => {
           aHitObjects.push(child)
         }
         
-        else if (child.name.indexOf('Deer') > -1) {
-          child.castShadow = true
-          child.receiveShadow = true
-        }
+        // else if (child.name.indexOf('Deer') > -1) {
+        //   child.castShadow = true
+        //   child.receiveShadow = true
+        //   aHitMesh.push(child)
+        //   aHitObjects.push(child)
+        // }
 
         else if (child.name.indexOf('Ground') > -1) {
           child.receiveShadow = true
