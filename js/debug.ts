@@ -1,4 +1,4 @@
-export const SKIP_INTRO = true;
+export const SKIP_INTRO = false;
 
 
 

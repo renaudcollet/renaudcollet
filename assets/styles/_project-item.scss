@@ -6,6 +6,10 @@
     text-decoration: none;
     width: calc(100vw - 60px);
     height: 56.25vw;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   
     @include media-breakpoint-up(lg) {
       margin-bottom: 140px;

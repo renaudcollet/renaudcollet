@@ -130,5 +130,5 @@
   user-select: none;
   align-items: center;
   z-index: $z-projects;
-  min-height: 100vh;
+  // min-height: calc(100vh - 245px); // 245px size of the footer
 }

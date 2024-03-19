@@ -17,8 +17,12 @@ export const useDatasStore = defineStore( 'datas', {
     seo: null,
     about: null,
     projects: null,
+    paginationCurrentPage: 1,
+    paginationSize: 5,
+    paginationTotalPages: 1,
     projectsById: null,
     projectsFiltered: null,
+    projectsFilteredPagination: null,
     projectsHomepage: null,
     footer: null,
     keywords: null,
@@ -42,6 +46,19 @@ export const useDatasStore = defineStore( 'datas', {
       this.lockScroll = value
     },
 
+    projectsByPage(currentPage) {
+      if (currentPage !== undefined)
+        this.paginationCurrentPage = currentPage
+
+      const currentPageId = this.paginationCurrentPage - 1
+      this.projectsFilteredPagination = this.projectsFiltered.slice(currentPageId * this.paginationSize, currentPageId * this.paginationSize + this.paginationSize)
+      console.log(`--- projectsByPage (page: ${this.paginationCurrentPage})`, this.projectsFilteredPagination.length);
+    },
+
+    /**
+     * Called by the keywords component when a keyword is selected
+     * @param {*} datasKeywordsSelected 
+     */
     filterProjects(datasKeywordsSelected) {
       console.log('--- Filter projects', datasKeywordsSelected);
       this.keywordsSelected = datasKeywordsSelected
@@ -54,7 +71,7 @@ export const useDatasStore = defineStore( 'datas', {
           tmp.push(this.projectsById[project.id])
         })
       })
-      console.log('--- Filtered projectsFiltered', tmp);
+      console.log('--- Filtered projectsFiltered', tmp.length);
 
       // Remove duplicates
       const seen = new Set();
@@ -67,6 +84,8 @@ export const useDatasStore = defineStore( 'datas', {
       if (this.projectsFiltered.length === 0) {
         this.projectsFiltered = this.projects
       }
+
+      this.projectsByPage()
 
       // console.log('--- Filtered projectsFiltered singles', this.projectsFiltered);
     },
@@ -111,7 +130,7 @@ export const useDatasStore = defineStore( 'datas', {
         // )
         // query = { ...query, sort: 'Date:desc', 'filters[Type][$eq][0]': 'B et C', 'filters[Type][$eq][1]': this.currentFolder }
         // ?filters[slug][$eq]=mon-projet-1
-        query = { populate: 'deep', sort: 'Date:desc' }
+        query = { populate: 'deep', sort: 'Date:desc', 'pagination[page]': 0, 'pagination[pageSize]': 100 }
       }
       else if (apiId === S_DATA_KEYWORDS) {
         // TODO: Should only return id of related projects (not createdAt, updatedAt, etc.)
@@ -139,7 +158,7 @@ export const useDatasStore = defineStore( 'datas', {
         })
 
         // console.log('Data ERROR', error);
-        console.log(`Data from ${apiId}`, data.value);
+        // console.log(`Data from ${apiId}`, data.value);
 
         switch (apiId) {
           case S_DATA_CONTACT:
@@ -159,12 +178,18 @@ export const useDatasStore = defineStore( 'datas', {
             this.about = data.value
             break;
           case S_DATA_PROJECTS:
+            console.log(`Data from ${apiId}`, data.value);
             this.projects = data.value.data
             this.projectsById = {}
             this.projects.forEach(project => {
               this.projectsById[project.id] = project
             })
             this.projectsFiltered = data.value.data // includes all projects by default
+            this.paginationTotalPages = Math.ceil(this.projectsFiltered.length / this.paginationSize);
+            console.log('--- Total pages', this.paginationTotalPages);
+            
+            this.setCurrentPage(1)
+            this.projectsByPage()
             break;
           case S_DATA_KEYWORDS:
             this.keywords = data.value

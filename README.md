@@ -8,6 +8,11 @@ Upload to ionos, then restart Nodejs App in Plesk admin panel
 
 Logs: Nodejs Logs on server are in /var/log/passenger/passenger.log, access with root user
 
+
+## Plesk Server errors logs !
+
+Have a look in /var/log/passenger with root user
+
 ## Nuxt 3 Minimal Starter
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.

@@ -30,6 +30,11 @@
       </section>
       <div class="space"></div>
     </div>
+    <Pagination
+      :totalPages="storeDatas.paginationTotalPages"
+      :currentPage="storeDatas.paginationCurrentPage"
+      @onPageUpdate="onPageUpdate"
+    />
     <FooterSimple />
   </div>
 </template>
@@ -41,7 +46,7 @@ import gsap from 'gsap';
 import { workTransition, durationEnterWork, durationLeaveWork } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
-// import { Vec2, Vec3 } from 'curtainsjs';
+import Pagination from '~/components/ui/Pagination.vue';
 
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
@@ -59,7 +64,8 @@ const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 const { transitionState, elementsToTransition, functionTransitionCallback, curtainsForTransition, backgroundForTransition } = useTransitionComposable();
 
 const projectsFilteredDelay = ref(null);
-projectsFilteredDelay.value = storeDatas.projectsFiltered;
+// projectsFilteredDelay.value = storeDatas.projectsFiltered;
+projectsFilteredDelay.value = storeDatas.projectsFilteredPagination;
 
 const projectsFilteredLabelDelay = ref(null);
 projectsFilteredLabelDelay.value = '';
@@ -101,10 +107,9 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
 
 const root = ref(null);
 
-// Select filter
-watch(() => storeDatas.projectsFiltered, (newVal, oldVal) => {
-  console.log('watch projectsFiltered', newVal, oldVal);
-  nextTick(() => {
+const updateProjectsView = (newVal) => {
+    if (process.server) return
+
     clearScrollReveal()
     projectsFilteredDelay.value = null
     // storeDatasCurtains.removePlanes()
@@ -139,11 +144,25 @@ watch(() => storeDatas.projectsFiltered, (newVal, oldVal) => {
               })
             }})
       }})
+}
+
+// Select filter
+// watch(() => storeDatas.projectsFiltered, (newVal, oldVal) => {
+//   console.log('watch projectsFiltered', newVal, oldVal);
+//   nextTick(() => {
+//     updateProjectsView(newVal)
+//   })
+// })
+watch(() => storeDatas.projectsFilteredPagination, (newVal, oldVal) => {
+  console.log('watch projectsFilteredPagination', newVal.length, oldVal.length);
+  nextTick(() => {
+    updateProjectsView(newVal)
   })
 })
 
 const updateFilteredLabel = (newVal) => {
-  projectsFilteredDelay.value = newVal ? newVal : storeDatas.projectsFiltered
+  // projectsFilteredDelay.value = newVal ? newVal : storeDatas.projectsFiltered
+  projectsFilteredDelay.value = newVal ? newVal : storeDatas.projectsFilteredPagination
   projectsFilteredLabelDelay.value = 
     storeDatas.keywordsSelected && storeDatas.keywordsSelected.length > 0 
     ? `${storeDatas.keywordsSelected[0].attributes.key}` 
@@ -159,6 +178,11 @@ const onClickProjectItem = (id, imagePlane) => {
   // imagePlane.planeMesh.watchScroll = false;
   // window.lenis.scrollTo(0, {immediate: true})
   emit('onLockScroll', true)
+}
+
+const onPageUpdate = (page) => {
+  console.log('onPageUpdate', page);
+  storeDatas.projectsByPage(page);
 }
 
 onMounted(() => {
@@ -386,6 +410,7 @@ onBeforeUnmount(() => {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  min-height: 100vh;
 
   &__header-minimize {
     position: absolute;

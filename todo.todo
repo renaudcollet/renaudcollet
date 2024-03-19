@@ -89,11 +89,17 @@ Animation:
         ✔ Add website powered by Nuxt / Curtains / Threejs / Gsap in footer, Cover created in Blender @done(24-02-02 17:09)
         ✔ Page about, mise en page, bloc pour les titres, Add scroll reveal @done(24-02-02 18:12)
         ✔ project item last keyword not visible on mobile @done(24-02-08 17:37)
+        ✘ 3D shadows ! Baking ? @cancelled(24-03-15 15:26)
+        ☐ When page work id is longer than page work, the scroll value is not good - it all bugs
+        ☐ Pagination on work page
         ☐ Page work premiere visite, dérouler le menu filtres
+        ☐ Possibilité d'ordonner les filtres
+        ☐ Filtres parameter in url
         ☐ RGB shift
         ☐ When going from index to page work id, then to page work, the scroll value is not good
-        ☐ 3D shadows ! Baking ?
         ☐ GTAG
+        ☐ Page work id, video big ne se calle plus sur le haut de la page
+        ☐ Cover in page work id, image behind is visible on the edge
 
         Admin:
         ☐ Activate email of retrieval of password in admin
