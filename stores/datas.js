@@ -135,8 +135,9 @@ export const useDatasStore = defineStore( 'datas', {
         query = { populate: 'deep', sort: 'Date:desc', 'pagination[page]': 0, 'pagination[pageSize]': 100 }
       }
       else if (apiId === S_DATA_KEYWORDS) {
-        // TODO: Should only return id of related projects (not createdAt, updatedAt, etc.)
         query = { populate: 'deep' }
+        // /api/keywords?populate=deep&sort[0]=order:asc&fields[0]=key&fields[1]=order&fields[2]=projets&pagination[withCount]=false&pagination[pageSize]=50
+        query = { populate: 'deep', 'sort[0]': 'order:asc', 'fields[0]': 'key', 'fields[1]': 'order', 'fields[2]': 'projets', 'pagination[withCount]': 'false', 'pagination[pageSize]': 50 }
       }
       else if (apiId === S_DATA_CONTACT) {
         query = { populate: 'deep' }
@@ -195,6 +196,7 @@ export const useDatasStore = defineStore( 'datas', {
             break;
           case S_DATA_KEYWORDS:
             this.keywords = data.value
+            console.log(`Data from ${apiId}`, data.value);
             break;
           default:
         }
