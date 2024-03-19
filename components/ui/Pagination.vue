@@ -21,8 +21,8 @@ const state = reactive({
   totalPages: props.totalPages,
 })
 
-// const currentPage = toRef(state, 'currentPage')
-// const totalPages = toRef(state, 'totalPages')
+const currentPage = toRef(state, 'currentPage')
+const totalPages = toRef(state, 'totalPages')
 
 watch(() => props.currentPage, (val) => {
   console.log('currentPage', val);
@@ -34,16 +34,16 @@ watch(() => props.totalPages, (val) => {
 })
 
 const nextPage = () => {
-  if (state.currentPage.value < totalPages.value) {
-    state.currentPage.value++;
-    emit('onPageUpdate', state.currentPage.value);
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+    emit('onPageUpdate', currentPage.value);
   }
 }
 
 const prevPage = () => {
-  if (state.currentPage.value > 1) {
-    state.currentPage.value--;
-    emit('onPageUpdate', state.currentPage.value)
+  if (currentPage.value > 1) {
+    currentPage.value--;
+    emit('onPageUpdate', currentPage.value)
   }
 }
 </script>
