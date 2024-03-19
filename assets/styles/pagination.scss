@@ -40,17 +40,20 @@
         border: 0;
         color: transparent;
 
+        &:disabled {
+            opacity: 0.3;
+        }
+
         &.left {
             transform: rotate(180deg);
             // animation: pagination-hover-left 0.5s none;
-            &:hover {
+            &:not(:disabled):hover {
                 animation: pagination-hover-left 0.5s forwards;
             }
         }
 
         &.right {
-            // animation: pagination-hover-right 0.5s none;
-            &:hover {
+            &:not(:disabled):hover {
                 animation: pagination-hover-right 0.5s forwards;
             }
         }
