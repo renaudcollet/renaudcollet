@@ -51,6 +51,8 @@ export const useDatasStore = defineStore( 'datas', {
         this.paginationCurrentPage = currentPage
 
       const currentPageId = this.paginationCurrentPage - 1
+      this.paginationTotalPages = Math.ceil(this.projectsFiltered.length / this.paginationSize);
+      console.log('--- Total pages', this.paginationTotalPages);
       this.projectsFilteredPagination = this.projectsFiltered.slice(currentPageId * this.paginationSize, currentPageId * this.paginationSize + this.paginationSize)
       console.log(`--- projectsByPage (page: ${this.paginationCurrentPage})`, this.projectsFilteredPagination.length);
     },

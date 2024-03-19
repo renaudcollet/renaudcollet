@@ -31,8 +31,8 @@
       <div class="space"></div>
     </div>
     <Pagination
-      :totalPages="storeDatas.paginationTotalPages"
-      :currentPage="storeDatas.paginationCurrentPage"
+      :totalPages="totalPages"
+      :currentPage="currentPage"
       @onPageUpdate="onPageUpdate"
     />
     <FooterSimple />
@@ -66,6 +66,14 @@ const { transitionState, elementsToTransition, functionTransitionCallback, curta
 const projectsFilteredDelay = ref(null);
 // projectsFilteredDelay.value = storeDatas.projectsFiltered;
 projectsFilteredDelay.value = storeDatas.projectsFilteredPagination;
+
+const totalPages = ref(storeDatas.paginationTotalPages);
+const currentPage = ref(storeDatas.paginationCurrentPage);
+
+watch(() => storeDatas.paginationTotalPages, (newVal, oldVal) => {
+  console.log('watch paginationTotalPages', newVal, oldVal);
+  totalPages.value = newVal;
+})
 
 const projectsFilteredLabelDelay = ref(null);
 projectsFilteredLabelDelay.value = '';
