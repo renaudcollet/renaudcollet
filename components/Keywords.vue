@@ -65,6 +65,10 @@ const { fetchDatas } = storeDatas
 await fetchDatas(S_DATA_PROJECTS);
 await fetchDatas(S_DATA_KEYWORDS);
 
+const props = defineProps({
+  show: Boolean
+})
+
 const datasKeywords = storeDatas.keywords.data;
 let datasKeywordsSelected = ref([]);
 
@@ -89,7 +93,7 @@ const onClickItem = (oItem) => {
 }
 
 const onClickRemoveItem = (oItem) => {
-  console.log('> onClickRemoveItem', oItem.id, oItem.attributes.projets.data);
+  // console.log('> onClickRemoveItem', oItem.id, oItem.attributes.projets.data);
 
   datasKeywordsSelected.value.forEach((item, index) => {
     if (oItem.id === item.id) {
@@ -100,11 +104,37 @@ const onClickRemoveItem = (oItem) => {
   storeDatas.filterProjects(datasKeywordsSelected.value);
 }
 
+watch(() => props.show, (newValue, oldValue) => {
+  if (newValue === true) {
+    openMenu()
+  } else {
+    closeMenu()
+  }
+})
+
 const onClickMenuButton = () => {
   if (isMenuOpened) {
     closeMenu()
   } else {
     openMenu()
+  }
+}
+
+const hideButton = () => {
+  if (props.show === false) {
+    gsap.to('.keywords__menu__button', {
+      duration: 0.2,
+      autoAlpha: 0
+    })
+  }
+}
+
+const showButton = () => {
+  if (props.show === true) {
+    gsap.to('.keywords__menu__button', {
+      duration: 0.2,
+      autoAlpha: 1
+    })
   }
 }
 
@@ -121,7 +151,10 @@ const closeMenu = () => {
       each: 0.1,
       from: 'end'
     },
-    autoAlpha: 0
+    autoAlpha: 0,
+    onComplete: () => {
+      hideButton()
+    }
   })
   gsap.to('.keywords__menu__content', {
     delay: 0.5,
@@ -141,6 +174,7 @@ const closeMenu = () => {
 
 const openMenu = () => {
   isMenuOpened = true
+  showButton()
   gsap.to('.keywords__menu__zone', {
     duration: 0.2,
     autoAlpha: 1

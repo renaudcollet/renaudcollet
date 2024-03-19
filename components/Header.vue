@@ -36,10 +36,20 @@
       </div>
       <div class="header__menu__zone" v-on:click="closeMenu"></div>
     </div>
-    <Keywords />
+    <Keywords :show="bShowKeywords" />
 
   </div>
 </template>
+
+<script setup>
+
+const route = useRouter()
+watch(() => route.currentRoute.value, (newValue, oldValue) => {
+  bShowKeywords.value = newValue.name === 'works'
+})
+
+const bShowKeywords = ref(false)
+</script>
 
 <script>
 // import utilsDevice from '~~/mixins/utils-device.js'

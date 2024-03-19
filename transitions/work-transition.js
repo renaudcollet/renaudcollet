@@ -25,7 +25,7 @@ export const workIdTransition = {
   name: 'work-id-transiton',
   mode: 'out-in',
   onEnter: (el, done) => {
-    console.log('workIdTransition onEnter'); 
+    // console.log('workIdTransition onEnter'); 
     
     const t = {v: 0}
     // gsap.set(el, { opacity: 0 });
@@ -33,15 +33,15 @@ export const workIdTransition = {
       // .to(el, { opacity: 1, duration: durationEnterWorkId,
       .to(t, { v: 1, duration: durationEnterWorkId,
         onComplete: () => {
-          console.log('workIdTransition onEnter complete');
+          // console.log('workIdTransition onEnter complete');
           toggleTransitionComplete(true);
           done();
         } })
   },
   
   onLeave: (el, done) => {
-    console.log('workIdTransition onLeave');
-    console.log('workIdTransition onLeave elementsToTransition', elementsToTransition.elements.length);
+    // console.log('workIdTransition onLeave');
+    // console.log('workIdTransition onLeave elementsToTransition', elementsToTransition.elements.length);
     const t = {v: 0}
     toggleTransitionComplete(false);
     gsap
@@ -53,7 +53,7 @@ export const workIdTransition = {
           ease: 'power2.outIn',
         },
         onComplete:() => {
-          console.log('workIdTransition onLeave opacity 0 complete');
+          // console.log('workIdTransition onLeave opacity 0 complete');
           elementsToTransition.elements = null;
 
           if (functionTransitionCallback.function) {
@@ -63,7 +63,7 @@ export const workIdTransition = {
 
           gsap.to(t, { v: 1, delay: 0.3, duration: durationLeaveWorkId,
             onComplete:() => {
-              console.log('workIdTransition onLeave complete');
+              // console.log('workIdTransition onLeave complete');
               done();
             }})
       }})
@@ -74,14 +74,14 @@ export const workTransition = {
   name: 'work-transiton',
   mode: 'out-in',
   onEnter: (el, done) => {
-    console.log('workTransition onEnter');
+    // console.log('workTransition onEnter');
     const t = {v: 0}
     gsap.set(el, { opacity: 0 });
     gsap
       .timeline({
         paused: true,
         onComplete: () => {
-          console.log('workTransition onEnter complete');
+          // console.log('workTransition onEnter complete');
           toggleTransitionComplete(true);
           done();
         },
@@ -94,8 +94,8 @@ export const workTransition = {
   //   gsap.to(el, { delay: 1, opacity: 1 });
   // },
   onLeave: (el, done) => {
-    console.log('workTransition onLeave');
-    console.log('workTransition onLeave elementsToTransition', elementsToTransition);
+    // console.log('workTransition onLeave');
+    // console.log('workTransition onLeave elementsToTransition', elementsToTransition);
     const t = {v: 0}
     toggleTransitionComplete(false);
     gsap
@@ -107,7 +107,7 @@ export const workTransition = {
           ease: 'power2.outIn',
         },
         onComplete:() => {
-          console.log('workTransition onLeave opacity 0 complete');
+          // console.log('workTransition onLeave opacity 0 complete');
           // toggleTransitionLeaveComplete(true); // This is not watched because the component is already unmounted
           elementsToTransition.elements = null;
 
@@ -118,7 +118,7 @@ export const workTransition = {
           
           gsap.to(t, { v: 1, delay: 0.1, duration: durationLeaveWork,
             onComplete:() => {
-              console.log('workTransition onLeave complete');
+              // console.log('workTransition onLeave complete');
               done();
             }})
       }})
@@ -129,13 +129,13 @@ export const defaultTransition = {
   name: 'default-transiton',
   mode: 'out-in',
   onEnter: (el, done) => {
-    console.log('defaultTransition onEnter');
+    // console.log('defaultTransition onEnter');
     gsap.set(el, { opacity: 0 });
     gsap
       .timeline({
         paused: true,
         onComplete() {
-          console.log('defaultTransition onEnter complete');
+          // console.log('defaultTransition onEnter complete');
           toggleTransitionComplete(true);
           done();
         },
@@ -144,8 +144,8 @@ export const defaultTransition = {
       .play();
   },
   onLeave: (el, done) => {
-    console.log('defaultTransition onLeave');
-    console.log('defaultTransition onLeave elementsToTransition', elementsToTransition);
+    // console.log('defaultTransition onLeave');
+    // console.log('defaultTransition onLeave elementsToTransition', elementsToTransition);
     toggleTransitionComplete(false);
     const t = {v: 0}
     gsap
@@ -157,7 +157,7 @@ export const defaultTransition = {
         ease: 'power2.outIn',
       },
       onComplete:() => {
-        console.log('defaultTransition onLeave opacity 0 complete');
+        // console.log('defaultTransition onLeave opacity 0 complete');
         // toggleTransitionLeaveComplete(true); // This is not watched because the component is already unmounted
         elementsToTransition.elements = null;
 
@@ -169,7 +169,7 @@ export const defaultTransition = {
         // This is to let the plane animation finish
         // They are the last to disappear
         gsap.to(t, {v:1, duration: 0 /* durationLeaveDefault */, onComplete: () => {
-          console.log('defaultTransition onLeave complete');
+          // console.log('defaultTransition onLeave complete');
           done();
         }})
       }})
