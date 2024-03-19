@@ -75,6 +75,8 @@ let datasKeywordsSelected = ref([]);
 let isMenuOpened = false
 let isDesktop = computed(() => window.innerWidth >= 1200)
 
+let _openDelay = 1.0
+
 const isSelected = (oItem) => {
   return datasKeywordsSelected.value.includes(oItem)
 }
@@ -105,6 +107,7 @@ const onClickRemoveItem = (oItem) => {
 }
 
 watch(() => props.show, (newValue, oldValue) => {
+  console.log('> watch show', newValue, oldValue);
   if (newValue === true) {
     openMenu()
   } else {
@@ -116,12 +119,14 @@ const onClickMenuButton = () => {
   if (isMenuOpened) {
     closeMenu()
   } else {
+    _openDelay = 0.0
     openMenu()
   }
 }
 
 const hideButton = () => {
   if (props.show === false) {
+    _openDelay = 1.0
     gsap.to('.keywords__menu__button', {
       duration: 0.2,
       autoAlpha: 0
@@ -140,6 +145,12 @@ const showButton = () => {
 
 const closeMenu = () => {
   isMenuOpened = false
+
+  gsap.killTweensOf('.keywords__menu__zone')
+  gsap.killTweensOf('.keywords__menu__content .menu-item')
+  gsap.killTweensOf('.keywords__menu__content')
+  gsap.killTweensOf('.keywords__menu__button__arrow__right')
+
   gsap.to('.keywords__menu__zone', {
     delay: 0.4,
     duration: 0.5,
@@ -173,28 +184,38 @@ const closeMenu = () => {
 }
 
 const openMenu = () => {
+  console.log('> openMenu !!!');
   isMenuOpened = true
+
+  gsap.killTweensOf('.keywords__menu__zone')
+  gsap.killTweensOf('.keywords__menu__content .menu-item')
+  gsap.killTweensOf('.keywords__menu__content')
+  gsap.killTweensOf('.keywords__menu__button__arrow__right')
+
   showButton()
   gsap.to('.keywords__menu__zone', {
     duration: 0.2,
-    autoAlpha: 1
+    autoAlpha: 1,
+    delay: _openDelay
   })
   gsap.fromTo('.keywords__menu__content .menu-item', {
     autoAlpha: 0,
   }, {
-    delay: 0.3,
+    delay: _openDelay + 0.3,
     duration: 0.5,
     stagger: 0.1,
     autoAlpha: 1
   })
   gsap.to('.keywords__menu__content', {
     duration: 0.5,
+    delay: _openDelay,
     height: 'auto',
     ease: 'power4.out',
     top: 60
   })
   gsap.to('.keywords__menu__button__arrow__right', {
     duration: 0.5,
+    delay: _openDelay,
     autoAlpha: 1,
     // transform: 'translateX(-100%) rotate(180deg) scale(1)',
     transform: 'scale(1)',
@@ -206,8 +227,10 @@ onMounted(() => {
   gsap.set('.keywords__menu__content', { height: 0 })
   gsap.set('.keywords__menu__zone', { autoAlpha: 0 })
   gsap.set('.keywords__menu__button__arrow__right', { autoAlpha: 0, transform: 'scale(0)' })
+  gsap.set('.keywords__menu__button', { autoAlpha: 0 })
 
-  if (isDesktop === true)
+  console.log('> onMounted', isDesktop.value, props.show);
+  if (isDesktop.value === true && props.show === true)
     openMenu()
 })
 </script>

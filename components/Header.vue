@@ -45,10 +45,17 @@
 
 const route = useRouter()
 watch(() => route.currentRoute.value, (newValue, oldValue) => {
+  // console.log('Header route changed', newValue.name, oldValue.name);
   bShowKeywords.value = newValue.name === 'works'
 })
 
 const bShowKeywords = ref(false)
+
+onMounted(() => {
+  // console.log('Header mounted composition');
+  bShowKeywords.value = route.currentRoute.value.name === 'works'
+  // console.log('Header route show keywords', route.currentRoute.value.name, bShowKeywords.value);
+})
 </script>
 
 <script>
@@ -63,6 +70,7 @@ export default {
     }
   },
   mounted() {
+    console.log('Header mounted');
     gsap.set('.header__menu', { visibility: 'visible' })
     gsap.set('.header__menu__content', { height: 0 })
     gsap.set('.header__menu__zone', { autoAlpha: 0 })
