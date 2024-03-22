@@ -14,6 +14,16 @@
         <br v-if="projectsFilteredLabelDelay !== ''" /> 
         works
       </h1>
+      <Pagination
+        v-if="totalPages > 1"
+        class="scroll-reveal unmount-animation"
+        data-scroll-reveal-opacity-y
+        :data-scroll-reveal-delay="durationEnterWork + 0.3"
+        data-scroll-reveal-duration="0.5"
+        :totalPages="totalPages"
+        :currentPage="currentPage"
+        @onPageUpdate="onPageUpdate"
+      />
       <section class="projects-work">
         <!-- <template v-for="(item, index) in storeDatas.projectsFiltered"> -->
         <template v-for="(item, index) in projectsFilteredDelay">
@@ -31,10 +41,16 @@
       <div class="space"></div>
     </div>
     <Pagination
+      v-if="totalPages > 1"
+      class="scroll-reveal unmount-animation"
+      data-scroll-reveal-opacity-y
+      :data-scroll-reveal-delay="durationEnterWork + 0.2"
+      data-scroll-reveal-duration="0.5"
       :totalPages="totalPages"
       :currentPage="currentPage"
       @onPageUpdate="onPageUpdate"
     />
+    <!-- <BackToTop /> -->
     <FooterSimple />
   </div>
 </template>
@@ -71,8 +87,27 @@ const totalPages = ref(storeDatas.paginationTotalPages);
 const currentPage = ref(storeDatas.paginationCurrentPage);
 
 watch(() => storeDatas.paginationTotalPages, (newVal, oldVal) => {
-  console.log('watch paginationTotalPages', newVal, oldVal);
+  console.log('watch paginationTotalPages', newVal);
   totalPages.value = newVal;
+})
+
+watch(() => storeDatas.paginationCurrentPage, (newVal, oldVal) => {
+  console.log('watch paginationCurrentPage', newVal);
+  currentPage.value = newVal;
+})
+
+// Select filter
+// watch(() => storeDatas.projectsFiltered, (newVal, oldVal) => {
+//   console.log('watch projectsFiltered', newVal, oldVal);
+//   nextTick(() => {
+//     updateProjectsView(newVal)
+//   })
+// })
+watch(() => storeDatas.projectsFilteredPagination, (newVal, oldVal) => {
+  console.log('watch projectsFilteredPagination', newVal.length);
+  nextTick(() => {
+    updateProjectsView(newVal)
+  })
 })
 
 const projectsFilteredLabelDelay = ref(null);
@@ -153,20 +188,6 @@ const updateProjectsView = (newVal) => {
             }})
       }})
 }
-
-// Select filter
-// watch(() => storeDatas.projectsFiltered, (newVal, oldVal) => {
-//   console.log('watch projectsFiltered', newVal, oldVal);
-//   nextTick(() => {
-//     updateProjectsView(newVal)
-//   })
-// })
-watch(() => storeDatas.projectsFilteredPagination, (newVal, oldVal) => {
-  console.log('watch projectsFilteredPagination', newVal.length, oldVal.length);
-  nextTick(() => {
-    updateProjectsView(newVal)
-  })
-})
 
 const updateFilteredLabel = (newVal) => {
   // projectsFilteredDelay.value = newVal ? newVal : storeDatas.projectsFiltered

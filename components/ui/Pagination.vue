@@ -7,8 +7,6 @@
 </template>
 
 <script setup>
-// import { toRef } from '@vueuse/core';
-
 const emit = defineEmits(['onPageUpdate'])
 
 const props = defineProps({
@@ -28,6 +26,7 @@ watch(() => props.currentPage, (val) => {
   console.log('currentPage', val);
   state.currentPage = val;
 })
+
 watch(() => props.totalPages, (val) => {
   console.log('totalPages', val);
   state.totalPages = val;
