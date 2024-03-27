@@ -1,10 +1,10 @@
 <template>
-  <div class="header">
+  <header class="header">
     <NuxtLink id="header-logo" class="header__logo" to="/"
         data-mouse-cursor="hover">
       <Logo class="header__logo__logo" />
     </NuxtLink>
-    <div class="header__menu">
+    <nav class="header__menu">
       <div 
         class="header__menu__button"
         v-on:click="onClickMenuButton"
@@ -35,10 +35,10 @@
         </div>
       </div>
       <div class="header__menu__zone" v-on:click="closeMenu"></div>
-    </div>
+    </nav>
     <Keywords :show="bShowKeywords" />
 
-  </div>
+  </header>
 </template>
 
 <script setup>
