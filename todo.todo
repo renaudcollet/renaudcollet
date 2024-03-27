@@ -91,14 +91,14 @@ Animation:
         ✔ project item last keyword not visible on mobile @done(24-02-08 17:37)
         ✘ 3D shadows ! Baking ? @cancelled(24-03-15 15:26)
         ☐ When page work id is longer than page work, the scroll value is not good - it all bugs
-        ☐ Pagination on work page
-        ☐ Page work premiere visite, dérouler le menu filtres
-        ☐ Possibilité d'ordonner les filtres
+        ✔ Pagination on work page @done(24-03-22 17:28)
+        ✔ Page work premiere visite, dérouler le menu filtres @done(24-03-22 17:28)
+        ✔ Possibilité d'ordonner les filtres @done(24-03-22 17:28)
         ☐ Filtres parameter in url
         ☐ RGB shift
         ☐ When going from index to page work id, then to page work, the scroll value is not good
         ☐ GTAG
-        ☐ Page work id, video big ne se calle plus sur le haut de la page
+        ✔ Page work id, video big ne se calle plus sur le haut de la page @done(24-03-27 14:09)
         ☐ Cover in page work id, image behind is visible on the edge
 
         Admin:

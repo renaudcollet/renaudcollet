@@ -8,8 +8,7 @@ Upload to ionos, then restart Nodejs App in Plesk admin panel
 
 Logs: Nodejs Logs on server are in /var/log/passenger/passenger.log, access with root user
 
-
-## Plesk Server errors logs !
+## Plesk Server errors logs
 
 Have a look in /var/log/passenger with root user
 
