@@ -61,7 +61,6 @@ export default defineNuxtConfig({
         { property: 'og:url', content: 'https://renaudcollet.com' },
         { property: 'og:type', content: 'website' },
         { property: 'og:title', content: 'Développeur Frontend Freelance' },
-        // { property: 'og:description', content: "Frontend Creative developer programing and animating websites or DOOH using nuxtjs, vuejs, threejs, gsap, phaserjs and laravel for your backend and api" }, // Set with code
         { property: 'og:description', content: "Freelance Créative développeur frontend qui programme et anime des sites internets ou des DOOH en utilisant nuxtjs, vuejs, threejs, gsap, phaserjs et laravel pour le backend et l'api" }, // Set with code
         { property: 'og:image', content: "https://renaudcollet.com/opengraph.png" }, // Set with code
       ],
