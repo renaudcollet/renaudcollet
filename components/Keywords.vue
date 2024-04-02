@@ -82,7 +82,7 @@ const isSelected = (oItem) => {
 }
 
 const onClickItem = (oItem) => {
-  console.log('> onClickItem', oItem.id, oItem.attributes.projets.data);
+  // console.log('> onClickItem', oItem.id, oItem.attributes.projets.data);
 
   if (router.currentRoute.value.name !== 'works') {
     router.push({ name: 'works' })
@@ -107,7 +107,7 @@ const onClickRemoveItem = (oItem) => {
 }
 
 watch(() => props.show, (newValue, oldValue) => {
-  console.log('> watch show', newValue, oldValue);
+  // console.log('> watch show', newValue, oldValue);
   if (newValue === true) {
     openMenu()
   } else {
@@ -184,7 +184,6 @@ const closeMenu = () => {
 }
 
 const openMenu = () => {
-  console.log('> openMenu !!!');
   isMenuOpened = true
 
   gsap.killTweensOf('.keywords__menu__zone')
@@ -229,7 +228,7 @@ onMounted(() => {
   gsap.set('.keywords__menu__button__arrow__right', { autoAlpha: 0, transform: 'scale(0)' })
   gsap.set('.keywords__menu__button', { autoAlpha: 0 })
 
-  console.log('> onMounted', isDesktop.value, props.show);
+  // console.log('> onMounted', isDesktop.value, props.show);
   if (isDesktop.value === true && props.show === true)
     openMenu()
 })

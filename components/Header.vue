@@ -70,7 +70,7 @@ export default {
     }
   },
   mounted() {
-    console.log('Header mounted');
+    // console.log('Header mounted');
     gsap.set('.header__menu', { visibility: 'visible' })
     gsap.set('.header__menu__content', { height: 0 })
     gsap.set('.header__menu__zone', { autoAlpha: 0 })
