@@ -194,7 +194,7 @@ const onMouseout = () => {
     // delay: 0.2,
     ease: 'power2.out',
     onUpdate: () => {
-      if (imagePlane.value.planeMesh === null) {
+      if (imagePlane.value === null || imagePlane.value.planeMesh === null) {
         return;
       }
       imagePlane.value.planeMesh.uniforms.uScale.value = zoomValue.u
