@@ -215,7 +215,7 @@ const onMouseover = () => {
     // delay: 0.2,
     ease: 'power2.inOut',
     onUpdate: () => {
-      if (imagePlane.value.planeMesh === null) {
+      if (imagePlane.value === null || imagePlane.value.planeMesh === null) {
         return;
       }
       imagePlane.value.planeMesh.uniforms.uScale.value = zoomValue.u

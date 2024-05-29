@@ -64,14 +64,14 @@ const { curtainsForTransition, backgroundForTransition } = useTransitionComposab
 const onLockScroll = (isLocked, animate, scrollY = 0) => {
   // storeDatas.lockScroll = isLocked;
   if (!isLocked) {
-    // console.log(`SCROLL ACTIVATED, scrollY: ${scrollY}, immediate: ${!animate}`);
+    console.log(`SCROLL ACTIVATED, scrollY: ${scrollY}, immediate: ${!animate}`);
     lenis.start()
     lastScroll = 0 // To prevent having a bump when scroll sudenly change between pages
     lenis.scrollTo(scrollY, {immediate: !animate })
     lastScroll = 0 // To prevent having a bump when scroll sudenly change between pages
     // console.log(`UNLOCK SCROLL - scrollY: ${scrollY} lastScroll: ${lastScroll}`);
   } else {
-    // console.log(`SCROLL STOPPED, scrollY: ${storeDatas.scrollY}`);
+    console.log(`SCROLL STOPPED, scrollY: ${storeDatas.scrollY}`);
     lenis.stop()
   } 
 }

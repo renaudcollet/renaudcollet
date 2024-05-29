@@ -199,8 +199,9 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
 })
 
 const onCoverReady = (e) => {
+  console.log('---> onCoverReady', e);
   setTimeout(() => {
-    console.log('---> onCoverReady', e);
+    // console.log('---> onCoverReady', e);
     storeDatasCurtains.removeCurrentPlaneCover()
     storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
     bMountPlanes.value = true;
@@ -235,7 +236,7 @@ const xxlarge = currentProjectCover.formats.xxlarge !== undefined ? currentProje
 const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProjectCover.formats.xlarge.url : currentProjectCover.url;
 // const large = currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;
 
-console.log('IMAGE COVER URL', xxlarge);
+// console.log('IMAGE COVER URL', xxlarge);
 
 const skipCoverAnimation = computed(() => {
   return storeDatas.previousPage !== null

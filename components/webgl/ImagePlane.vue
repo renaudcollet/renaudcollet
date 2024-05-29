@@ -149,6 +149,8 @@ const planeProps = {
   },
 }
 
+const emit = defineEmits(['ready']);
+
 const isReady = ref(false);
 const isVisible = toRef(props, 'isVisible');
 
@@ -213,7 +215,10 @@ const disappear = () => {
 // }
 
 const onReady = (plane) => {
+  console.log('!!!! onReady in ImagePlane', plane);
   planeMesh.value = plane; // extends DOMMesh
+  emit('ready', plane)
+
   nextTick(() => {
       // plane.images[0].style.opacity = 0
       // plane.resize()

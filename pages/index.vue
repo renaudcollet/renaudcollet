@@ -136,6 +136,8 @@ const onClickProjectItem = (id, imagePlane) => {
   emit('onLockScroll', true)
 }
 
+let tl
+
 onMounted(() => {
   // ERROR: After page is unmounted, 
   // and then mounted again, 
@@ -146,7 +148,7 @@ onMounted(() => {
   gsap.set(indexLogo.value, { top: '50%', left: '50%', translateX: '-50%', translateY: '-50%', opacity: 0 })
   gsap.set(job.value, { top: '50%', left: '50%', translateX: '-50%', translateY: '-50%', opacity: 0 })
 
-  const tl = gsap.timeline()
+  tl = gsap.timeline()
   if (debug.SKIP_INTRO) tl.timeScale(5)
   tl
     .to(job.value, { delay: 0.5, opacity: 1 })
@@ -243,6 +245,8 @@ const expandCover = (imagePlane) => {
 
 onBeforeUnmount(() => {  
   // console.log('HOME onBeforeUnmount');
+  tl.kill()
+  tl.killTweensOf(scrollDown.value)
   gsap.killTweensOf(scrollDown.value)
   clearScrollReveal()
 
