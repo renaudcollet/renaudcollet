@@ -1,6 +1,7 @@
 <template>
   <header class="header">
     <NuxtLink id="header-logo" class="header__logo" to="/"
+        :aria-current="route.currentRoute.value.name === 'index' ? 'page' : null"
         data-mouse-cursor="hover">
       <Logo class="header__logo__logo" />
     </NuxtLink>
@@ -14,22 +15,30 @@
       </div>
       <div class="header__menu__content">
         <NuxtLink class="js-menu-item" to="/works" v-on:click="onClickItem"
-        data-mouse-cursor="hover">
+          :aria-current="route.currentRoute.value.name === 'works' ? 'page' : null"
+          data-mouse-cursor="hover"
+        >
           <div class="front">Works</div>
           <div class="back">Works</div>
         </NuxtLink>
         <NuxtLink class="js-menu-item" to="/about" v-on:click="onClickItem"
-        data-mouse-cursor="hover">
+          :aria-current="route.currentRoute.value.name === 'about' ? 'page' : null"
+          data-mouse-cursor="hover"
+        >
           <div class="front">About</div>
           <div class="back">About</div>
         </NuxtLink>
         <NuxtLink class="js-menu-item" to="/contact" v-on:click="onClickItem"
-        data-mouse-cursor="hover">
+          :aria-current="route.currentRoute.value.name === 'contact' ? 'page' : null"
+          data-mouse-cursor="hover"
+        >
           <div class="front">Contact</div>
           <div class="back">Contact</div>
         </NuxtLink>
         <div class="header__menu__content__logo js-menu-item">
-          <NuxtLink class="logo" to="/" v-on:click="onClickItem">
+          <NuxtLink class="logo" to="/" v-on:click="onClickItem"
+            :aria-current="route.currentRoute.value.name === 'index' ? 'page' : null"
+          >
             <Logo />
           </NuxtLink>
         </div>
@@ -44,6 +53,9 @@
 <script setup>
 
 const route = useRouter()
+
+// console.log('Header route', route.currentRoute.value.name);
+
 watch(() => route.currentRoute.value, (newValue, oldValue) => {
   // console.log('Header route changed', newValue.name, oldValue.name);
   bShowKeywords.value = newValue.name === 'works'
