@@ -153,10 +153,13 @@ section {
 
   p {
     @include font-main();
-    font-weight: 300;
-    margin-bottom: 0;
-    margin-left: 60px;
-    width: calc(100% - 120px);
+
+    & {
+      font-weight: 300;
+      margin-bottom: 0;
+      margin-left: 60px;
+      width: calc(100% - 120px);
+    }
 
     @include media-breakpoint-up(lg) {
       font-size: 16px;

@@ -170,10 +170,13 @@
     
       &__text {
         @include font-main();
-        font-weight: normal;
-        padding: 0 45px;
-        text-align: center;
-        margin-top: 0;
+
+        & {
+          font-weight: normal;
+          padding: 0 45px;
+          text-align: center;
+          margin-top: 0;
+        }
   
         @include media-breakpoint-up(lg) {
           text-align: left;
