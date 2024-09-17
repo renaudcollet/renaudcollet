@@ -52,7 +52,7 @@ export default defineNuxtConfig({
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { hid: 'description', name: 'description', content: "Freelance Frontend and Créative développeur qui programme et anime des sites internets ou des DOOH en utilisant nuxtjs, vuejs, threejs, gsap, phaserjs et laravel pour le backend et l'api" }, // Set with code
+        { hid: 'description', name: 'description', content: "Freelance Créative développeur frontend qui programme et anime des sites internets ou des DOOH en utilisant nuxtjs, vuejs, threejs, gsap, phaserjs et laravel pour le backend et l'api" }, // Set with code
         { name: 'theme-color', content: '#000000' },
         { name: 'robots', content: process.env.NUXT_PREPROD_APP ? 'none' : 'all' },
         // { name: 'msapplication-TileColor', content: '#da532c' },
@@ -61,7 +61,7 @@ export default defineNuxtConfig({
         { property: 'og:url', content: 'https://renaudcollet.com' },
         { property: 'og:type', content: 'website' },
         { property: 'og:title', content: 'Développeur Frontend Freelance' },
-        { property: 'og:description', content: "Freelance Frontend and Créative développeur qui programme et anime des sites internets ou des DOOH en utilisant nuxtjs, vuejs, threejs, gsap, phaserjs et laravel pour le backend et l'api" }, // Set with code
+        { property: 'og:description', content: "Freelance Créative développeur frontend qui programme et anime des sites internets ou des DOOH en utilisant nuxtjs, vuejs, threejs, gsap, phaserjs et laravel pour le backend et l'api" }, // Set with code
         { property: 'og:image', content: "https://renaudcollet.com/opengraph.png" }, // Set with code
       ],
       link: [
