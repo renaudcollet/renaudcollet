@@ -16,6 +16,7 @@ Intégration:
     ✘ Titles colors change each load : @cancelled(24-01-15 11:07)
         $font-title-color: #f7eedd;
         $font-color: #fffaf2; // #928282
+    ☐ Homepage assombrir au scroll
 
 Page transition:
     // Nuxt page transition with gsap : https://stackblitz.com/edit/nuxt-starter-bthjlg
@@ -32,6 +33,7 @@ Bug:
 
 Menu: 
     ✔ Rollover triangle @done(23-10-10 10:07)
+    ✔ Show filters on homepage @done(24-09-18 15:18)
 
 Animation:
     ✔ Titles and Vignettes should appear with a skew mask animation @done(23-09-21 16:56)
@@ -106,7 +108,6 @@ Animation:
         ✔ Media Library not showing images -> because of security on the server @done(24-02-22 12:47)
         (verify that Web App Firewall -> Switch off security rules : 211760)
 
-
     ✘ Particles : @cancelled(24-01-15 11:13)
         Joshua Davis - https://codepen.io/jshuadvd/pen/ogKeBB
         https://nullprogram.com/webgl-particles/
@@ -148,9 +149,8 @@ SEO:
 
 Build: 
     ☐ Create a clear console, then add console.log (like lusion.co)
-    
 
 Optimization:
     https://medium.com/@khalidoghli7/lets-cover-some-powerful-feature-to-be-vue-jedi-master-2e0134910a0b#de97
     ☐ Use defineAsyncComponent for footer
-    ☐ Use defineAsyncComponent for filters ?
+    ☐ Use defineAsyncComponent for keywords ?

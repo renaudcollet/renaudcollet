@@ -19,6 +19,7 @@
         data-scroll-reveal-opacity-y
         data-scroll-reveal-delay="0.5"
         data-scroll-reveal-duration="0.5"
+        data-scroll-reveal-callback="show-keywords"
       >
         <span class="front">{{storeDatas.accueil.data.attributes.Titre}}</span>
         <span class="back">{{storeDatas.accueil.data.attributes.Titre}}</span>
@@ -75,6 +76,7 @@ const props = defineProps({
 
 // const { initLogoObserver, clearLogoObserver } = useLogoObserver();
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
+
 const { transitionState, elementsToTransition, functionTransitionCallback, curtainsForTransition, backgroundForTransition } = useTransitionComposable();
 
 /**
@@ -178,11 +180,17 @@ onMounted(() => {
       ease: 'power4.out',
     })
 
+  const scrollRevealCallback = (name) => {
+    console.log('scrollRevealCallback', name);
+    if (name === 'show-keywords')
+      storeDatas.setShowKeywords(true)
+  }
+
   nextTick(() => {
     scrollZone.value.style.height = `${window.innerHeight * 2}px`  
     emit('onScrollZone', scrollZone.value)
 
-    initScrollReveal(root.value)
+    initScrollReveal(root.value, scrollRevealCallback)
   })
 })
 

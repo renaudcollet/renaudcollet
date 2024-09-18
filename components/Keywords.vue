@@ -1,6 +1,6 @@
 <template>
   <div class="keywords">
-    <div class="keywords__menu">
+    <div class="keywords__menu" ref="menu">
       <div 
         class="keywords__menu__button"
         v-on:click="onClickMenuButton"
@@ -58,6 +58,8 @@
 import gsap from 'gsap'
 import { useDatasStore, S_DATA_PROJECTS, S_DATA_KEYWORDS } from '~/stores/datas'
 
+const menu = ref(null)
+
 const router = useRouter();
 
 const storeDatas = useDatasStore()
@@ -107,13 +109,30 @@ const onClickRemoveItem = (oItem) => {
 }
 
 watch(() => props.show, (newValue, oldValue) => {
-  // console.log('> watch show', newValue, oldValue);
+  console.log('> Keywords watch show', newValue, oldValue);
   if (newValue === true) {
-    openMenu()
+    showMenu()
   } else {
-    closeMenu()
+    hideMenu()
   }
 })
+
+const showMenu = () => {
+  gsap.to(menu.value, {
+    duration: 0.2,
+    autoAlpha: 1,
+    onComplete: () => {
+      showButton()
+    }
+  })
+}
+
+const hideMenu = () => {
+  gsap.to(menu.value, {
+    duration: 0.2,
+    autoAlpha: 0
+  })
+}
 
 const onClickMenuButton = () => {
   if (isMenuOpened) {
@@ -123,6 +142,7 @@ const onClickMenuButton = () => {
     openMenu()
   }
 }
+
 
 const hideButton = () => {
   if (props.show === false) {
@@ -229,8 +249,9 @@ onMounted(() => {
   gsap.set('.keywords__menu__button', { autoAlpha: 0 })
 
   // console.log('> onMounted', isDesktop.value, props.show);
-  if (isDesktop.value === true && props.show === true)
-    openMenu()
+  if (isDesktop.value === true && props.show === true) {
+    showMenu()
+  }
 })
 </script>
 

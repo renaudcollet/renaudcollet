@@ -31,6 +31,7 @@ export const useDatasStore = defineStore( 'datas', {
     scrollY: 0,
     currentPage: null,
     previousPage: null,
+    showKeywords: false,
   }),
 
   actions: {
@@ -93,7 +94,6 @@ export const useDatasStore = defineStore( 'datas', {
     },
 
     async fetchDatas(apiId) {
-
       // console.log('--- Fetching datas for ', apiId);
 
       switch (apiId) {
@@ -203,6 +203,10 @@ export const useDatasStore = defineStore( 'datas', {
       } catch(e) {
         console.log(`Error fetching - ${e}`);
       }
+    },
+
+    setShowKeywords(value) {
+      this.showKeywords = value
     }
   }
 })

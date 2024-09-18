@@ -46,27 +46,31 @@
       <div class="header__menu__zone" v-on:click="closeMenu"></div>
     </nav>
     <Keywords :show="bShowKeywords" />
-
   </header>
 </template>
 
 <script setup>
-
+import { useDatasStore } from '~/stores/datas'
 const route = useRouter()
-
-// console.log('Header route', route.currentRoute.value.name);
-
-watch(() => route.currentRoute.value, (newValue, oldValue) => {
-  // console.log('Header route changed', newValue.name, oldValue.name);
-  bShowKeywords.value = newValue.name === 'works'
-})
 
 const bShowKeywords = ref(false)
 
+const storeDatas = useDatasStore()
+// // console.log('Header route', route.currentRoute.value.name);
+
+watch(() => storeDatas.showKeywords, (newValue, oldValue) => {
+  console.log('Header show keywords changed', newValue, oldValue);
+  bShowKeywords.value = newValue
+})
+
+watch(() => route.currentRoute.value, (newValue, oldValue) => {
+  console.log('Header route changed', newValue.name, oldValue.name);
+  bShowKeywords.value = newValue.name === 'works'
+})
+
 onMounted(() => {
-  // console.log('Header mounted composition');
   bShowKeywords.value = route.currentRoute.value.name === 'works'
-  // console.log('Header route show keywords', route.currentRoute.value.name, bShowKeywords.value);
+  console.log('Header route show keywords', route.currentRoute.value.name, bShowKeywords.value);
 })
 </script>
 

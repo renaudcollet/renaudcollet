@@ -7,13 +7,15 @@ import gsap from 'gsap'
  * <div class="scroll-reveal" 
     data-scroll-reveal-opacity-y OR data-scroll-reveal-height OR data-scroll-reveal-clip-path
     data-scroll-reveal-delay="0.0"
-    data-scroll-reveal-duration="0.5">Lorem ipsum dolor sit amet</div>
+    data-scroll-reveal-duration="0.5"
+    data-scroll-reveal-callback="any-name-you-want">Lorem ipsum dolor sit amet</div>
  */
+
 export default function useScrollReveal() {
 
   let intersectionObserver = null
 
-  function initScrollReveal(el) {
+  function initScrollReveal(el, callback) {
     if (!el) return;
     
       const targets = Array.from(el.querySelectorAll('.scroll-reveal'))
@@ -27,6 +29,12 @@ export default function useScrollReveal() {
 
             const _duration = entry.target.dataset.scrollRevealDuration
             const _delay = entry.target.dataset.scrollRevealDelay
+            const _callbackName = entry.target.dataset.scrollRevealCallback
+
+            if (_callbackName && callback)  {
+              callback(_callbackName)
+            }
+
             if (entry.target.dataset.scrollRevealOpacityY !== undefined) {
               gsap.set(entry.target, {opacity: 0, y: 40, x: 0, z: 0})
               gsap.to(entry.target, {
@@ -81,6 +89,6 @@ export default function useScrollReveal() {
 
     return {
       initScrollReveal,
-      clearScrollReveal
+      clearScrollReveal,
     }
 };
