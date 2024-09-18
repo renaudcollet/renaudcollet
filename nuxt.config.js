@@ -57,7 +57,7 @@ export default defineNuxtConfig({
         { name: 'robots', content: process.env.NUXT_PREPROD_APP ? 'none' : 'all' },
         // { name: 'msapplication-TileColor', content: '#da532c' },
         // { name: 'msapplication-TileImage', content: 'images/tileimage.jpg' },
-        { name: 'apple-mobile-web-app-capable', content: 'yes' },
+        { name: 'mobile-web-app-capable', content: 'yes' },
         { property: 'og:url', content: 'https://renaudcollet.com' },
         { property: 'og:type', content: 'website' },
         { property: 'og:title', content: 'Développeur Frontend Freelance' },
