@@ -11,7 +11,7 @@
     "@types/three": "^0.157.0",
     "cssnano": "^5.1.15",
     "nuxt": "3.7.1",
-    "postcss": "^8.4.31",
+    "postcss": "^8.5.23",
     "postcss-cli": "^10.1.0",
     "postcss-nested": "^6.0.1",
     "sass": "^1.69.3",

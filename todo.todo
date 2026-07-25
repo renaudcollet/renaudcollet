@@ -153,8 +153,17 @@ SEO:
     ☐ Add google analytics - Use partytown https://partytown.builder.io/getting-started
         -> See lusion.co for example
 
-Build: 
+Build:
     ☐ Create a clear console, then add console.log (like lusion.co)
+
+Sécurité / dépendances:
+    ✔ Supprimer nuxt-seo-kit (inutilisé, tirait shell-quote vulnérable) @done(26-07-26 01:20)
+    ✔ postcss 8.4.47 -> 8.5.23 (GHSA-r28c-9q8g-f849, GHSA-6g55-p6wh-862q) @done(26-07-26 01:35)
+    ☐ Décider pour les 39 alertes restantes (svgo, minimatch, glob, rollup...)
+        Toutes en devDependencies via nuxt/vite, absentes de .output, donc pas exposées en prod.
+        `npm audit fix` = 153 add / 153 change / 95 remove, dont @nuxt/kit 3.13.2 -> 3.21.9
+        et nitropack 2.9.7 -> 2.13.4, risqué avec nuxt épinglé à 3.7.1.
+        Le vrai correctif est de monter Nuxt (>= 3.16), ce qui débloquerait aussi @nuxtjs/seo.
 
 Optimization:
     https://medium.com/@khalidoghli7/lets-cover-some-powerful-feature-to-be-vue-jedi-master-2e0134910a0b#de97
