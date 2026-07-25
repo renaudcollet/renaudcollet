@@ -16,7 +16,7 @@ Intégration:
     ✘ Titles colors change each load : @cancelled(24-01-15 11:07)
         $font-title-color: #f7eedd;
         $font-color: #fffaf2; // #928282
-    ☐ Homepage assombrir au scroll
+    ✔ Homepage assombrir au scroll @done(24-09-18 16:27)
 
 Page transition:
     // Nuxt page transition with gsap : https://stackblitz.com/edit/nuxt-starter-bthjlg
@@ -30,6 +30,7 @@ Bug:
     ✘ Error when go from another page to homepage @cancelled(23-10-10 11:56)
         Might be du to .env file wrong IPs
     ☐ Mouse cursor is visible on ipad when click on a project or a link
+    ☐ When returning to the homepage, the cover is not visible
 
 Menu: 
     ✔ Rollover triangle @done(23-10-10 10:07)
@@ -38,7 +39,7 @@ Menu:
 Animation:
     ✔ Titles and Vignettes should appear with a skew mask animation @done(23-09-21 16:56)
     ✔ Transition on the cover when click homepage project to project page @done(24-01-15 11:14)
-    ☐ Mouse hover on project item should be triggered when scrolling while mouse not moving
+    (☐ Mouse hover on project item should be triggered when scrolling while mouse not moving)
     -> https://codepen.io/kleinfreund/pen/XYdBYP
     
     Webgl:
@@ -141,8 +142,8 @@ Data:
     ✘ slug : prepend brand to slug @cancelled(23-09-28 12:30) 
 
 SEO:
-    ☐ Add meta tags
-    ☐ Add sitemap
+    ✔ Add meta tags @done(24-09-20 16:35)
+    ✘ Add sitemap @cancelled(24-09-20 16:35)
     ☐ Add robots.txt
     ☐ Add google analytics - Use partytown https://partytown.builder.io/getting-started
         -> See lusion.co for example

@@ -181,7 +181,7 @@ export const useDatasStore = defineStore( 'datas', {
             this.about = data.value
             break;
           case S_DATA_PROJECTS:
-            console.log(`Data from ${apiId}`, data.value);
+            // console.log(`Data from ${apiId}`, data.value);
             this.projects = data.value.data
             this.projectsById = {}
             this.projects.forEach(project => {
@@ -196,7 +196,7 @@ export const useDatasStore = defineStore( 'datas', {
             break;
           case S_DATA_KEYWORDS:
             this.keywords = data.value
-            console.log(`Data from ${apiId}`, data.value);
+            // console.log(`Data from ${apiId}`, data.value);
             break;
           default:
         }

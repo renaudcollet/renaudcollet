@@ -181,7 +181,6 @@ onMounted(() => {
     })
 
   const scrollRevealCallback = (name) => {
-    console.log('scrollRevealCallback', name);
     if (name === 'show-keywords')
       storeDatas.setShowKeywords(true)
   }
