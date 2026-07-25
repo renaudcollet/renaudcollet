@@ -89,6 +89,7 @@
 import { onMounted, onUnmounted, ref, nextTick, onBeforeUnmount } from "vue";
 import { useDatasStore, S_DATA_CONTACT } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
+import useSeo from '~/compositions/use-seo';
 import gsap from 'gsap';
 import { defaultTransition, durationEnterDefault} from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
@@ -108,6 +109,14 @@ const props = defineProps({
 
 const datasContact = storeDatas.contact.data;
 const config = useRuntimeConfig()
+
+// The strapi `description` is a ui label ("Feel free to contact me through :"),
+// too short to work as a meta description, so this one is written here.
+useSeo({
+  title: datasContact.attributes.titre || 'Contact',
+  description: "Contactez Renaud Collet, développeur frontend freelance, pour vos projets de sites internet, d'expériences WebGL et de dispositifs DOOH.",
+  image: datasContact.attributes.cover,
+});
 
 const root = ref(null);
 const showTel = ref(false)

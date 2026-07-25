@@ -58,6 +58,7 @@
 <script setup>
 import { useDatasStore, S_DATA_ACCUEIL, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
+import useSeo from '~/compositions/use-seo';
 import gsap from 'gsap';
 import { workTransition, durationEnterWork, durationLeaveWork } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
@@ -68,6 +69,12 @@ const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
 await fetchDatas(S_DATA_ACCUEIL);
 await fetchDatas(S_DATA_PROJECTS);
+
+useSeo({
+  title: 'Projets',
+  description: "Sélection de projets web, WebGL et DOOH réalisés en freelance : sites internet, expériences interactives et dispositifs événementiels.",
+  image: storeDatas.accueil.data.attributes.cover,
+});
 
 const props = defineProps({
   onRender: {

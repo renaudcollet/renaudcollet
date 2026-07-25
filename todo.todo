@@ -142,9 +142,14 @@ Data:
     ✘ slug : prepend brand to slug @cancelled(23-09-28 12:30) 
 
 SEO:
-    ✔ Add meta tags @done(24-09-20 16:35)
-    ✘ Add sitemap @cancelled(24-09-20 16:35)
-    ☐ Add robots.txt
+    ✔ Add meta tags @done(26-07-26 01:20)
+        Per page title / description / og / canonical -> compositions/use-seo.js
+    ✔ Add sitemap @done(26-07-26 01:20)
+        server/routes/sitemap.xml.js, project slugs fetched from strapi at request time
+    ✔ Add robots.txt @done(26-07-26 01:20)
+        server/routes/robots.txt.js, disallow all when NUXT_PREPROD_APP is set
+    ☐ Remplir le champ `description` du single type `seo` dans strapi (encore le texte placeholder)
+    ☐ Remplir SIRET et adresse dans pages/legal.vue
     ☐ Add google analytics - Use partytown https://partytown.builder.io/getting-started
         -> See lusion.co for example
 

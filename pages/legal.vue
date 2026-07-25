@@ -4,52 +4,76 @@
       <div class="block">
         <div class="header-minimize" data-header-scroll-minimize></div>
         <h1 class="title-agence" data-scroll-index="0">Mentions légales<sub class="big-underscore">&nbsp;—</sub></h1>
+
+        <h2>Éditeur du site</h2>
         <p>
-          <span v-html="findAndReplaceGroupie(legals.value)"></span>
+          Renaud Collet, développeur web freelance.<br>
+          SIRET : {{ siret }}<br>
+          Adresse : {{ address }}<br>
+          Contact : <a href="mailto:hello@renaudcollet.com">hello@renaudcollet.com</a><br>
+          Directeur de la publication : Renaud Collet
+        </p>
+
+        <h2>Hébergement</h2>
+        <p>
+          Le site est hébergé par IONOS SARL, 7 place de la Gare, 57200 Sarreguemines, France.<br>
+          Site : <a href="https://www.ionos.fr" target="_blank" rel="noopener">www.ionos.fr</a>
+        </p>
+
+        <h2>Propriété intellectuelle</h2>
+        <p>
+          L'ensemble des contenus présents sur ce site (textes, images, vidéos, animations et code)
+          est la propriété de Renaud Collet ou de ses clients respectifs, sauf mention contraire.
+          Toute reproduction ou représentation, totale ou partielle, sans autorisation écrite
+          préalable est interdite.
+        </p>
+
+        <h2>Données personnelles</h2>
+        <p>
+          Ce site ne collecte aucune donnée personnelle via un formulaire. Les échanges se font
+          par email ou par téléphone, à votre initiative. Conformément au RGPD, vous disposez d'un
+          droit d'accès, de rectification et de suppression des données que vous m'auriez
+          transmises, en écrivant à <a href="mailto:hello@renaudcollet.com">hello@renaudcollet.com</a>.
+        </p>
+
+        <h2>Mesure d'audience</h2>
+        <p>
+          Ce site utilise Google Analytics afin de mesurer la fréquentation des pages.
+          Les données collectées sont anonymisées et ne sont pas cédées à des tiers.
         </p>
       </div>
     </section>
-    <Footer :projects="projects" :footer="footer"></Footer>
-  </div>  
+    <FooterSimple />
+  </div>
 </template>
 
 <script>
 import gsap from 'gsap';
 import utilsDevice from '~~/mixins/utils-device.js';
-import { useDatasStore } from '~/stores/datas';
 import scrollHeaderMinimize from '~~/mixins/scroll-header-minimize';
+import useSeo from '~/compositions/use-seo';
 
 export default {
   setup() {
-    const storeDatas = useDatasStore()
-
-    // I don't know why, I can't use useHead() after receiving the data from the store in the default layout
-    useHead({
-      // titleTemplate: '%s - Accueil',
-      titleTemplate: '%s',
-      meta: [
-        { name: "description", content: datasSEO.blocks[0].value },
-        { property: 'og:description', content: datasSEO.blocks[0].value },
-        { property: 'og:image', content: datasSEO.blocks[1].value },
-      ],
+    // Nothing is awaited here on purpose: in an Options API setup() there is no
+    // withAsyncContext() wrapper, so a composable called after an await would lose
+    // the component instance (this is what broke the previous useHead() call).
+    useSeo({
+      title: 'Mentions légales',
+      description: "Mentions légales du site renaudcollet.com : éditeur, hébergeur, propriété intellectuelle et traitement des données personnelles.",
+      noindex: true,
     })
 
     return {
-      projects: storeDatas.projects,
-      footer: storeDatas.footer,
-      legals: storeDatas.legals.sections[0].blocks[0],
+      // TODO: à compléter avec les informations réelles avant mise en ligne
+      siret: 'XXX XXX XXX XXXXX',
+      address: 'À compléter',
     }
   },
 
   mounted() {
     gsap.killTweensOf('#header-logo')
     gsap.to('#header-logo', { autoAlpha: 1 })
-  },
-
-  methods: {
-    findAndReplaceGroupie(content) {
-      return content.replace(/Groupie/g, '<span class="font-groupie">Groupie</span>');
-    },
   },
 
   mixins: [
@@ -151,12 +175,21 @@ section {
     }
   }
 
+  a {
+    color: inherit;
+    text-decoration: underline;
+
+    &:hover {
+      color: $font-title-color;
+    }
+  }
+
   p {
     @include font-main();
 
     & {
       font-weight: 300;
-      margin-bottom: 0;
+      margin-bottom: 30px;
       margin-left: 60px;
       width: calc(100% - 120px);
     }

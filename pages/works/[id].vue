@@ -116,6 +116,7 @@
 <script setup>
 import { useDatasStore, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
+import useSeo, { stripHtml } from '~/compositions/use-seo';
 import useZoomableImage from '~/compositions/use-zoomable-image';
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
 import gsap from 'gsap';
@@ -228,6 +229,34 @@ const currentProject = datasProjets.find(project => {
 const currentProjectCover = currentProject.attributes.cover.data.attributes
 const currentProjectBlocs = currentProject.attributes.bloc
 const keywords = currentProject.attributes.keywords.data
+
+// Each project gets its own title, description and share image, otherwise google
+// sees every /works/* url as a duplicate of the home page.
+const seoProjectTitle = (currentProject.attributes.titre || '').trim()
+const seoBrand = (currentProject.attributes.brand || '').trim()
+const seoAgency = (currentProject.attributes.agency || '').trim()
+
+const seoTitle = seoBrand && seoBrand !== seoProjectTitle
+  ? `${seoProjectTitle} - ${seoBrand}`
+  : seoProjectTitle
+
+// About half the projects have no `resume` filled in strapi. Rather than letting
+// them all fall back to the same site wide description, build a unique one out of
+// the fields that are always there.
+const seoFallbackDescription = [
+  seoBrand ? `${seoProjectTitle}, projet réalisé pour ${seoBrand}` : seoProjectTitle,
+  seoAgency ? ` avec ${seoAgency}` : '',
+  '.',
+  keywords.length ? ` ${keywords.map(item => item.attributes.key).join(', ')}.` : '',
+].join('')
+
+useSeo({
+  title: seoTitle,
+  description: stripHtml(currentProject.attributes.resume) || seoFallbackDescription,
+  image: currentProject.attributes.cover,
+  imageAlt: seoProjectTitle,
+  type: 'article',
+})
 
 // const coverSrc = computed(() => {
 //   return currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;

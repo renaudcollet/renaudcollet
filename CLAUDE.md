@@ -70,6 +70,14 @@ The store also owns keyword filtering (`filterProjects`), client-side pagination
 
 `stores/datasCurtains.js` owns WebGL state that must survive page changes: the curtains instance, `planesToRemove`, and `currentPlaneCover` (the plane that morphs from a project thumbnail into the project page cover).
 
+### SEO
+
+`compositions/use-seo.js` is the single entry point for page metadata. Every page calls `useSeo({ title, description, image })` in its `<script setup>` after the `fetchDatas()` calls; the composable cleans Strapi html out of the description, truncates it, resolves Strapi media to an absolute opengraph url, appends the site name to the title, and emits the canonical link plus the opengraph and twitter tags. The global fallbacks are the Strapi `seo` single type and, failing that, the description in `nuxt.config.js`.
+
+Do not call `useSeoMeta`/`useHead` after an `await` in an Options API `setup()` (as opposed to `<script setup>`): there is no `withAsyncContext()` wrapper there, so the component instance is lost and the tags are silently dropped. `pages/legal.vue` calls `useSeo()` before anything async for this reason.
+
+`server/routes/robots.txt.js` and `server/routes/sitemap.xml.js` are generated at request time rather than sitting in `public/`, so `robots.txt` can honour `NUXT_PREPROD_APP` and the sitemap can list project slugs pulled live from Strapi without a rebuild.
+
 ### Styling
 
 SCSS with `variables.scss`, `bootstrap` (grid subset) and `mixins.scss` **auto-injected into every component** via `vite.css.preprocessorOptions.additionalData`. Never re-import those three in a component `<style>` block. Global partials are aggregated in `assets/styles/main.scss`; per-component styles that are shared across pages live there as `_partial.scss` files rather than in the SFC.

@@ -51,6 +51,7 @@
 <script setup>
 import { useDatasStore, S_DATA_ABOUT } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
+import useSeo from '~/compositions/use-seo';
 import gsap from 'gsap';
 import { defaultTransition, durationEnterDefault } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
@@ -70,6 +71,12 @@ const props = defineProps({
 
 const datasAbout = storeDatas.about.data;
 const config = useRuntimeConfig()
+
+useSeo({
+  title: datasAbout.attributes.titre || 'À propos',
+  description: datasAbout.attributes.description,
+  image: datasAbout.attributes.cover,
+});
 
 const root = ref(null);
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();

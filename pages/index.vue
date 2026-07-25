@@ -55,6 +55,7 @@
 <script setup>
 import { useDatasStore, S_DATA_ACCUEIL } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
+import useSeo from '~/compositions/use-seo';
 import gsap from 'gsap';
 import { workTransition, durationLeaveWork } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
@@ -64,6 +65,12 @@ import * as debug from '~/js/debug';
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
 await fetchDatas(S_DATA_ACCUEIL);
+
+useSeo({
+  title: 'Renaud Collet - Développeur Frontend Freelance',
+  description: "Développeur frontend freelance créatif. Je programme et anime des sites internet et des dispositifs DOOH avec Nuxt, Vue, Three.js, WebGL et GSAP.",
+  image: storeDatas.accueil.data.attributes.cover,
+});
 
 console.log('INDEX PAGE - setup', storeDatas.accueil);
 
