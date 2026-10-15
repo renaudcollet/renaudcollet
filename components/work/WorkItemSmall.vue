@@ -15,7 +15,7 @@
           data-scroll-reveal-delay="0.2"
           data-scroll-reveal-duration="0.5"
           object-fit="cover" 
-          alt=""
+          :alt="alt"
         />
       </ClientOnly>
       <VideoPlane
@@ -29,7 +29,7 @@
           @videoOutOfView="onVideoOutOfView"
           @videoPaused="onVideoPaused"
           object-fit="contain" 
-          alt=""
+          :alt="alt"
       ></VideoPlane>
       <div class="work-item-small__content__button__center">
         <div 
@@ -87,6 +87,10 @@ import useElementVisibility from '~/compositions/use-element-visibility';
 import gsap from 'gsap';
 
 const props = defineProps({
+  alt: {
+    type: String,
+    default: "",
+  },
   src: {
     type: String,
     required: true,

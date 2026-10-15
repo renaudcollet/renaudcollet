@@ -4,6 +4,11 @@ const props = defineProps({
 })
 
 const handleError = () => clearError({ redirect: '/' })
+
+useHead({
+  title: props.error && props.error.statusCode == '404' ? 'Page introuvable - Renaud Collet' : 'Erreur - Renaud Collet',
+  meta: [{ name: 'robots', content: 'noindex, follow' }],
+})
 </script>
 
 <template>

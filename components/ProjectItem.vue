@@ -18,37 +18,39 @@
           :srcPortrait="config.public.backendUrl + xlarge"
           :onRender="onRender"
           :isVisible="isVisible"
-          object-fit="cover" 
-          class="project-item__image" 
+          object-fit="cover"
+          class="project-item__image"
+          :alt="imageAlt"
           ref="imagePlane"
         />
       </div>
     <!-- </ClientOnly> -->
     <div class="project-item__title">
-      <h1>
+      <!-- h2: the page has its own h1. The .back copy is the coloured shadow, hidden from crawlers and screen readers -->
+      <h2 class="project-item__name">
         <template v-for="(line, index) in paraphToLines">
-          <div 
+          <div
             class="line scroll-reveal"
             data-scroll-reveal-opacity-y
             :data-scroll-reveal-delay="1"
             data-scroll-reveal-duration="0.5"
           >
             <span class="front" :style="{'color': titleColor}">{{ line.trim() }}</span>
-            <span class="back" :style="{'color': titleColorBack}">{{ line.trim() }}</span>
+            <span class="back" aria-hidden="true" :style="{'color': titleColorBack}">{{ line.trim() }}</span>
           </div>
         </template>
-      </h1>
-      <h2 :style="{'color': titleColorBack}">
-        <div 
+      </h2>
+      <div class="project-item__brand" :style="{'color': titleColorBack}">
+        <div
           class="line scroll-reveal"
           data-scroll-reveal-opacity-y
           data-scroll-reveal-delay="1.2"
           data-scroll-reveal-duration="0.5"
         >
           <span class="front" :style="{'color': titleColorBack}">{{ props.datas.attributes.brand }}</span>
-          <span class="back" :style="{'color': titleColor}">{{ props.datas.attributes.brand }}</span>
+          <span class="back" aria-hidden="true" :style="{'color': titleColor}">{{ props.datas.attributes.brand }}</span>
         </div>
-      </h2>
+      </div>
     </div>
     <div 
       ref="keywordsContainer"
@@ -63,18 +65,12 @@
     > -->
       <div class="project-item__alt">
         <template v-for="(item, index) in keywords">
-          <h3 
+          <div
             ref="keywordItem"
-            class="project-item__subtitle scroll-reveal" 
+            class="project-item__subtitle scroll-reveal"
           >
-          <!-- <h3 
-            class="project-item__subtitle scroll-reveal" 
-            data-scroll-reveal-opacity-y
-            :data-scroll-reveal-delay="index * 0.2"
-            data-scroll-reveal-duration="0.5"
-          > -->
             {{ item.attributes.key }}
-          </h3>
+          </div>
         </template>
       </div>
     </div>
@@ -150,6 +146,12 @@ const large = currentProjectCover.formats.large !== undefined ? currentProjectCo
 
 const paraphToLines = computed(() => {
   return props.datas.attributes.titre.split('<br />');
+})
+
+const imageAlt = computed(() => {
+  const title = paraphToLines.value.map(line => line.trim()).join(' ');
+  const brand = props.datas.attributes.brand;
+  return brand && brand !== title ? `${title} - ${brand}` : title;
 })
 
 const titleColor = computed(() => {

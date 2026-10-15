@@ -28,7 +28,8 @@
 
 <script setup>
 import Cover3D from '~/components/webgl/Cover3D.vue';
-import { useDatasStore, S_DATA_SEO } from '~/stores/datas';
+import { useDatasStore, S_DATA_SEO, S_DATA_CONTACT } from '~/stores/datas';
+import { useSiteSchema } from '~/compositions/use-schema-org';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 // import { Curtains } from "vue-curtains";
 import GUI from 'lil-gui';
@@ -43,6 +44,9 @@ import { useTransitionComposable } from '../compositions/use-transition';
 const storeDatas = useDatasStore();
 const { fetchDatas } = storeDatas;
 await fetchDatas(S_DATA_SEO);
+await fetchDatas(S_DATA_CONTACT); // email, phone and linkedin for the structured data
+
+useSiteSchema();
 
 const route = useRoute()
 storeDatas.setCurrentPage(route.fullPath)

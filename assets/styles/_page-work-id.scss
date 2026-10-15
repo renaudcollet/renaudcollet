@@ -261,3 +261,57 @@
         }
     }
 }
+// Link to the next project, at the bottom of a project page
+.next-project {
+    display: flex;
+    justify-content: center;
+    padding: 100px 30px;
+    text-align: center;
+
+    @include media-breakpoint-up(lg) {
+        padding: 160px 30px;
+    }
+
+    &__link {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        color: $font-title-color;
+        text-decoration: none;
+    }
+
+    &__label {
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+
+        @include media-breakpoint-up(lg) {
+            font-size: 18px;
+        }
+    }
+
+    &__title {
+        position: relative;
+        font-weight: 800;
+        font-size: $font-size-big-title-sm;
+        line-height: 1;
+
+        @include media-breakpoint-up(md) {
+            font-size: $font-size-big-title-md;
+        }
+
+        @include media-breakpoint-up(lg) {
+            font-size: $font-size-big-title-lg;
+        }
+
+        @include media-breakpoint-up(xl) {
+            font-size: $font-size-big-title-xl;
+        }
+
+        .back {
+            text-decoration: underline;
+        }
+    }
+}

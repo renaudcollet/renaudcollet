@@ -12,7 +12,8 @@
             :onRender="onRender"
             :isVisible="true"
             object-fit="cover" 
-            class="cover__image" 
+            class="cover__image"
+            :alt="coverAlt"
             ref="imagePlane"
           />
           <h1 
@@ -52,6 +53,7 @@
 import { useDatasStore, S_DATA_ABOUT } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 import useSeo from '~/compositions/use-seo';
+import { usePageSchema, breadcrumbNode, schemaIds } from '~/compositions/use-schema-org';
 import gsap from 'gsap';
 import { defaultTransition, durationEnterDefault } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
@@ -72,11 +74,30 @@ const props = defineProps({
 const datasAbout = storeDatas.about.data;
 const config = useRuntimeConfig()
 
-useSeo({
+// Strapi alternative text when filled, a description of the illustration otherwise
+const coverAlt = (datasAbout.attributes.cover.data && datasAbout.attributes.cover.data.attributes.alternativeText)
+  || "Illustration d'un développeur créatif avec des lunettes 3D, une souris et un clavier";
+
+const seo = useSeo({
   title: datasAbout.attributes.titre || 'À propos',
   description: datasAbout.attributes.description,
   image: datasAbout.attributes.cover,
 });
+
+const appUrl = String(config.public.appUrl || '').replace(/\/+$/, '');
+
+usePageSchema([
+  {
+    '@type': 'AboutPage',
+    '@id': `${seo.url}#page`,
+    url: seo.url,
+    name: seo.title,
+    description: seo.description,
+    isPartOf: { '@id': schemaIds(appUrl).website },
+    mainEntity: { '@id': schemaIds(appUrl).person },
+  },
+  breadcrumbNode(appUrl, [{ name: 'À propos', path: '/about' }]),
+]);
 
 const root = ref(null);
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();

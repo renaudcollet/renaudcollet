@@ -224,16 +224,16 @@
       position: absolute;
     }
   
-    h1,
-    h2,
-    h3 {
+    .project-item__name,
+    .project-item__brand,
+    .project-item__subtitle {
       width: fit-content;
       margin: 0;
       font-family: $font-main;
       color: $font-title-color;
     }
   
-    h1 {
+    .project-item__name {
       font-size: 28px;
       font-weight: 700;
       margin-bottom: 7px;
@@ -269,7 +269,7 @@
       }
     }
 
-    h2 {
+    .project-item__brand {
       font-size: 14px;
       font-weight: 600;
       margin-bottom: 7px;
@@ -310,7 +310,7 @@
       }
     }
   
-    h3 {
+    .project-item__subtitle {
       font-size: 11px;
       font-weight: 500;
       margin-bottom: 4px;

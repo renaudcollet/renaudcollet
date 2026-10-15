@@ -140,13 +140,11 @@ const emit = defineEmits(['ready']);
 const isReady = ref(false);
 const isVisible = toRef(props, 'isVisible');
 
-const sourceFile = computed(() => {
-  return `${props.src}?${new Date().getTime()}` ; // Use date to force reload, otherwise we have resize bug or black image....
-})
+// No cache busting query anymore: it was a workaround for the cover swap between two planes,
+// and it prevented browser caching, image indexing, and broke hydration (a new url on each render)
+const sourceFile = computed(() => props.src)
 
-const sourceFilePortrait = computed(() => {
-  return `${props.srcPortrait}?${new Date().getTime()}` ; // Use date to force reload, otherwise we have resize bug or black image....
-})
+const sourceFilePortrait = computed(() => props.srcPortrait)
 
 watch(isVisible, (newVal, oldVal) => {
   // console.log(`ImagePlane ${props.src} isVisible`, newVal);

@@ -8,7 +8,7 @@
       >
         <div class="keywords__menu__button__label">
           <div class="front">Filtres</div>
-          <div class="back">Filtres</div>
+          <div class="back" aria-hidden="true">Filtres</div>
         </div>
         <div class="keywords__menu__button__arrow">
           <svg width="16px" height="29px" viewBox="0 0 16 29">

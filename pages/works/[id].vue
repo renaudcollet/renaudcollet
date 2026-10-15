@@ -2,7 +2,7 @@
   <div ref="root" class="page page-work-id">
     <div class="btn-back" ref="btnBack" @click="onBtnBackClick" @mouseover="onBtnBackHover" @mouseout="onBtnBackOut">
       <div class="front"></div>
-      <div class="back"></div>
+      <div class="back" aria-hidden="true"></div>
     </div>
     <section class="cover-top">
       <div class="cover-top__image">
@@ -15,6 +15,7 @@
           :isVisible="true"
           object-fit="cover" 
           class="project-item__image" 
+          :alt="coverAlt"
           ref="imagePlane"
           @ready="onCoverReady"
         />
@@ -29,7 +30,7 @@
           data-scroll-reveal-duration="0.7"
         >
           <span class="front" :style="{'color': titleColor}">{{ currentProject.attributes.titre }}</span>
-          <span class="back" :style="{'color': titleColorBack}">{{ currentProject.attributes.titre }}</span>
+          <span class="back" aria-hidden="true" :style="{'color': titleColorBack}">{{ currentProject.attributes.titre }}</span>
         </h1>
         <div
           class="cover-top__title__brand scroll-reveal unmount-animation"
@@ -38,7 +39,7 @@
           data-scroll-reveal-duration="0.3"
         >
           <span class="front" :style="{'color': titleColor}">Client : {{ currentProject.attributes.brand }}</span>
-          <span class="back" :style="{'color': titleColorBack}">Client : {{ currentProject.attributes.brand }}</span>
+          <span class="back" aria-hidden="true" :style="{'color': titleColorBack}">Client : {{ currentProject.attributes.brand }}</span>
         </div>
         <div
           class="cover-top__title__brand scroll-reveal unmount-animation"
@@ -47,7 +48,7 @@
           data-scroll-reveal-duration="0.3"
         >
           <span class="front" :style="{'color': titleColor}">Agency : {{ currentProject.attributes.agency }}</span>
-          <span class="back" :style="{'color': titleColorBack}">Agency : {{ currentProject.attributes.agency }}</span>
+          <span class="back" aria-hidden="true" :style="{'color': titleColorBack}">Agency : {{ currentProject.attributes.agency }}</span>
         </div>
         <a
           v-if="currentProject.attributes.website_url !== ''"
@@ -60,7 +61,7 @@
           data-scroll-reveal-duration="0.3"
         >
           <span class="front" :style="{'color': titleColor}">Voir le projet</span>
-          <span class="back" :style="{'color': titleColorBack}">Voir le projet</span>
+          <span class="back" aria-hidden="true" :style="{'color': titleColorBack}">Voir le projet</span>
         </a>
         <div
           class="cover-top__title__filters scroll-reveal unmount-animation"
@@ -88,6 +89,7 @@
         <WorkItemBig
           v-else-if="item.type === 'Big'"
           :index="index" 
+          :alt="blocAlt(item)"
           :src="item.Image.data ? getImageUrl(item.Image.data.attributes.formats) : null" 
           :srcPortrait="item.Image.data ? getImageUrlPortrait(item.Image.data.attributes.formats) : null"
           :video-src="item.Video.data ? config.public.backendUrl + item.Video.data.attributes.url : null"
@@ -99,6 +101,7 @@
         <WorkItemSmall
           v-else-if="item.type === 'Small'"
           :index="index" 
+          :alt="blocAlt(item)"
           :src="item.Image.data ? getImageUrl(item.Image.data.attributes.formats) : null" 
           :srcPortrait="item.Image.data ? getImageUrlPortrait(item.Image.data.attributes.formats) : null"
           :video-src="item.Video.data ? config.public.backendUrl + item.Video.data.attributes.url : null"
@@ -108,8 +111,17 @@
           :mountPlanes="bMountPlanes"
         />
       </template>
-    </section>     
-    <FooterSimple /> 
+    </section>
+    <section v-if="nextProject" class="next-project z-index-text unmount-animation">
+      <NuxtLink :to="`/works/${nextProject.attributes.slug}`" class="next-project__link" data-mouse-cursor="hover">
+        <span class="next-project__label">Projet suivant</span>
+        <span class="next-project__title">
+          <span class="front" :style="{'color': titleColor}">{{ nextProjectTitle }}</span>
+          <span class="back" aria-hidden="true" :style="{'color': titleColorBack}">{{ nextProjectTitle }}</span>
+        </span>
+      </NuxtLink>
+    </section>
+    <FooterSimple />
   </div>
 </template>
   
@@ -117,6 +129,7 @@
 import { useDatasStore, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 import useSeo, { stripHtml } from '~/compositions/use-seo';
+import { usePageSchema, breadcrumbNode, schemaIds } from '~/compositions/use-schema-org';
 import useZoomableImage from '~/compositions/use-zoomable-image';
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
 import gsap from 'gsap';
@@ -236,6 +249,11 @@ const currentProject = datasProjets.find(project => {
   return project.attributes.slug === route.params.id
 })
 
+// Unknown or unpublished project: a real 404, not a server error
+if (!currentProject) {
+  throw createError({ statusCode: 404, statusMessage: 'Projet introuvable', fatal: true })
+}
+
 const currentProjectCover = currentProject.attributes.cover.data.attributes
 const currentProjectBlocs = currentProject.attributes.bloc
 const keywords = currentProject.attributes.keywords.data
@@ -250,6 +268,16 @@ const seoTitle = seoBrand && seoBrand !== seoProjectTitle
   ? `${seoProjectTitle} - ${seoBrand}`
   : seoProjectTitle
 
+// The alternative text of the media in strapi when it is filled, the project otherwise
+const coverAlt = currentProjectCover.alternativeText || seoTitle
+
+const blocAlt = (bloc) => {
+  const media = bloc.Image.data || bloc.Video.data
+  const alternativeText = media && media.attributes.alternativeText
+  if (alternativeText) return alternativeText
+  return bloc.Titre ? `${seoTitle} - ${stripHtml(bloc.Titre)}` : seoTitle
+}
+
 // About half the projects have no `resume` filled in strapi. Rather than letting
 // them all fall back to the same site wide description, build a unique one out of
 // the fields that are always there.
@@ -260,13 +288,43 @@ const seoFallbackDescription = [
   keywords.length ? ` ${keywords.map(item => item.attributes.key).join(', ')}.` : '',
 ].join('')
 
-useSeo({
+const seo = useSeo({
   title: seoTitle,
   description: stripHtml(currentProject.attributes.resume) || seoFallbackDescription,
   image: currentProject.attributes.cover,
   imageAlt: seoProjectTitle,
   type: 'article',
 })
+
+const appUrl = String(config.public.appUrl || '').replace(/\/+$/, '')
+const schemaId = schemaIds(appUrl)
+
+usePageSchema([
+  {
+    '@type': 'CreativeWork',
+    '@id': `${seo.url}#project`,
+    name: stripHtml(seoTitle),
+    headline: stripHtml(seoProjectTitle),
+    description: seo.description,
+    url: seo.url,
+    image: seo.image,
+    inLanguage: 'fr-FR',
+    dateCreated: currentProject.attributes.Date || undefined,
+    dateModified: currentProject.attributes.updatedAt || undefined,
+    keywords: keywords.map(item => item.attributes.key).join(', ') || undefined,
+    creator: { '@id': schemaId.person },
+    isPartOf: { '@id': schemaId.website },
+  },
+  breadcrumbNode(appUrl, [
+    { name: 'Projets', path: '/works' },
+    { name: stripHtml(seoProjectTitle), path: route.path },
+  ]),
+])
+
+// Next project in the list (sorted by date, most recent first), back to the first one at the end
+const currentProjectIndex = datasProjets.indexOf(currentProject)
+const nextProject = datasProjets.length > 1 ? datasProjets[(currentProjectIndex + 1) % datasProjets.length] : null
+const nextProjectTitle = nextProject ? stripHtml(nextProject.attributes.titre) : ''
 
 // const coverSrc = computed(() => {
 //   return currentProjectCover.formats.large !== undefined ? currentProjectCover.formats.large.url : currentProjectCover.url;

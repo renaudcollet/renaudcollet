@@ -16,7 +16,7 @@
           :onRender="onRender"
           :isVisible="isVisible"
           object-fit="cover" 
-          alt=""
+          :alt="alt"
         />
       </ClientOnly>
       <VideoPlane
@@ -31,7 +31,7 @@
           @videoOutOfView="onVideoOutOfView"
           @videoPaused="onVideoPaused"
           object-fit="contain" 
-          alt=""
+          :alt="alt"
       ></VideoPlane>
     </div>
     <div class="work-item-big__content z-index-text" :class="{'hide': bPlayVideo}" ref="elContent">
@@ -83,6 +83,10 @@ import VideoPlane from '~/components/video/VideoPlane.vue';
 import gsap from 'gsap';
 
 const props = defineProps({
+  alt: {
+    type: String,
+    default: "",
+  },
   title: {
     type: String,
     required: false,

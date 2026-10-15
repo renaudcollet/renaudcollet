@@ -22,7 +22,7 @@
         data-scroll-reveal-callback="show-keywords"
       >
         <span class="front">{{storeDatas.accueil.data.attributes.Titre}}</span>
-        <span class="back">{{storeDatas.accueil.data.attributes.Titre}}</span>
+        <span class="back" aria-hidden="true">{{storeDatas.accueil.data.attributes.Titre}}</span>
       </h1>
       <template v-for="(item, index) in storeDatas.projectsHomepage" :key="index">
         <ProjectItem 
@@ -45,7 +45,7 @@
         data-scroll-reveal-duration="0.5"
       >
         <span class="front">Voir tous les projets</span>
-        <span class="back">Voir tous les projets</span>
+        <span class="back" aria-hidden="true">Voir tous les projets</span>
       </NuxtLink>
     </section>
     <FooterSimple />

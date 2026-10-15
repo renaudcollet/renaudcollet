@@ -8,7 +8,8 @@
         :onRender="onRender"
         :isVisible="true"
         object-fit="cover" 
-        class="cover__image" 
+        class="cover__image"
+        :alt="coverAlt"
         ref="imagePlane"
       />
       <div class="header-minimize" data-header-scroll-minimize></div>
@@ -90,6 +91,7 @@ import { onMounted, onUnmounted, ref, nextTick, onBeforeUnmount } from "vue";
 import { useDatasStore, S_DATA_CONTACT } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 import useSeo from '~/compositions/use-seo';
+import { usePageSchema, breadcrumbNode, schemaIds } from '~/compositions/use-schema-org';
 import gsap from 'gsap';
 import { defaultTransition, durationEnterDefault} from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
@@ -112,11 +114,30 @@ const config = useRuntimeConfig()
 
 // The strapi `description` is a ui label ("Feel free to contact me through :"),
 // too short to work as a meta description, so this one is written here.
-useSeo({
+// Strapi alternative text when filled, a description of the illustration otherwise
+const coverAlt = (datasContact.attributes.cover.data && datasContact.attributes.cover.data.attributes.alternativeText)
+  || "Illustration d'un développeur créatif avec des lunettes 3D, une souris et un clavier";
+
+const seo = useSeo({
   title: datasContact.attributes.titre || 'Contact',
   description: "Contactez Renaud Collet, développeur frontend freelance, pour vos projets de sites internet, d'expériences WebGL et de dispositifs DOOH.",
   image: datasContact.attributes.cover,
 });
+
+const appUrl = String(config.public.appUrl || '').replace(/\/+$/, '');
+
+usePageSchema([
+  {
+    '@type': 'ContactPage',
+    '@id': `${seo.url}#page`,
+    url: seo.url,
+    name: seo.title,
+    description: seo.description,
+    isPartOf: { '@id': schemaIds(appUrl).website },
+    mainEntity: { '@id': schemaIds(appUrl).service },
+  },
+  breadcrumbNode(appUrl, [{ name: 'Contact', path: '/contact' }]),
+]);
 
 const root = ref(null);
 const showTel = ref(false)

@@ -22,17 +22,33 @@ const escapeXml = (value) =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&apos;');
 
-const toUrlNode = ({ loc, lastmod, changefreq, priority }) =>
+const toUrlNode = ({ loc, lastmod, changefreq, priority, image }) =>
   [
     '  <url>',
     `    <loc>${escapeXml(loc)}</loc>`,
     lastmod ? `    <lastmod>${escapeXml(lastmod)}</lastmod>` : null,
     changefreq ? `    <changefreq>${changefreq}</changefreq>` : null,
     priority ? `    <priority>${priority}</priority>` : null,
+    // Google image sitemap extension, the project images are drawn in WebGL
+    image ? `    <image:image><image:loc>${escapeXml(image)}</image:loc></image:image>` : null,
     '  </url>',
   ]
     .filter(Boolean)
     .join('\n');
+
+// Same format as the opengraph image of the project page (compositions/use-seo.js)
+const coverUrl = (project, backendUrl) => {
+  const cover = project.attributes.cover && project.attributes.cover.data;
+  if (!cover) return null;
+
+  const formats = cover.attributes.formats || {};
+  const best = formats.xlarge || formats.large || cover.attributes;
+  if (!best.url) return null;
+
+  return /^https?:\/\//i.test(best.url)
+    ? best.url
+    : `${String(backendUrl || '').replace(/\/+$/, '')}${best.url}`;
+};
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
@@ -45,6 +61,8 @@ export default defineEventHandler(async (event) => {
       query: {
         'fields[0]': 'slug',
         'fields[1]': 'updatedAt',
+        'populate[cover][fields][0]': 'url',
+        'populate[cover][fields][1]': 'formats',
         'sort[0]': 'Date:desc',
         'pagination[pageSize]': 100,
         'pagination[withCount]': 'false',
@@ -73,6 +91,7 @@ export default defineEventHandler(async (event) => {
           : null,
         changefreq: 'monthly',
         priority: '0.8',
+        image: coverUrl(project, config.public.backendUrl),
       })),
   ];
 
@@ -81,7 +100,7 @@ export default defineEventHandler(async (event) => {
 
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">',
     ...urls.map(toUrlNode),
     '</urlset>',
     '',

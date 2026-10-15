@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { slimMedia } from '~/js/strapi'
 // import {mande} from 'mande'
 
 export const S_DATA_ACCUEIL = 'accueil'
@@ -132,18 +133,36 @@ export const useDatasStore = defineStore( 'datas', {
         // )
         // query = { ...query, sort: 'Date:desc', 'filters[Type][$eq][0]': 'B et C', 'filters[Type][$eq][1]': this.currentFolder }
         // ?filters[slug][$eq]=mon-projet-1
-        query = { populate: 'deep', sort: 'Date:desc', 'pagination[page]': 0, 'pagination[pageSize]': 100 }
+        // No populate=deep: it nests every keyword with all its projects in each project
+        query = {
+          sort: 'Date:desc',
+          'pagination[page]': 0,
+          'pagination[pageSize]': 100,
+          'populate[cover]': '*',
+          'populate[keywords][fields][0]': 'key',
+          'populate[bloc][populate]': '*',
+        }
       }
       else if (apiId === S_DATA_KEYWORDS) {
-        query = { populate: 'deep' }
-        // /api/keywords?populate=deep&sort[0]=order:asc&fields[0]=key&fields[1]=order&fields[2]=projets&pagination[withCount]=false&pagination[pageSize]=50
-        query = { populate: 'deep', 'sort[0]': 'order:asc', 'fields[0]': 'key', 'fields[1]': 'order', 'fields[2]': 'projets', 'pagination[withCount]': 'false', 'pagination[pageSize]': 50 }
+        // The projects of a keyword are only used for their ids (filterProjects)
+        query = {
+          'sort[0]': 'order:asc',
+          'fields[0]': 'key',
+          'fields[1]': 'order',
+          'populate[projets][fields][0]': 'slug',
+          'pagination[withCount]': 'false',
+          'pagination[pageSize]': 50,
+        }
       }
       else if (apiId === S_DATA_CONTACT) {
         query = { populate: 'deep' }
       }
       else if (apiId === S_DATA_ACCUEIL) {
-        query = { populate: 'deep' }
+        query = {
+          'populate[cover]': '*',
+          'populate[projets][populate][cover]': '*',
+          'populate[projets][populate][keywords][fields][0]': 'key',
+        }
       }
       else if (apiId === S_DATA_SEO) {
         query = { populate: 'deep' }
@@ -157,7 +176,9 @@ export const useDatasStore = defineStore( 'datas', {
       try {        
         const { data, pending, error, refresh } = await useFetch(`${config.public.apiUrl}/${apiId}`, {
           method: 'GET',
-          query
+          query,
+          // Applied before the data is put in the payload of the page
+          transform: slimMedia,
         })
 
         // console.log('Data ERROR', error);

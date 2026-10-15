@@ -59,6 +59,7 @@
 import { useDatasStore, S_DATA_ACCUEIL, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 import useSeo from '~/compositions/use-seo';
+import { usePageSchema, breadcrumbNode, schemaIds } from '~/compositions/use-schema-org';
 import gsap from 'gsap';
 import { workTransition, durationEnterWork, durationLeaveWork } from '~/transitions/work-transition';
 import { expandCover } from '~/transitions/expand-cover';
@@ -71,11 +72,33 @@ const { fetchDatas } = storeDatas;
 await fetchDatas(S_DATA_ACCUEIL);
 await fetchDatas(S_DATA_PROJECTS);
 
-useSeo({
+const seo = useSeo({
   title: 'Projets',
   description: "Sélection de projets web, WebGL et DOOH réalisés en freelance : sites internet, expériences interactives et dispositifs événementiels.",
   image: storeDatas.accueil.data.attributes.cover,
 });
+
+const appUrl = String(useRuntimeConfig().public.appUrl || '').replace(/\/+$/, '');
+
+usePageSchema([
+  {
+    '@type': 'CollectionPage',
+    '@id': `${seo.url}#page`,
+    url: seo.url,
+    name: seo.title,
+    description: seo.description,
+    isPartOf: { '@id': schemaIds(appUrl).website },
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: storeDatas.projects.map((project, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        url: `${appUrl}/works/${project.attributes.slug}`,
+      })),
+    },
+  },
+  breadcrumbNode(appUrl, [{ name: 'Projets', path: '/works' }]),
+]);
 
 const props = defineProps({
   onRender: {

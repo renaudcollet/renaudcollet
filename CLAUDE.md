@@ -62,7 +62,7 @@ A curtains plane reads its size and position on its html element (`getBoundingCl
 
 `shaders/planes.frag` returns early when `uOpenProgress` is (nearly) 0: the lygia `rect()` mask divides by it, and the resulting inf/NaN shows up as a black flash on some GPUs.
 
-`components/webgl/ImagePlane.vue` is the standard image-as-plane wrapper (`shaders/planes.vert|frag`); it appends a timestamp to the `src` on purpose to defeat cache-related resize/black-image bugs.
+`components/webgl/ImagePlane.vue` is the standard image-as-plane wrapper (`shaders/planes.vert|frag`). It used to append a timestamp to the `src` against resize/black-image bugs of the old cover swap; it no longer does (that broke caching, image indexing and hydration). If such a bug comes back, look for its cause rather than restoring the cache busting.
 
 ### Page transitions
 
@@ -79,9 +79,13 @@ Pages typically react to `watch(() => transitionState.transitionComplete, ...)` 
 
 ### Data layer
 
-`stores/datas.js` (Pinia) is the single content store. `fetchDatas(apiId)` takes one of the exported `S_DATA_*` constants, returns early if that slice is already cached, and builds the Strapi query (`populate=deep`, sorting, pagination) per endpoint. Strapi shapes are used raw everywhere: `item.attributes.<Field>`, media at `config.public.backendUrl + data.attributes.url`. Field names are mixed French/English and inconsistently capitalised (`Titre`, `Resume`, `titre`, `brand`, `slug`) - always check the actual API payload rather than guessing.
+`stores/datas.js` (Pinia) is the single content store. `fetchDatas(apiId)` takes one of the exported `S_DATA_*` constants, returns early if that slice is already cached, and builds the Strapi query (sorting, pagination, populate) per endpoint. Strapi shapes are used raw everywhere: `item.attributes.<Field>`, media at `config.public.backendUrl + data.attributes.url`. Field names are mixed French/English and inconsistently capitalised (`Titre`, `Resume`, `titre`, `brand`, `slug`) - always check the actual API payload rather than guessing.
 
 The store also owns keyword filtering (`filterProjects`), client-side pagination (`projectsByPage`), scroll lock, and current/previous route tracking.
+
+The whole store ends up in the payload of every page (`components/Keywords.vue`, in the header, loads the projects and the keywords everywhere), so keep it light:
+- no `populate=deep` on projects and keywords: it nests every keyword with all its projects inside each project. Populate the relations explicitly, and only the fields the templates read;
+- every response goes through `slimMedia()` (`js/strapi.js`, `useFetch` `transform`), which keeps `url`, `alternativeText`, the dimensions and the `xxlarge` / `xlarge` / `large` formats of each media. Add a format there before using it in a template.
 
 `stores/datasCurtains.js` owns WebGL state that must survive page changes: the curtains instance, `planesToRemove`, and `currentPlaneCover` (the plane that morphs from a project thumbnail into the project page cover, then is owned by the project page until it leaves).
 
@@ -91,7 +95,13 @@ The store also owns keyword filtering (`filterProjects`), client-side pagination
 
 Do not call `useSeoMeta`/`useHead` after an `await` in an Options API `setup()` (as opposed to `<script setup>`): there is no `withAsyncContext()` wrapper there, so the component instance is lost and the tags are silently dropped. `pages/legal.vue` calls `useSeo()` before anything async for this reason.
 
-`server/routes/robots.txt.js` and `server/routes/sitemap.xml.js` are generated at request time rather than sitting in `public/`, so `robots.txt` can honour `NUXT_PREPROD_APP` and the sitemap can list project slugs pulled live from Strapi without a rebuild.
+`server/routes/robots.txt.js` and `server/routes/sitemap.xml.js` are generated at request time rather than sitting in `public/`, so `robots.txt` can honour `NUXT_PREPROD_APP` and the sitemap can list project slugs (and cover images) pulled live from Strapi without a rebuild.
+
+Structured data (JSON-LD) comes from `compositions/use-schema-org.js`: `useSiteSchema()` in the layout (WebSite, Person, ProfessionalService for Paris and France), `usePageSchema([...])` in pages for their own nodes (CreativeWork, BreadcrumbList, CollectionPage...), linked to the site nodes by `@id`.
+
+Every route is cached by Nitro for an hour with stale-while-revalidate (`routeRules` in `nuxt.config.js`): a change in Strapi shows up on the site within the hour, without a redeploy. Only in the production build, `pnpm dev` is not cached.
+
+One `h1` per page. The `.front` / `.back` text pairs are a coloured shadow effect: the `.back` copy carries `aria-hidden="true"`, keep it on new ones. An unknown project slug throws a 404 (`createError`), rendered by `error.vue` with `noindex`.
 
 ### Styling
 

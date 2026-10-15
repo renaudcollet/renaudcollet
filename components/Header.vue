@@ -19,21 +19,21 @@
           data-mouse-cursor="hover"
         >
           <div class="front">Works</div>
-          <div class="back">Works</div>
+          <div class="back" aria-hidden="true">Works</div>
         </NuxtLink>
         <NuxtLink class="js-menu-item" to="/about" v-on:click="onClickItem"
           :aria-current="route.currentRoute.value.name === 'about' ? 'page' : null"
           data-mouse-cursor="hover"
         >
           <div class="front">About</div>
-          <div class="back">About</div>
+          <div class="back" aria-hidden="true">About</div>
         </NuxtLink>
         <NuxtLink class="js-menu-item" to="/contact" v-on:click="onClickItem"
           :aria-current="route.currentRoute.value.name === 'contact' ? 'page' : null"
           data-mouse-cursor="hover"
         >
           <div class="front">Contact</div>
-          <div class="back">Contact</div>
+          <div class="back" aria-hidden="true">Contact</div>
         </NuxtLink>
         <div class="header__menu__content__logo js-menu-item">
           <NuxtLink class="logo" to="/" v-on:click="onClickItem"

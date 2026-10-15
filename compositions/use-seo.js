@@ -72,18 +72,26 @@ const toAbsoluteUrl = (value, base) => {
  * `attributes` object, or a plain url, and returns an absolute url.
  * Prefers a format wide enough for opengraph (1200px), falls back to the original.
  */
-export const seoImageUrl = (media, backendUrl) => {
-  if (!media) return '';
-  if (typeof media === 'string') return toAbsoluteUrl(media, backendUrl);
+export const seoImage = (media, backendUrl) => {
+  if (!media) return null;
+  if (typeof media === 'string') return { url: toAbsoluteUrl(media, backendUrl) };
 
   const attributes = media.data ? media.data.attributes : media;
-  if (!attributes) return '';
+  if (!attributes) return null;
 
   const formats = attributes.formats || {};
   const best = formats.xlarge || formats.large || attributes;
 
-  return toAbsoluteUrl(best.url, backendUrl);
+  return { url: toAbsoluteUrl(best.url, backendUrl), width: best.width, height: best.height };
 };
+
+export const seoImageUrl = (media, backendUrl) => {
+  const image = seoImage(media, backendUrl);
+  return image ? image.url : '';
+};
+
+// public/opengraph.png
+const DEFAULT_IMAGE = { path: '/opengraph.png', width: 1886, height: 1114 };
 
 export default function useSeo(options = {}) {
   const config = useRuntimeConfig();
@@ -107,10 +115,11 @@ export default function useSeo(options = {}) {
     stripHtml(options.description) || stripHtml(globalSeo && globalSeo.description) || DEFAULT_DESCRIPTION
   );
 
-  const image =
-    seoImageUrl(options.image, backendUrl) ||
-    seoImageUrl(globalSeo && globalSeo.ogImage, backendUrl) ||
-    `${appUrl}/opengraph.png`;
+  const imageData =
+    seoImage(options.image, backendUrl) ||
+    seoImage(globalSeo && globalSeo.ogImage, backendUrl) ||
+    { url: `${appUrl}${DEFAULT_IMAGE.path}`, width: DEFAULT_IMAGE.width, height: DEFAULT_IMAGE.height };
+  const image = imageData.url;
 
   // route.path has no trailing slash except on the home page, which is what we want.
   const url = `${appUrl}${route.path}`;
@@ -125,6 +134,9 @@ export default function useSeo(options = {}) {
     ogUrl: url,
     ogSiteName: SITE_NAME,
     ogImage: image,
+    // Lets social networks build the preview without downloading the image first
+    ogImageWidth: imageData.width,
+    ogImageHeight: imageData.height,
     ogImageAlt: options.imageAlt || title,
     ogLocale: 'fr_FR',
 
