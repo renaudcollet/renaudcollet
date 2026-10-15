@@ -60,9 +60,9 @@ import { useDatasStore, S_DATA_ACCUEIL, S_DATA_PROJECTS } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 import useSeo from '~/compositions/use-seo';
 import gsap from 'gsap';
-import { workTransition, durationEnterWork, durationLeaveWork } from '../transitions/work-transition';
-import { expandCover } from '../transitions/expand-cover';
-import { useTransitionComposable } from '../compositions/use-transition';
+import { workTransition, durationEnterWork, durationLeaveWork } from '~/transitions/work-transition';
+import { expandCover } from '~/transitions/expand-cover';
+import { useTransitionComposable } from '~/compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 import Pagination from '~/components/ui/Pagination.vue';
 

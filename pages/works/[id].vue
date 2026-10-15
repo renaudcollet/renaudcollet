@@ -120,10 +120,10 @@ import useSeo, { stripHtml } from '~/compositions/use-seo';
 import useZoomableImage from '~/compositions/use-zoomable-image';
 import ImagePlane from '~/components/webgl/ImagePlane.vue';
 import gsap from 'gsap';
-import { workIdTransition, durationEnterWorkId, durationLeaveWorkId } from '../transitions/work-transition';
-import { useTransitionComposable } from '../compositions/use-transition';
+import { workIdTransition, durationEnterWorkId, durationLeaveWorkId } from '~/transitions/work-transition';
+import { useTransitionComposable } from '~/compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
-import { adoptCover, isCoverOnProxy } from '../../transitions/expand-cover';
+import { adoptCover, isCoverOnProxy } from '~/transitions/expand-cover';
 import { updatePlaneRatio } from '~/js/plane-utils';
 // import { RenderTarget, Plane } from 'curtainsjs';
 

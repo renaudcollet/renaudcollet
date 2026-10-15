@@ -1,7 +1,3 @@
-# Vue is pinned on purpose (see CLAUDE.md), pnpm ignores the npm "overrides" field of package.json
-overrides:
-  vue: '3.4'
-
 # Replaces the --shamefully-hoist flag of the README
 shamefullyHoist: true
 

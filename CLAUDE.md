@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-pnpm install    # settings in pnpm-workspace.yaml (shamefullyHoist, Vue override, allowBuilds)
+pnpm install    # settings in pnpm-workspace.yaml (shamefullyHoist, allowBuilds)
 pnpm dev        # nuxt dev --host, http://localhost:3000
 pnpm build      # nuxt build -> .output/
 pnpm preview    # preview the production build
@@ -17,7 +17,9 @@ There is no test suite, no linter and no formatter configured. Do not invent com
 
 Shaders live in a git submodule: `git submodule update --init` (lygia) must be run before the first build, otherwise GLSL `#include "/lygia/..."` fails.
 
-Versions are deliberately pinned: `nuxt` is `3.7.1` (exact) and `vue` is `3.4`. Do not bump them casually, animation/transition behaviour depends on those versions. The Vue pin needs three places: the `overrides` of `pnpm-workspace.yaml` (pnpm ignores the npm `overrides` field of `package.json`, kept for npm), and `vue` as a direct dependency in `package.json`, otherwise the packages that only have Vue as a peer dependency (pinia, vue-demi, vue-router) get the latest Vue installed alongside.
+`nuxt` is pinned to `3.21.11` (the last 3.x, Nuxt 4 would be a migration of its own) with Vue 3.5. After an upgrade, check the page transitions and the cover transition in the browser, the WebGL layer relies on the timing of Vue transitions and page mounts. Keep `vue` as a direct dependency in `package.json`: otherwise the packages that only have Vue as a peer dependency (pinia, vue-demi, vue-router) can get another Vue version installed alongside.
+
+In `pages/works/`, import with the `~/` alias: Nuxt 3.21 fails to build the `definePageMeta` macro on a wrong relative path that older versions resolved anyway.
 
 ## Environment
 
