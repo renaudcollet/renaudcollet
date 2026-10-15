@@ -39,6 +39,7 @@ import Plane from "~/components/curtains/Plane/index.vue";
 import fragmentShader from "~/shaders/planes.frag";
 import vertexShader from "~/shaders/planes.vert";
 import gsap from 'gsap';
+import { updatePlaneRatio } from '~/js/plane-utils';
 
 const planeMesh = ref(null);
 
@@ -76,10 +77,6 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  skipAnimation: {
-    type: Boolean,
-    default: false
-  }
 });
 
 const planeProps = {
@@ -115,12 +112,6 @@ const planeProps = {
         type: "1f",
         value: 1.0,
     },
-    uZPos: {
-        name: "uZPos",
-        type: "1f",
-        // value: isVideo() ? 0. : 0.2,
-        value: 0.,
-    },
     // hovered: {
     //     name: "uHovered",
     //     type: "1f",
@@ -133,11 +124,6 @@ const planeProps = {
     // },
     uOpenProgress: {
         name: "uOpenProgress",
-        type: "1f",
-        value: 0,
-    },
-    uCoverProgress: {
-        name: "uTransition",
         type: "1f",
         value: 0,
     },
@@ -174,31 +160,24 @@ const appear = () => {
   // console.log('appear', planeMesh.value);
   if(!planeMesh.value) return
 
-  if (props.skipAnimation) {
-    // Case where user arrives from home page or work page, with a cover transition
-    planeMesh.value.uniforms.uOpenProgress.value = 0.7
-    planeMesh.value.uniforms.uCoverProgress.value = 1.0
-    console.log('-> PLANE COVER IS STRAIGHT VISIBLE');
-    return
-  } else {
-    // Case where item is shown by scroll or user arrives directly on a project page (cover will appear with a transition)
-    const t = {u: 0, v: 0.0}
-    gsap.to(t, {
-      v: 0.7,
-      duration: 0.7,
-      delay: 0.2,
-      ease: 'power2.out',
-      // onStart: () => {
-      //     planeMesh.value.resize()
-      // },
-      onUpdate: () => {
-          planeMesh.value.uniforms.uOpenProgress.value = t.v
-      },
-      onComplete: () => {
-          planeMesh.value.uniforms.uOpenProgress.value = t.v
-      },
-    })
-  }
+  // Item shown by scroll, or project page cover when the user arrives directly on it.
+  // Coming from a project item, the cover is that item plane (transitions/expand-cover.js).
+  const t = {u: 0, v: 0.0}
+  gsap.to(t, {
+    v: 0.7,
+    duration: 0.7,
+    delay: 0.2,
+    ease: 'power2.out',
+    // onStart: () => {
+    //     planeMesh.value.resize()
+    // },
+    onUpdate: () => {
+        planeMesh.value.uniforms.uOpenProgress.value = t.v
+    },
+    onComplete: () => {
+        planeMesh.value.uniforms.uOpenProgress.value = t.v
+    },
+  })
 }
 
 const disappear = () => {
@@ -242,10 +221,7 @@ const onReady = (plane) => {
 }
 
 const updateRatioUniforms = (plane) => {
-    const image = plane.images[0]
-    // For uCover
-    plane.uniforms.resolution.value = [image.width, image.height]
-    plane.uniforms.size.value = [image.naturalWidth, image.naturalHeight]
+    updatePlaneRatio(plane)
 }
 
 const onResize = () => {

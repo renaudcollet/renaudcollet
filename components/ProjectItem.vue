@@ -177,7 +177,9 @@ let isClicked = false;
 let zoomValue = {u: 1.0};
 
 const onClick = () => {
-  isClicked = true;  
+  isClicked = true;
+  // The cover expansion takes over uScale from here
+  gsap.killTweensOf(zoomValue)
   emit('onClick', props.id, imagePlane.value)
 }
 

@@ -54,13 +54,24 @@ A vendored and modified port of `vue-curtains` (`Curtains`, `Plane`, `ShaderPass
 
 Critical quirk: **planes are never removed on unmount**. Vue transitions unmount a component before the leave animation finishes, so `Plane`'s `onBeforeUnmount` pushes the plane into `datasCurtains.planesToRemove`, and `removePlanes()` animates `uOpenProgress` down before calling `plane.remove()`. Pages therefore gate plane creation on a `bMountPlanes` computed (`planesToRemove.length === 0`) passed down as the `mountPlanes` prop. Breaking this pattern produces duplicated or black planes.
 
+A curtains plane reads its size and position on its html element (`getBoundingClientRect()`), and a detached element reports 0x0: a plane still bound to the DOM of a page that has left collapses on its next resize. Compare planes by `uuid`, not `index` (`index` is the number of planes at creation time, so it is reused once planes have been removed).
+
+`shaders/planes.frag` returns early when `uOpenProgress` is (nearly) 0: the lygia `rect()` mask divides by it, and the resulting inf/NaN shows up as a black flash on some GPUs.
+
 `components/webgl/ImagePlane.vue` is the standard image-as-plane wrapper (`shaders/planes.vert|frag`); it appends a timestamp to the `src` on purpose to defeat cache-related resize/black-image bugs.
 
 ### Page transitions
 
-`compositions/use-transition.js` exports **module-level mutable singletons** (`transitionState`, `elementsToTransition`, `functionTransitionCallback`, `curtainsForTransition`, `backgroundForTransition`), not per-component state. A page assigns to them right before navigating, and the GSAP transitions in `transitions/work-transition.js` read them during `onLeave`. Transitions are wired per page with `definePageMeta({ pageTransition: workTransition })`.
+`compositions/use-transition.js` exports **module-level mutable singletons** (`transitionState`, `elementsToTransition`, `functionTransitionCallback`, `coverProxyForTransition`, `scrollForTransition`), not per-component state. A page assigns to them right before navigating, and the GSAP transitions in `transitions/work-transition.js` read them during `onLeave`. They also carry what the layout exposes to pages: a leaving page is already unmounted, its `emit()` calls are ignored. Transitions are wired per page with `definePageMeta({ pageTransition: workTransition })`.
+
+Two Nuxt behaviours to keep in mind:
+
+- the transition used for a navigation is the one of the **target** page, for both the leave and the enter hooks (home to project runs `workIdTransition.onLeave`);
+- the `setup` of the next page runs as soon as the navigation starts, during the leave. Anything that depends on the leave being over belongs in `onMounted`.
 
 Pages typically react to `watch(() => transitionState.transitionComplete, ...)` to unlock scroll, start scroll-reveal, or drop planes.
+
+**Cover transition** (`transitions/expand-cover.js`, home or works to a project page): a single plane goes from the project item to the project cover, there is no second plane to swap with. `expandCover()` binds the item plane to `.cover-proxy`, a fixed element owned by the layout that survives the page change, expands the proxy to fullscreen, then resets the scroll to the top (`scrollForTransition.resetToTop()`, which also syncs Lenis and curtains). The leave hook waits for the promise returned by the page callback, so the project page mounts with the cover fullscreen and the scroll at 0. On mount, `pages/works/[id].vue` binds the plane to its `.cover-top__anchor` element (`adoptCover()`); without an expanded cover (direct url, history) it mounts its own `ImagePlane`. Each rebind happens between two identical rects, which is what makes it seamless.
 
 ### Data layer
 
@@ -68,7 +79,7 @@ Pages typically react to `watch(() => transitionState.transitionComplete, ...)` 
 
 The store also owns keyword filtering (`filterProjects`), client-side pagination (`projectsByPage`), scroll lock, and current/previous route tracking.
 
-`stores/datasCurtains.js` owns WebGL state that must survive page changes: the curtains instance, `planesToRemove`, and `currentPlaneCover` (the plane that morphs from a project thumbnail into the project page cover).
+`stores/datasCurtains.js` owns WebGL state that must survive page changes: the curtains instance, `planesToRemove`, and `currentPlaneCover` (the plane that morphs from a project thumbnail into the project page cover, then is owned by the project page until it leaves).
 
 ### SEO
 

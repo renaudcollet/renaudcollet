@@ -78,7 +78,13 @@
                 height: 100vh;
             }
         }
-    
+
+        // Element the plane of the clicked project item is bound to (transitions/expand-cover.js)
+        &__anchor {
+            width: 100%;
+            height: 100%;
+        }
+
         &__title {
             display: inline-flex;
             position: absolute;

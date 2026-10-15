@@ -57,7 +57,8 @@ import { useDatasStore, S_DATA_ACCUEIL } from '~/stores/datas';
 import useScrollReveal from '~/compositions/use-scroll-reveal';
 import useSeo from '~/compositions/use-seo';
 import gsap from 'gsap';
-import { workTransition, durationLeaveWork } from '../transitions/work-transition';
+import { workTransition } from '../transitions/work-transition';
+import { expandCover } from '../transitions/expand-cover';
 import { useTransitionComposable } from '../compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 import * as debug from '~/js/debug';
@@ -84,7 +85,7 @@ const props = defineProps({
 // const { initLogoObserver, clearLogoObserver } = useLogoObserver();
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 
-const { transitionState, elementsToTransition, functionTransitionCallback, curtainsForTransition, backgroundForTransition } = useTransitionComposable();
+const { transitionState, elementsToTransition, functionTransitionCallback } = useTransitionComposable();
 
 /**
  *  page transition
@@ -200,64 +201,7 @@ onMounted(() => {
   })
 })
 
-const expandCover = (imagePlane) => {
-  // console.log('expandCover', imagePlane, imagePlane.planeMesh.htmlElement);
-
-  let planeHtml = imagePlane.planeMesh.htmlElement;
-
-  // Get the bounding rectangle of the relative element
-  const rect = planeHtml.parentNode.parentNode.getBoundingClientRect()
-  
-  // This would be eq to the final size of the imagePlane (aka the cover image in page id)
-  const rectFinal = imagePlane.planeMesh.renderer.canvas.getBoundingClientRect()
-
-  // Change z position to cover other planes in datasCurtains.js 
-  // Not working for home page... So we do it here for this plane
-  imagePlane.planeMesh.uniforms.uZPos.value = -0.0001;
-  imagePlane.planeMesh.setRenderOrder(1); // This should work too
-
-  const lerp = (v0, v1, t) => {
-    return v0 + t * (v1 - v0);
-  }
-
-  imagePlane.planeMesh.watchScroll = false;
-
-  let scale = imagePlane.planeMesh.uniforms.uScale.value;
-
-  // gsap.killTweensOf(planeHtml)
-  gsap.set(planeHtml, {
-    position: 'fixed', 
-    top: `${rect.top}px`,
-    left: `${rect.left}px`,
-  })
-
-  const tl = gsap.to(planeHtml, {
-    duration: durationLeaveWork,
-    ease: 'power4.out',
-    top: `0px`,
-    left: `0px`,
-    // width: rectFinal.width - 100, // debug
-    width: rectFinal.width,
-    height: rectFinal.height,
-    onUpdate: () => {
-      imagePlane.resize();
-      imagePlane.planeMesh.uniforms.uCoverProgress.value = tl.progress();
-      imagePlane.planeMesh.uniforms.uScale.value = lerp(scale, 1, tl.progress())
-    },
-    onComplete: () => {
-      imagePlane.resize();
-      
-      backgroundForTransition.imgData = curtainsForTransition.curtains.canvas.toDataURL();
-      backgroundForTransition.element.style.backgroundImage = `url(${backgroundForTransition.imgData})`
-      
-      // imagePlane.planeMesh.watchScroll = false;
-      // imagePlane.planeMesh.resetPlane()
-      // console.log('expandCover onComplete');
-    }
-  })
-}
-
-onBeforeUnmount(() => {  
+onBeforeUnmount(() => {
   // console.log('HOME onBeforeUnmount');
   tl.kill()
   tl.killTweensOf(scrollDown.value)
@@ -271,10 +215,9 @@ onBeforeUnmount(() => {
     // console.log('HOME closePanels');
     storeDatasCurtains.removePlanes();
 
-    // if has cover, expand it
-    if (selectedImagePlane) {
-      // console.log('HOME closePanels expandCover');
-      expandCover(selectedImagePlane)
+    // if has cover, expand it, the leave transition waits for it
+    if (selectedImagePlane && storeDatasCurtains.currentPlaneCover) {
+      return expandCover(storeDatasCurtains.currentPlaneCover)
     }
   }
 

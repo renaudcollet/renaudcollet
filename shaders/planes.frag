@@ -20,7 +20,6 @@ uniform vec2 uSize;
 // uniform float hovered;
 // uniform float isText;
 uniform float uScale;
-uniform float uCoverProgress; // 0 -> 1
 uniform float uOpenProgress; // 0 -> 1
 
 #include "/lygia/math/const.glsl";
@@ -55,12 +54,18 @@ vec2 uvCover (vec2 uv, vec2 size, vec2 resolution) {
 }
 
 void main() {
-  vec2 uv = vTextureCoord; // From 0 to 1 
+  // Closed plane. The rect mask below divides by uOpenProgress (rectSDF), at 0 or nearly 0
+  // (mediump overflow) it outputs inf/NaN, which some GPUs draw as a black flash
+  if (uOpenProgress < 0.001) {
+    gl_FragColor = vec4(0.0);
+    return;
+  }
+
+  vec2 uv = vTextureCoord; // From 0 to 1
 
   vec2 cover_uv = uvCover(uv, uSize, uResolution);
 
-  float _scale = lerp(uScale, 1.0, uCoverProgress);
-  cover_uv = scale(cover_uv, _scale);
+  cover_uv = scale(cover_uv, uScale);
 
   vec4 color = texture2D(uTexture, cover_uv);
 
@@ -104,11 +109,6 @@ void main() {
   // Rect
   float rect_mask = rect(rotate_uv, vec2(1.5, 1.5 * uOpenProgress));
   color.rgba *= rect_mask;
-
-  // Prevent black flash just before opening
-  // if (uOpenProgress == 0.0) {
-  //   color.a = 0.0;
-  // }
 
   // color.r = 1.0;
 

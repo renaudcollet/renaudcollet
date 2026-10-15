@@ -61,6 +61,7 @@ import useScrollReveal from '~/compositions/use-scroll-reveal';
 import useSeo from '~/compositions/use-seo';
 import gsap from 'gsap';
 import { workTransition, durationEnterWork, durationLeaveWork } from '../transitions/work-transition';
+import { expandCover } from '../transitions/expand-cover';
 import { useTransitionComposable } from '../compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
 import Pagination from '~/components/ui/Pagination.vue';
@@ -84,7 +85,7 @@ const props = defineProps({
 })
 
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
-const { transitionState, elementsToTransition, functionTransitionCallback, curtainsForTransition, backgroundForTransition } = useTransitionComposable();
+const { transitionState, elementsToTransition, functionTransitionCallback } = useTransitionComposable();
 
 const projectsFilteredDelay = ref(null);
 // projectsFilteredDelay.value = storeDatas.projectsFiltered;
@@ -230,186 +231,6 @@ onMounted(() => {
   })
 })
 
-const expandCover = (imagePlane) => {
-  // console.log('expandCover', imagePlane, imagePlane.planeMesh.htmlElement);
-
-  let planeHtml = imagePlane.planeMesh.htmlElement;
-
-  // Get the bounding rectangle of the relative element
-  const rect = planeHtml.parentNode.parentNode.getBoundingClientRect()
-  
-  // This would be eq to the final size of the imagePlane (aka the cover image in page id)
-  const rectFinal = imagePlane.planeMesh.renderer.canvas.getBoundingClientRect()
-
-  // Change z position to cover other planes in datasCurtains.js 
-  // Not working for home page... So we do it here for this plane
-  imagePlane.planeMesh.uniforms.uZPos.value = -0.0001;
-  imagePlane.planeMesh.setRenderOrder(1); // This should work too
-
-  /***************
-   * CURTAINS EXAMPLE !!!:
-   *  */ 
-  // https://www.curtainsjs.com/examples/gsap-click-to-fullscreen-gallery/index.html
-  
-  /* const lerp = (v0, v1, t) => {
-   return v0 + t * (v1 - v0);
-  }
-
-  console.log(`rect.top: ${rect.top}px, rect.left: ${rect.left}px`);
-  console.log(`lerp top: ${lerp(0, -rect.top, 1)}px, lerp left: ${lerp(0, -rect.left, 1)}px`);
-  console.log('scroll current', window.scrollY, 'scroll before', storeDatas.scrollY);
-
-  const scrollYBefore = storeDatas.scrollY; // if scroll is set to 0, we need to keep the previous scrollY
-  // const scrollYBefore = 0;
-  // imagePlane.planeMesh.relativeTranslation.x = -rect.left;
-  // imagePlane.planeMesh.relativeTranslation.y = -rect.top;
-
-  // create vectors only once and use them later on during tween onUpdate callback
-  const newScale = new Vec2();
-  const newTranslation = new Vec3();
-  
-  imagePlane.planeMesh.setTransformOrigin(newTranslation);
-  const planeBoundingRect = imagePlane.planeMesh.getBoundingRect();
-  const curtainBoundingRect = storeDatasCurtains.curtains.getBoundingRect();
-
-  console.log('rect', rect);
-  console.log('rectFinal', rectFinal);
-  console.log(`scaleX: ${rectFinal.width / rect.width}, scaleY: ${rectFinal.height / rect.height}`);
-  console.log('planeBoundingRect', planeBoundingRect);
-  console.log('curtainBoundingRect', curtainBoundingRect);
-
-  // starting values
-  const animation = {
-      scaleX: 1,
-      scaleY: 1,
-      translationX: 0,
-      translationY: 0,
-      transition: 0,
-      textureScale: 1, //1.5,
-      mouseX: 0,
-      mouseY: 0,
-      zoom: imagePlane.planeMesh.uniforms.uScale.value,
-  };
-
-  const tl = gsap.to(animation, {
-    scaleX: rectFinal.width / rect.width,
-    scaleY: rectFinal.height / rect.height,
-    // scaleX: rectFinal.height / rect.height,
-    // scaleY: rectFinal.width / rect.width,
-    translationX: -1 * rect.left / storeDatasCurtains.curtains.pixelRatio,
-    // translationY: -1 * rect.top / storeDatasCurtains.curtains.pixelRatio,
-    translationY: -1 * (rect.top - scrollYBefore) / storeDatasCurtains.curtains.pixelRatio,
-    transition: 1,
-    textureScale: 1,
-    zoom: 1, // zoom from rollover
-    mouseX: 0,
-    mouseY: 0,
-    duration: durationLeaveWork,
-    ease: 'power4.out',
-    onUpdate: () => {
-      // imagePlane.planeMesh.relativeTranslation.x = lerp(0, -rect.left, t.v);
-      // imagePlane.planeMesh.relativeTranslation.y = lerp(0, -rect.top + scrollYBefore, t.v);
-      // console.log('expandCover onUpdate', tl.progress());
-      
-      // plane scale
-      newScale.set(animation.scaleX, animation.scaleY);
-      imagePlane.planeMesh.setScale(newScale);
-
-      // plane translation
-      newTranslation.set(animation.translationX, animation.translationY, 0);
-      imagePlane.planeMesh.setRelativeTranslation(newTranslation);
-
-      // texture scale
-      newScale.set(animation.textureScale, animation.textureScale + 0.5);
-      imagePlane.planeMesh.textures[0].setScale(newScale);
-
-      // transition value
-      imagePlane.planeMesh.uniforms.uCoverProgress.value = animation.transition;
-      imagePlane.planeMesh.uniforms.uScale.value = animation.zoom;
-
-      // apply parallax to change texture offset
-      // applyPlanesParallax(plane);
-
-      // // tween mouse position back to center
-      // imagePlane.planeMesh.uniforms.mousePosition.value.set(animation.mouseX, animation.mouseY);
-
-      // imagePlane.planeMesh.uniforms.uCoverProgress.value = tl.progress();
-      // imagePlane.resize();
-      // imagePlane.updateRatioUniforms(imagePlane.planeMesh);
-
-      // apply parallax to change texture offset
-      // applyPlanesParallax(imagePlane.planeMesh);
-
-    },
-    onComplete: () => {
-      debugger
-      // imagePlane.resize();
-      backgroundForTransition.imgData = curtainsForTransition.curtains.canvas.toDataURL();
-      backgroundForTransition.element.style.backgroundImage = `url(${backgroundForTransition.imgData})`
-      console.log('expandCover onComplete');
-    }
-  })
-
-  function applyPlanesParallax(plane) {
-      // calculate the parallax effect
-      // get our window size
-      const sceneBoundingRect = storeDatasCurtains.curtains.getBoundingRect();
-      // get our plane center coordinate
-      const planeBoundingRect = plane.getBoundingRect();
-      const planeOffsetTop = planeBoundingRect.top + planeBoundingRect.height / 2;
-      // get a float value based on window height (0 means the plane is centered)
-      const parallaxEffect = (planeOffsetTop - sceneBoundingRect.height / 2) / sceneBoundingRect.height;
-
-      // set texture offset
-      const texture = plane.textures[0];
-      texture.offset.y = (1 - texture.scale.y) * 0.5 * parallaxEffect;
-  } */
-  /**
-   * END - CURTAINS EXAMPLE
-  *********/
-  const lerp = (v0, v1, t) => {
-    return v0 + t * (v1 - v0);
-  }
-
-  imagePlane.planeMesh.watchScroll = false;
-
-  let scale = imagePlane.planeMesh.uniforms.uScale.value;
-
-  // gsap.killTweensOf(planeHtml)
-  gsap.set(planeHtml, {
-    position: 'fixed', 
-    top: `${rect.top}px`,
-    left: `${rect.left}px`,
-  })
-
-  const tl = gsap.to(planeHtml, {
-    duration: durationLeaveWork,
-    ease: 'power4.out',
-    top: `0px`,
-    left: `0px`,
-    // width: rectFinal.width - 300, // debug
-    width: rectFinal.width,
-    height: rectFinal.height,
-    onUpdate: () => {
-      imagePlane.resize();
-      imagePlane.planeMesh.uniforms.uCoverProgress.value = tl.progress();
-      imagePlane.planeMesh.uniforms.uScale.value = lerp(scale, 1, tl.progress())
-      // console.log('expandCover onUpdate', tl.progress());
-      // console.log('scale', imagePlane.planeMesh.uniforms.uScale.value);
-    },
-    onComplete: () => {
-      imagePlane.resize();
-
-      backgroundForTransition.imgData = curtainsForTransition.curtains.canvas.toDataURL();
-      backgroundForTransition.element.style.backgroundImage = `url(${backgroundForTransition.imgData})`
-
-      // imagePlane.planeMesh.watchScroll = false;
-      // console.log('expandCover onComplete');
-      // storeDatasCurtains.curtains.disableDrawing();
-    }
-  })
-}
-
 onBeforeUnmount(() => {  
   // console.log('WORKS onBeforeUnmount');
   clearScrollReveal()
@@ -421,10 +242,9 @@ onBeforeUnmount(() => {
     // console.log('WORKS closePanels');
     storeDatasCurtains.removePlanes();
 
-    // if has cover, expand it
-    if (selectedImagePlane) {
-      // console.log('WORKS closePanels expandCover');
-      expandCover(selectedImagePlane)
+    // if has cover, expand it, the leave transition waits for it
+    if (selectedImagePlane && storeDatasCurtains.currentPlaneCover) {
+      return expandCover(storeDatasCurtains.currentPlaneCover)
     }
   }
 

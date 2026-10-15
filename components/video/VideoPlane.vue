@@ -110,12 +110,6 @@ const planeProps = {
         type: "1f",
         value: 0,
     },
-    uZPos: {
-        name: "uZPos",
-        type: "1f",
-        // value: isVideo() ? 0. : 0.2,
-        value: 0.,
-    },
     // hovered: {
     //     name: "uHovered",
     //     type: "1f",

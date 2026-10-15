@@ -6,13 +6,13 @@
     </div>
     <section class="cover-top">
       <div class="cover-top__image">
-        <ImagePlane 
-          v-if="storeDatasCurtains.planesToRemove.length === 0"
+        <div v-if="coverMode === 'adopt'" ref="coverAnchor" class="cover-top__anchor"></div>
+        <ImagePlane
+          v-else-if="coverMode === 'plane' && storeDatasCurtains.planesToRemove.length === 0"
           :src="config.public.backendUrl + xxlarge"
           :srcPortrait="config.public.backendUrl + xlarge"
           :onRender="onRender"
           :isVisible="true"
-          :skip-animation="skipCoverAnimation"
           object-fit="cover" 
           class="project-item__image" 
           ref="imagePlane"
@@ -123,6 +123,8 @@ import gsap from 'gsap';
 import { workIdTransition, durationEnterWorkId, durationLeaveWorkId } from '../transitions/work-transition';
 import { useTransitionComposable } from '../compositions/use-transition';
 import { useDatasCurtainsStore } from "~/stores/datasCurtains";
+import { adoptCover, isCoverOnProxy } from '../../transitions/expand-cover';
+import { updatePlaneRatio } from '~/js/plane-utils';
 // import { RenderTarget, Plane } from 'curtainsjs';
 
 const storeDatas = useDatasStore();
@@ -141,7 +143,7 @@ const props = defineProps({
 
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 const { initZoomableImage, clearZoomableImage } = useZoomableImage();
-const { transitionState, elementsToTransition, functionTransitionCallback, backgroundForTransition } = useTransitionComposable();
+const { transitionState, elementsToTransition, functionTransitionCallback, coverProxyForTransition } = useTransitionComposable();
 
 const getImageUrl = (formats) => {
   if (formats.xxlarge !== undefined) return config.public.backendUrl + formats.xxlarge.url;
@@ -175,6 +177,24 @@ const btnBack = ref(null);
 const storeDatasCurtains = useDatasCurtainsStore();
 const bMountPlanes = ref(false);
 
+// Coming from a project item, the cover is the plane of that item, expanded to fullscreen
+// by the leaving page: bind it to the cover element instead of creating a new plane.
+// Decided on mount: setup runs as soon as the navigation starts, before the expansion.
+const coverMode = ref(null); // 'adopt' | 'plane'
+let adoptedPlane = null;
+const coverAnchor = ref(null);
+
+const onAdoptedCoverResize = () => {
+  updatePlaneRatio(adoptedPlane)
+}
+
+// The other planes wait for the planes of the leaving page to be removed
+watch(() => storeDatasCurtains.planesToRemove.length, (length) => {
+  if (length === 0) {
+    bMountPlanes.value = true;
+  }
+})
+
 watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   if (newVal) {
     // console.log('PAGE ID - transitionState.transitionComplete', storeDatasCurtains.scrollY);
@@ -199,21 +219,11 @@ watch(() => transitionState.transitionComplete, (newVal, oldVal) => {
   }
 })
 
-const onCoverReady = (e) => {
-  console.log('---> onCoverReady', e);
-  setTimeout(() => {
-    // console.log('---> onCoverReady', e);
-    storeDatasCurtains.removeCurrentPlaneCover()
-    storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
-    bMountPlanes.value = true;
-
-    // Remove image background
-    backgroundForTransition.imgData = null
-    backgroundForTransition.element.style.backgroundImage = `none`
-
-    showBtnBack()
-    emit('onLockScroll', false)
-  }, 250)
+// Cover plane of its own, when the page is not reached from a project item (direct url, history...)
+const onCoverReady = () => {
+  storeDatasCurtains.scrollToTopCompleteAfterTransition = true;
+  showBtnBack()
+  emit('onLockScroll', false)
 }
 
 const config = useRuntimeConfig()
@@ -267,7 +277,7 @@ const xlarge = currentProjectCover.formats.xlarge !== undefined ? currentProject
 
 // console.log('IMAGE COVER URL', xxlarge);
 
-const skipCoverAnimation = computed(() => {
+const hasPreviousPage = computed(() => {
   return storeDatas.previousPage !== null
 })
 
@@ -304,6 +314,27 @@ onMounted(() => {
   emit('onLockScroll', true)
 
   bMountPlanes.value = storeDatasCurtains.planesToRemove.length === 0;
+
+  if (isCoverOnProxy(storeDatasCurtains.currentPlaneCover)) {
+    adoptedPlane = storeDatasCurtains.currentPlaneCover
+    coverMode.value = 'adopt'
+  } else {
+    // A cover plane that was not expanded can't be used, don't leave it in the scene
+    storeDatasCurtains.removeCurrentPlaneCover()
+    coverMode.value = 'plane'
+  }
+
+  if (adoptedPlane) {
+    window.addEventListener('resize', onAdoptedCoverResize)
+
+    nextTick(() => {
+      adoptCover(adoptedPlane, coverAnchor.value).then(() => {
+        storeDatasCurtains.adoptCurrentPlaneCover()
+        showBtnBack()
+        emit('onLockScroll', false)
+      })
+    })
+  }
 
   // gtag
   // https://developers.google.com/tag-platform/gtagjs/reference/events?hl=fr#page_view -> should I use page_view ?
@@ -344,7 +375,7 @@ onMounted(() => {
   // })
 
   nextTick(() => {
-    if (skipCoverAnimation.value) {
+    if (hasPreviousPage.value) {
       gsap.killTweensOf('#header-logo')
       gsap.to('#header-logo', { autoAlpha: 1 })
       initZoomableImage(root.value)
@@ -359,7 +390,14 @@ onBeforeUnmount(() => {
 
   clearScrollReveal()
   clearZoomableImage()
-    
+
+  if (adoptedPlane) {
+    window.removeEventListener('resize', onAdoptedCoverResize)
+    // In case the page is left before the end of the adoption
+    gsap.killTweensOf(coverProxyForTransition.element)
+    storeDatasCurtains.releaseCurrentPlaneCover()
+  }
+
   elementsToTransition.elements = root.value.querySelectorAll('.unmount-animation');
   console.log('ELEMENTS TO UNMOUNT TRANSITION', elementsToTransition.elements.length);
 

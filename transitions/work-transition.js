@@ -17,6 +17,15 @@ export const durationLeaveWork = 0.6;
 export const durationEnterWorkId = 0.5;
 export const durationLeaveWorkId = 0.6;
 
+// Runs the callback of the leaving page (close its planes, expand the cover...).
+// It returns a promise when the cover expands (transitions/expand-cover.js): the leave then ends
+// when it resolves, so the next page mounts with the cover fullscreen and the scroll at the top.
+const runTransitionCallback = () => {
+  const callback = functionTransitionCallback.function;
+  functionTransitionCallback.function = null;
+  return callback ? callback() : null;
+}
+
 /**
  * Inspired by https://stackblitz.com/edit/nuxt-starter-bthjlg
  */
@@ -56,9 +65,10 @@ export const workIdTransition = {
           // console.log('workIdTransition onLeave opacity 0 complete');
           elementsToTransition.elements = null;
 
-          if (functionTransitionCallback.function) {
-            functionTransitionCallback.function();
-            functionTransitionCallback.function = null;
+          const coverExpanded = runTransitionCallback();
+          if (coverExpanded) {
+            coverExpanded.then(() => done());
+            return;
           }
 
           gsap.to(t, { v: 1, delay: 0.3, duration: durationLeaveWorkId,
@@ -111,11 +121,12 @@ export const workTransition = {
           // toggleTransitionLeaveComplete(true); // This is not watched because the component is already unmounted
           elementsToTransition.elements = null;
 
-          if (functionTransitionCallback.function) {
-            functionTransitionCallback.function();
-            functionTransitionCallback.function = null;
+          const coverExpanded = runTransitionCallback();
+          if (coverExpanded) {
+            coverExpanded.then(() => done());
+            return;
           }
-          
+
           gsap.to(t, { v: 1, delay: 0.1, duration: durationLeaveWork,
             onComplete:() => {
               // console.log('workTransition onLeave complete');

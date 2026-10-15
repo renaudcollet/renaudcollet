@@ -1,6 +1,5 @@
 <template>
   <Header></Header>
-  <div ref="background" class="background"></div>
   <Cover3D ref="cover3d" :showCover="showCover3d" :scrollZone="scrollZone"/>
   <Curtains 
     id="CurtainsCanvas" 
@@ -22,6 +21,7 @@
       @onScrollZone="onScrollZone"
     />
   </Curtains>
+  <div ref="coverProxy" class="cover-proxy"></div>
   <MouseCursor ref="mouseCursor" />
   <span v-if="config" id="config"></span>
 </template>
@@ -53,13 +53,26 @@ const cover3d = ref(null);
 // const shaderPass = ref(null);
 const curtains = ref(null);
 const mouseCursor = ref(null);
-const background = ref(null);
+const coverProxy = ref(null);
 
 let scrollZoneHeight = 0;
 let __curtains = null;
 
 const storeDatasCurtains = useDatasCurtainsStore();
-const { curtainsForTransition, backgroundForTransition } = useTransitionComposable();
+const { coverProxyForTransition, scrollForTransition } = useTransitionComposable();
+
+// Called at the end of the cover expansion, while the fullscreen cover hides the page
+const resetScrollTop = () => {
+  // lenis.scrollTo() does nothing while lenis is stopped, scroll the window and sync lenis by hand
+  window.scrollTo(0, 0)
+  lenis.scroll = lenis.targetScroll = lenis.lastScroll = 0
+  lenis.isScrolling = false
+  lastScroll = 0 // No scroll velocity bump in the post fx
+
+  // Sync curtains now rather than on the next scroll event, which could come after the
+  // project page has bound the cover to its own element and would offset it by the old scroll
+  __curtains.updateScrollValues(window.scrollX, 0)
+}
 
 const onLockScroll = (isLocked, animate, scrollY = 0) => {
   // storeDatas.lockScroll = isLocked;
@@ -227,8 +240,6 @@ const onCurtainsReady = (_curtains) => {
   // curtains.disableDrawing();
 
   __curtains = _curtains;
-  curtainsForTransition.curtains = __curtains;
-  backgroundForTransition.element = background.value;
   storeDatasCurtains.setCurtains(_curtains)
 
   // NOTE: Curtains params changed directly in the custom Curtains component (params.js)
@@ -236,10 +247,6 @@ const onCurtainsReady = (_curtains) => {
 
   let timeout = false
   window.addEventListener('resize', () => {
-
-    const _html = document.querySelector('html')
-    background.value.style.width = `${_html.clientWidth}px`
-    background.value.style.height = `${_html.clientHeight}px`  
 
     if (scrollZone.value !== null)
       scrollZoneHeight = scrollZone.value.clientHeight
@@ -260,12 +267,6 @@ const onCurtainsReady = (_curtains) => {
 watch(() => route.path, (value) => {
   // console.log('➮ DEFAULT LAYOUT - WATCH route fullpath ', value)
   storeDatas.setCurrentPage(value)
-
-  if (storeDatas.previousPage === '/works' && backgroundForTransition.imgData !== null) {
-    // Remove image background
-    backgroundForTransition.imgData = null
-    backgroundForTransition.element.style.backgroundImage = `none`    
-  }
 
   setScrollVelocityMinimum()
 
@@ -343,10 +344,6 @@ onMounted(() => {
   // console.log('DEFAULT LAYOUT - MOUNTED');
   config = window.location.hash === '#config'
 
-  const _html = document.querySelector('html')
-  background.value.style.width = `${_html.clientWidth}px`
-  background.value.style.height = `${_html.clientHeight}px`  
-
   // window.addEventListener('keydown', (e) => {
   //   console.log('keydown', e.key);
   //   if (e.key === 'p') {
@@ -384,6 +381,9 @@ onMounted(() => {
   // Make Lenis available in every component
   window.lenis = lenis
   lastScroll = lenis.scroll
+
+  coverProxyForTransition.element = coverProxy.value
+  scrollForTransition.resetToTop = resetScrollTop
 
   // window.addEventListener('scroll', onScroll)
   // lenis.on('scroll', onScroll)
@@ -440,14 +440,14 @@ onErrorCaptured((err) => {
   right: 0;
   z-index: 99999999999;
 }
-.background {
+// Positioned by transitions/expand-cover.js, only its rect matters
+.cover-proxy {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  // background-color: yellow;
+  width: 0;
+  height: 0;
+  visibility: hidden;
   pointer-events: none;
-  opacity: 1;
 }
 </style>

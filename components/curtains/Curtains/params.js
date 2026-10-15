@@ -17,8 +17,7 @@ export const params = {
   },
   preserveDrawingBuffer: {
     type: Boolean,
-    default: true,
-    // default: false,
+    default: false,
   },
   failIfMajorPerformanceCaveat: {
     type: Boolean,

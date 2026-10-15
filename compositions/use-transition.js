@@ -14,14 +14,16 @@ export const elementsToTransition = {
 export const functionTransitionCallback = {
   function: null, // Function
 };
-export const curtainsForTransition = {
-  curtains: null, // Function
+
+// Layout owned element the cover plane is bound to while it expands (see transitions/expand-cover.js).
+// Unlike the DOM of the leaving page, it survives the page change.
+export const coverProxyForTransition = {
+  element: null, // HTMLElement
 };
 
-// This is a workaround to avoid black flash when going to work id page
-export const backgroundForTransition = {
-  element: null, // HTMLElement
-  imgData: null, // ImageData
+// Set by the layout. Pages can't emit to the layout during their leave, they are already unmounted.
+export const scrollForTransition = {
+  resetToTop: null, // Function
 };
 
 export const useTransitionComposable = () => {
@@ -45,7 +47,7 @@ export const useTransitionComposable = () => {
     elementsToTransition,
     functionTransitionCallback,
 
-    curtainsForTransition,
-    backgroundForTransition,
+    coverProxyForTransition,
+    scrollForTransition,
   };
 };
