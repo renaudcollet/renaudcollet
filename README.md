@@ -27,8 +27,8 @@ yarn install
 # npm
 npm install
 
-# pnpm
-pnpm install --shamefully-hoist
+# pnpm (hoisting, Vue pin and allowed build scripts are set in pnpm-workspace.yaml)
+pnpm install
 ```
 
 ## Development Server

@@ -5,17 +5,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-pnpm install --shamefully-hoist   # --shamefully-hoist is required (see README)
-pnpm dev                          # nuxt dev --host, http://localhost:3000
-pnpm build                        # nuxt build -> .output/
-pnpm preview                      # preview the production build
+pnpm install    # settings in pnpm-workspace.yaml (shamefullyHoist, Vue override, allowBuilds)
+pnpm dev        # nuxt dev --host, http://localhost:3000
+pnpm build      # nuxt build -> .output/
+pnpm preview    # preview the production build
 ```
+
+pnpm (v10+) checks the dependencies before `pnpm dev`/`pnpm build` and runs an install if they are out of date, which rewrites `node_modules`.
 
 There is no test suite, no linter and no formatter configured. Do not invent commands for them.
 
 Shaders live in a git submodule: `git submodule update --init` (lygia) must be run before the first build, otherwise GLSL `#include "/lygia/..."` fails.
 
-Versions are deliberately pinned: `nuxt` is `3.7.1` (exact) and `vue` is forced to `3.4` through the `overrides` field. Do not bump them casually, animation/transition behaviour depends on those versions.
+Versions are deliberately pinned: `nuxt` is `3.7.1` (exact) and `vue` is `3.4`. Do not bump them casually, animation/transition behaviour depends on those versions. The Vue pin needs three places: the `overrides` of `pnpm-workspace.yaml` (pnpm ignores the npm `overrides` field of `package.json`, kept for npm), and `vue` as a direct dependency in `package.json`, otherwise the packages that only have Vue as a peer dependency (pinia, vue-demi, vue-router) get the latest Vue installed alongside.
 
 ## Environment
 

@@ -28,7 +28,8 @@
     "nuxt-gtag": "^0.5.9",
     "pinia": "^2.1.6",
     "screenfull": "^6.0.2",
-    "three": "^0.157.0"
+    "three": "^0.157.0",
+    "vue": "3.4"
   },
   "overrides": {
     "vue": "3.4"
