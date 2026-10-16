@@ -68,8 +68,8 @@ const { fetchDatas } = storeDatas;
 await fetchDatas(S_DATA_ACCUEIL);
 
 useSeo({
-  title: 'Renaud Collet - Développeur Frontend Freelance',
-  description: "Développeur frontend freelance créatif. Je programme et anime des sites internet et des dispositifs DOOH avec Nuxt, Vue, Three.js, WebGL et GSAP.",
+  title: 'Renaud Collet - Développeur fullstack freelance à Paris',
+  description: "Développeur fullstack freelance à Paris. Je développe des sites et des expériences interactives avec Vue.js, Nuxt, TypeScript, Three.js, WebGL et WebAR.",
   image: storeDatas.accueil.data.attributes.cover,
 });
 

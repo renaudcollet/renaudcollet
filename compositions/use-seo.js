@@ -21,7 +21,7 @@ import { useDatasStore } from '~/stores/datas';
 const SITE_NAME = 'Renaud Collet';
 
 // Same wording as the fallback in nuxt.config.js, used when strapi has nothing.
-const DEFAULT_DESCRIPTION = "Freelance créatif développeur frontend qui programme et anime des sites internets ou des DOOH en utilisant nuxtjs, vuejs, threejs, gsap, phaserjs et laravel pour le backend et l'api";
+const DEFAULT_DESCRIPTION = 'Renaud Collet, développeur créatif fullstack freelance à Paris : Vue.js, Nuxt, TypeScript, Node.js, Three.js et WebAR. Sites et expériences interactives.';
 
 const DESCRIPTION_MAX_LENGTH = 160;
 
@@ -106,7 +106,7 @@ export default function useSeo(options = {}) {
 
   const pageTitle = stripHtml(options.title);
   const title = !pageTitle
-    ? `${SITE_NAME} - Développeur Frontend Freelance`
+    ? `${SITE_NAME} - Développeur fullstack freelance à Paris`
     : pageTitle.includes(SITE_NAME)
       ? pageTitle
       : `${pageTitle} - ${SITE_NAME}`;

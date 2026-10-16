@@ -47,8 +47,8 @@
           :data-scroll-reveal-delay="durationEnterWorkId + 0.5"
           data-scroll-reveal-duration="0.3"
         >
-          <span class="front" :style="{'color': titleColor}">Agency : {{ currentProject.attributes.agency }}</span>
-          <span class="back" aria-hidden="true" :style="{'color': titleColorBack}">Agency : {{ currentProject.attributes.agency }}</span>
+          <span class="front" :style="{'color': titleColor}">Agence : {{ currentProject.attributes.agency }}</span>
+          <span class="back" aria-hidden="true" :style="{'color': titleColorBack}">Agence : {{ currentProject.attributes.agency }}</span>
         </div>
         <a
           v-if="currentProject.attributes.website_url !== ''"
@@ -70,7 +70,7 @@
           data-scroll-reveal-duration="0.3"
           :style="{'color': titleColor}"
         >
-          Filters : 
+          Mots-clés : 
           <span v-for="(item, index) in keywords">
             {{ index < keywords.length - 1 ? `${item.attributes.key}, ` : item.attributes.key }}
           </span>

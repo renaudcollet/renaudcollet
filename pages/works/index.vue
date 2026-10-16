@@ -8,11 +8,9 @@
         :data-scroll-reveal-delay="durationEnterWork + 0.2"
         data-scroll-reveal-duration="0.5"
       >
-        Some 
+        Projets
         <br v-if="projectsFilteredLabelDelay !== ''" />
         <span class="filtered-label">{{ projectsFilteredLabelDelay }}</span>
-        <br v-if="projectsFilteredLabelDelay !== ''" /> 
-        works
       </h1>
       <Pagination
         v-if="totalPages > 1"

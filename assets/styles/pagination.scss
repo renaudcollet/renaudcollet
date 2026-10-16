@@ -30,7 +30,10 @@
         }
     }
 
+    // The label is an aria-label, the arrow is the background image
     button {
+        width: 53px;
+        height: 25px;
         font-size: 20px;
         background-color: transparent;
         background-image: url('/assets/svg/arrow-pagination-white.svg');

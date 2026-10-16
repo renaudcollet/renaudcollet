@@ -12,7 +12,7 @@ import { useDatasStore } from '~/stores/datas';
  */
 
 export const SITE_NAME = 'Renaud Collet';
-const JOB_TITLE = 'Développeur frontend freelance';
+const JOB_TITLE = 'Développeur fullstack freelance';
 
 const withoutTrailingSlash = (value) => String(value || '').replace(/\/+$/, '');
 
@@ -63,7 +63,7 @@ export const useSiteSchema = () => {
       email: contact.email ? `mailto:${contact.email}` : undefined,
       address,
       sameAs,
-      knowsAbout: ['Développement frontend', 'Vue.js', 'Nuxt', 'Three.js', 'WebGL', 'GSAP', 'WebAR', 'Creative coding', 'DOOH'],
+      knowsAbout: ['Développement fullstack', 'Vue.js', 'Nuxt', 'TypeScript', 'Three.js', 'WebGL', 'GSAP', 'WebAR', 'Intelligence artificielle', 'Creative coding', 'DOOH'],
     },
     {
       '@type': 'ProfessionalService',

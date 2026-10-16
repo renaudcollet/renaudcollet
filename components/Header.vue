@@ -18,15 +18,15 @@
           :aria-current="route.currentRoute.value.name === 'works' ? 'page' : null"
           data-mouse-cursor="hover"
         >
-          <div class="front">Works</div>
-          <div class="back" aria-hidden="true">Works</div>
+          <div class="front">Projets</div>
+          <div class="back" aria-hidden="true">Projets</div>
         </NuxtLink>
         <NuxtLink class="js-menu-item" to="/about" v-on:click="onClickItem"
           :aria-current="route.currentRoute.value.name === 'about' ? 'page' : null"
           data-mouse-cursor="hover"
         >
-          <div class="front">About</div>
-          <div class="back" aria-hidden="true">About</div>
+          <div class="front">À propos</div>
+          <div class="back" aria-hidden="true">À propos</div>
         </NuxtLink>
         <NuxtLink class="js-menu-item" to="/contact" v-on:click="onClickItem"
           :aria-current="route.currentRoute.value.name === 'contact' ? 'page' : null"

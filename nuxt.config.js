@@ -45,14 +45,14 @@ export default defineNuxtConfig({
   // Global page headers: https://go.nuxtjs.dev/config-head
   app: {
     head: {
-      title: 'Freelance Créative Développeur',
+      title: 'Renaud Collet - Développeur fullstack freelance à Paris',
       htmlAttrs: {
         lang: 'fr',
       },
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { hid: 'description', name: 'description', content: "Freelance Créative développeur frontend qui programme et anime des sites internets ou des DOOH en utilisant nuxtjs, vuejs, threejs, gsap, phaserjs et laravel pour le backend et l'api" }, // Set with code
+        { hid: 'description', name: 'description', content: 'Renaud Collet, développeur créatif fullstack freelance à Paris : Vue.js, Nuxt, TypeScript, Node.js, Three.js et WebAR. Sites et expériences interactives.' }, // Set with code
         { name: 'theme-color', content: '#000000' },
         { name: 'robots', content: process.env.NUXT_PREPROD_APP ? 'none' : 'all' },
         // { name: 'msapplication-TileColor', content: '#da532c' },
@@ -60,8 +60,8 @@ export default defineNuxtConfig({
         { name: 'mobile-web-app-capable', content: 'yes' },
         { property: 'og:url', content: 'https://renaudcollet.com' },
         { property: 'og:type', content: 'website' },
-        { property: 'og:title', content: 'Développeur Frontend Freelance' },
-        { property: 'og:description', content: "Freelance Créative développeur frontend qui programme et anime des sites internets ou des DOOH en utilisant nuxtjs, vuejs, threejs, gsap, phaserjs et laravel pour le backend et l'api" }, // Set with code
+        { property: 'og:title', content: 'Renaud Collet - Développeur fullstack freelance à Paris' },
+        { property: 'og:description', content: 'Renaud Collet, développeur créatif fullstack freelance à Paris : Vue.js, Nuxt, TypeScript, Node.js, Three.js et WebAR. Sites et expériences interactives.' }, // Set with code
         { property: 'og:image', content: "https://renaudcollet.com/opengraph.png" }, // Set with code
       ],
       link: [
@@ -76,8 +76,11 @@ export default defineNuxtConfig({
   // Every page is rendered from strapi content, which changes rarely: the html is cached on the
   // server for an hour and refreshed in the background (stale-while-revalidate), so visitors and
   // crawlers don't wait for the strapi requests. A change in the admin shows up within the hour.
-  routeRules: {
-    '/**': { swr: 3600 },
+  // Production only: in dev, nitro would serve stale pages from .nuxt/cache after a code change.
+  $production: {
+    routeRules: {
+      '/**': { swr: 3600 },
+    },
   },
 
   gtag: {

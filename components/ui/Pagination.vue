@@ -1,8 +1,8 @@
 <template>
   <div class="pagination">
-    <button class="left" @click="prevPage" :disabled="state.currentPage === 1">Prev</button>
+    <button class="left" @click="prevPage" :disabled="state.currentPage === 1" aria-label="Page précédente"></button>
     <span class="count">{{ state.currentPage }} / {{ totalPages }}</span>
-    <button class="right" @click="nextPage" :disabled="state.currentPage === totalPages">Next</button>
+    <button class="right" @click="nextPage" :disabled="state.currentPage === totalPages" aria-label="Page suivante"></button>
   </div>
 </template>
 

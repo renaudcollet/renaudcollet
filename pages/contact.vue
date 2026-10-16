@@ -120,7 +120,7 @@ const coverAlt = (datasContact.attributes.cover.data && datasContact.attributes.
 
 const seo = useSeo({
   title: datasContact.attributes.titre || 'Contact',
-  description: "Contactez Renaud Collet, développeur frontend freelance, pour vos projets de sites internet, d'expériences WebGL et de dispositifs DOOH.",
+  description: "Contactez Renaud Collet, développeur fullstack freelance à Paris, pour vos sites internet, applications Vue.js / Nuxt et expériences WebGL ou WebAR.",
   image: datasContact.attributes.cover,
 });
 
