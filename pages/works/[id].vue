@@ -42,6 +42,7 @@
           <span class="back" aria-hidden="true" :style="{'color': titleColorBack}">Client : {{ currentProject.attributes.brand }}</span>
         </div>
         <div
+          v-if="currentProject.attributes.agency"
           class="cover-top__title__brand scroll-reveal unmount-animation"
           data-scroll-reveal-opacity-y
           :data-scroll-reveal-delay="durationEnterWorkId + 0.5"
@@ -51,7 +52,7 @@
           <span class="back" aria-hidden="true" :style="{'color': titleColorBack}">Agence : {{ currentProject.attributes.agency }}</span>
         </div>
         <a
-          v-if="currentProject.attributes.website_url !== ''"
+          v-if="currentProject.attributes.website_url"
           target="_blank"
           :href="currentProject.attributes.website_url"
           class="cover-top__title__brand cover-top__title__brand--anchor scroll-reveal unmount-animation"
@@ -78,6 +79,12 @@
       </div> 
     </section>
     <section class="projects unmount-animation">
+      <!-- The project summary, also used as the meta description: its first sentence must stand alone -->
+      <WorkItemTitleResume
+        v-if="currentProject.attributes.resume"
+        title="Le projet"
+        :content="currentProject.attributes.resume"
+      />
       <template v-for="(item, index) in currentProjectBlocs">
         <WorkItemTitleResume
           v-if="item.Image.data === null && item.Video.data === null"

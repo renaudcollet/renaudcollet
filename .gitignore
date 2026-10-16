@@ -6,3 +6,9 @@ node_modules
 .output
 .env
 dist
+
+# Personal documents (CV with address and birth date)
+docs/cv/
+
+# Portfolio drafts and fact briefs (working files, pushed to Strapi)
+docs/projets/
