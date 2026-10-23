@@ -271,7 +271,9 @@ const seoProjectTitle = (currentProject.attributes.titre || '').trim()
 const seoBrand = (currentProject.attributes.brand || '').trim()
 const seoAgency = (currentProject.attributes.agency || '').trim()
 
-const seoTitle = seoBrand && seoBrand !== seoProjectTitle
+// The brand is left out when the title already names it ("New Era Magic Mirror - New Era")
+const normalize = s => s.toLowerCase().normalize('NFD').replace(/[^a-z0-9]/g, '')
+const seoTitle = seoBrand && !normalize(seoProjectTitle).includes(normalize(seoBrand))
   ? `${seoProjectTitle} - ${seoBrand}`
   : seoProjectTitle
 
