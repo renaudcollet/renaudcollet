@@ -4,9 +4,8 @@
       <div id="index-logo" ref="indexLogo" class="index-logo" data-header-scroll-minimize>
         <Logo class="index-logo__logo" />
       </div>
-      <!-- The page h1: the name is shown by the logo, so it is only written for screen readers and crawlers -->
       <h1 id="job" ref="job" class="job">
-        <span class="visually-hidden">Renaud Collet, </span>Développeur fullstack freelance à Paris
+        Développeur fullstack freelance
       </h1>
       <div ref="scrollDown" class="scroll-down">
         <div>SCROLL</div>
@@ -303,14 +302,5 @@ onBeforeUnmount(() => {
   letter-spacing: 0.1em;
   text-align: center;
   text-transform: uppercase;
-}
-
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
 }
 </style>
