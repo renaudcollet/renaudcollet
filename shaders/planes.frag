@@ -61,6 +61,12 @@ void main() {
     return;
   }
 
+  // Not measured yet (element or image of 0px): uvCover() would divide by 0, same black flash
+  if (min(min(uResolution.x, uResolution.y), min(uSize.x, uSize.y)) < 1.0) {
+    gl_FragColor = vec4(0.0);
+    return;
+  }
+
   vec2 uv = vTextureCoord; // From 0 to 1
 
   vec2 cover_uv = uvCover(uv, uSize, uResolution);

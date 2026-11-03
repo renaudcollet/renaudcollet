@@ -76,7 +76,15 @@ export const useDatasCurtainsStore = defineStore( 'datasCurtains', {
 
     removeCurrentPlaneCover() {
       if (this.currentPlaneCover) {
-        this.currentPlaneCover.remove();
+        const uuid = this.currentPlaneCover.uuid
+        // Already closing in removePlanes(), which removes it at the end of its animation
+        if (!closingPlanes.has(uuid)) {
+          this.currentPlaneCover.remove();
+          // Leaving the project page before it adopted the cover (back during the expansion):
+          // the cover is still listed by the page it came from, and the next page would wait
+          // forever for planesToRemove to empty before mounting its planes
+          this.planesToRemove = this.planesToRemove.filter(plane => plane.uuid !== uuid)
+        }
         this.currentPlaneCover = null
       }
     }

@@ -62,7 +62,11 @@ Critical quirk: **planes are never removed on unmount**. Vue transitions unmount
 
 A curtains plane reads its size and position on its html element (`getBoundingClientRect()`), and a detached element reports 0x0: a plane still bound to the DOM of a page that has left collapses on its next resize. Compare planes by `uuid`, not `index` (`index` is the number of planes at creation time, so it is reused once planes have been removed).
 
-`shaders/planes.frag` returns early when `uOpenProgress` is (nearly) 0: the lygia `rect()` mask divides by it, and the resulting inf/NaN shows up as a black flash on some GPUs.
+`shaders/planes.frag` returns early when `uOpenProgress` is (nearly) 0: the lygia `rect()` mask divides by it, and the resulting inf/NaN shows up as a black flash on some GPUs. It also returns early while `uResolution` or `uSize` is 0, since `uvCover()` divides by them.
+
+The planes of an entering page are sometimes created while its DOM is still detached (the page is mounted before it is inserted), so they read a 0x0 element: curtains does not draw them and their ratio uniforms stay at 0 until something measures them again. `ImagePlane.appear()` measures again before opening (and once more when the opening starts), keep it that way. A page waits for `planesToRemove` to be empty before mounting its planes, so a plane removed directly (not through `removePlanes()`) must also leave that list, otherwise the next page never shows its images: see `removeCurrentPlaneCover()`, which covers a "back" during the cover expansion.
+
+To debug curtains in a browser without GPU (Claude in Chrome runs software WebGL), set `failIfMajorPerformanceCaveat` to `false` in `components/curtains/Curtains/params.js` for the session only, and put it back.
 
 `components/webgl/ImagePlane.vue` is the standard image-as-plane wrapper (`shaders/planes.vert|frag`). It used to append a timestamp to the `src` against resize/black-image bugs of the old cover swap; it no longer does (that broke caching, image indexing and hydration). If such a bug comes back, look for its cause rather than restoring the cache busting.
 

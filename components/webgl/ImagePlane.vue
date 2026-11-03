@@ -158,6 +158,10 @@ const appear = () => {
   // console.log('appear', planeMesh.value);
   if(!planeMesh.value) return
 
+  // Measure again before opening: a plane created while its page was entering can have read a
+  // 0x0 element, and would never be drawn (curtains) or draw black (uvCover() divides by 0)
+  onResize()
+
   // Item shown by scroll, or project page cover when the user arrives directly on it.
   // Coming from a project item, the cover is that item plane (transitions/expand-cover.js).
   const t = {u: 0, v: 0.0}
@@ -166,9 +170,8 @@ const appear = () => {
     duration: 0.7,
     delay: 0.2,
     ease: 'power2.out',
-    // onStart: () => {
-    //     planeMesh.value.resize()
-    // },
+    // And once more after the delay, in case the page was still entering when appear() was called
+    onStart: () => onResize(),
     onUpdate: () => {
         planeMesh.value.uniforms.uOpenProgress.value = t.v
     },
