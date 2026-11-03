@@ -35,7 +35,9 @@ Read at runtime through `useRuntimeConfig().public.{apiUrl,backendUrl,appUrl}`.
 
 ## Deployment
 
-Build locally with the production `.env`, upload `.output/` to Ionos, then restart the Node app from the Plesk panel. `server.js` is the Passenger entry point (`import('./.output/server/index.mjs')`). Server logs: `/var/log/passenger/passenger.log` (root).
+Build locally with the production `.env`, upload `.output/` to Ionos, then restart the Node app from the Plesk panel. `server.js` is the Passenger entry point (`import('./.output/server/index.mjs')`). Server logs: `/var/log/passenger/passenger.log` (root). Without root, run the app by hand over SSH to see the error: `PORT=3999 /opt/plesk/node/22/bin/node .output/server/index.mjs` in `~/httpdocs`, then `curl` it. The host runs Node 22 (Nuxt 3.21 needs `^20.19.0 || >=22.12.0`).
+
+Nitro links the packages bundled in several versions (`node_modules/.nitro`) with Windows junctions to absolute paths, which break on upload (`Cannot find package 'hookable'`): the `compiled` hook in `nuxt.config.js` replaces them with copies. Replace the whole `.output` on the server rather than merging into the old one.
 
 ## Architecture
 

@@ -7,6 +7,26 @@
  */
 
 import glsl from 'vite-plugin-glsl';
+import { cpSync, existsSync, lstatSync, readdirSync, realpathSync, rmSync } from 'node:fs';
+import { join } from 'node:path';
+
+// Nitro stores the packages bundled in several versions (hookable, @vue/devtools-api) in
+// .output/server/node_modules/.nitro and links them into place. On Windows the links are junctions
+// to absolute D:/ paths, which do not survive the upload to Ionos ("Cannot find package
+// 'hookable'"): replace every link with a real copy so that .output is self-contained.
+function dereferenceLinks(dir) {
+  for (const name of readdirSync(dir)) {
+    const path = join(dir, name);
+    const stat = lstatSync(path);
+    if (stat.isSymbolicLink()) {
+      const target = realpathSync(path);
+      rmSync(path, { recursive: true, force: true });
+      cpSync(target, path, { recursive: true, dereference: true });
+    } else if (stat.isDirectory()) {
+      dereferenceLinks(path);
+    }
+  }
+}
 
 export default defineNuxtConfig({
   telemetry: false, // For nuxt team (anonyous statistics)
@@ -80,6 +100,17 @@ export default defineNuxtConfig({
   $production: {
     routeRules: {
       '/**': { swr: 3600 },
+    },
+  },
+
+  nitro: {
+    hooks: {
+      compiled(nitro) {
+        const modules = join(nitro.options.output.serverDir, 'node_modules');
+        if (!existsSync(modules)) return;
+        dereferenceLinks(modules);
+        rmSync(join(modules, '.nitro'), { recursive: true, force: true });
+      },
     },
   },
 
