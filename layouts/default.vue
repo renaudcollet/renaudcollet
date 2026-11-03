@@ -237,9 +237,11 @@ const onCurtainsError = (error) => {
   console.log('onCurtainsError', error);
   // we will add a class to the document body to display original images
   document.body.classList.add("no-curtains");
+  storeDatasCurtains.webglAvailable = false
 }
 
 const onCurtainsReady = (_curtains) => {
+  storeDatasCurtains.webglAvailable = true
   // console.log('onCurtainsReady', _curtains);
   // curtains.disableDrawing();
 

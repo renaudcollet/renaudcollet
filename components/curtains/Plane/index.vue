@@ -51,6 +51,11 @@ export default {
     };
 
     useCurtains((curtains) => {
+      // No WebGL context (no GPU, hardware acceleration turned off): no plane at all, its html
+      // image or video is shown instead (.no-curtains). A plane without context would still be
+      // listed in planesToRemove on unmount and never removed, the next page would wait forever
+      if (!curtains.gl) return;
+
       emit("before-create");
 
       plane = new Plane(curtains, planeEl.value, params);

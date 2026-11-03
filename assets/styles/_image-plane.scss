@@ -18,6 +18,14 @@
 opacity: 0;
 }
 
+// Without WebGL (no GPU, hardware acceleration turned off), curtains can't draw the planes:
+// layouts/default.vue adds .no-curtains to the body on its error, and the html images and videos
+// the planes would have used as textures are shown instead
+.no-curtains .plane img,
+.no-curtains .plane video {
+  opacity: 1;
+}
+
 .not-plane img {
   position: absolute;
   top: 0;

@@ -245,6 +245,13 @@ const onCoverReady = () => {
   emit('onLockScroll', false)
 }
 
+// Without WebGL the cover plane is never created, so it is never ready: its html image is shown
+// (.no-curtains) and the page is unlocked right away: here when the page is the first one loaded
+// (the error comes after it is mounted), in onMounted() when it is reached from another page
+watch(() => storeDatasCurtains.webglAvailable, (available) => {
+  if (available === false && coverMode.value === 'plane') onCoverReady()
+})
+
 const config = useRuntimeConfig()
 const route = useRoute()
 const router = useRouter()
@@ -388,6 +395,7 @@ onMounted(() => {
     // A cover plane that was not expanded can't be used, don't leave it in the scene
     storeDatasCurtains.removeCurrentPlaneCover()
     coverMode.value = 'plane'
+    if (storeDatasCurtains.webglAvailable === false) nextTick(onCoverReady)
   }
 
   if (adoptedPlane) {

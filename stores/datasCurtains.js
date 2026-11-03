@@ -12,6 +12,8 @@ export const useDatasCurtainsStore = defineStore( 'datasCurtains', {
   state: () => ({
     planesToRemove: [],
     curtains: null,
+    // null until curtains has tried to get a WebGL context, false without one (no GPU)
+    webglAvailable: null,
     currentPlaneCover: null,
     scrollY: 0,
     scrollToTopCompleteAfterTransition: true,
