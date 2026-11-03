@@ -12,6 +12,7 @@
 
 uniform float time;
 uniform float progress;
+uniform float uDarken; // 0 -> 1, past the cover zone: the scene fades to a dark grey under the home text
 uniform sampler2D uTexture1;
 uniform sampler2D uTexture2;
 uniform vec4 resolution;
@@ -63,7 +64,9 @@ void main()	{
 
 	vec4 rgba = mix(rgba1,rgba2,delayValue);
 	
-	gl_FragColor = sRGBTransferOETF( rgba );
+	vec4 color = sRGBTransferOETF( rgba );
+	float gray = dot(color.rgb, vec3(0.299, 0.587, 0.114));
+	gl_FragColor = vec4(mix(color.rgb, vec3(gray * 0.3), uDarken), color.a);
 
 
 }

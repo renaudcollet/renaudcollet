@@ -1,7 +1,8 @@
 <template>
   <div class="work-item-title" :class="{'small' : type === 'Small'}">
     <div class="work-item-title__answer z-index-text">
-      <h3 
+      <h3
+        v-if="title"
         class="work-item-title__answer__title scroll-reveal"
         data-scroll-reveal-opacity-y
         data-scroll-reveal-delay="0.2"

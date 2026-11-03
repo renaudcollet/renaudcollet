@@ -67,6 +67,8 @@
     padding: 30px;
     position: relative;
     text-align: center;
+    // Explicit, so the h2 of the home page and the h1 of /works keep the same spacing
+    margin-top: 0.67em;
     margin-bottom: 90px;
     max-width: 90%;
   

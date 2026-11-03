@@ -4,9 +4,10 @@
       <div id="index-logo" ref="indexLogo" class="index-logo" data-header-scroll-minimize>
         <Logo class="index-logo__logo" />
       </div>
-      <div id="job" ref="job" class="job">
-        Freelance Web Developer
-      </div>
+      <!-- The page h1: the name is shown by the logo, so it is only written for screen readers and crawlers -->
+      <h1 id="job" ref="job" class="job">
+        <span class="visually-hidden">Renaud Collet, </span>Développeur fullstack freelance à Paris
+      </h1>
       <div ref="scrollDown" class="scroll-down">
         <div>SCROLL</div>
         <div ref="scrollSvg" class="scroll-svg"></div>
@@ -14,7 +15,12 @@
     </div>
     <div ref="scrollZone" class="scroll-zone"></div>
     <section class="projects-home">
-      <h1 
+      <WorkItemTitleResume
+        v-if="storeDatas.accueil.data.attributes.resume"
+        class="projects-home__intro unmount-animation"
+        :content="storeDatas.accueil.data.attributes.resume"
+      />
+      <h2
         class="projects-home__title scroll-reveal unmount-animation"
         data-scroll-reveal-opacity-y
         data-scroll-reveal-delay="0.5"
@@ -23,7 +29,7 @@
       >
         <span class="front">{{storeDatas.accueil.data.attributes.Titre}}</span>
         <span class="back" aria-hidden="true">{{storeDatas.accueil.data.attributes.Titre}}</span>
-      </h1>
+      </h2>
       <template v-for="(item, index) in storeDatas.projectsHomepage" :key="index">
         <ProjectItem 
           class="projects-home__item unmount-animation" 
@@ -290,9 +296,21 @@ onBeforeUnmount(() => {
 .job {
   position: absolute;
   opacity: 0;
+  margin: 0;
+  width: 90%;
   font-size: 1.5rem;
   font-weight: 300;
   letter-spacing: 0.1em;
+  text-align: center;
   text-transform: uppercase;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 </style>

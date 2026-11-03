@@ -492,6 +492,13 @@ const onScroll = () => {
       config3d.progress = prc
       // updateRendererAndShaderMaterial()
     }
+
+    // The home introduction scrolls in at the end of the cover zone: the scene fades to a dark
+    // grey from 30% of a screen before it, over 80% of a screen
+    if (material) {
+      const darken = (window.scrollY - zoneHeight + window.innerHeight * 0.3) / (window.innerHeight * 0.8)
+      material.uniforms.uDarken.value = Math.min(Math.max(darken, 0), 1)
+    }
 }
 
 defineExpose({
@@ -891,6 +898,7 @@ const initPostprocessing = () => {
     side: THREE.DoubleSide,
     uniforms: {
       progress : { type: "f", value: 0 },
+      uDarken: { type: "f", value: 0 },
       uTexture1: { type: "t", value: null },
       uTexture2: { type: "t", value: null },
     },
