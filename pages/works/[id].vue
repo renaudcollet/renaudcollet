@@ -97,8 +97,8 @@
           v-else-if="item.type === 'Big'"
           :index="index" 
           :alt="blocAlt(item)"
-          :src="item.Image.data ? getImageUrl(item.Image.data.attributes.formats) : null" 
-          :srcPortrait="item.Image.data ? getImageUrlPortrait(item.Image.data.attributes.formats) : null"
+          :src="item.Image.data ? getImageUrl(item.Image.data.attributes) : null" 
+          :srcPortrait="item.Image.data ? getImageUrlPortrait(item.Image.data.attributes) : null"
           :video-src="item.Video.data ? config.public.backendUrl + item.Video.data.attributes.url : null"
           :title="item.Titre || ''"
           :content="item.Resume || ''"
@@ -109,8 +109,8 @@
           v-else-if="item.type === 'Small'"
           :index="index" 
           :alt="blocAlt(item)"
-          :src="item.Image.data ? getImageUrl(item.Image.data.attributes.formats) : null" 
-          :srcPortrait="item.Image.data ? getImageUrlPortrait(item.Image.data.attributes.formats) : null"
+          :src="item.Image.data ? getImageUrl(item.Image.data.attributes) : null" 
+          :srcPortrait="item.Image.data ? getImageUrlPortrait(item.Image.data.attributes) : null"
           :video-src="item.Video.data ? config.public.backendUrl + item.Video.data.attributes.url : null"
           :content="{title: item.Titre, content: item.Resume}" 
           :class="{'right': index%4 === 0, 'left': index%4 === 2}"
@@ -165,17 +165,16 @@ const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 const { initZoomableImage, clearZoomableImage } = useZoomableImage();
 const { transitionState, elementsToTransition, functionTransitionCallback, coverProxyForTransition } = useTransitionComposable();
 
-const getImageUrl = (formats) => {
-  if (formats.xxlarge !== undefined) return config.public.backendUrl + formats.xxlarge.url;
-  else if (formats.xlarge !== undefined) return config.public.backendUrl + formats.xlarge.url;
-  else if (formats.large !== undefined) return config.public.backendUrl + formats.large.url;
-  else return config.public.backendUrl + formats.url;
+// Largest generated format, or the original: strapi only generates the formats smaller than the
+// image, so an image under 1200px has no "large" one
+const getImageUrl = (image) => {
+  const formats = image.formats || {};
+  return config.public.backendUrl + (formats.xxlarge || formats.xlarge || formats.large || image).url;
 }
 
-const getImageUrlPortrait = (formats) => {
-  if (formats.xlarge !== undefined) return config.public.backendUrl + formats.xlarge.url;
-  else if (formats.large !== undefined) return config.public.backendUrl + formats.large.url;
-  else return config.public.backendUrl + formats.url;
+const getImageUrlPortrait = (image) => {
+  const formats = image.formats || {};
+  return config.public.backendUrl + (formats.xlarge || formats.large || image).url;
 }
 
 /**
