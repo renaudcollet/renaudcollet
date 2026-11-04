@@ -13,6 +13,7 @@
           :src="src"
           :srcPortrait="srcPortrait"
           :video-src="videoSrc" 
+          :loop-video="loopVideo"
           :onRender="onRender"
           :isVisible="isVisible"
           object-fit="cover" 
@@ -112,6 +113,11 @@ const props = defineProps({
     required: false,
     default: null
   },
+  // Short muted loop played inside the block, instead of a poster with a play button
+  loopVideo: {
+    type: Boolean,
+    default: false
+  },
   supportsCurtains: {
     type: Boolean,
     required: false,
@@ -141,12 +147,8 @@ const titleAlphaNumeric = computed(() => {
   return toAlphaNumeric(props.title);
 })
 
-const isVideo = computed(() => {
-  if (!props.videoSrc)
-    return false;
-  else 
-    return true;
-})
+// A video to play on click (with its controls): a loop video plays by itself in the plane
+const isVideo = computed(() => !!props.videoSrc && !props.loopVideo)
 
 const el = ref(null);
 

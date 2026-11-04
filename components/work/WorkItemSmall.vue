@@ -6,11 +6,13 @@
           v-if="mountPlane && !playVideo"
           :src="src" 
           :srcPortrait="srcPortrait"
+          :video-src="videoSrc"
+          :loop-video="loopVideo"
           :data-zoomable-url="src"
           :onRender="onRender"
           :isVisible="isVisible"
-          :class="{'scroll-reveal': !supportsCurtains, 'zoomable': !isVideo}" 
-          :data-mouse-cursor="isVideo ? null : 'zoom'"
+          :class="{'scroll-reveal': !supportsCurtains, 'zoomable': isZoomable}" 
+          :data-mouse-cursor="isZoomable ? 'zoom' : null"
           data-scroll-reveal-opacity-y
           data-scroll-reveal-delay="0.2"
           data-scroll-reveal-duration="0.5"
@@ -93,7 +95,8 @@ const props = defineProps({
   },
   src: {
     type: String,
-    required: true,
+    required: false,
+    default: null
   },
   srcPortrait: {
     type: String,
@@ -104,6 +107,11 @@ const props = defineProps({
     type: String,
     required: false,
     default: null
+  },
+  // Short muted loop played inside the block, instead of a poster with a play button
+  loopVideo: {
+    type: Boolean,
+    default: false
   },
   content: {
     type: Object,
@@ -140,12 +148,10 @@ const titleAlphaNumeric = computed(() => {
   return toAlphaNumeric(props.content.title);
 })
 
-const isVideo = computed(() => {
-  if (!props.videoSrc)
-    return false;
-  else 
-    return true;
-})
+// A video to play on click (with its controls): a loop video plays by itself in the plane
+const isVideo = computed(() => !!props.videoSrc && !props.loopVideo)
+// Only a plain image opens in the zoom
+const isZoomable = computed(() => !props.videoSrc && !!props.src)
 
 const visibilityObserver = useElementVisibility(el);
 const isVisible = visibilityObserver.isVisible;

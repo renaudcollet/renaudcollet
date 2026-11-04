@@ -12,17 +12,33 @@
       data-sampler="uTexture"
       crossorigin="anonymous"
     > -->
-    <picture>
+    <!-- A short muted loop (bloc "Boucle" in strapi), drawn as the texture like an image would be.
+      curtains forces muted / loop / playsinline itself, they are repeated for the no-WebGL fallback -->
+    <video
+      v-if="isLoopVideo"
+      ref="elVideo"
+      :src="videoSrc"
+      :poster="src || undefined"
+      :style="{'object-fit': objectFit}"
+      :aria-label="alt || undefined"
+      muted
+      loop
+      playsinline
+      preload="auto"
+      data-sampler="uTexture"
+      crossorigin="anonymous"
+    ></video>
+    <picture v-else>
       <source :srcset="sourceFilePortrait" media="(orientation: portrait)" />
-      <img 
-        :src="sourceFile" 
+      <img
+        :src="sourceFile"
         :style="{'object-fit': objectFit}"
         :alt="alt"
         data-sampler="uTexture"
         crossorigin="anonymous"
       />
     </picture>
-  </Plane>   
+  </Plane>
   <!-- <div v-else class="not-plane">
       <img 
           :src="src" 
@@ -58,6 +74,16 @@ const props = defineProps({
     type: String,
     required: false,
     default: null
+  },
+  // With loopVideo, the plane draws this video in a muted loop instead of the image (src becomes its poster)
+  videoSrc: {
+    type: String,
+    required: false,
+    default: null
+  },
+  loopVideo: {
+    type: Boolean,
+    default: false
   },
   onRender: {
     type: Function,
@@ -146,6 +172,35 @@ const sourceFile = computed(() => props.src)
 
 const sourceFilePortrait = computed(() => props.srcPortrait)
 
+const isLoopVideo = computed(() => props.loopVideo && !!props.videoSrc)
+const elVideo = ref(null)
+let videoObserver = null
+
+// The loop only plays while it is on screen (decoding and texture uploads cost on every frame),
+// and not at all when the visitor asked for reduced motion: the first frame (or the poster) stays
+const watchLoopVideo = () => {
+  const video = elVideo.value
+  if (!video || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+  videoObserver = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) {
+      // Refused autoplay (iOS low power mode...): the video simply stays on its first frame
+      video.play().catch(() => {})
+    } else {
+      video.pause()
+    }
+  })
+  videoObserver.observe(video)
+}
+
+const stopLoopVideo = () => {
+  if (videoObserver) {
+    videoObserver.disconnect()
+    videoObserver = null
+  }
+  if (elVideo.value) elVideo.value.pause()
+}
+
 watch(isVisible, (newVal, oldVal) => {
   // console.log(`ImagePlane ${props.src} isVisible`, newVal);
   if (newVal) {
@@ -199,6 +254,13 @@ const onReady = (plane) => {
   planeMesh.value = plane; // extends DOMMesh
   emit('ready', plane)
 
+  // curtains only uploads the frames of a playing video: a loop that does not play (reduced motion,
+  // refused autoplay) would leave the texture empty. The plane is ready once the video can play,
+  // so its first frame is decoded and can be uploaded once
+  if (isLoopVideo.value && elVideo.value && elVideo.value.paused) {
+    plane.textures.forEach((texture) => texture.needUpdate())
+  }
+
   nextTick(() => {
       // plane.images[0].style.opacity = 0
       // plane.resize()
@@ -245,6 +307,7 @@ defineExpose({
 onMounted(() => {
   // console.log(`ImagePlane mounted ${props.src}`, `isVisible ${props.isVisible}`);
   window.addEventListener('resize', onResize)
+  if (isLoopVideo.value) watchLoopVideo()
 
   // const t = {v: 0}
   // gsap.to(t, {
@@ -265,5 +328,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', onResize)
+  // The plane itself is removed later (planesToRemove), its video would keep playing until then
+  stopLoopVideo()
 })
 </script>

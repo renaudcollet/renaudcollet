@@ -72,6 +72,8 @@ To debug curtains in a browser without GPU (Claude in Chrome runs software WebGL
 
 `components/webgl/ImagePlane.vue` is the standard image-as-plane wrapper (`shaders/planes.vert|frag`). It used to append a timestamp to the `src` against resize/black-image bugs of the old cover swap; it no longer does (that broke caching, image indexing and hydration). If such a bug comes back, look for its cause rather than restoring the cache busting.
 
+A project bloc with a video has two modes. By default the image is a poster with a play button, and the video opens on click in a `VideoPlane` (html video with controls and sound). With the bloc's `Boucle` boolean checked in Strapi, `ImagePlane` draws the video itself as the plane texture, muted and looping, played only while it is on screen and never with `prefers-reduced-motion` (the image, optional, becomes its poster). Keep loop videos short and light (a few seconds, no sound, a few MB).
+
 ### Page transitions
 
 `compositions/use-transition.js` exports **module-level mutable singletons** (`transitionState`, `elementsToTransition`, `functionTransitionCallback`, `coverProxyForTransition`, `scrollForTransition`), not per-component state. A page assigns to them right before navigating, and the GSAP transitions in `transitions/work-transition.js` read them during `onLeave`. They also carry what the layout exposes to pages: a leaving page is already unmounted, its `emit()` calls are ignored. Transitions are wired per page with `definePageMeta({ pageTransition: workTransition })`.
