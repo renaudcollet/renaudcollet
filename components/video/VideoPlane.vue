@@ -144,7 +144,6 @@ const isReady = ref(false)
 const emit = defineEmits(['video-paused', 'video-out-of-view', 'video-ended', 'video-played', 'video-paused'])
 
 watch(play, (newVal, oldVas) => {
-  console.log('WATCH play', video)
   if(newVal) {
       video.value.play().then(() => {
           video.value.volume = 1
@@ -183,7 +182,6 @@ const onResize = () => {
 
 const onReady = (plane) => {
   planeMesh.value = plane; // extends DOMMesh
-  console.log('VIDEO onReady', planeMesh.value);
   nextTick(() => {
       // plane.images[0].style.opacity = 0
       updateRatioUniforms(plane)

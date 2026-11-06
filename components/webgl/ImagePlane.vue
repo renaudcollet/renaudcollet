@@ -250,7 +250,6 @@ const disappear = () => {
 // }
 
 const onReady = (plane) => {
-  console.log('!!!! onReady in ImagePlane', plane);
   planeMesh.value = plane; // extends DOMMesh
   emit('ready', plane)
 
