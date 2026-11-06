@@ -7,6 +7,7 @@
 import { Curtains } from "curtainsjs";
 import { curtainsEvents, flattenDefaultParams } from "../utils";
 import { params } from "./params.js";
+import "../texture-fix.js";
 import {
   ref,
   provide,
