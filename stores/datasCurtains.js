@@ -76,6 +76,16 @@ export const useDatasCurtainsStore = defineStore( 'datasCurtains', {
       })
     },
 
+    // Remove right away a plane that is never seen closing (VideoPlane: the html video is drawn above it).
+    // Left in planesToRemove, it would stay there until the page is left, and everything gated on an
+    // empty list (bMountPlanes, the project page cover) would unmount meanwhile
+    removePlaneNow(value) {
+      const plane = toRaw(value)
+      if (closingPlanes.has(plane.uuid)) return
+      this.planesToRemove = this.planesToRemove.filter(_plane => _plane.uuid !== plane.uuid)
+      removeBeforeNextDraw(this.curtains, plane)
+    },
+
     // The project page now owns the cover plane, the leaving page must not remove it
     adoptCurrentPlaneCover() {
       const uuid = this.currentPlaneCover.uuid

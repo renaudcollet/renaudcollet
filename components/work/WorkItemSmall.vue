@@ -2,8 +2,11 @@
   <div class="work-item-small" ref="el">
     <div class="work-item-small__image">
       <ClientOnly>
-        <ImagePlane 
-          v-if="mountPlane && !playVideo"
+        <!-- Stays mounted while the video plays (the html video is drawn above the canvas): unmounted,
+          its plane would be listed in planesToRemove and stay in the scene until the page is left.
+          No plane for a video without poster image: curtains would upload an <img> without source -->
+        <ImagePlane
+          v-if="mountPlane && (src || loopVideo)"
           :src="src" 
           :srcPortrait="srcPortrait"
           :video-src="videoSrc"
@@ -27,6 +30,7 @@
           :video-src="videoSrc" 
           :id="titleAlphaNumeric" 
           :play="activateVideo"
+          :onRender="onRender"
           @videoEnded="onVideoEnded"
           @videoOutOfView="onVideoOutOfView"
           @videoPaused="onVideoPaused"

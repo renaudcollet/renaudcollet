@@ -7,6 +7,7 @@
             :params="planeProps"
             @render="onRender"
             @ready="onReady"
+            @before-remove="onPlaneRemove"
         >
             <video 
                 :style="{'object-fit': objectFit}" 
@@ -40,6 +41,10 @@ import vertexShader from "~/shaders/planes.vert";
 import VideoControls from '~/components/video/VideoControls.vue';
 // import supportsCurtains from '~/mixins/utils-device.js';
 import gsap from 'gsap';
+import { updatePlaneRatio } from '~/js/plane-utils';
+import { useDatasCurtainsStore } from '~/stores/datasCurtains';
+
+const storeDatasCurtains = useDatasCurtainsStore();
 
 const props = defineProps({
   objectFit: {
@@ -160,11 +165,9 @@ watch(play, (newVal, oldVas) => {
   }
 })
 
+// For uvCover() in planes.frag (a video has no naturalWidth / naturalHeight, see plane-utils)
 const updateRatioUniforms = (plane) => {
-    const image = plane.videos[0]
-    // For uCover
-    plane.uniforms.resolution.value = [image.width, image.height]
-    plane.uniforms.size.value = [image.naturalWidth, image.naturalHeight]
+    updatePlaneRatio(plane)
 }
 
 const onResize = () => {
@@ -202,17 +205,33 @@ const onReady = (plane) => {
     
 }
 
+let videoObserver = null
+
+// The plane is hidden behind the html video: no closing animation, remove it on unmount
+const onPlaneRemove = (plane) => {
+  storeDatasCurtains.removePlaneNow(plane)
+}
+
 const addVideoObserver = () => {
-    const observer = new IntersectionObserver((entries) => {
+    if (!video.value) return
+    videoObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-            if (!entry.isIntersecting) {
+            // The video ref is null once the component is unmounted
+            if (!entry.isIntersecting && video.value) {
                 video.value.pause();
                 onVideoOutOfView()
             }
         });
 
     });
-    observer.observe(video.value);
+    videoObserver.observe(video.value);
+}
+
+const removeVideoObserver = () => {
+    if (videoObserver) {
+        videoObserver.disconnect()
+        videoObserver = null
+    }
 }
 
 const onClickVideo = () => {
@@ -253,6 +272,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  removeVideoObserver()
   if (video.value && video.value.getAttribute('click-listener') === 'true') {
       video.value.removeEventListener('click', onClickVideo)
   }
