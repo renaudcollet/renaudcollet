@@ -165,7 +165,7 @@ const props = defineProps({
 
 const { initScrollReveal, clearScrollReveal } = useScrollReveal();
 const { initZoomableImage, clearZoomableImage } = useZoomableImage();
-const { transitionState, elementsToTransition, functionTransitionCallback, coverProxyForTransition } = useTransitionComposable();
+const { transitionState, elementsToTransition, functionTransitionCallback, coverProxyForTransition, scrollForTransition } = useTransitionComposable();
 
 // Largest generated format, or the original: strapi only generates the formats smaller than the
 // image, so an image under 1200px has no "large" one
@@ -185,6 +185,10 @@ const getImageUrlPortrait = (image) => {
  * */
 definePageMeta({
   pageTransition: workIdTransition,
+  // The router scrolls to the top as soon as the navigation starts (Nuxt 3.21 does not wait for the
+  // transition when the page has nothing to load): the leaving page jumped to its top on click.
+  // The scroll is reset by the page instead: by the cover expansion, or on mount (see onMounted)
+  scrollToTop: false,
 });
 
 const emit = defineEmits(['onLockScroll'])
@@ -396,6 +400,9 @@ onMounted(() => {
   } else {
     // A cover plane that was not expanded can't be used, don't leave it in the scene
     storeDatasCurtains.removeCurrentPlaneCover()
+    // No cover expansion to reset the scroll (next project link, history...): the leaving page is gone
+    // (out-in transition), start this one at the top before its cover plane is measured
+    if (scrollForTransition.resetToTop) scrollForTransition.resetToTop()
     coverMode.value = 'plane'
     if (storeDatasCurtains.webglAvailable === false) nextTick(onCoverReady)
   }

@@ -75,7 +75,8 @@ const resetScrollTop = () => {
 
   // Sync curtains now rather than on the next scroll event, which could come after the
   // project page has bound the cover to its own element and would offset it by the old scroll
-  __curtains.updateScrollValues(window.scrollX, 0)
+  // (no curtains instance without a WebGL context)
+  if (__curtains) __curtains.updateScrollValues(window.scrollX, 0)
 }
 
 const onLockScroll = (isLocked, animate, scrollY = 0) => {
