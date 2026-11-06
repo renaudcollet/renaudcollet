@@ -7,6 +7,19 @@ import gsap from 'gsap'
 // so two planes can share an index once some planes have been removed.
 const closingPlanes = new Set()
 
+// curtains clears the whole canvas when it removes a plane (Renderer.removePlane()). Called from a gsap
+// tween, the removal can land after curtains has drawn the frame (each runs its own requestAnimationFrame
+// loop): the cleared canvas is then shown for one frame, a random black flash of the whole screen.
+// curtains runs its nextRender queue at the start of render(), before drawing: remove the plane there.
+const removeBeforeNextDraw = (curtains, plane, onRemoved) => {
+  const remove = () => {
+    plane.remove()
+    onRemoved && onRemoved()
+  }
+  if (curtains) toRaw(curtains).nextRender(remove)
+  else remove()
+}
+
 export const useDatasCurtainsStore = defineStore( 'datasCurtains', {
 
   state: () => ({
@@ -53,10 +66,11 @@ export const useDatasCurtainsStore = defineStore( 'datasCurtains', {
             plane.uniforms.uOpenProgress.value = t.v
           },
           onComplete: () => {
-            plane.remove();
-            closingPlanes.delete(plane.uuid)
-            // Empty once every plane is removed, pages wait for it to mount their own planes
-            this.planesToRemove = this.planesToRemove.filter(_plane => _plane.uuid !== plane.uuid)
+            removeBeforeNextDraw(this.curtains, plane, () => {
+              closingPlanes.delete(plane.uuid)
+              // Empty once every plane is removed, pages wait for it to mount their own planes
+              this.planesToRemove = this.planesToRemove.filter(_plane => _plane.uuid !== plane.uuid)
+            })
           },
         })
       })
@@ -81,7 +95,7 @@ export const useDatasCurtainsStore = defineStore( 'datasCurtains', {
         const uuid = this.currentPlaneCover.uuid
         // Already closing in removePlanes(), which removes it at the end of its animation
         if (!closingPlanes.has(uuid)) {
-          this.currentPlaneCover.remove();
+          removeBeforeNextDraw(this.curtains, this.currentPlaneCover);
           // Leaving the project page before it adopted the cover (back during the expansion):
           // the cover is still listed by the page it came from, and the next page would wait
           // forever for planesToRemove to empty before mounting its planes
