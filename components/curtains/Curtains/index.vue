@@ -8,6 +8,7 @@ import { Curtains } from "curtainsjs";
 import { curtainsEvents, flattenDefaultParams } from "../utils";
 import { params } from "./params.js";
 import "../texture-fix.js";
+import { setScrollSyncCurtains } from "../scroll-fix.js";
 import {
   ref,
   provide,
@@ -47,6 +48,7 @@ export default {
     onMounted(() => {
       // set its container
       curtains.setContainer(container.value);
+      setScrollSyncCurtains(toRaw(curtains));
 
       // loop through our subscriptions and bind them to curtains events
       Object.keys(curtainsEvents.subscriptions).forEach((subscription) => {
@@ -60,6 +62,7 @@ export default {
     });
 
     onBeforeUnmount(() => {
+      setScrollSyncCurtains(null);
       curtains.dispose();
     });
 
