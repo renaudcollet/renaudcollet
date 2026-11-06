@@ -57,6 +57,10 @@ export const useDatasCurtainsStore = defineStore( 'datasCurtains', {
         if (closingPlanes.has(plane.uuid)) return
         closingPlanes.add(plane.uuid)
 
+        // A closing plane stays where it is on screen: the next page can change the scroll while it
+        // closes (shorter page, scroll back to the top), and the plane would jump with it
+        plane.watchScroll = false
+
         // TODO: Need to shorten duration when leaving work id page (to prevent scroll to top)
         const t = {v: 0.7}
         gsap.to(t, {
