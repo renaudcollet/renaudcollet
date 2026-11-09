@@ -5,3 +5,10 @@ allowBuilds:
   '@parcel/watcher': true
   esbuild: true
   vue-demi: true
+
+# Security fixes for build and dev tools, none of them reach the production output.
+# Same minor as the versions required by Nuxt: remove them once Nuxt requires these or later.
+overrides:
+  fast-uri: ~3.1.9
+  node-forge: ~1.4.3
+  seroval: ~1.6.12
