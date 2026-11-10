@@ -98,17 +98,28 @@
       color: $font-color;
       text-decoration: none;
       font-size: 12px;
-      display: flex;
+      // Block rather than flex: in a flex container the text and the legal link become two
+      // separate flex items, and the text cannot be balanced over the lines
+      display: block;
+      text-align: center;
+      text-wrap: balance;
+      padding: 0 30px;
       margin-top: 40px;
-  
+
       @include media-breakpoint-up(md) {
         margin-top: 40px;
       }
-  
+
       @include media-breakpoint-up(lg) {
         margin-top: 0;
         order: 2;
         width: auto;
+        text-wrap: wrap;
+        padding: 0;
       }
+    }
+
+    &__legal {
+      color: $font-color;
     }
   }

@@ -21,7 +21,7 @@
 
 
     <div class="footer__since">
-      {{footerSince}} - ©{{ currentYear }}
+      {{footerSince}} - ©2004-{{ currentYear }}&nbsp;-&nbsp;<NuxtLink to="/legal" class="footer__legal" data-mouse-cursor="hover">Mentions légales</NuxtLink>
     </div>
 
   </footer>
@@ -39,11 +39,9 @@ const footerMadeWith = storeDatas.contact.data.attributes.made_with;
 
 const madeWith = ref(null)
 
-const currentYear = computed(() => {
-  // Have to use date field otherwise new Date() returns wrong year server side
-  // return new Date().getFullYear()
-  return storeDatas.contact.data.attributes.currentYear.split('-')[0]
-})
+// Computed on the server and carried to the client in the payload, so hydration never
+// sees two different years (a page cached by Nitro just before New Year, for instance)
+const currentYear = useState('footer-current-year', () => new Date().getFullYear())
 
 onMounted(() => {
   madeWith.value.querySelectorAll('a').forEach((el) => {
