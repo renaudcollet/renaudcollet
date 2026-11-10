@@ -28,7 +28,6 @@ In `pages/works/`, import with the `~/` alias: Nuxt 3.21 fails to build the `def
 - `NUXT_API_URL` - Strapi REST API (`https://admin.renaudcollet.com/api`)
 - `NUXT_APP_BACKEND_URL` - Strapi origin, prefixed to every media URL returned by the API
 - `NUXT_APP_URL` - public site URL
-- `NUXT_GTAG_ID` - nuxt-gtag
 - `NUXT_PREPROD_APP` - when set, `robots` meta becomes `none`
 
 Read at runtime through `useRuntimeConfig().public.{apiUrl,backendUrl,appUrl}`.
@@ -136,4 +135,5 @@ SCSS with `variables.scss`, `bootstrap` (grid subset) and `mixins.scss` **auto-i
 - `data-header-scroll-minimize` marks the zone that shrinks the header on scroll.
 - `mixins/` are legacy Options API mixins (`utils-device.js` for device/touch detection) coexisting with `<script setup>` pages.
 - `~` and `@` both alias the project root (`jsconfig.json`).
+- Analytics is Umami Cloud (cookieless, no consent banner): a script in `app.head` of `nuxt.config.js`, with `data-domains` limiting tracking to `renaudcollet.com`, so dev and preprod are not counted. It follows route changes by itself. The legal page describes it under "Mesure d'audience".
 - `todo.todo` is the project backlog in TaskPaper-ish format; it is kept up to date by hand.

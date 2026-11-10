@@ -419,12 +419,6 @@ onMounted(() => {
     })
   }
 
-  // gtag
-  // https://developers.google.com/tag-platform/gtagjs/reference/events?hl=fr#page_view -> should I use page_view ?
-  // https://github.com/johannschopplich/nuxt-gtag
-  // const route = useRoute()
-  // useTrackEvent('work-id-page', route.params.id)
-
   // Create plane cover for curtains
   // https://www.curtainsjs.com/render-target-class.html#basic-usage
   // console.log('imagePlane', imagePlane.value);

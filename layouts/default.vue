@@ -281,12 +281,6 @@ watch(() => route.path, (value) => {
     mouseCursor.value.reset()
   }, 1000)
 
-  // if (window.gtag)
-  //   window.gtag('page_view', to.name)
-
-  // const gtag = useGtag()
-  // gtag('set', 'page_title', to)
-    
   // lenis.scrollTo(0)
   // lenis.start()
 

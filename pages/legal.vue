@@ -38,8 +38,9 @@
 
         <h2>Mesure d'audience</h2>
         <p>
-          Ce site utilise Google Analytics afin de mesurer la fréquentation des pages.
-          Les données collectées sont anonymisées et ne sont pas cédées à des tiers.
+          Ce site utilise Umami pour mesurer sa fréquentation. Umami ne dépose aucun cookie et ne
+          collecte aucune donnée permettant de vous identifier : les statistiques sont agrégées et
+          anonymes, et ne sont pas cédées à des tiers.
         </p>
       </div>
     </section>

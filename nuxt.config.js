@@ -90,6 +90,17 @@ export default defineNuxtConfig({
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
         { rel: 'manifest', href: '/site.webmanifest' },
       ],
+      script: [
+        // Umami analytics (cookieless, no consent banner needed). data-domains restricts tracking
+        // to the production domain, so local dev and preprod are not counted. The tracker follows
+        // the client-side route changes on its own (history API).
+        {
+          src: 'https://cloud.umami.is/script.js',
+          defer: true,
+          'data-website-id': '9676e2a1-320f-4af7-9551-c29590637f86',
+          'data-domains': 'renaudcollet.com',
+        },
+      ],
     },
   },
 
@@ -114,10 +125,6 @@ export default defineNuxtConfig({
     },
   },
 
-  gtag: {
-    id: process.env.NUXT_GTAG_ID // can alos be set in .env https://github.com/johannschopplich/nuxt-gtag#runtime-config
-  },
-
   // css
   css: [/* '~/assets/styles/vendor.scss',  */'~/assets/styles/main.scss'],
 
@@ -126,7 +133,6 @@ export default defineNuxtConfig({
 
   modules: [
     '@pinia/nuxt',
-    'nuxt-gtag',
   ],
 
   build: {
