@@ -9,7 +9,7 @@
         <p>
           Renaud Collet, développeur web freelance.<br>
           SIRET : {{ siret }}<br>
-          Adresse : {{ address }}<br>
+          N° de TVA intracommunautaire : {{ tva }}<br>
           Contact : <a href="mailto:hello@renaudcollet.com">hello@renaudcollet.com</a><br>
           Directeur de la publication : Renaud Collet
         </p>
@@ -65,9 +65,8 @@ export default {
     })
 
     return {
-      // TODO: à compléter avec les informations réelles avant mise en ligne
-      siret: 'XXX XXX XXX XXXXX',
-      address: 'À compléter',
+      siret: '483 682 399 00033',
+      tva: 'FR56483682399',
     }
   },
 
