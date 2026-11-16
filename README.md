@@ -1,16 +1,12 @@
-## Hi there 👋
+# Hi, I'm Renaud 👋
 
-<!--
-**renaudcollet/renaudcollet** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+Freelance fullstack creative developer with 20+ years of experience building
+interactive web experiences: real-time 3D, WebAR, DOOH, phygital installations
+and browser games.
 
-Here are some ideas to get you started:
-
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+- 🛠️ **Stack:** Vue / Nuxt + TypeScript, Three.js, GSAP, Phaser, WebAR (8th Wall, Zappar, MindAR),
+  Node.js, Laravel, PostgreSQL / Supabase, Docker, GitHub Actions
+- 🎯 **Worked for:** Samsung, Sony PlayStation, Bethesda, Renault, Orange, Cartier, Piaget
+- 📁 Many of my client projects live in agency organizations, so this profile only shows part of my work.
+- 🌐 **Portfolio:** [renaudcollet.com](https://renaudcollet.com)
+- 📫 **Open to freelance missions:** feel free to reach out!
